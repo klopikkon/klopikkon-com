@@ -22,6 +22,9 @@ jobs:
   powerwall:
     runs-on: ubuntu-latest
     steps:
+      - name: Install PyNaCl
+        run: pip install pynacl
+
       - name: Refresh access token and rotate refresh token
         id: token
         run: |
@@ -46,7 +49,6 @@ jobs:
           if [ "$NEW_REFRESH" != "null" ] && [ -n "$NEW_REFRESH" ]; then
             echo "Updating TESLA_REFRESH_TOKEN secret..."
 
-            # Get the repository public key for secret encryption
             KEY_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/${{ github.repository }}/actions/secrets/public-key")
@@ -54,7 +56,6 @@ jobs:
             KEY_ID=$(echo "$KEY_RESPONSE" | jq -r .key_id)
             PUBLIC_KEY=$(echo "$KEY_RESPONSE" | jq -r .key)
 
-            # Encrypt the new refresh token
             ENCRYPTED=$(python3 -c "
 from base64 import b64encode
 from nacl import encoding, public
@@ -64,7 +65,6 @@ encrypted = sealed_box.encrypt('''$NEW_REFRESH'''.encode('utf-8'))
 print(b64encode(encrypted).decode('utf-8'))
 ")
 
-            # Update the secret
             curl -s -X PUT \
               -H "Authorization: token ${{ secrets.GH_PAT }}" \
               -H "Accept: application/vnd.github+json" \
