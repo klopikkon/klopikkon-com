@@ -1,0 +1,142 @@
+name: Tesla Powerwall Schedule
+
+on:
+  schedule:
+    # 04:00 AEST – morning top-up check
+    - cron: '0 4 * * *'
+      timezone: 'Australia/Sydney'
+    # 05:00 AEST – optional check
+    - cron: '0 5 * * *'
+      timezone: 'Australia/Sydney'
+    # 06:00 AEST – back to house mode
+    - cron: '0 6 * * *'
+      timezone: 'Australia/Sydney'
+    # 11:00 AEST – start free fill
+    - cron: '0 11 * * *'
+      timezone: 'Australia/Sydney'
+    # 12:00 AEST – confirm
+    - cron: '0 12 * * *'
+      timezone: 'Australia/Sydney'
+    # 13:00 AEST – confirm
+    - cron: '0 13 * * *'
+      timezone: 'Australia/Sydney'
+    # 14:00 AEST – back to self-powered
+    - cron: '0 14 * * *'
+      timezone: 'Australia/Sydney'
+  workflow_dispatch:   # allows manual runs from the Actions tab
+
+jobs:
+  powerwall:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refresh access token
+        id: token
+        run: |
+          RESPONSE=$(curl -s -X POST "https://fleet-auth.prd.vn.cloud.tesla.com/oauth2/v3/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "grant_type=refresh_token" \
+            -d "client_id=${{ secrets.TESLA_CLIENT_ID }}" \
+            -d "refresh_token=${{ secrets.TESLA_REFRESH_TOKEN }}")
+
+          ACCESS_TOKEN=$(echo $RESPONSE | jq -r .access_token)
+          NEW_REFRESH=$(echo $RESPONSE | jq -r .refresh_token)
+
+          if [ "$ACCESS_TOKEN" = "null" ] || [ -z "$ACCESS_TOKEN" ]; then
+            echo "Failed to refresh token"
+            echo $RESPONSE
+            exit 1
+          fi
+
+          echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
+          echo "New refresh token received (you should update the secret if it changed)"
+          # Note: for long-term use you should update the TESLA_REFRESH_TOKEN secret with NEW_REFRESH
+
+      - name: Determine action based on time
+        id: action
+        run: |
+          HOUR=$(TZ='Australia/Sydney' date +%H)
+          echo "Current AEST hour: $HOUR"
+          echo "hour=$HOUR" >> $GITHUB_OUTPUT
+
+      - name: Run Powerwall command
+        env:
+          TOKEN: ${{ steps.token.outputs.access_token }}
+          SITE: ${{ secrets.ENERGY_SITE_ID }}
+          HOUR: ${{ steps.action.outputs.hour }}
+        run: |
+          BASE="https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/energy_sites/$SITE"
+
+          # Helper functions
+          set_backup() {
+            curl -s -X POST "$BASE/backup" \
+              -H "Authorization: Bearer $TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"backup_reserve_percent\": $1}"
+            echo "Set backup reserve to $1%"
+          }
+
+          set_mode() {
+            curl -s -X POST "$BASE/operation" \
+              -H "Authorization: Bearer $TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"default_real_mode\": \"$1\"}"
+            echo "Set mode to $1"
+          }
+
+          set_grid_charging() {
+            # false = allow grid charging, true = disallow
+            curl -s -X POST "$BASE/grid_import_export" \
+              -H "Authorization: Bearer $TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"disallow_charge_from_grid_with_solar_installed\": $1}"
+            echo "Grid charging disallow = $1"
+          }
+
+          get_soc() {
+            curl -s "$BASE/live_status" \
+              -H "Authorization: Bearer $TOKEN" | jq -r '.response.percentage_charged'
+          }
+
+          case $HOUR in
+            04)
+              SOC=$(get_soc)
+              echo "Current SoC: $SOC%"
+              if (( $(echo "$SOC < 40" | bc -l) )); then
+                echo "SoC under 40% → starting charge to 60%"
+                set_mode "backup"
+                set_grid_charging false    # ALLOW grid charging
+                set_backup 60
+              else
+                echo "SoC already ≥ 40% → doing nothing"
+              fi
+              ;;
+            05)
+              echo "05:00 status check"
+              get_soc
+              ;;
+            06)
+              echo "06:00 → back to house mode (5%) + stop grid charging"
+              set_mode "self_consumption"
+              set_grid_charging true       # DISALLOW grid charging
+              set_backup 5
+              ;;
+            11)
+              echo "11:00 → start free fill (100%) + allow grid charging"
+              set_mode "backup"
+              set_grid_charging false      # ALLOW grid charging
+              set_backup 100
+              ;;
+            12|13)
+              echo "$HOUR:00 status check"
+              get_soc
+              ;;
+            14)
+              echo "14:00 → Self-Powered + 5% + stop grid charging"
+              set_mode "self_consumption"
+              set_grid_charging true       # DISALLOW grid charging
+              set_backup 5
+              ;;
+            *)
+              echo "Unexpected hour $HOUR – no action"
+              ;;
+          esac
