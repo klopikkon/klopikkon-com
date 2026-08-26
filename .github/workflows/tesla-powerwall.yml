@@ -2,34 +2,27 @@ name: Tesla Powerwall Schedule
 
 on:
   schedule:
-    # 04:00 AEST – morning top-up check
     - cron: '0 4 * * *'
       timezone: 'Australia/Sydney'
-    # 05:00 AEST – optional check
     - cron: '0 5 * * *'
       timezone: 'Australia/Sydney'
-    # 06:00 AEST – back to house mode
     - cron: '0 6 * * *'
       timezone: 'Australia/Sydney'
-    # 11:00 AEST – start free fill
     - cron: '0 11 * * *'
       timezone: 'Australia/Sydney'
-    # 12:00 AEST – confirm
     - cron: '0 12 * * *'
       timezone: 'Australia/Sydney'
-    # 13:00 AEST – confirm
     - cron: '0 13 * * *'
       timezone: 'Australia/Sydney'
-    # 14:00 AEST – back to self-powered
     - cron: '0 14 * * *'
       timezone: 'Australia/Sydney'
-  workflow_dispatch:   # allows manual runs from the Actions tab
+  workflow_dispatch:
 
 jobs:
   powerwall:
     runs-on: ubuntu-latest
     steps:
-      - name: Refresh access token
+      - name: Refresh access token and rotate refresh token
         id: token
         run: |
           RESPONSE=$(curl -s -X POST "https://fleet-auth.prd.vn.cloud.tesla.com/oauth2/v3/token" \
@@ -38,18 +31,48 @@ jobs:
             -d "client_id=${{ secrets.TESLA_CLIENT_ID }}" \
             -d "refresh_token=${{ secrets.TESLA_REFRESH_TOKEN }}")
 
-          ACCESS_TOKEN=$(echo $RESPONSE | jq -r .access_token)
-          NEW_REFRESH=$(echo $RESPONSE | jq -r .refresh_token)
+          ACCESS_TOKEN=$(echo "$RESPONSE" | jq -r .access_token)
+          NEW_REFRESH=$(echo "$RESPONSE" | jq -r .refresh_token)
 
           if [ "$ACCESS_TOKEN" = "null" ] || [ -z "$ACCESS_TOKEN" ]; then
             echo "Failed to refresh token"
-            echo $RESPONSE
+            echo "$RESPONSE"
             exit 1
           fi
 
           echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
-          echo "New refresh token received (you should update the secret if it changed)"
-          # Note: for long-term use you should update the TESLA_REFRESH_TOKEN secret with NEW_REFRESH
+
+          # Automatically update the TESLA_REFRESH_TOKEN secret with the new value
+          if [ "$NEW_REFRESH" != "null" ] && [ -n "$NEW_REFRESH" ]; then
+            echo "Updating TESLA_REFRESH_TOKEN secret..."
+
+            # Get the repository public key for secret encryption
+            KEY_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/secrets/public-key")
+
+            KEY_ID=$(echo "$KEY_RESPONSE" | jq -r .key_id)
+            PUBLIC_KEY=$(echo "$KEY_RESPONSE" | jq -r .key)
+
+            # Encrypt the new refresh token
+            ENCRYPTED=$(python3 -c "
+from base64 import b64encode
+from nacl import encoding, public
+public_key = public.PublicKey('''$PUBLIC_KEY''', encoding.Base64Encoder())
+sealed_box = public.SealedBox(public_key)
+encrypted = sealed_box.encrypt('''$NEW_REFRESH'''.encode('utf-8'))
+print(b64encode(encrypted).decode('utf-8'))
+")
+
+            # Update the secret
+            curl -s -X PUT \
+              -H "Authorization: token ${{ secrets.GH_PAT }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/secrets/TESLA_REFRESH_TOKEN" \
+              -d "{\"encrypted_value\":\"$ENCRYPTED\",\"key_id\":\"$KEY_ID\"}"
+
+            echo "TESLA_REFRESH_TOKEN secret updated successfully"
+          fi
 
       - name: Determine action based on time
         id: action
@@ -66,7 +89,6 @@ jobs:
         run: |
           BASE="https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/energy_sites/$SITE"
 
-          # Helper functions
           set_backup() {
             curl -s -X POST "$BASE/backup" \
               -H "Authorization: Bearer $TOKEN" \
@@ -84,7 +106,6 @@ jobs:
           }
 
           set_grid_charging() {
-            # false = allow grid charging, true = disallow
             curl -s -X POST "$BASE/grid_import_export" \
               -H "Authorization: Bearer $TOKEN" \
               -H "Content-Type: application/json" \
@@ -104,7 +125,7 @@ jobs:
               if (( $(echo "$SOC < 40" | bc -l) )); then
                 echo "SoC under 40% → starting charge to 60%"
                 set_mode "backup"
-                set_grid_charging false    # ALLOW grid charging
+                set_grid_charging false
                 set_backup 60
               else
                 echo "SoC already ≥ 40% → doing nothing"
@@ -115,15 +136,15 @@ jobs:
               get_soc
               ;;
             06)
-              echo "06:00 → back to house mode (5%) + stop grid charging"
+              echo "06:00 → house mode + stop grid charging"
               set_mode "self_consumption"
-              set_grid_charging true       # DISALLOW grid charging
+              set_grid_charging true
               set_backup 5
               ;;
             11)
-              echo "11:00 → start free fill (100%) + allow grid charging"
+              echo "11:00 → free fill + allow grid charging"
               set_mode "backup"
-              set_grid_charging false      # ALLOW grid charging
+              set_grid_charging false
               set_backup 100
               ;;
             12|13)
@@ -131,9 +152,9 @@ jobs:
               get_soc
               ;;
             14)
-              echo "14:00 → Self-Powered + 5% + stop grid charging"
+              echo "14:00 → Self-Powered + stop grid charging"
               set_mode "self_consumption"
-              set_grid_charging true       # DISALLOW grid charging
+              set_grid_charging true
               set_backup 5
               ;;
             *)
