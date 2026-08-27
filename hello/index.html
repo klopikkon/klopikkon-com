@@ -212,16 +212,19 @@ document.getElementById("f").addEventListener("submit",e=>{
 });
 // Warm the ciphertext so the first unlock is just key derivation.
 fetchEnc().catch(()=>{});
-(async ()=>{
+async function tryHashOrSaved(){
   const hash=decodeURIComponent((location.hash||"").replace(/^#/,"")).trim();
   if(hash){
-    try{ await unlock(hash,{fromHash:true}); return; }catch(e){}
+    try{ await unlock(hash,{fromHash:true}); return true; }catch(e){}
   }
   const saved=localStorage.getItem(LS);
   if(saved){
-    try{ await unlock(saved); return; }catch(e){}
+    try{ await unlock(saved); return true; }catch(e){}
   }
-})();
+  return false;
+}
+tryHashOrSaved();
+window.addEventListener("hashchange",()=>{ tryHashOrSaved(); });
 </script>
 </body>
 </html>
