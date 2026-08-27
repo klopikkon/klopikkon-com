@@ -1,5 +1,7 @@
 name: Tesla Powerwall Schedule
 
+# Surplus solar to car (plugged in, SoC<85%, Powerwall >=95%): 09:00-10:30 and 14:00-15:30, stop 16:00.
+# 11:00 still sets 90% for the free grid window. 14:00 stops the free-window charge unless solar can take over.
 # Car commands (Spirit of Fire) are signed with the klopikkon.com virtual key.
 # One-time: in the Tesla app, open https://tesla.com/_ak/klopikkon.com and approve
 # the key on Spirit of Fire. Australia uses the NA Fleet API (same as Powerwall).
@@ -20,10 +22,14 @@ on:
       timezone: 'Australia/Sydney'
     - cron: '0 14 * * *'
       timezone: 'Australia/Sydney'
+    - cron: '30 9,10,14,15 * * *'
+      timezone: 'Australia/Sydney'
+    - cron: '0 9,10,15,16 * * *'
+      timezone: 'Australia/Sydney'
   workflow_dispatch:
     inputs:
       force_hour:
-        description: 'Override AEST hour (04, 05, 06, 11, 12, 13, 14). Empty = now.'
+        description: 'Override AEST hour (04, 09, 10, 11, 14, 15, 16). Empty = now.'
         required: false
         type: string
 
@@ -90,20 +96,24 @@ jobs:
         id: action
         run: |
           HOUR=$(TZ='Australia/Sydney' date +%H)
+          MIN=$(TZ='Australia/Sydney' date +%M)
           FORCE="${{ github.event.inputs.force_hour }}"
           if [ -n "$FORCE" ]; then
             HOUR=$(printf '%02d' "$((10#$FORCE))")
-            echo "Forced AEST hour: $HOUR (clock was $(TZ='Australia/Sydney' date +%H))"
+            echo "Forced AEST hour: $HOUR (clock was $(TZ='Australia/Sydney' date +%H:%M))"
           else
-            echo "Current AEST hour: $HOUR"
+            echo "Current AEST time: $HOUR:$MIN"
           fi
           echo "hour=$HOUR" >> $GITHUB_OUTPUT
+          echo "minute=$MIN" >> $GITHUB_OUTPUT
 
       - name: Run Powerwall command
         env:
           TOKEN: ${{ steps.token.outputs.access_token }}
           SITE: ${{ secrets.ENERGY_SITE_ID }}
           HOUR: ${{ steps.action.outputs.hour }}
+          MIN: ${{ steps.action.outputs.minute }}
+          FORCE: ${{ github.event.inputs.force_hour }}
         run: |
           BASE="https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/energy_sites/$SITE"
 
@@ -136,6 +146,9 @@ jobs:
               -H "Authorization: Bearer $TOKEN" | jq -r '.response.percentage_charged'
           }
 
+          if [ "$MIN" != "00" ] && [ -z "$FORCE" ]; then
+            echo "Half-hour tick $HOUR:$MIN — skip Powerwall writes"
+          else
           case $HOUR in
             04)
               SOC=$(get_soc)
@@ -179,15 +192,16 @@ jobs:
               echo "Unexpected hour $HOUR – no action"
               ;;
           esac
+          fi
 
       - name: Install tesla-control
-        if: steps.action.outputs.hour == '11' || steps.action.outputs.hour == '14'
+        if: contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
         uses: actions/setup-go@v5
         with:
           go-version: '1.23'
 
       - name: Build tesla-control
-        if: steps.action.outputs.hour == '11' || steps.action.outputs.hour == '14'
+        if: contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
         run: |
           git clone --depth 1 https://github.com/teslamotors/vehicle-command.git /tmp/vehicle-command
           cd /tmp/vehicle-command
@@ -196,10 +210,11 @@ jobs:
           "$HOME/go/bin/tesla-control" --help | head -20
 
       - name: Spirit of Fire charge limit
-        if: steps.action.outputs.hour == '11' || steps.action.outputs.hour == '14'
+        if: contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
         env:
           TOKEN: ${{ steps.token.outputs.access_token }}
           HOUR: ${{ steps.action.outputs.hour }}
+          SITE: ${{ secrets.ENERGY_SITE_ID }}
           TESLA_VEHICLE_ID: ${{ secrets.TESLA_VEHICLE_ID }}
           TESLA_PRIVATE_KEY: ${{ secrets.TESLA_PRIVATE_KEY }}
         run: |
@@ -249,22 +264,130 @@ jobs:
             return "$RC"
           }
 
+          tesla_ok() {
+            set +e
+            OUT=$(tesla-control "$@" 2>&1)
+            RC=$?
+            set -e
+            echo "$OUT"
+            if [ "$RC" -eq 0 ]; then return 0; fi
+            echo "$OUT" | grep -Eiq 'already_set|is_charging|complete|requested|not_charging|disconnected|no_power' && return 0
+            return "$RC"
+          }
+
+          LIVE=$(curl -sS "$BASE/energy_sites/$SITE/live_status" -H "Authorization: Bearer $TOKEN")
+          echo "$LIVE" | jq '{solar:.response.solar_power, grid:.response.grid_power, battery:.response.battery_power, load:.response.load_power, pw:.response.percentage_charged}'
+
+          DATA=$(curl -sS "$BASE/vehicles/$VIN/vehicle_data?endpoints=charge_state" -H "Authorization: Bearer $TOKEN")
+          echo "$DATA" | jq '{soc:.response.charge_state.battery_level, state:.response.charge_state.charging_state, limit:.response.charge_state.charge_limit_soc, amps:.response.charge_state.charger_actual_current, volts:.response.charge_state.charger_voltage, phases:.response.charge_state.charger_phases}'
+
           if [ "$HOUR" = "11" ]; then
-            echo "11:00 → charge limit 90%"
+            echo "11:00 → free window, charge limit 90%"
             set_limit 90
-          else
-            DATA=$(curl -sS "$BASE/vehicles/$VIN/vehicle_data?endpoints=charge_state" -H "Authorization: Bearer $TOKEN")
-            SOC=$(echo "$DATA" | jq -r '.response.charge_state.battery_level // .response.battery_level')
-            echo "Current SoC: $SOC%"
-            if [ -z "$SOC" ] || [ "$SOC" = "null" ]; then
-              echo "Could not read SoC"
-              echo "$DATA" | jq 'keys, (.response|keys? // .)'
-              exit 1
-            fi
-            LIMIT=$((SOC - 2))
-            if [ "$LIMIT" -lt 50 ]; then LIMIT=50; fi
-            echo "14:00 → charge limit $LIMIT% (SoC-2, min 50) then stop"
-            set_limit "$LIMIT"
-            tesla-control charging-stop || true
+            tesla_ok charging-start || true
+            rm -f /tmp/tesla-private.pem /tmp/tesla-token
+            exit 0
           fi
+
+          cat > /tmp/solar_plan.py << 'ENDPY'
+import json, sys
+hour = sys.argv[1]
+live = json.load(open(sys.argv[2])).get("response") or {}
+cs = (json.load(open(sys.argv[3])).get("response") or {}).get("charge_state") or {}
+solar = float(live.get("solar_power") or 0)
+grid = float(live.get("grid_power") or 0)   # +import / -export
+batt = float(live.get("battery_power") or 0)  # +discharge
+pw = float(live.get("percentage_charged") or 0)
+soc = cs.get("battery_level")
+state = (cs.get("charging_state") or "")
+amps_now = float(cs.get("charger_actual_current") or 0)
+volts = float(cs.get("charger_voltage") or 0)
+phases_raw = cs.get("charger_phases") or 1
+try:
+    phases_raw = int(phases_raw)
+except Exception:
+    phases_raw = 1
+phases = 3 if phases_raw >= 2 else 1
+volts = volts if volts > 50 else 230.0
+car_w = amps_now * volts * phases if state == "Charging" else 0.0
+surplus = car_w - grid
+plugged = state not in ("Disconnected", "", "Unknown")
+pw_full = pw >= 95
+print(
+    f"hour={hour} pw={pw:.1f} solar={solar:.0f}W grid={grid:.0f}W batt={batt:.0f}W "
+    f"car={car_w:.0f}W surplus={surplus:.0f}W soc={soc} state={state} plugged={plugged}",
+    file=sys.stderr,
+)
+
+def emit(action, amps=0, limit=0, reason=""):
+    print(json.dumps({"action": action, "amps": int(amps), "limit": int(limit), "reason": reason, "soc": soc}))
+
+if soc is None:
+    emit("error", reason="no_soc")
+    sys.exit(0)
+
+if hour == "16":
+    emit("stop", reason="end of 2-4pm solar window")
+    sys.exit(0)
+
+if not plugged:
+    emit("skip", reason="car not plugged in")
+    sys.exit(0)
+
+if hour == "14" and soc >= 85:
+    emit("stop_free", reason="end free window, car already >=85%", limit=max(50, int(soc) - 2))
+    sys.exit(0)
+
+if soc >= 85:
+    emit("stop" if state == "Charging" else "skip", reason="car already at or above 85%")
+    sys.exit(0)
+
+if not pw_full:
+    emit("stop" if state == "Charging" else "skip", reason=f"Powerwall {pw:.0f}% not full, solar should fill it first")
+    sys.exit(0)
+
+min_w = 5 * 230
+if surplus < min_w:
+    emit("stop" if state == "Charging" else "skip", reason=f"surplus {surplus:.0f}W below {min_w:.0f}W")
+    sys.exit(0)
+
+amps = int((surplus - 300) / (volts * phases))
+amps = max(5, min(16, amps))
+emit("solar", amps=amps, limit=85, reason=f"divert ~{amps * volts * phases:.0f}W to car (cap 16A)")
+
+ENDPY
+          printf '%s' "$LIVE" > /tmp/live.json
+          printf '%s' "$DATA" > /tmp/car.json
+          PLAN=$(python3 /tmp/solar_plan.py "$HOUR" /tmp/live.json /tmp/car.json)
+          echo "$PLAN"
+          ACTION=$(echo "$PLAN" | jq -r .action)
+          REASON=$(echo "$PLAN" | jq -r .reason)
+          echo "plan=$ACTION $REASON"
+
+          case "$ACTION" in
+            solar)
+              AMPS=$(echo "$PLAN" | jq -r .amps)
+              set_limit 85
+              tesla_ok charging-set-amps "$AMPS"
+              tesla_ok charging-start || true
+              echo "Solar divert: ${AMPS}A to 85%"
+              ;;
+            stop_free)
+              LIMIT=$(echo "$PLAN" | jq -r .limit)
+              set_limit "$LIMIT"
+              tesla_ok charging-stop || true
+              echo "Ended free-window charge, limit $LIMIT%"
+              ;;
+            stop)
+              tesla_ok charging-stop || true
+              echo "Stopped car charging ($REASON)"
+              ;;
+            skip)
+              echo "No car action ($REASON)"
+              ;;
+            *)
+              echo "Planner error: $PLAN"
+              exit 1
+              ;;
+          esac
           rm -f /tmp/tesla-private.pem /tmp/tesla-token
