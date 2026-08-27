@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Home energy">
+<title>Home energy</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--solar:#e6b800;--ok:#3dd68c;--warn:#ff8b4a;--car:#6ea8fe}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;font:16px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:1.25rem}
+h1{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 1rem}
+.grid{display:grid;gap:.85rem;grid-template-columns:1fr 1fr}
+.card{background:var(--card);border-radius:1rem;padding:1.1rem 1.15rem}
+.wide{grid-column:1/-1}
+.label{color:var(--muted);font-size:.8rem}
+.big{font-size:2.6rem;font-weight:650;letter-spacing:-.03em;margin:.15rem 0}
+.sub{color:var(--muted);font-size:.9rem}
+.kw{font-variant-numeric:tabular-nums}
+.ok{color:var(--ok)}.warn{color:var(--warn)}.solar{color:var(--solar)}.car{color:var(--car)}
+form{display:flex;flex-direction:column;gap:.7rem;max-width:22rem;margin:18vh auto 0}
+input{font:inherit;padding:.8rem .9rem;border-radius:.7rem;border:1px solid #2a3440;background:#0f141a;color:var(--ink)}
+button{font:inherit;font-weight:650;padding:.8rem;border:0;border-radius:.7rem;background:var(--ok);color:#062;cursor:pointer}
+.err{color:var(--warn);min-height:1.2em}
+</style>
+<body>
+<div id="lock">
+<h1>Home energy</h1>
+<form id="f">
+<p class="sub">Password unlocks the live numbers. Saved only on this device.</p>
+<input id="pw" type="password" autocomplete="current-password" placeholder="Password" required>
+<button type="submit">Unlock</button>
+<p class="err" id="err"></p>
+</form>
+</div>
+<div id="dash" hidden>
+<h1>Home energy</h1>
+<div class="grid">
+<div class="card"><div class="label">Powerwall</div><div class="big kw" id="pw-soc">—</div><div class="sub" id="pw-mode"></div></div>
+<div class="card"><div class="label">Spirit of Fire</div><div class="big kw car" id="car-soc">—</div><div class="sub" id="car-state"></div></div>
+<div class="card"><div class="label">Solar</div><div class="big kw solar" id="solar">—</div><div class="sub">production</div></div>
+<div class="card"><div class="label">Grid</div><div class="big kw" id="grid">—</div><div class="sub" id="grid-sub"></div></div>
+<div class="card wide"><div class="sub kw" id="load"></div><div class="sub" id="updated"></div></div>
+</div>
+</div>
+<script>
+const b60c6ce5d89b77d89f96039a6df27031_HEX = \"b60c6ce5d89b77d89f96039a6df27031\";
+const LS = \"energy-dash-pw\";
+function hexToBytes(h){const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.substr(i*2,2),16);return a}
+function b64ToBytes(s){const bin=atob(s.trim());const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a}
+function kw(w){if(w==null||isNaN(w))return \"—\";const k=w/1000;return (k>=0?\"\":\"−\")+Math.abs(k).toFixed(1)+\" kW\"}
+function pct(n){if(n==null||isNaN(n))return \"—\";return Math.round(n)+\"%\"}
+async function deriveKey(password){
+  const enc=new TextEncoder();
+  const material=await crypto.subtle.importKey(\"raw\",enc.encode(password),\"PBKDF2\",false,[\"deriveKey\"]);
+  return crypto.subtle.deriveKey({name:\"PBKDF2\",salt:hexToBytes(b60c6ce5d89b77d89f96039a6df27031_HEX),iterations:100000,hash:\"SHA-256\"},material,{name:\"AES-GCM\",length:256},false,[\"decrypt\"]);
+}
+async function load(password){
+  const res=await fetch(\"status.enc?t=\"+Date.now(),{cache:\"no-store\"});
+  if(!res.ok) throw new Error(\"No status yet\");
+  const buf=b64ToBytes(await res.text());
+  const pt=await crypto.subtle.decrypt({name:\"AES-GCM\",iv:buf.slice(0,12)},await deriveKey(password),buf.slice(12));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+function render(d){
+  document.getElementById(\"lock\").hidden=true;
+  document.getElementById(\"dash\").hidden=false;
+  const p=d.powerwall||{}, c=d.car||{};
+  document.getElementById(\"pw-soc\").textContent=pct(p.soc);
+  const mode=p.mode===\"backup\"?\"Backup / grid fill\":p.mode===\"self_consumption\"?\"Self-Powered\":(p.mode||\"\");
+  document.getElementById(\"pw-mode\").textContent=mode+(p.reserve!=null?\" · reserve \"+p.reserve+\"%\":\"\");
+  document.getElementById(\"car-soc\").textContent=pct(c.soc);
+  const plugged=c.plugged_in?\"plugged in\":\"unplugged\";
+  const ch=c.charging&&c.charging!==\"Disconnected\"?c.charging:plugged;
+  document.getElementById(\"car-state\").textContent=(c.asleep?\"asleep · last \":\"\")+ch+(c.limit!=null?\" · limit \"+c.limit+\"%\":\"\");
+  document.getElementById(\"solar\").textContent=kw(p.solar_w);
+  const g=p.grid_w||0;
+  const gel=document.getElementById(\"grid\");
+  gel.textContent=kw(Math.abs(g));
+  gel.className=\"big kw \"+(g>80?\"warn\":g<-80?\"ok\":\"\");
+  document.getElementById(\"grid-sub\").textContent=g>80?\"importing\":g<-80?\"exporting\":\"idle\";
+  document.getElementById(\"load\").textContent=kw(p.load_w)+\" house\";
+  const ts=d.updated_at?new Date(d.updated_at):null;
+  document.getElementById(\"updated\").textContent=ts?(\"Updated \"+ts.toLocaleString(\"en-AU\",{timeZone:\"Australia/Sydney\",hour:\"numeric\",minute:\"2-digit\"})):\"—\";
+}
+async function unlock(password){
+  const err=document.getElementById(\"err\");
+  err.textContent=\"\";
+  try{ render(await load(password)); localStorage.setItem(LS,password); }
+  catch(e){ localStorage.removeItem(LS); err.textContent=e.name===\"OperationError\"?\"Wrong password.\":String(e.message||e); throw e; }
+}
+document.getElementById(\"f\").addEventListener(\"submit\",e=>{e.preventDefault();unlock(document.getElementById(\"pw\").value)});
+const saved=localStorage.getItem(LS);
+if(saved) unlock(saved).catch(()=>{});
+setInterval(()=>{const p=localStorage.getItem(LS); if(p&&!document.getElementById(\"dash\").hidden) load(p).then(render).catch(()=>{});},60000);
+</script>
+</body>
+</html>
