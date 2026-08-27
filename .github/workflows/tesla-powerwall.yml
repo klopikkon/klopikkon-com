@@ -193,7 +193,7 @@ jobs:
           cd /tmp/vehicle-command
           go build -o "$HOME/go/bin/tesla-control" ./cmd/tesla-control
           echo "$HOME/go/bin" >> "$GITHUB_PATH"
-          tesla-control --help | head -5
+          "$HOME/go/bin/tesla-control" --help | head -20
 
       - name: Spirit of Fire charge limit
         if: steps.action.outputs.hour == '11' || steps.action.outputs.hour == '14'
