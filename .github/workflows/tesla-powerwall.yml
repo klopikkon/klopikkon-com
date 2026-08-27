@@ -232,9 +232,26 @@ jobs:
             sleep 10
           done
 
+          set_limit() {
+            local pct="$1"
+            set +e
+            OUT=$(tesla-control charging-set-limit "$pct" 2>&1)
+            RC=$?
+            set -e
+            echo "$OUT"
+            if [ "$RC" -eq 0 ]; then
+              return 0
+            fi
+            if echo "$OUT" | grep -qi 'already_set'; then
+              echo "Charge limit already ${pct}% (signed command accepted)"
+              return 0
+            fi
+            return "$RC"
+          }
+
           if [ "$HOUR" = "11" ]; then
             echo "11:00 → charge limit 90%"
-            tesla-control charging-set-limit 90
+            set_limit 90
           else
             DATA=$(curl -sS "$BASE/vehicles/$VIN/vehicle_data?endpoints=charge_state" -H "Authorization: Bearer $TOKEN")
             SOC=$(echo "$DATA" | jq -r '.response.charge_state.battery_level // .response.battery_level')
@@ -247,7 +264,7 @@ jobs:
             LIMIT=$((SOC - 2))
             if [ "$LIMIT" -lt 50 ]; then LIMIT=50; fi
             echo "14:00 → charge limit $LIMIT% (SoC-2, min 50) then stop"
-            tesla-control charging-set-limit "$LIMIT"
+            set_limit "$LIMIT"
             tesla-control charging-stop || true
           fi
           rm -f /tmp/tesla-private.pem /tmp/tesla-token
