@@ -10,7 +10,8 @@
 :root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--solar:#e6b800;--ok:#3dd68c;--warn:#ff8b4a;--car:#6ea8fe}
 *{box-sizing:border-box}
 body{margin:0;min-height:100dvh;font:16px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:1.25rem}
-h1{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 1rem}
+.top{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:0 0 1rem}
+h1{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0}
 .grid{display:grid;gap:.85rem;grid-template-columns:1fr 1fr}
 .card{background:var(--card);border-radius:1rem;padding:1.1rem 1.15rem}
 .wide{grid-column:1/-1}
@@ -22,7 +23,10 @@ h1{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mut
 form{display:flex;flex-direction:column;gap:.7rem;max-width:22rem;margin:18vh auto 0}
 input{font:inherit;padding:.8rem .9rem;border-radius:.7rem;border:1px solid #2a3440;background:#0f141a;color:var(--ink)}
 button{font:inherit;font-weight:650;padding:.8rem;border:0;border-radius:.7rem;background:var(--ok);color:#062;cursor:pointer}
+button.secondary{background:#243041;color:var(--ink);padding:.55rem .9rem;font-size:.9rem}
+button:disabled{opacity:.55;cursor:wait}
 .err{color:var(--warn);min-height:1.2em}
+a{color:var(--car)}
 </style>
 <body>
 <div id="lock">
@@ -35,18 +39,27 @@ button{font:inherit;font-weight:650;padding:.8rem;border:0;border-radius:.7rem;b
 </form>
 </div>
 <div id="dash" hidden>
-<h1>Home energy</h1>
+<div class="top">
+  <h1>Home energy</h1>
+  <button type="button" class="secondary" id="upd">Update</button>
+</div>
 <div class="grid">
 <div class="card"><div class="label">Powerwall</div><div class="big kw" id="pw-soc">—</div><div class="sub" id="pw-mode"></div></div>
 <div class="card"><div class="label">Spirit of Fire</div><div class="big kw car" id="car-soc">—</div><div class="sub" id="car-state"></div></div>
 <div class="card"><div class="label">Solar</div><div class="big kw solar" id="solar">—</div><div class="sub">production</div></div>
 <div class="card"><div class="label">Grid</div><div class="big kw" id="grid">—</div><div class="sub" id="grid-sub"></div></div>
-<div class="card wide"><div class="sub kw" id="load"></div><div class="sub" id="updated"></div></div>
+<div class="card wide"><div class="sub kw" id="load"></div><div class="sub" id="updated"></div><div class="sub" id="upd-status"></div></div>
+<div class="card wide">
+  <div class="label">Fleet API credit</div>
+  <div class="sub" id="credit-note">Tesla doesn’t expose remaining personal-use credit over the Fleet API. Check Billing &amp; usage in the <a href="https://developer.tesla.com/" target="_blank" rel="noopener">developer portal</a> ($10/mo personal discount).</div>
+</div>
 </div>
 </div>
 <script>
 const SALT_HEX = "b60c6ce5d89b77d89f96039a6df27031";
 const LS = "energy-dash-pw";
+let lastData = null;
+let updating = false;
 function hexToBytes(h){const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.substr(i*2,2),16);return a}
 function b64ToBytes(s){const bin=atob(s.trim());const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a}
 function kw(w){if(w==null||isNaN(w))return "—";const k=w/1000;return (k>=0?"":"−")+Math.abs(k).toFixed(1)+" kW"}
@@ -64,6 +77,7 @@ async function load(password){
   return JSON.parse(new TextDecoder().decode(pt));
 }
 function render(d){
+  lastData = d;
   document.getElementById("lock").hidden=true;
   document.getElementById("dash").hidden=false;
   const p=d.powerwall||{}, c=d.car||{};
@@ -82,7 +96,7 @@ function render(d){
   document.getElementById("grid-sub").textContent=g>80?"importing":g<-80?"exporting":"idle";
   document.getElementById("load").textContent=kw(p.load_w)+" house";
   const ts=d.updated_at?new Date(d.updated_at):null;
-  document.getElementById("updated").textContent=ts?("Updated "+ts.toLocaleString("en-AU",{timeZone:"Australia/Sydney",hour:"numeric",minute:"2-digit"})):"—";
+  document.getElementById("updated").textContent=ts?("Updated "+ts.toLocaleString("en-AU",{timeZone:"Australia/Sydney",hour:"numeric",minute:"2-digit",second:"2-digit"})):"—";
 }
 async function unlock(password){
   const err=document.getElementById("err");
@@ -90,10 +104,66 @@ async function unlock(password){
   try{ render(await load(password)); localStorage.setItem(LS,password); }
   catch(e){ localStorage.removeItem(LS); err.textContent=e.name==="OperationError"?"Wrong password.":String(e.message||e); throw e; }
 }
+function setUpd(msg){ document.getElementById("upd-status").textContent = msg || ""; }
+async function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+async function triggerRefresh(d){
+  const r = d && d.refresh;
+  if(!r || !r.token || !r.repo || !r.workflow) throw new Error("Refresh not configured yet. Wait for the next scheduled publish.");
+  const res = await fetch("https://api.github.com/repos/"+r.repo+"/actions/workflows/"+r.workflow+"/dispatches", {
+    method:"POST",
+    headers:{
+      "Authorization":"Bearer "+r.token,
+      "Accept":"application/vnd.github+json",
+      "X-GitHub-Api-Version":"2022-11-28"
+    },
+    body: JSON.stringify({ref: r.ref || "main", inputs:{ status_only: "true" }})
+  });
+  if(res.status !== 204 && res.status !== 200){
+    const t = await res.text();
+    throw new Error("Could not start update ("+res.status+"): "+t.slice(0,120));
+  }
+}
+async function waitForNew(password, prevUpdated){
+  for(let i=0;i<24;i++){
+    await sleep(5000);
+    try{
+      const d = await load(password);
+      if(d.updated_at && d.updated_at !== prevUpdated){
+        render(d);
+        return true;
+      }
+      setUpd("Waiting for Tesla… "+(i+1)+"/24");
+    }catch(e){}
+  }
+  return false;
+}
+async function updateNow(){
+  if(updating) return;
+  const password = localStorage.getItem(LS);
+  if(!password) return;
+  updating = true;
+  const btn = document.getElementById("upd");
+  btn.disabled = true;
+  btn.textContent = "Updating…";
+  const prev = lastData && lastData.updated_at;
+  try{
+    setUpd("Asking Tesla for a fresh snapshot…");
+    await triggerRefresh(lastData || await load(password));
+    const ok = await waitForNew(password, prev);
+    setUpd(ok ? "Fresh numbers loaded." : "Triggered, but no new snapshot yet. Tap Update again in a minute.");
+  }catch(e){
+    setUpd(String(e.message || e));
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "Update";
+    updating = false;
+  }
+}
 document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();unlock(document.getElementById("pw").value)});
+document.getElementById("upd").addEventListener("click",()=>updateNow());
 const saved=localStorage.getItem(LS);
 if(saved) unlock(saved).catch(()=>{});
-setInterval(()=>{const p=localStorage.getItem(LS); if(p&&!document.getElementById("dash").hidden) load(p).then(render).catch(()=>{});},60000);
+setInterval(()=>{const p=localStorage.getItem(LS); if(p&&!document.getElementById("dash").hidden&&!updating) load(p).then(render).catch(()=>{});},60000);
 </script>
 </body>
 </html>
