@@ -3,28 +3,46 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-<meta name="theme-color" content="#140e0c">
+<meta name="theme-color" content="#0a0706">
 <title>Adam Marcuccio</title>
 <style>
 :root{
   color-scheme:dark;
-  --bg:#140e0c;
   --ink:#f4eadc;
-  --muted:#b39a82;
+  --muted:#cbb6a0;
   --ember:#e08a4c;
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100dvh}
 body{
   font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  background:
-    radial-gradient(900px 520px at 50% -8%, rgba(224,138,76,.22), transparent 58%),
-    radial-gradient(700px 400px at 80% 110%, rgba(90,40,20,.35), transparent 50%),
-    var(--bg);
   color:var(--ink);
+  background:#0a0706 url("img/bg.jpg") center top / cover no-repeat fixed;
   padding:max(1.75rem, env(safe-area-inset-top)) max(1.4rem, env(safe-area-inset-right)) max(2.4rem, env(safe-area-inset-bottom)) max(1.4rem, env(safe-area-inset-left));
 }
-#page{max-width:38rem;margin:0 auto;padding-top:.2rem}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:
+    linear-gradient(180deg, rgba(8,5,4,.72) 0%, rgba(8,5,4,.55) 35%, rgba(8,5,4,.78) 100%),
+    radial-gradient(900px 520px at 50% 0%, rgba(224,138,76,.14), transparent 60%);
+}
+#page{
+  position:relative;
+  z-index:1;
+  max-width:38rem;
+  margin:0 auto;
+  padding:1.1rem 1.15rem 1.4rem;
+  border-radius:1.15rem;
+  background:rgba(12,8,6,.42);
+  border:1px solid rgba(224,138,76,.14);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  box-shadow:0 18px 50px rgba(0,0,0,.35);
+}
 h1{
   font-family:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif;
   font-weight:500;
@@ -59,42 +77,14 @@ p{
   color:#eadccb;
 }
 p:last-child{margin-bottom:0}
-.gallery{
-  display:grid;
-  gap:.7rem;
-  grid-template-columns:1fr 1fr;
-  margin:1.7rem 0 0;
-}
-.gallery figure{
-  margin:0;
-  border-radius:1rem;
-  overflow:hidden;
-  background:#1c1410;
-  border:1px solid rgba(224,138,76,.12);
-}
-.gallery figure.wide{grid-column:1/-1}
-.gallery img{
-  display:block;
-  width:100%;
-  height:11rem;
-  object-fit:cover;
-}
-.gallery figure.wide img{height:14rem}
-.gallery figcaption{
-  padding:.55rem .75rem .7rem;
-  font-size:.78rem;
-  color:var(--muted);
-  letter-spacing:.02em;
-}
-.credit{
-  margin-top:2.6rem;
+.note{
+  margin-top:2.4rem;
   padding-top:1rem;
-  border-top:1px solid rgba(61,42,34,.8);
+  border-top:1px solid rgba(61,42,34,.65);
   font-size:.72rem;
-  color:#8a7362;
+  color:#9a8370;
   line-height:1.5;
 }
-.credit a{color:#b39a82}
 @media (prefers-reduced-motion:no-preference){
   #page{animation:rise .65s ease}
 }
@@ -108,21 +98,6 @@ p:last-child{margin-bottom:0}
   <h1>Adam Marcuccio</h1>
   <p class="subtitle">Donnybrook, Victoria</p>
   <div class="rule"></div>
-
-  <div class="gallery" aria-label="A few things I love">
-    <figure class="wide">
-      <img src="img/tesla.jpg" alt="A Tesla Model 3 on a tree-lined road" width="1400" height="900" loading="eager">
-      <figcaption>Out on the road in a Model 3</figcaption>
-    </figure>
-    <figure>
-      <img src="img/solar.jpg" alt="House with rooftop solar panels" width="1400" height="900" loading="lazy">
-      <figcaption>Solar on the roof</figcaption>
-    </figure>
-    <figure>
-      <img src="img/discgolf.jpg" alt="Disc golf basket in a park" width="1400" height="900" loading="lazy">
-      <figcaption>Disc golf</figcaption>
-    </figure>
-  </div>
 
   <section>
     <h2>What makes me tick</h2>
@@ -147,7 +122,7 @@ p:last-child{margin-bottom:0}
     <p>When I'm not doing that I'm usually on a disc golf course, at a table tennis table, in a computer game, or out on the road. Spirit of Fire and I have been covering a fair bit of Australia.</p>
   </section>
 
-  <p class="credit">Photos are generic stock (Unsplash), not my own house or car — just the vibe. Resume stays in the Google Doc you already have.</p>
+  <p class="note">Background from Grok Imagine. Resume stays in the Google Doc.</p>
 </div>
 </body>
 </html>
