@@ -1,1 +1,33 @@
-<!doctype html><meta charset="utf-8"><title>Tesla OAuth callback</title><p>Tesla auth callback for klopikkon.com. You can close this.</p>
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adams Setup</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 32rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.4; }
+  a.btn { display: inline-block; margin-top: 1rem; padding: .8rem 1.2rem; background: #cc0000; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; }
+  pre { word-break: break-all; white-space: pre-wrap; font-size: 12px; background: #f4f4f4; padding: .75rem; }
+</style>
+<h1>Adams Setup</h1>
+<p id="msg">Checking Tesla login…</p>
+<p><a class="btn" id="ak" href="https://tesla.com/_ak/klopikkon.com">Add key to Spirit of Fire</a></p>
+<p id="hint" hidden>If adding the key still fails, copy the code below and send it in chat.</p>
+<pre id="out" hidden></pre>
+<script>
+const p = new URLSearchParams(location.search);
+const code = p.get("code");
+const err = p.get("error");
+const desc = p.get("error_description") || "";
+const msg = document.getElementById("msg");
+if (err) {
+  msg.textContent = "Tesla login failed: " + err + (desc ? " — " + desc : "");
+  document.getElementById("ak").hidden = true;
+} else if (code) {
+  msg.textContent = "Tesla access granted. Next, add the virtual key in the Tesla app.";
+  document.getElementById("hint").hidden = false;
+  document.getElementById("out").hidden = false;
+  document.getElementById("out").textContent = code;
+  setTimeout(() => { location.href = "https://tesla.com/_ak/klopikkon.com"; }, 1500);
+} else {
+  msg.textContent = "No Tesla login code in this URL. Use the authorize link from chat.";
+}
+</script>
