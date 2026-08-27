@@ -141,13 +141,19 @@ async function deriveKey(password){
     ["decrypt"]
   );
 }
-async function load(password){
-  const res=await fetch("page.enc?t="+Date.now(),{cache:"no-store"});
+let cachedEnc=null;
+async function fetchEnc(){
+  if(cachedEnc) return cachedEnc;
+  const res=await fetch("/hello/page.enc?t="+Date.now(),{cache:"no-store"});
   if(!res.ok) throw new Error("Nothing to open.");
-  const buf=b64ToBytes(await res.text());
+  cachedEnc=b64ToBytes(await res.text());
+  return cachedEnc;
+}
+async function load(password){
+  const buf=await fetchEnc();
   const pt=await crypto.subtle.decrypt(
     {name:"AES-GCM",iv:buf.slice(0,12)},
-    await deriveKey(password),
+    await deriveKey(password.trim()),
     buf.slice(12)
   );
   return JSON.parse(new TextDecoder().decode(pt));
@@ -174,29 +180,42 @@ function render(d){
   document.getElementById("lock").hidden=true;
   page.hidden=false;
 }
-async function unlock(password){
+let unlocking=false;
+async function unlock(password, {fromHash=false}={}){
+  password=(password||"").trim();
+  if(!password || unlocking) return;
+  unlocking=true;
   const err=document.getElementById("err");
+  const btn=document.querySelector("#f button");
+  const prev=btn?btn.textContent:"";
+  if(btn){ btn.disabled=true; btn.textContent="Unlocking…"; }
   err.textContent="";
   try{
     render(await load(password));
     localStorage.setItem(LS,password);
+    if(location.hash){
+      history.replaceState(null,"",location.pathname+location.search);
+    }
   }catch(e){
     localStorage.removeItem(LS);
+    cachedEnc=null;
     err.textContent=e.name==="OperationError"?"That didn't work.":String(e.message||e);
+    if(btn){ btn.disabled=false; btn.textContent=prev||"Unlock"; }
+    unlocking=false;
     throw e;
   }
+  unlocking=false;
 }
 document.getElementById("f").addEventListener("submit",e=>{
   e.preventDefault();
   unlock(document.getElementById("pw").value).catch(()=>{});
 });
+// Warm the ciphertext so the first unlock is just key derivation.
+fetchEnc().catch(()=>{});
 (async ()=>{
-  const hash=decodeURIComponent((location.hash||"").replace(/^#/,""));
-  if(location.hash){
-    history.replaceState(null,"",location.pathname+location.search);
-  }
+  const hash=decodeURIComponent((location.hash||"").replace(/^#/,"")).trim();
   if(hash){
-    try{ await unlock(hash); return; }catch(e){}
+    try{ await unlock(hash,{fromHash:true}); return; }catch(e){}
   }
   const saved=localStorage.getItem(LS);
   if(saved){
