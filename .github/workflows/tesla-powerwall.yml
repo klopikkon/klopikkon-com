@@ -21,6 +21,11 @@ on:
     - cron: '0 14 * * *'
       timezone: 'Australia/Sydney'
   workflow_dispatch:
+    inputs:
+      force_hour:
+        description: 'Override AEST hour (04, 05, 06, 11, 12, 13, 14). Empty = now.'
+        required: false
+        type: string
 
 jobs:
   powerwall:
@@ -85,7 +90,13 @@ jobs:
         id: action
         run: |
           HOUR=$(TZ='Australia/Sydney' date +%H)
-          echo "Current AEST hour: $HOUR"
+          FORCE="${{ github.event.inputs.force_hour }}"
+          if [ -n "$FORCE" ]; then
+            HOUR=$(printf '%02d' "$((10#$FORCE))")
+            echo "Forced AEST hour: $HOUR (clock was $(TZ='Australia/Sydney' date +%H))"
+          else
+            echo "Current AEST hour: $HOUR"
+          fi
           echo "hour=$HOUR" >> $GITHUB_OUTPUT
 
       - name: Run Powerwall command
