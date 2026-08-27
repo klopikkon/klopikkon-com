@@ -32,6 +32,11 @@ on:
         description: 'Override AEST hour (04, 09, 10, 11, 14, 15, 16). Empty = now.'
         required: false
         type: string
+      status_only:
+        description: 'Read-only dump of live_status and site_info. No writes.'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   powerwall:
@@ -114,8 +119,19 @@ jobs:
           HOUR: ${{ steps.action.outputs.hour }}
           MIN: ${{ steps.action.outputs.minute }}
           FORCE: ${{ github.event.inputs.force_hour }}
+          STATUS_ONLY: ${{ github.event.inputs.status_only }}
         run: |
           BASE="https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/energy_sites/$SITE"
+
+          echo "=== live_status ==="
+          curl -sS "$BASE/live_status" -H "Authorization: Bearer $TOKEN" | jq '{solar:.response.solar_power, grid:.response.grid_power, battery:.response.battery_power, load:.response.load_power, pw:.response.percentage_charged, grid_status:.response.grid_status}'
+          echo "=== site_info ==="
+          curl -sS "$BASE/site_info" -H "Authorization: Bearer $TOKEN" | jq '{mode:.response.default_real_mode, reserve:.response.backup_reserve_percent, disallow_grid:.response.disallow_charge_from_grid_with_solar_installed}'
+
+          if [ "$STATUS_ONLY" = "true" ]; then
+            echo "status_only: no Powerwall writes"
+            exit 0
+          fi
 
           set_backup() {
             curl -s -X POST "$BASE/backup" \
@@ -195,13 +211,13 @@ jobs:
           fi
 
       - name: Install tesla-control
-        if: contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
+        if: github.event.inputs.status_only != 'true' && contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
         uses: actions/setup-go@v5
         with:
           go-version: '1.23'
 
       - name: Build tesla-control
-        if: contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
+        if: github.event.inputs.status_only != 'true' && contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
         run: |
           git clone --depth 1 https://github.com/teslamotors/vehicle-command.git /tmp/vehicle-command
           cd /tmp/vehicle-command
@@ -210,7 +226,7 @@ jobs:
           "$HOME/go/bin/tesla-control" --help | head -20
 
       - name: Spirit of Fire charge limit
-        if: contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
+        if: github.event.inputs.status_only != 'true' && contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
         env:
           TOKEN: ${{ steps.token.outputs.access_token }}
           HOUR: ${{ steps.action.outputs.hour }}
