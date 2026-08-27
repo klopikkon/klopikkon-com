@@ -30,7 +30,7 @@ body{
   box-shadow:0 0 18px 6px rgba(224,138,76,.45);
   margin:0 0 1.8rem;
 }
-#page{max-width:36rem;margin:0 auto;padding-top:.4rem}
+#page{max-width:38rem;margin:0 auto;padding-top:.4rem}
 h1{
   font-family:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif;
   font-weight:500;
@@ -65,6 +65,42 @@ p{
   color:#eadccb;
 }
 p:last-child{margin-bottom:0}
+.gallery{
+  display:grid;
+  gap:.7rem;
+  grid-template-columns:1fr 1fr;
+  margin:1.7rem 0 0;
+}
+.gallery figure{
+  margin:0;
+  border-radius:1rem;
+  overflow:hidden;
+  background:#1c1410;
+  border:1px solid rgba(224,138,76,.12);
+}
+.gallery figure.wide{grid-column:1/-1}
+.gallery img{
+  display:block;
+  width:100%;
+  height:11rem;
+  object-fit:cover;
+}
+.gallery figure.wide img{height:14rem}
+.gallery figcaption{
+  padding:.55rem .75rem .7rem;
+  font-size:.78rem;
+  color:var(--muted);
+  letter-spacing:.02em;
+}
+.credit{
+  margin-top:2.6rem;
+  padding-top:1rem;
+  border-top:1px solid rgba(61,42,34,.8);
+  font-size:.72rem;
+  color:#8a7362;
+  line-height:1.5;
+}
+.credit a{color:#b39a82}
 @media (prefers-reduced-motion:no-preference){
   #page{animation:rise .65s ease}
 }
@@ -79,15 +115,46 @@ p:last-child{margin-bottom:0}
   <h1>Adam Marcuccio</h1>
   <p class="subtitle">Donnybrook, Victoria</p>
   <div class="rule"></div>
+
+  <div class="gallery" aria-label="A few things I love">
+    <figure class="wide">
+      <img src="img/tesla.jpg" alt="A Tesla Model 3 on a tree-lined road" width="1400" height="900" loading="eager">
+      <figcaption>Out on the road in a Model 3</figcaption>
+    </figure>
+    <figure>
+      <img src="img/solar.jpg" alt="House with rooftop solar panels" width="1400" height="900" loading="lazy">
+      <figcaption>Solar on the roof</figcaption>
+    </figure>
+    <figure>
+      <img src="img/discgolf.jpg" alt="Disc golf basket in a park" width="1400" height="900" loading="lazy">
+      <figcaption>Disc golf</figcaption>
+    </figure>
+  </div>
+
   <section>
     <h2>What makes me tick</h2>
     <p>I like helping people, especially the people I work with. If a process is clunky or a tool is getting in the way, I want to fix it. Making someone's work day a bit easier is the bit I enjoy most.</p>
     <p>I've been playing with AI for the same reason: not as a toy for its own sake, but to see how these new friends can actually take work off people's plates and get the best out of them.</p>
   </section>
+
+  <section>
+    <h2>Green energy</h2>
+    <p>I'm pretty keen on green energy at home. Solar on the roof, a Tesla Powerwall in the garage, and Spirit of Fire (my Model 3) all talk to each other so surplus sun fills the battery and the car instead of just dumping to the grid.</p>
+    <p>It's half environmental, half a puzzle I enjoy: cheap overnight power, free daytime windows, and automation that actually makes the house run cleaner without me babysitting it every hour.</p>
+  </section>
+
+  <section>
+    <h2>Board games</h2>
+    <p>When friends are around the table, I love a good board game. Dice Thrones is a favourite — quick rounds, big character moments, and just enough chaos that nobody's sitting quietly waiting for their turn.</p>
+    <p>Anything that gets people talking, laughing, and plotting together is my kind of night.</p>
+  </section>
+
   <section>
     <h2>A bit about me</h2>
-    <p>When I'm not doing that I'm usually on a disc golf course, at a table tennis table, in a game, or out on the road. Spirit of Fire (my Tesla Model 3) and I have been covering a fair bit of Australia.</p>
+    <p>When I'm not doing that I'm usually on a disc golf course, at a table tennis table, in a computer game, or out on the road. Spirit of Fire and I have been covering a fair bit of Australia.</p>
   </section>
+
+  <p class="credit">Photos are generic stock (Unsplash), not my own house or car — just the vibe. Resume stays in the Google Doc you already have.</p>
 </div>
 </body>
 </html>
