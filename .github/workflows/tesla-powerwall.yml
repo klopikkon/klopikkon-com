@@ -45,7 +45,6 @@ jobs:
 
           echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
 
-          # Automatically update the TESLA_REFRESH_TOKEN secret with the new value
           if [ "$NEW_REFRESH" != "null" ] && [ -n "$NEW_REFRESH" ]; then
             echo "Updating TESLA_REFRESH_TOKEN secret..."
 
@@ -56,14 +55,18 @@ jobs:
             KEY_ID=$(echo "$KEY_RESPONSE" | jq -r .key_id)
             PUBLIC_KEY=$(echo "$KEY_RESPONSE" | jq -r .key)
 
-            ENCRYPTED=$(python3 -c "
-from base64 import b64encode
-from nacl import encoding, public
-public_key = public.PublicKey('''$PUBLIC_KEY''', encoding.Base64Encoder())
-sealed_box = public.SealedBox(public_key)
-encrypted = sealed_box.encrypt('''$NEW_REFRESH'''.encode('utf-8'))
-print(b64encode(encrypted).decode('utf-8'))
-")
+            # Write a small Python script to a file to avoid YAML quoting problems
+            cat > /tmp/encrypt.py << 'EOF'
+          from base64 import b64encode
+          from nacl import encoding, public
+          import sys
+          public_key = public.PublicKey(sys.argv[1], encoding.Base64Encoder())
+          sealed_box = public.SealedBox(public_key)
+          encrypted = sealed_box.encrypt(sys.argv[2].encode("utf-8"))
+          print(b64encode(encrypted).decode("utf-8"))
+          EOF
+
+            ENCRYPTED=$(python3 /tmp/encrypt.py "$PUBLIC_KEY" "$NEW_REFRESH")
 
             curl -s -X PUT \
               -H "Authorization: token ${{ secrets.GH_PAT }}" \
