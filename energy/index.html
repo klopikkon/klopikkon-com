@@ -45,55 +45,55 @@ button{font:inherit;font-weight:650;padding:.8rem;border:0;border-radius:.7rem;b
 </div>
 </div>
 <script>
-const b60c6ce5d89b77d89f96039a6df27031_HEX = \"b60c6ce5d89b77d89f96039a6df27031\";
-const LS = \"energy-dash-pw\";
+const SALT_HEX = "b60c6ce5d89b77d89f96039a6df27031";
+const LS = "energy-dash-pw";
 function hexToBytes(h){const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.substr(i*2,2),16);return a}
 function b64ToBytes(s){const bin=atob(s.trim());const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a}
-function kw(w){if(w==null||isNaN(w))return \"—\";const k=w/1000;return (k>=0?\"\":\"−\")+Math.abs(k).toFixed(1)+\" kW\"}
-function pct(n){if(n==null||isNaN(n))return \"—\";return Math.round(n)+\"%\"}
+function kw(w){if(w==null||isNaN(w))return "—";const k=w/1000;return (k>=0?"":"−")+Math.abs(k).toFixed(1)+" kW"}
+function pct(n){if(n==null||isNaN(n))return "—";return Math.round(n)+"%"}
 async function deriveKey(password){
   const enc=new TextEncoder();
-  const material=await crypto.subtle.importKey(\"raw\",enc.encode(password),\"PBKDF2\",false,[\"deriveKey\"]);
-  return crypto.subtle.deriveKey({name:\"PBKDF2\",salt:hexToBytes(b60c6ce5d89b77d89f96039a6df27031_HEX),iterations:100000,hash:\"SHA-256\"},material,{name:\"AES-GCM\",length:256},false,[\"decrypt\"]);
+  const material=await crypto.subtle.importKey("raw",enc.encode(password),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt:hexToBytes(SALT_HEX),iterations:100000,hash:"SHA-256"},material,{name:"AES-GCM",length:256},false,["decrypt"]);
 }
 async function load(password){
-  const res=await fetch(\"status.enc?t=\"+Date.now(),{cache:\"no-store\"});
-  if(!res.ok) throw new Error(\"No status yet\");
+  const res=await fetch("status.enc?t="+Date.now(),{cache:"no-store"});
+  if(!res.ok) throw new Error("No status yet");
   const buf=b64ToBytes(await res.text());
-  const pt=await crypto.subtle.decrypt({name:\"AES-GCM\",iv:buf.slice(0,12)},await deriveKey(password),buf.slice(12));
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:buf.slice(0,12)},await deriveKey(password),buf.slice(12));
   return JSON.parse(new TextDecoder().decode(pt));
 }
 function render(d){
-  document.getElementById(\"lock\").hidden=true;
-  document.getElementById(\"dash\").hidden=false;
+  document.getElementById("lock").hidden=true;
+  document.getElementById("dash").hidden=false;
   const p=d.powerwall||{}, c=d.car||{};
-  document.getElementById(\"pw-soc\").textContent=pct(p.soc);
-  const mode=p.mode===\"backup\"?\"Backup / grid fill\":p.mode===\"self_consumption\"?\"Self-Powered\":(p.mode||\"\");
-  document.getElementById(\"pw-mode\").textContent=mode+(p.reserve!=null?\" · reserve \"+p.reserve+\"%\":\"\");
-  document.getElementById(\"car-soc\").textContent=pct(c.soc);
-  const plugged=c.plugged_in?\"plugged in\":\"unplugged\";
-  const ch=c.charging&&c.charging!==\"Disconnected\"?c.charging:plugged;
-  document.getElementById(\"car-state\").textContent=(c.asleep?\"asleep · last \":\"\")+ch+(c.limit!=null?\" · limit \"+c.limit+\"%\":\"\");
-  document.getElementById(\"solar\").textContent=kw(p.solar_w);
+  document.getElementById("pw-soc").textContent=pct(p.soc);
+  const mode=p.mode==="backup"?"Backup / grid fill":p.mode==="self_consumption"?"Self-Powered":(p.mode||"");
+  document.getElementById("pw-mode").textContent=mode+(p.reserve!=null?" · reserve "+p.reserve+"%":"");
+  document.getElementById("car-soc").textContent=pct(c.soc);
+  const plugged=c.plugged_in?"plugged in":"unplugged";
+  const ch=c.charging&&c.charging!=="Disconnected"?c.charging:plugged;
+  document.getElementById("car-state").textContent=(c.asleep?"asleep · last ":"")+ch+(c.limit!=null?" · limit "+c.limit+"%":"");
+  document.getElementById("solar").textContent=kw(p.solar_w);
   const g=p.grid_w||0;
-  const gel=document.getElementById(\"grid\");
+  const gel=document.getElementById("grid");
   gel.textContent=kw(Math.abs(g));
-  gel.className=\"big kw \"+(g>80?\"warn\":g<-80?\"ok\":\"\");
-  document.getElementById(\"grid-sub\").textContent=g>80?\"importing\":g<-80?\"exporting\":\"idle\";
-  document.getElementById(\"load\").textContent=kw(p.load_w)+\" house\";
+  gel.className="big kw "+(g>80?"warn":g<-80?"ok":"");
+  document.getElementById("grid-sub").textContent=g>80?"importing":g<-80?"exporting":"idle";
+  document.getElementById("load").textContent=kw(p.load_w)+" house";
   const ts=d.updated_at?new Date(d.updated_at):null;
-  document.getElementById(\"updated\").textContent=ts?(\"Updated \"+ts.toLocaleString(\"en-AU\",{timeZone:\"Australia/Sydney\",hour:\"numeric\",minute:\"2-digit\"})):\"—\";
+  document.getElementById("updated").textContent=ts?("Updated "+ts.toLocaleString("en-AU",{timeZone:"Australia/Sydney",hour:"numeric",minute:"2-digit"})):"—";
 }
 async function unlock(password){
-  const err=document.getElementById(\"err\");
-  err.textContent=\"\";
+  const err=document.getElementById("err");
+  err.textContent="";
   try{ render(await load(password)); localStorage.setItem(LS,password); }
-  catch(e){ localStorage.removeItem(LS); err.textContent=e.name===\"OperationError\"?\"Wrong password.\":String(e.message||e); throw e; }
+  catch(e){ localStorage.removeItem(LS); err.textContent=e.name==="OperationError"?"Wrong password.":String(e.message||e); throw e; }
 }
-document.getElementById(\"f\").addEventListener(\"submit\",e=>{e.preventDefault();unlock(document.getElementById(\"pw\").value)});
+document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();unlock(document.getElementById("pw").value)});
 const saved=localStorage.getItem(LS);
 if(saved) unlock(saved).catch(()=>{});
-setInterval(()=>{const p=localStorage.getItem(LS); if(p&&!document.getElementById(\"dash\").hidden) load(p).then(render).catch(()=>{});},60000);
+setInterval(()=>{const p=localStorage.getItem(LS); if(p&&!document.getElementById("dash").hidden) load(p).then(render).catch(()=>{});},60000);
 </script>
 </body>
 </html>
