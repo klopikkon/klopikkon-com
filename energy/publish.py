@@ -94,6 +94,19 @@ def main():
             "reserve": info.get("backup_reserve_percent"),
         },
         "car": car,
+        # Encrypted with the page password. Lets the Update button kick a status_only workflow.
+        "refresh": {
+            "repo": REPO,
+            "workflow": "tesla-powerwall.yml",
+            "ref": "main",
+            "token": GH_PAT,
+        },
+        "fleet_api_credit": {
+            "available_via_api": False,
+            "note": "Tesla only shows Fleet API usage/credit in the developer portal Billing & usage page. No public credit endpoint.",
+            "portal": "https://developer.tesla.com/",
+            "personal_discount_usd": 10,
+        },
     }
     blob = encrypt(payload)
     sha = (existing or {}).get("sha")
