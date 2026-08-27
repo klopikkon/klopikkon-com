@@ -1,0 +1,50 @@
+name: Tesla Partner Register
+
+# One-shot: register klopikkon.com on the NA Fleet API so tesla.com/_ak/klopikkon.com works.
+on:
+  workflow_dispatch:
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify public key is live
+        run: |
+          curl -sS -D - -o /tmp/pem "https://klopikkon.com/.well-known/appspecific/com.tesla.3p.public-key.pem" | head -20
+          echo "----- body -----"
+          cat /tmp/pem
+          grep -q "BEGIN PUBLIC KEY" /tmp/pem
+
+      - name: Register partner domain (NA)
+        env:
+          TESLA_CLIENT_ID: ${{ secrets.TESLA_CLIENT_ID }}
+          TESLA_CLIENT_SECRET: ${{ secrets.TESLA_CLIENT_SECRET }}
+        run: |
+          set -euo pipefail
+          TOKEN_JSON=$(curl -sS --request POST \
+            --header 'Content-Type: application/x-www-form-urlencoded' \
+            --data-urlencode 'grant_type=client_credentials' \
+            --data-urlencode "client_id=$TESLA_CLIENT_ID" \
+            --data-urlencode "client_secret=$TESLA_CLIENT_SECRET" \
+            --data-urlencode 'scope=openid vehicle_device_data vehicle_cmds vehicle_charging_cmds energy_device_data energy_cmds' \
+            --data-urlencode 'audience=https://fleet-api.prd.na.vn.cloud.tesla.com' \
+            'https://fleet-auth.prd.vn.cloud.tesla.com/oauth2/v3/token')
+          ACCESS=$(echo "$TOKEN_JSON" | jq -r .access_token)
+          if [ "$ACCESS" = "null" ] || [ -z "$ACCESS" ]; then
+            echo "Partner token failed"
+            echo "$TOKEN_JSON" | jq 'del(.access_token,.refresh_token)'
+            exit 1
+          fi
+          echo "Got partner token"
+
+          echo "POST partner_accounts domain=klopikkon.com"
+          curl -sS -D - -X POST "https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/partner_accounts" \
+            -H "Authorization: Bearer $ACCESS" \
+            -H "Content-Type: application/json" \
+            -d '{"domain":"klopikkon.com"}'
+
+          echo
+          echo "GET public_key"
+          curl -sS "https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/partner_accounts/public_key?domain=klopikkon.com" \
+            -H "Authorization: Bearer $ACCESS"
+          echo
