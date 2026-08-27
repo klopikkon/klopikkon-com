@@ -188,7 +188,12 @@ jobs:
 
       - name: Build tesla-control
         if: steps.action.outputs.hour == '11' || steps.action.outputs.hour == '14'
-        run: go install github.com/teslamotors/vehicle-command/cmd/tesla-control@latest
+        run: |
+          git clone --depth 1 https://github.com/teslamotors/vehicle-command.git /tmp/vehicle-command
+          cd /tmp/vehicle-command
+          go build -o "$HOME/go/bin/tesla-control" ./cmd/tesla-control
+          echo "$HOME/go/bin" >> "$GITHUB_PATH"
+          tesla-control --help | head -5
 
       - name: Spirit of Fire charge limit
         if: steps.action.outputs.hour == '11' || steps.action.outputs.hour == '14'
