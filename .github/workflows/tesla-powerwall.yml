@@ -8,28 +8,12 @@ name: Tesla Powerwall Schedule
 
 on:
   schedule:
-    - cron: '0 4 * * *'
-      timezone: 'Australia/Sydney'
-    - cron: '0 5 * * *'
-      timezone: 'Australia/Sydney'
-    - cron: '0 6 * * *'
-      timezone: 'Australia/Sydney'
-    - cron: '0 11 * * *'
-      timezone: 'Australia/Sydney'
-    - cron: '0 12 * * *'
-      timezone: 'Australia/Sydney'
-    - cron: '0 13 * * *'
-      timezone: 'Australia/Sydney'
-    - cron: '0 14 * * *'
-      timezone: 'Australia/Sydney'
-    - cron: '30 9,10,14,15 * * *'
-      timezone: 'Australia/Sydney'
-    - cron: '0 9,10,15,16 * * *'
-      timezone: 'Australia/Sydney'
-    - cron: '30 11,12,13,16 * * *'
-      timezone: 'Australia/Sydney'
-    - cron: '0 17 * * *'
-      timezone: 'Australia/Sydney'
+    # Times are UTC = AEST-10, fixed year-round (not Sydney DST).
+    - cron: "0 18 * * *"      # 04:00 AEST overnight
+    - cron: "0 19 * * *"      # 05:00 AEST
+    - cron: "0 20 * * *"      # 06:00 AEST house mode
+    - cron: "0,30 23,0-6 * * *"  # 09:00-16:30 AEST every 30 min
+    - cron: "0 7 * * *"       # 17:00 AEST dashboard tick
   workflow_dispatch:
     inputs:
       force_hour:
