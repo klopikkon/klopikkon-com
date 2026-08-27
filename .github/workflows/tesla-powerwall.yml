@@ -289,73 +289,7 @@ jobs:
             exit 0
           fi
 
-          cat > /tmp/solar_plan.py << 'ENDPY'
-import json, sys
-hour = sys.argv[1]
-live = json.load(open(sys.argv[2])).get("response") or {}
-cs = (json.load(open(sys.argv[3])).get("response") or {}).get("charge_state") or {}
-solar = float(live.get("solar_power") or 0)
-grid = float(live.get("grid_power") or 0)   # +import / -export
-batt = float(live.get("battery_power") or 0)  # +discharge
-pw = float(live.get("percentage_charged") or 0)
-soc = cs.get("battery_level")
-state = (cs.get("charging_state") or "")
-amps_now = float(cs.get("charger_actual_current") or 0)
-volts = float(cs.get("charger_voltage") or 0)
-phases_raw = cs.get("charger_phases") or 1
-try:
-    phases_raw = int(phases_raw)
-except Exception:
-    phases_raw = 1
-phases = 3 if phases_raw >= 2 else 1
-volts = volts if volts > 50 else 230.0
-car_w = amps_now * volts * phases if state == "Charging" else 0.0
-surplus = car_w - grid
-plugged = state not in ("Disconnected", "", "Unknown")
-pw_full = pw >= 95
-print(
-    f"hour={hour} pw={pw:.1f} solar={solar:.0f}W grid={grid:.0f}W batt={batt:.0f}W "
-    f"car={car_w:.0f}W surplus={surplus:.0f}W soc={soc} state={state} plugged={plugged}",
-    file=sys.stderr,
-)
-
-def emit(action, amps=0, limit=0, reason=""):
-    print(json.dumps({"action": action, "amps": int(amps), "limit": int(limit), "reason": reason, "soc": soc}))
-
-if soc is None:
-    emit("error", reason="no_soc")
-    sys.exit(0)
-
-if hour == "16":
-    emit("stop", reason="end of 2-4pm solar window")
-    sys.exit(0)
-
-if not plugged:
-    emit("skip", reason="car not plugged in")
-    sys.exit(0)
-
-if hour == "14" and soc >= 85:
-    emit("stop_free", reason="end free window, car already >=85%", limit=max(50, int(soc) - 2))
-    sys.exit(0)
-
-if soc >= 85:
-    emit("stop" if state == "Charging" else "skip", reason="car already at or above 85%")
-    sys.exit(0)
-
-if not pw_full:
-    emit("stop" if state == "Charging" else "skip", reason=f"Powerwall {pw:.0f}% not full, solar should fill it first")
-    sys.exit(0)
-
-min_w = 5 * 230
-if surplus < min_w:
-    emit("stop" if state == "Charging" else "skip", reason=f"surplus {surplus:.0f}W below {min_w:.0f}W")
-    sys.exit(0)
-
-amps = int((surplus - 300) / (volts * phases))
-amps = max(5, min(16, amps))
-emit("solar", amps=amps, limit=85, reason=f"divert ~{amps * volts * phases:.0f}W to car (cap 16A)")
-
-ENDPY
+          echo 'aW1wb3J0IGpzb24sIHN5cwpob3VyID0gc3lzLmFyZ3ZbMV0KbGl2ZSA9IGpzb24ubG9hZChvcGVuKHN5cy5hcmd2WzJdKSkuZ2V0KCJyZXNwb25zZSIpIG9yIHt9CmNzID0gKGpzb24ubG9hZChvcGVuKHN5cy5hcmd2WzNdKSkuZ2V0KCJyZXNwb25zZSIpIG9yIHt9KS5nZXQoImNoYXJnZV9zdGF0ZSIpIG9yIHt9CnNvbGFyID0gZmxvYXQobGl2ZS5nZXQoInNvbGFyX3Bvd2VyIikgb3IgMCkKZ3JpZCA9IGZsb2F0KGxpdmUuZ2V0KCJncmlkX3Bvd2VyIikgb3IgMCkgICAjICtpbXBvcnQgLyAtZXhwb3J0CmJhdHQgPSBmbG9hdChsaXZlLmdldCgiYmF0dGVyeV9wb3dlciIpIG9yIDApICAjICtkaXNjaGFyZ2UKcHcgPSBmbG9hdChsaXZlLmdldCgicGVyY2VudGFnZV9jaGFyZ2VkIikgb3IgMCkKc29jID0gY3MuZ2V0KCJiYXR0ZXJ5X2xldmVsIikKc3RhdGUgPSAoY3MuZ2V0KCJjaGFyZ2luZ19zdGF0ZSIpIG9yICIiKQphbXBzX25vdyA9IGZsb2F0KGNzLmdldCgiY2hhcmdlcl9hY3R1YWxfY3VycmVudCIpIG9yIDApCnZvbHRzID0gZmxvYXQoY3MuZ2V0KCJjaGFyZ2VyX3ZvbHRhZ2UiKSBvciAwKQpwaGFzZXNfcmF3ID0gY3MuZ2V0KCJjaGFyZ2VyX3BoYXNlcyIpIG9yIDEKdHJ5OgogICAgcGhhc2VzX3JhdyA9IGludChwaGFzZXNfcmF3KQpleGNlcHQgRXhjZXB0aW9uOgogICAgcGhhc2VzX3JhdyA9IDEKcGhhc2VzID0gMyBpZiBwaGFzZXNfcmF3ID49IDIgZWxzZSAxCnZvbHRzID0gdm9sdHMgaWYgdm9sdHMgPiA1MCBlbHNlIDIzMC4wCmNhcl93ID0gYW1wc19ub3cgKiB2b2x0cyAqIHBoYXNlcyBpZiBzdGF0ZSA9PSAiQ2hhcmdpbmciIGVsc2UgMC4wCnN1cnBsdXMgPSBjYXJfdyAtIGdyaWQKcGx1Z2dlZCA9IHN0YXRlIG5vdCBpbiAoIkRpc2Nvbm5lY3RlZCIsICIiLCAiVW5rbm93biIpCnB3X2Z1bGwgPSBwdyA+PSA5NQpwcmludCgKICAgIGYiaG91cj17aG91cn0gcHc9e3B3Oi4xZn0gc29sYXI9e3NvbGFyOi4wZn1XIGdyaWQ9e2dyaWQ6LjBmfVcgYmF0dD17YmF0dDouMGZ9VyAiCiAgICBmImNhcj17Y2FyX3c6LjBmfVcgc3VycGx1cz17c3VycGx1czouMGZ9VyBzb2M9e3NvY30gc3RhdGU9e3N0YXRlfSBwbHVnZ2VkPXtwbHVnZ2VkfSIsCiAgICBmaWxlPXN5cy5zdGRlcnIsCikKCmRlZiBlbWl0KGFjdGlvbiwgYW1wcz0wLCBsaW1pdD0wLCByZWFzb249IiIpOgogICAgcHJpbnQoanNvbi5kdW1wcyh7ImFjdGlvbiI6IGFjdGlvbiwgImFtcHMiOiBpbnQoYW1wcyksICJsaW1pdCI6IGludChsaW1pdCksICJyZWFzb24iOiByZWFzb24sICJzb2MiOiBzb2N9KSkKCmlmIHNvYyBpcyBOb25lOgogICAgZW1pdCgiZXJyb3IiLCByZWFzb249Im5vX3NvYyIpCiAgICBzeXMuZXhpdCgwKQoKaWYgaG91ciA9PSAiMTYiOgogICAgZW1pdCgic3RvcCIsIHJlYXNvbj0iZW5kIG9mIDItNHBtIHNvbGFyIHdpbmRvdyIpCiAgICBzeXMuZXhpdCgwKQoKaWYgbm90IHBsdWdnZWQ6CiAgICBlbWl0KCJza2lwIiwgcmVhc29uPSJjYXIgbm90IHBsdWdnZWQgaW4iKQogICAgc3lzLmV4aXQoMCkKCmlmIGhvdXIgPT0gIjE0IiBhbmQgc29jID49IDg1OgogICAgZW1pdCgic3RvcF9mcmVlIiwgcmVhc29uPSJlbmQgZnJlZSB3aW5kb3csIGNhciBhbHJlYWR5ID49ODUlIiwgbGltaXQ9bWF4KDUwLCBpbnQoc29jKSAtIDIpKQogICAgc3lzLmV4aXQoMCkKCmlmIHNvYyA+PSA4NToKICAgIGVtaXQoInN0b3AiIGlmIHN0YXRlID09ICJDaGFyZ2luZyIgZWxzZSAic2tpcCIsIHJlYXNvbj0iY2FyIGFscmVhZHkgYXQgb3IgYWJvdmUgODUlIikKICAgIHN5cy5leGl0KDApCgppZiBub3QgcHdfZnVsbDoKICAgIGVtaXQoInN0b3AiIGlmIHN0YXRlID09ICJDaGFyZ2luZyIgZWxzZSAic2tpcCIsIHJlYXNvbj1mIlBvd2Vyd2FsbCB7cHc6LjBmfSUgbm90IGZ1bGwsIHNvbGFyIHNob3VsZCBmaWxsIGl0IGZpcnN0IikKICAgIHN5cy5leGl0KDApCgptaW5fdyA9IDUgKiAyMzAKaWYgc3VycGx1cyA8IG1pbl93OgogICAgZW1pdCgic3RvcCIgaWYgc3RhdGUgPT0gIkNoYXJnaW5nIiBlbHNlICJza2lwIiwgcmVhc29uPWYic3VycGx1cyB7c3VycGx1czouMGZ9VyBiZWxvdyB7bWluX3c6LjBmfVciKQogICAgc3lzLmV4aXQoMCkKCmFtcHMgPSBpbnQoKHN1cnBsdXMgLSAzMDApIC8gKHZvbHRzICogcGhhc2VzKSkKYW1wcyA9IG1heCg1LCBtaW4oMTYsIGFtcHMpKQplbWl0KCJzb2xhciIsIGFtcHM9YW1wcywgbGltaXQ9ODUsIHJlYXNvbj1mImRpdmVydCB+e2FtcHMgKiB2b2x0cyAqIHBoYXNlczouMGZ9VyB0byBjYXIgKGNhcCAxNkEpIikK' | base64 -d > /tmp/solar_plan.py
           printf '%s' "$LIVE" > /tmp/live.json
           printf '%s' "$DATA" > /tmp/car.json
           PLAN=$(python3 /tmp/solar_plan.py "$HOUR" /tmp/live.json /tmp/car.json)
