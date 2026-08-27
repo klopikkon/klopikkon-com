@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="theme-color" content="#140e0c">
-<title>Hello</title>
+<title>Adam Marcuccio</title>
 <style>
 :root{
   color-scheme:dark;
@@ -12,9 +12,6 @@
   --ink:#f4eadc;
   --muted:#b39a82;
   --ember:#e08a4c;
-  --ember-deep:#c46a38;
-  --line:#3d2a22;
-  --field:#2a1c16;
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100dvh}
@@ -31,39 +28,9 @@ body{
   width:.55rem;height:.55rem;border-radius:50%;
   background:var(--ember);
   box-shadow:0 0 18px 6px rgba(224,138,76,.45);
-  margin:0 auto 1.6rem;
+  margin:0 0 1.8rem;
 }
-#lock{
-  min-height:calc(100dvh - 4rem);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-}
-form{
-  width:min(100%, 22rem);
-  display:flex;flex-direction:column;gap:.95rem;
-}
-input{
-  font:inherit;font-size:1rem;
-  padding:.95rem 1rem;
-  border:1px solid var(--line);
-  border-radius:999px;
-  background:rgba(20,12,10,.45);
-  color:var(--ink);
-  outline:none;
-  width:100%;
-}
-input:focus{border-color:var(--ember);box-shadow:0 0 0 3px rgba(224,138,76,.18)}
-button{
-  font:inherit;font-weight:650;
-  padding:.95rem 1rem;
-  border:0;border-radius:999px;
-  background:linear-gradient(180deg,#e79a5c,#c46a38);
-  color:#1a100c;
-  cursor:pointer;
-}
-button:active{transform:translateY(1px)}
-.err{color:#e08a4c;min-height:1.3em;margin:0;font-size:.9rem;text-align:center}
 #page{max-width:36rem;margin:0 auto;padding-top:.4rem}
-#page .ember{margin:0 0 1.8rem}
 h1{
   font-family:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif;
   font-weight:500;
@@ -92,12 +59,12 @@ h2{
   color:var(--ember);
   margin:0 0 .75rem;
 }
-#page p{
+p{
   margin:0 0 1.05rem;
   font-size:1.05rem;
   color:#eadccb;
 }
-#page p:last-child{margin-bottom:0}
+p:last-child{margin-bottom:0}
 @media (prefers-reduced-motion:no-preference){
   #page{animation:rise .65s ease}
 }
@@ -107,124 +74,20 @@ h2{
 }
 </style>
 <body>
-<div id="lock">
+<div id="page">
   <div class="ember" aria-hidden="true"></div>
-  <form id="f" autocomplete="off">
-    <input id="pw" type="password" autocomplete="current-password" placeholder="Password" required>
-    <button type="submit">Unlock</button>
-    <p class="err" id="err"></p>
-  </form>
+  <h1>Adam Marcuccio</h1>
+  <p class="subtitle">Donnybrook, Victoria</p>
+  <div class="rule"></div>
+  <section>
+    <h2>What makes me tick</h2>
+    <p>I like helping people, especially the people I work with. If a process is clunky or a tool is getting in the way, I want to fix it. Making someone's work day a bit easier is the bit I enjoy most.</p>
+    <p>I've been playing with AI for the same reason: not as a toy for its own sake, but to see how these new friends can actually take work off people's plates and get the best out of them.</p>
+  </section>
+  <section>
+    <h2>A bit about me</h2>
+    <p>When I'm not doing that I'm usually on a disc golf course, at a table tennis table, in a game, or out on the road. Spirit of Fire (my Tesla Model 3) and I have been covering a fair bit of Australia.</p>
+  </section>
 </div>
-<div id="page" hidden></div>
-<script>
-const SALT_HEX = "342baf1ef77cddb252b25a469e4dd1ae";
-const LS = "hello-page-pw";
-function hexToBytes(h){
-  const a=new Uint8Array(h.length/2);
-  for(let i=0;i<a.length;i++) a[i]=parseInt(h.substr(i*2,2),16);
-  return a;
-}
-function b64ToBytes(s){
-  const bin=atob(s.trim());
-  const a=new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++) a[i]=bin.charCodeAt(i);
-  return a;
-}
-async function deriveKey(password){
-  const enc=new TextEncoder();
-  const material=await crypto.subtle.importKey("raw",enc.encode(password),"PBKDF2",false,["deriveKey"]);
-  return crypto.subtle.deriveKey(
-    {name:"PBKDF2",salt:hexToBytes(SALT_HEX),iterations:100000,hash:"SHA-256"},
-    material,
-    {name:"AES-GCM",length:256},
-    false,
-    ["decrypt"]
-  );
-}
-let cachedEnc=null;
-async function fetchEnc(){
-  if(cachedEnc) return cachedEnc;
-  const res=await fetch("/hello/page.enc?t="+Date.now(),{cache:"no-store"});
-  if(!res.ok) throw new Error("Nothing to open.");
-  cachedEnc=b64ToBytes(await res.text());
-  return cachedEnc;
-}
-async function load(password){
-  const buf=await fetchEnc();
-  const pt=await crypto.subtle.decrypt(
-    {name:"AES-GCM",iv:buf.slice(0,12)},
-    await deriveKey(password.trim()),
-    buf.slice(12)
-  );
-  return JSON.parse(new TextDecoder().decode(pt));
-}
-function el(tag, cls, text){
-  const n=document.createElement(tag);
-  if(cls) n.className=cls;
-  if(text!=null) n.textContent=text;
-  return n;
-}
-function render(d){
-  document.title=d.title||"Hello";
-  const page=document.getElementById("page");
-  page.replaceChildren();
-  const ember=el("div","ember");
-  ember.setAttribute("aria-hidden","true");
-  page.append(ember, el("h1",null,d.title||""), el("p","subtitle",d.subtitle||""), el("div","rule"));
-  for(const s of d.sections||[]){
-    const sec=el("section");
-    sec.append(el("h2",null,s.heading||""));
-    for(const para of s.body||[]) sec.append(el("p",null,para));
-    page.append(sec);
-  }
-  document.getElementById("lock").hidden=true;
-  page.hidden=false;
-}
-let unlocking=false;
-async function unlock(password, {fromHash=false}={}){
-  password=(password||"").trim();
-  if(!password || unlocking) return;
-  unlocking=true;
-  const err=document.getElementById("err");
-  const btn=document.querySelector("#f button");
-  const prev=btn?btn.textContent:"";
-  if(btn){ btn.disabled=true; btn.textContent="Unlocking…"; }
-  err.textContent="";
-  try{
-    render(await load(password));
-    localStorage.setItem(LS,password);
-    if(location.hash){
-      history.replaceState(null,"",location.pathname+location.search);
-    }
-  }catch(e){
-    localStorage.removeItem(LS);
-    cachedEnc=null;
-    err.textContent=e.name==="OperationError"?"That didn't work.":String(e.message||e);
-    if(btn){ btn.disabled=false; btn.textContent=prev||"Unlock"; }
-    unlocking=false;
-    throw e;
-  }
-  unlocking=false;
-}
-document.getElementById("f").addEventListener("submit",e=>{
-  e.preventDefault();
-  unlock(document.getElementById("pw").value).catch(()=>{});
-});
-// Warm the ciphertext so the first unlock is just key derivation.
-fetchEnc().catch(()=>{});
-async function tryHashOrSaved(){
-  const hash=decodeURIComponent((location.hash||"").replace(/^#/,"")).trim();
-  if(hash){
-    try{ await unlock(hash,{fromHash:true}); return true; }catch(e){}
-  }
-  const saved=localStorage.getItem(LS);
-  if(saved){
-    try{ await unlock(saved); return true; }catch(e){}
-  }
-  return false;
-}
-tryHashOrSaved();
-window.addEventListener("hashchange",()=>{ tryHashOrSaved(); });
-</script>
 </body>
 </html>
