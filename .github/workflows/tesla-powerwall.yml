@@ -26,6 +26,10 @@ on:
       timezone: 'Australia/Sydney'
     - cron: '0 9,10,15,16 * * *'
       timezone: 'Australia/Sydney'
+    - cron: '30 11,12,13,16 * * *'
+      timezone: 'Australia/Sydney'
+    - cron: '0 17 * * *'
+      timezone: 'Australia/Sydney'
   workflow_dispatch:
     inputs:
       force_hour:
@@ -43,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install PyNaCl
-        run: pip install pynacl
+        run: pip install pynacl cryptography
 
       - name: Refresh access token and rotate refresh token
         id: token
@@ -209,6 +213,23 @@ jobs:
               ;;
           esac
           fi
+
+      - name: Publish encrypted dashboard
+        if: success()
+        continue-on-error: true
+        env:
+          TOKEN: ${{ steps.token.outputs.access_token }}
+          SITE: ${{ secrets.ENERGY_SITE_ID }}
+          TESLA_VEHICLE_ID: ${{ secrets.TESLA_VEHICLE_ID }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          ENERGY_DASH_PASSWORD: ${{ secrets.ENERGY_DASH_PASSWORD }}
+          ENERGY_DASH_SALT: b60c6ce5d89b77d89f96039a6df27031
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          if [ -z "$ENERGY_DASH_PASSWORD" ]; then echo "no dashboard password"; exit 0; fi
+          curl -sS -H "Authorization: token $GH_PAT" -H "Accept: application/vnd.github.raw" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/contents/energy/publish.py?ref=main" -o /tmp/publish.py
+          python3 /tmp/publish.py
 
       - name: Install tesla-control
         if: github.event.inputs.status_only != 'true' && contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
