@@ -1,1 +1,279 @@
 name: Tesla Powerwall Schedule
+
+# Surplus solar to car (plugged in, SoC<85%, Powerwall >=95%): 09:00-10:30 and 14:00-15:30, stop 16:00.
+# 11:00 sets 90% and 20A for the free grid window. 14:00 stops the free-window charge unless solar can take over.
+# Wake gate: 11 and 16 always. 09/10/14/15 only if car already online or PW>=95% and export>=1150W.
+# Car commands (Spirit of Fire) are signed with the klopikkon.com virtual key.
+# One-time: in the Tesla app, open https://tesla.com/_ak/klopikkon.com and approve
+# the key on Spirit of Fire. Australia uses the NA Fleet API (same as Powerwall).
+
+on:
+  schedule:
+    - cron: "1 18 * * *"
+    - cron: "1 19 * * *"
+    - cron: "1 20 * * *"
+    - cron: "1,31 23 * * *"
+    - cron: "1,31 0-6 * * *"
+    - cron: "1 7 * * *"
+  workflow_dispatch:
+    inputs:
+      force_hour:
+        description: 'Override AEST hour (04, 09, 10, 11, 14, 15, 16). Empty = now.'
+        required: false
+        type: string
+      status_only:
+        description: 'Read-only dump of live_status and site_info. No writes.'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  powerwall:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install PyNaCl
+        run: pip install pynacl cryptography
+
+      - name: Refresh access token and rotate refresh token
+        id: token
+        run: |
+          RESPONSE=$(curl -s -X POST "https://fleet-auth.prd.vn.cloud.tesla.com/oauth2/v3/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "grant_type=refresh_token" \
+            -d "client_id=${{ secrets.TESLA_CLIENT_ID }}" \
+            -d "refresh_token=${{ secrets.TESLA_REFRESH_TOKEN }}")
+          ACCESS_TOKEN=$(echo "$RESPONSE" | jq -r .access_token)
+          NEW_REFRESH=$(echo "$RESPONSE" | jq -r .refresh_token)
+          if [ "$ACCESS_TOKEN" = "null" ] || [ -z "$ACCESS_TOKEN" ]; then
+            echo "Failed to refresh token"
+            echo "$RESPONSE"
+            exit 1
+          fi
+          echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
+          if [ "$NEW_REFRESH" != "null" ] && [ -n "$NEW_REFRESH" ]; then
+            echo "Updating TESLA_REFRESH_TOKEN on klopikkon-com and tesla-powerwall-cron..."
+            cat > /tmp/encrypt.py << 'EOF'
+          from base64 import b64encode
+          from nacl import encoding, public
+          import sys
+          public_key = public.PublicKey(sys.argv[1], encoding.Base64Encoder())
+          sealed_box = public.SealedBox(public_key)
+          encrypted = sealed_box.encrypt(sys.argv[2].encode("utf-8"))
+          print(b64encode(encrypted).decode("utf-8"))
+          EOF
+            for SECRET_REPO in klopikkon/klopikkon-com klopikkon/tesla-powerwall-cron; do
+              KEY_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
+                -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/${SECRET_REPO}/actions/secrets/public-key")
+              KEY_ID=$(echo "$KEY_RESPONSE" | jq -r .key_id)
+              PUBLIC_KEY=$(echo "$KEY_RESPONSE" | jq -r .key)
+              if [ "$KEY_ID" = "null" ] || [ -z "$KEY_ID" ]; then
+                echo "WARN: no actions public key for $SECRET_REPO"
+                continue
+              fi
+              ENCRYPTED=$(python3 /tmp/encrypt.py "$PUBLIC_KEY" "$NEW_REFRESH")
+              HTTP=$(curl -s -o /tmp/secret-put.out -w "%{http_code}" -X PUT \
+                -H "Authorization: token ${{ secrets.GH_PAT }}" \
+                -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/${SECRET_REPO}/actions/secrets/TESLA_REFRESH_TOKEN" \
+                -d "{\"encrypted_value\":\"$ENCRYPTED\",\"key_id\":\"$KEY_ID\"}")
+              echo "TESLA_REFRESH_TOKEN on $SECRET_REPO HTTP $HTTP"
+            done
+          fi
+
+      - name: Determine action based on time
+        id: action
+        run: |
+          HOUR=$(TZ='Australia/Sydney' date +%H)
+          MIN=$(TZ='Australia/Sydney' date +%M)
+          FORCE="${{ github.event.inputs.force_hour }}"
+          if [ -n "$FORCE" ]; then
+            HOUR=$(printf '%02d' "$((10#$FORCE))")
+            echo "Forced AEST hour: $HOUR (clock was $(TZ='Australia/Sydney' date +%H:%M))"
+          else
+            echo "Current AEST time: $HOUR:$MIN"
+          fi
+          echo "hour=$HOUR" >> $GITHUB_OUTPUT
+          echo "minute=$MIN" >> $GITHUB_OUTPUT
+
+      - name: Run Powerwall command
+        env:
+          TOKEN: ${{ steps.token.outputs.access_token }}
+          SITE: ${{ secrets.ENERGY_SITE_ID }}
+          HOUR: ${{ steps.action.outputs.hour }}
+          MIN: ${{ steps.action.outputs.minute }}
+          FORCE: ${{ github.event.inputs.force_hour }}
+          STATUS_ONLY: ${{ github.event.inputs.status_only }}
+        run: |
+          BASE="https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/energy_sites/$SITE"
+          echo "=== live_status ==="
+          curl -sS "$BASE/live_status" -H "Authorization: Bearer $TOKEN" | jq '{solar:.response.solar_power, grid:.response.grid_power, battery:.response.battery_power, load:.response.load_power, pw:.response.percentage_charged, grid_status:.response.grid_status}'
+          echo "=== site_info ==="
+          curl -sS "$BASE/site_info" -H "Authorization: Bearer $TOKEN" | jq '{mode:.response.default_real_mode, reserve:.response.backup_reserve_percent, disallow_grid:.response.disallow_charge_from_grid_with_solar_installed}'
+          if [ "$STATUS_ONLY" = "true" ]; then
+            echo "status_only: no Powerwall writes"
+            exit 0
+          fi
+          set_backup() {
+            curl -s -X POST "$BASE/backup" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "{\"backup_reserve_percent\": $1}"
+            echo "Set backup reserve to $1%"
+          }
+          set_mode() {
+            curl -s -X POST "$BASE/operation" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "{\"default_real_mode\": \"$1\"}"
+            echo "Set mode to $1"
+          }
+          set_grid_charging() {
+            curl -s -X POST "$BASE/grid_import_export" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "{\"disallow_charge_from_grid_with_solar_installed\": $1}"
+            echo "Grid charging disallow = $1"
+          }
+          get_soc() {
+            curl -s "$BASE/live_status" -H "Authorization: Bearer $TOKEN" | jq -r '.response.percentage_charged'
+          }
+          if [ "$MIN" -ge 15 ] && [ -z "$FORCE" ]; then
+            echo "Half-hour/late tick $HOUR:$MIN — skip Powerwall writes"
+          else
+          case $HOUR in
+            04)
+              SOC=$(get_soc)
+              echo "Current SoC: $SOC%"
+              if (( $(echo "$SOC < 40" | bc -l) )); then
+                set_mode "backup"; set_grid_charging false; set_backup 60
+              else
+                echo "SoC already >= 40% → doing nothing"
+              fi
+              ;;
+            05)
+              echo "05:00 status check"; get_soc
+              ;;
+            06)
+              set_mode "self_consumption"; set_grid_charging true; set_backup 5
+              ;;
+            11)
+              set_mode "backup"; set_grid_charging false; set_backup 100
+              ;;
+            12|13)
+              echo "$HOUR:00 status check"; get_soc
+              ;;
+            14)
+              set_mode "self_consumption"; set_grid_charging true; set_backup 5
+              ;;
+            *)
+              echo "Unexpected hour $HOUR – no action"
+              ;;
+          esac
+          fi
+
+      - name: Publish encrypted dashboard
+        if: success()
+        continue-on-error: true
+        env:
+          TOKEN: ${{ steps.token.outputs.access_token }}
+          SITE: ${{ secrets.ENERGY_SITE_ID }}
+          TESLA_VEHICLE_ID: ${{ secrets.TESLA_VEHICLE_ID }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          ENERGY_DASH_PASSWORD: ${{ secrets.ENERGY_DASH_PASSWORD }}
+          ENERGY_DASH_SALT: b60c6ce5d89b77d89f96039a6df27031
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          if [ -z "$ENERGY_DASH_PASSWORD" ]; then echo "no dashboard password"; exit 0; fi
+          curl -sS -H "Authorization: token $GH_PAT" -H "Accept: application/vnd.github.raw" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/contents/energy/publish.py?ref=main" -o /tmp/publish.py
+          python3 /tmp/publish.py
+
+      - name: Install tesla-control
+        if: github.event.inputs.status_only != 'true' && contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Build tesla-control
+        if: github.event.inputs.status_only != 'true' && contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
+        run: |
+          git clone --depth 1 https://github.com/teslamotors/vehicle-command.git /tmp/vehicle-command
+          cd /tmp/vehicle-command
+          go build -o "$HOME/go/bin/tesla-control" ./cmd/tesla-control
+          echo "$HOME/go/bin" >> "$GITHUB_PATH"
+
+      - name: Spirit of Fire charge limit
+        if: github.event.inputs.status_only != 'true' && contains(fromJSON('["09","10","11","14","15","16"]'), steps.action.outputs.hour)
+        env:
+          TOKEN: ${{ steps.token.outputs.access_token }}
+          HOUR: ${{ steps.action.outputs.hour }}
+          SITE: ${{ secrets.ENERGY_SITE_ID }}
+          TESLA_VEHICLE_ID: ${{ secrets.TESLA_VEHICLE_ID }}
+          TESLA_PRIVATE_KEY: ${{ secrets.TESLA_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          BASE="https://fleet-api.prd.na.vn.cloud.tesla.com/api/1"
+          umask 077
+          printf '%s' "$TESLA_PRIVATE_KEY" > /tmp/tesla-private.pem
+          printf '%s' "$TOKEN" > /tmp/tesla-token
+          export TESLA_KEY_FILE=/tmp/tesla-private.pem
+          export TESLA_TOKEN_FILE=/tmp/tesla-token
+          export PATH="$PATH:$(go env GOPATH)/bin"
+          VEHICLES=$(curl -sS "$BASE/vehicles" -H "Authorization: Bearer $TOKEN")
+          VIN=$(echo "$VEHICLES" | jq -r --arg id "$TESLA_VEHICLE_ID" '.response[] | select((.id|tostring)==$id or (.vehicle_id|tostring)==$id or .display_name=="Spirit of Fire") | .vin' | head -1)
+          if [ -z "$VIN" ] || [ "$VIN" = "null" ]; then
+            echo "Could not resolve VIN"
+            exit 1
+          fi
+          export TESLA_VIN="$VIN"
+          CAR_STATE=$(echo "$VEHICLES" | jq -r --arg id "$TESLA_VEHICLE_ID" --arg vin "$VIN" '.response[] | select((.id|tostring)==$id or (.vehicle_id|tostring)==$id or .vin==$vin or .display_name=="Spirit of Fire") | .state' | head -1)
+          LIVE=$(curl -sS "$BASE/energy_sites/$SITE/live_status" -H "Authorization: Bearer $TOKEN")
+          PW=$(echo "$LIVE" | jq -r '.response.percentage_charged // 0')
+          GRID=$(echo "$LIVE" | jq -r '.response.grid_power // 0')
+          SURPLUS=$(echo "$GRID" | awk '{printf "%.0f", -$1}')
+          MIN_W=1150
+          echo "wake_gate hour=$HOUR pw=$PW surplus_w=$SURPLUS min_w=$MIN_W state=${CAR_STATE:-unknown}"
+          should_wake=0
+          case "$HOUR" in
+            11|16) should_wake=1; echo "wake_gate: $HOUR fixed window" ;;
+            09|10|14|15)
+              if [ "$CAR_STATE" = "online" ]; then should_wake=1; echo "wake_gate: already online"
+              elif awk -v pw="$PW" -v s="$SURPLUS" -v m="$MIN_W" 'BEGIN { exit !((pw+0) >= 95 && (s+0) >= m) }'; then should_wake=1; echo "wake_gate: surplus"
+              else echo "wake_gate: skip wake"; fi ;;
+          esac
+          if [ "$should_wake" -ne 1 ]; then rm -f /tmp/tesla-private.pem /tmp/tesla-token; exit 0; fi
+          if [ "$CAR_STATE" != "online" ]; then
+            echo "Waking vehicle..."
+            curl -sS -X POST "$BASE/vehicles/$VIN/wake_up" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{}' >/dev/null || true
+            for i in 1 2 3 4 5 6; do
+              STATE=$(curl -sS "$BASE/vehicles/$VIN" -H "Authorization: Bearer $TOKEN" | jq -r '.response.state // empty')
+              echo "state=$STATE"
+              [ "$STATE" = "online" ] && break
+              sleep 10
+            done
+          fi
+          set_limit() {
+            local pct="$1"; set +e; OUT=$(tesla-control charging-set-limit "$pct" 2>&1); RC=$?; set -e; echo "$OUT"
+            [ "$RC" -eq 0 ] && return 0
+            echo "$OUT" | grep -qi already_set && return 0
+            return "$RC"
+          }
+          tesla_ok() {
+            set +e; OUT=$(tesla-control "$@" 2>&1); RC=$?; set -e; echo "$OUT"
+            [ "$RC" -eq 0 ] && return 0
+            echo "$OUT" | grep -Eiq 'already_set|is_charging|complete|requested|not_charging|disconnected|no_power' && return 0
+            return "$RC"
+          }
+          LIVE=$(curl -sS "$BASE/energy_sites/$SITE/live_status" -H "Authorization: Bearer $TOKEN")
+          DATA=$(curl -sS "$BASE/vehicles/$VIN/vehicle_data?endpoints=charge_state" -H "Authorization: Bearer $TOKEN")
+          if [ "$HOUR" = "11" ]; then
+            set_limit 90; tesla_ok charging-set-amps 20; tesla_ok charging-start || true
+            rm -f /tmp/tesla-private.pem /tmp/tesla-token; exit 0
+          fi
+          echo 'aW1wb3J0IGpzb24sIHN5cwpob3VyID0gc3lzLmFyZ3ZbMV0KbGl2ZSA9IGpzb24ubG9hZChvcGVuKHN5cy5hcmd2WzJdKSkuZ2V0KCJyZXNwb25zZSIpIG9yIHt9CmNzID0gKGpzb24ubG9hZChvcGVuKHN5cy5hcmd2WzNdKSkuZ2V0KCJyZXNwb25zZSIpIG9yIHt9KS5nZXQoImNoYXJnZV9zdGF0ZSIpIG9yIHt9CnNvbGFyID0gZmxvYXQobGl2ZS5nZXQoInNvbGFyX3Bvd2VyIikgb3IgMCkKZ3JpZCA9IGZsb2F0KGxpdmUuZ2V0KCJncmlkX3Bvd2VyIikgb3IgMCkgICAjICtpbXBvcnQgLyAtZXhwb3J0CmJhdHQgPSBmbG9hdChsaXZlLmdldCgiYmF0dGVyeV9wb3dlciIpIG9yIDApICAjICtkaXNjaGFyZ2UKcHcgPSBmbG9hdChsaXZlLmdldCgicGVyY2VudGFnZV9jaGFyZ2VkIikgb3IgMCkKc29jID0gY3MuZ2V0KCJiYXR0ZXJ5X2xldmVsIikKc3RhdGUgPSAoY3MuZ2V0KCJjaGFyZ2luZ19zdGF0ZSIpIG9yICIiKQphbXBzX25vdyA9IGZsb2F0KGNzLmdldCgiY2hhcmdlcl9hY3R1YWxfY3VycmVudCIpIG9yIDApCnZvbHRzID0gZmxvYXQoY3MuZ2V0KCJjaGFyZ2VyX3ZvbHRhZ2UiKSBvciAwKQpwaGFzZXNfcmF3ID0gY3MuZ2V0KCJjaGFyZ2VyX3BoYXNlcyIpIG9yIDEKdHJ5OgogICAgcGhhc2VzX3JhdyA9IGludChwaGFzZXNfcmF3KQpleGNlcHQgRXhjZXB0aW9uOgogICAgcGhhc2VzX3JhdyA9IDEKcGhhc2VzID0gMyBpZiBwaGFzZXNfcmF3ID49IDIgZWxzZSAxCnZvbHRzID0gdm9sdHMgaWYgdm9sdHMgPiA1MCBlbHNlIDIzMC4wCmNhcl93ID0gYW1wc19ub3cgKiB2b2x0cyAqIHBoYXNlcyBpZiBzdGF0ZSA9PSAiQ2hhcmdpbmciIGVsc2UgMC4wCnN1cnBsdXMgPSBjYXJfdyAtIGdyaWQKcGx1Z2dlZCA9IHN0YXRlIG5vdCBpbiAoIkRpc2Nvbm5lY3RlZCIsICIiLCAiVW5rbm93biIpCnB3X2Z1bGwgPSBwdyA+PSA5NQpwcmludCgKICAgIGYiaG91cj17aG91cn0gcHc9e3B3Oi4xZn0gc29sYXI9e3NvbGFyOi4wZn1XIGdyaWQ9e2dyaWQ6LjBmfVcgYmF0dD17YmF0dDouMGZ9VyAiCiAgICBmImNhcj17Y2FyX3c6LjBmfVcgc3VycGx1cz17c3VycGx1czouMGZ9VyBzb2M9e3NvY30gc3RhdGU9e3N0YXRlfSBwbHVnZ2VkPXtwbHVnZ2VkfSIsCiAgICBmaWxlPXN5cy5zdGRlcnIsCikKCmRlZiBlbWl0KGFjdGlvbiwgYW1wcz0wLCBsaW1pdD0wLCByZWFzb249IiIpOgogICAgcHJpbnQoanNvbi5kdW1wcyh7ImFjdGlvbiI6IGFjdGlvbiwgImFtcHMiOiBpbnQoYW1wcyksICJsaW1pdCI6IGludChsaW1pdCksICJyZWFzb24iOiByZWFzb24sICJzb2MiOiBzb2N9KSkKCmlmIHNvYyBpcyBOb25lOgogICAgZW1pdCgiZXJyb3IiLCByZWFzb249Im5vX3NvYyIpCiAgICBzeXMuZXhpdCgwKQoKaWYgaG91ciA9PSAiMTYiOgogICAgaWYgbm90IHBsdWdnZWQ6CiAgICAgICAgZW1pdCgic2tpcCIsIHJlYXNvbj0iZW5kIG9mIDItNHBtIHdpbmRvdywgY2FyIG5vdCBwbHVnZ2VkIGluIikKICAgIGVsc2U6CiAgICAgICAgZW1pdCgic3RvcF9mcmVlIiwgcmVhc29uPSJlbmQgb2YgMi00cG0gc29sYXIgd2luZG93IiwgbGltaXQ9bWF4KDUwLCBpbnQoc29jKSAtIDIpKQogICAgc3lzLmV4aXQoMCkKCmlmIHNvZCBwbHVnZ2VkOgogICAgZW1pdCgic2tpcCIsIHJlYXNvbj0iY2FyIG5vdCBwbHVnZ2VkIGluIikKICAgIHN5cy5leGl0KDApCgppZiBob3VyID09ICIxNCIgYW5kIHNvYyA+PSA4NToKICAgIGVtaXQoInN0b3BfZnJlZSIsIHJlYXNvbj0iZW5kIGZyZWUgd2luZG93LCBjYXIgYWxyZWFkeSA+PTg1JSIsIGxpbWl0PW1heCg1MCwgaW50KHNvYykgLSAyKSkKICAgIHN5cy5leGl0KDApCgppZiBzb2MgPj0gODU6CiAgICBlbWl0KCJzdG9wIiBpZiBzdGF0ZSA9PSAiQ2hhcmdpbmciIGVsc2UgInNraXAiLCByZWFzb249ImNhciBhbHJlYWR5IGF0IG9yIGFib3ZlIDg1JSIpCiAgICBzeXMuZXhpdCgwKQoKaWYgbm90IHB3X2Z1bGw6CiAgICBlbWl0KCJzdG9wIiBpZiBzdGF0ZSA9PSAiQ2hhcmdpbmciIGVsc2UgInNraXAiLCByZWFzb249ZiJQb3dlcndhbGwge3B3Oi4wZn0lIG5vdCBmdWxsLCBzb2xhciBzaG91bGQgZmlsbCBpdCBmaXJzdCIpCiAgICBzeXMuZXhpdCgwKQoKbWluX3cgPSA1ICogMjMwCmlmIHN1cnBsdXMgPCBtaW5fdzoKICAgIGVtaXQoInN0b3AiIGlmIHN0YXRlID09ICJDaGFyZ2luZyIgZWxzZSAic2tpcCIsIHJlYXNvbj1mInN1cnBsdXMge3N1cnBsdXM6LjBmfVcgYmVsb3cge21pbl93Oi4wZn1XIikKICAgIHN5cy5leGl0KDApCgphbXBzID0gaW50KChzdXJwbHVzIC0gMzAwKSAvICh2b2x0cyAqIHBoYXNlcykpCmFtcHMgPSBtYXgoNSwgbWluKDE2LCBhbXBzKSkKZW1pdCgic29sYXIiLCBhbXBzPWFtcHMsIGxpbWl0PTg1LCByZWFzb249ZiJkaXZlcnQgfnthbXBzICogdm9sdHMgKiBwaGFzZXM6LjBmfVcgdG8gY2FyIChjYXAgMTZBKSIpCg==' | base64 -d > /tmp/solar_plan.py
+          printf '%s' "$LIVE" > /tmp/live.json
+          printf '%s' "$DATA" > /tmp/car.json
+          PLAN=$(python3 /tmp/solar_plan.py "$HOUR" /tmp/live.json /tmp/car.json)
+          echo "$PLAN"
+          ACTION=$(echo "$PLAN" | jq -r .action)
+          REASON=$(echo "$PLAN" | jq -r .reason)
+          case "$ACTION" in
+            solar) AMPS=$(echo "$PLAN" | jq -r .amps); set_limit 85; tesla_ok charging-set-amps "$AMPS"; tesla_ok charging-start || true ;;
+            stop_free) LIMIT=$(echo "$PLAN" | jq -r .limit); set_limit "$LIMIT"; tesla_ok charging-stop || true ;;
+            stop) tesla_ok charging-stop || true ;;
+            skip) echo "No car action ($REASON)" ;;
+            *) echo "Planner error: $PLAN"; exit 1 ;;
+          esac
+          rm -f /tmp/tesla-private.pem /tmp/tesla-token
