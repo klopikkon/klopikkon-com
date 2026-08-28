@@ -87,6 +87,20 @@ jobs:
               -d "{\"encrypted_value\":\"$ENCRYPTED\",\"key_id\":\"$KEY_ID\"}"
 
             echo "TESLA_REFRESH_TOKEN secret updated successfully"
+
+            echo "Also copying TESLA_REFRESH_TOKEN to tesla-powerwall-cron..."
+            KEY2=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/klopikkon/tesla-powerwall-cron/actions/secrets/public-key")
+            KEY_ID2=$(echo "$KEY2" | jq -r .key_id)
+            PUBLIC_KEY2=$(echo "$KEY2" | jq -r .key)
+            ENCRYPTED2=$(python3 /tmp/encrypt.py "$PUBLIC_KEY2" "$NEW_REFRESH")
+            curl -s -X PUT \
+              -H "Authorization: token ${{ secrets.GH_PAT }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/klopikkon/tesla-powerwall-cron/actions/secrets/TESLA_REFRESH_TOKEN" \
+              -d "{\"encrypted_value\":\"$ENCRYPTED2\",\"key_id\":\"$KEY_ID2\"}"
+            echo "TESLA_REFRESH_TOKEN copied to tesla-powerwall-cron"
           fi
 
       - name: Determine action based on time
