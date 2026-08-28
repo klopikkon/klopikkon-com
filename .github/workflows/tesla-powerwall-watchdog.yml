@@ -1,18 +1,19 @@
 name: Tesla Powerwall Schedule Watchdog
 
-# Fires 2 minutes after each tesla-powerwall.yml cron. If the primary missed
-# this slot, workflow_dispatch it. No Tesla API, no tokens except GITHUB_TOKEN.
+# Fires 2 minutes after each tesla-powerwall.yml cron (+1 min primary).
+# If the primary missed this slot, workflow_dispatch it.
+# No Tesla API, no tokens except GITHUB_TOKEN.
 # Times are UTC = AEST-10 year-round (Australia/Brisbane / Etc/GMT-10, not Sydney DST).
 
 on:
   schedule:
     # Keep 23 and 0-6 as separate entries. Do not combine across midnight UTC.
-    - cron: "2 18 * * *"       # 04:02 AEST overnight
-    - cron: "2 19 * * *"       # 05:02 AEST
-    - cron: "2 20 * * *"       # 06:02 AEST house mode
-    - cron: "2,32 23 * * *"    # 09:02 and 09:32 AEST
-    - cron: "2,32 0-6 * * *"   # 10:02-16:32 AEST every 30 min
-    - cron: "2 7 * * *"        # 17:02 AEST dashboard tick
+    - cron: "3 18 * * *"       # 04:03 AEST overnight
+    - cron: "3 19 * * *"       # 05:03 AEST
+    - cron: "3 20 * * *"       # 06:03 AEST house mode
+    - cron: "3,33 23 * * *"    # 09:03 and 09:33 AEST
+    - cron: "3,33 0-6 * * *"   # 10:03-16:33 AEST every 30 min
+    - cron: "3 7 * * *"        # 17:03 AEST dashboard tick
   workflow_dispatch:
 
 permissions:

@@ -11,12 +11,13 @@ on:
     # Times are UTC = AEST-10, fixed year-round (not Sydney DST).
     # Split the 09:00-16:30 window across midnight UTC. The old combined
     # cron "0,30 23,0-6 * * *" produced zero event=schedule runs.
-    - cron: "0 18 * * *"      # 04:00 AEST overnight
-    - cron: "0 19 * * *"      # 05:00 AEST
-    - cron: "0 20 * * *"      # 06:00 AEST house mode
-    - cron: "0,30 23 * * *"   # 09:00 and 09:30 AEST
-    - cron: "0,30 0-6 * * *"  # 10:00-16:30 AEST every 30 min
-    - cron: "0 7 * * *"       # 17:00 AEST dashboard tick
+    # Offset +1 min off :00/:30 to dodge GitHub's top-of-hour drop zone.
+    - cron: "1 18 * * *"      # 04:01 AEST overnight
+    - cron: "1 19 * * *"      # 05:01 AEST
+    - cron: "1 20 * * *"      # 06:01 AEST house mode
+    - cron: "1,31 23 * * *"   # 09:01 and 09:31 AEST
+    - cron: "1,31 0-6 * * *"  # 10:01-16:31 AEST every 30 min
+    - cron: "1 7 * * *"       # 17:01 AEST dashboard tick
   workflow_dispatch:
     inputs:
       force_hour:
