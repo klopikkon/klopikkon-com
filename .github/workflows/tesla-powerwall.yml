@@ -1,7 +1,7 @@
 name: Tesla Powerwall Schedule
 
 # Surplus solar to car (plugged in, SoC<85%, Powerwall >=95%): 09:00-10:30 and 14:00-15:30, stop 16:00.
-# 11:00 still sets 90% for the free grid window. 14:00 stops the free-window charge unless solar can take over.
+# 11:00 sets 90% and 20A for the free grid window. 14:00 stops the free-window charge unless solar can take over.
 # Car commands (Spirit of Fire) are signed with the klopikkon.com virtual key.
 # One-time: in the Tesla app, open https://tesla.com/_ak/klopikkon.com and approve
 # the key on Spirit of Fire. Australia uses the NA Fleet API (same as Powerwall).
@@ -308,8 +308,9 @@ jobs:
           echo "$DATA" | jq '{soc:.response.charge_state.battery_level, state:.response.charge_state.charging_state, limit:.response.charge_state.charge_limit_soc, amps:.response.charge_state.charger_actual_current, volts:.response.charge_state.charger_voltage, phases:.response.charge_state.charger_phases}'
 
           if [ "$HOUR" = "11" ]; then
-            echo "11:00 → free window, charge limit 90%"
+            echo "11:00 → free window, charge limit 90%, 20A"
             set_limit 90
+            tesla_ok charging-set-amps 20
             tesla_ok charging-start || true
             rm -f /tmp/tesla-private.pem /tmp/tesla-token
             exit 0
