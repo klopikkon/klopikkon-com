@@ -9,10 +9,13 @@ name: Tesla Powerwall Schedule
 on:
   schedule:
     # Times are UTC = AEST-10, fixed year-round (not Sydney DST).
+    # Split the 09:00-16:30 window across midnight UTC. The old combined
+    # cron "0,30 23,0-6 * * *" produced zero event=schedule runs.
     - cron: "0 18 * * *"      # 04:00 AEST overnight
     - cron: "0 19 * * *"      # 05:00 AEST
     - cron: "0 20 * * *"      # 06:00 AEST house mode
-    - cron: "0,30 23,0-6 * * *"  # 09:00-16:30 AEST every 30 min
+    - cron: "0,30 23 * * *"   # 09:00 and 09:30 AEST
+    - cron: "0,30 0-6 * * *"  # 10:00-16:30 AEST every 30 min
     - cron: "0 7 * * *"       # 17:00 AEST dashboard tick
   workflow_dispatch:
     inputs:
@@ -150,8 +153,10 @@ jobs:
               -H "Authorization: Bearer $TOKEN" | jq -r '.response.percentage_charged'
           }
 
-          if [ "$MIN" != "00" ] && [ -z "$FORCE" ]; then
-            echo "Half-hour tick $HOUR:$MIN — skip Powerwall writes"
+          # Only skip Powerwall writes on the :30 solar-divert ticks.
+          # GitHub cron is often several minutes late; requiring :00 dropped the 11am fill.
+          if [ "$MIN" -ge 15 ] && [ -z "$FORCE" ]; then
+            echo "Half-hour/late tick $HOUR:$MIN — skip Powerwall writes"
           else
           case $HOUR in
             04)
