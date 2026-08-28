@@ -58,16 +58,8 @@ jobs:
           echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
 
           if [ "$NEW_REFRESH" != "null" ] && [ -n "$NEW_REFRESH" ]; then
-            echo "Updating TESLA_REFRESH_TOKEN secret..."
+            echo "Updating TESLA_REFRESH_TOKEN on klopikkon-com and tesla-powerwall-cron..."
 
-            KEY_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/secrets/public-key")
-
-            KEY_ID=$(echo "$KEY_RESPONSE" | jq -r .key_id)
-            PUBLIC_KEY=$(echo "$KEY_RESPONSE" | jq -r .key)
-
-            # Write a small Python script to a file to avoid YAML quoting problems
             cat > /tmp/encrypt.py << 'EOF'
           from base64 import b64encode
           from nacl import encoding, public
@@ -78,29 +70,24 @@ jobs:
           print(b64encode(encrypted).decode("utf-8"))
           EOF
 
-            ENCRYPTED=$(python3 /tmp/encrypt.py "$PUBLIC_KEY" "$NEW_REFRESH")
-
-            curl -s -X PUT \
-              -H "Authorization: token ${{ secrets.GH_PAT }}" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/secrets/TESLA_REFRESH_TOKEN" \
-              -d "{\"encrypted_value\":\"$ENCRYPTED\",\"key_id\":\"$KEY_ID\"}"
-
-            echo "TESLA_REFRESH_TOKEN secret updated successfully"
-
-            echo "Also copying TESLA_REFRESH_TOKEN to tesla-powerwall-cron..."
-            KEY2=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/klopikkon/tesla-powerwall-cron/actions/secrets/public-key")
-            KEY_ID2=$(echo "$KEY2" | jq -r .key_id)
-            PUBLIC_KEY2=$(echo "$KEY2" | jq -r .key)
-            ENCRYPTED2=$(python3 /tmp/encrypt.py "$PUBLIC_KEY2" "$NEW_REFRESH")
-            curl -s -X PUT \
-              -H "Authorization: token ${{ secrets.GH_PAT }}" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/klopikkon/tesla-powerwall-cron/actions/secrets/TESLA_REFRESH_TOKEN" \
-              -d "{\"encrypted_value\":\"$ENCRYPTED2\",\"key_id\":\"$KEY_ID2\"}"
-            echo "TESLA_REFRESH_TOKEN copied to tesla-powerwall-cron"
+            for SECRET_REPO in klopikkon/klopikkon-com klopikkon/tesla-powerwall-cron; do
+              KEY_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
+                -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/${SECRET_REPO}/actions/secrets/public-key")
+              KEY_ID=$(echo "$KEY_RESPONSE" | jq -r .key_id)
+              PUBLIC_KEY=$(echo "$KEY_RESPONSE" | jq -r .key)
+              if [ "$KEY_ID" = "null" ] || [ -z "$KEY_ID" ]; then
+                echo "WARN: no actions public key for $SECRET_REPO"
+                continue
+              fi
+              ENCRYPTED=$(python3 /tmp/encrypt.py "$PUBLIC_KEY" "$NEW_REFRESH")
+              HTTP=$(curl -s -o /tmp/secret-put.out -w "%{http_code}" -X PUT \
+                -H "Authorization: token ${{ secrets.GH_PAT }}" \
+                -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/${SECRET_REPO}/actions/secrets/TESLA_REFRESH_TOKEN" \
+                -d "{\"encrypted_value\":\"$ENCRYPTED\",\"key_id\":\"$KEY_ID\"}")
+              echo "TESLA_REFRESH_TOKEN on $SECRET_REPO HTTP $HTTP"
+            done
           fi
 
       - name: Determine action based on time
