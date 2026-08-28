@@ -1,0 +1,190 @@
+name: Tesla Powerwall Schedule Watchdog
+
+# Fires 2 minutes after each tesla-powerwall.yml cron. If the primary missed
+# this slot, workflow_dispatch it. No Tesla API, no tokens except GITHUB_TOKEN.
+# Times are UTC = AEST-10 year-round (Australia/Brisbane / Etc/GMT-10, not Sydney DST).
+
+on:
+  schedule:
+    # Keep 23 and 0-6 as separate entries. Do not combine across midnight UTC.
+    - cron: "2 18 * * *"       # 04:02 AEST overnight
+    - cron: "2 19 * * *"       # 05:02 AEST
+    - cron: "2 20 * * *"       # 06:02 AEST house mode
+    - cron: "2,32 23 * * *"    # 09:02 and 09:32 AEST
+    - cron: "2,32 0-6 * * *"   # 10:02-16:32 AEST every 30 min
+    - cron: "2 7 * * *"        # 17:02 AEST dashboard tick
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  watchdog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch primary if schedule missed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          NOW_UTC=$(date -u +%s)
+          UTC_MIN=$(date -u +%-M)
+          AEST_HOUR=$(TZ=Australia/Brisbane date +%H)
+          AEST_NOW=$(TZ=Australia/Brisbane date +%Y-%m-%dT%H:%M:%S%z)
+          UTC_NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          WINDOW_SECS=480
+          PRIMARY=tesla-powerwall.yml
+
+          echo "watchdog utc_now=$UTC_NOW utc_min=$UTC_MIN aest_now=$AEST_NOW aest_hour=$AEST_HOUR window=${WINDOW_SECS}s"
+
+          RUNS_JSON=$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${PRIMARY}/runs?per_page=20")
+
+          classify_dispatch() {
+            # stdout: real | status_only | uncertain
+            # Run JSON does not expose workflow_dispatch inputs (no "inputs" key).
+            # Infer from jobs/steps, then logs. Prefer "uncertain" over a false skip.
+            local run_id="$1"
+            local jobs_json
+            if ! jobs_json=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/jobs" 2>/dev/null); then
+              echo "uncertain"
+              return 0
+            fi
+            local njobs
+            njobs=$(echo "$jobs_json" | jq '.jobs | length')
+            if [ "$njobs" -eq 0 ]; then
+              echo "uncertain"
+              return 0
+            fi
+
+            local car_states
+            car_states=$(echo "$jobs_json" | jq -r '
+              [.jobs[].steps[]?
+               | select(.name=="Install tesla-control"
+                     or .name=="Build tesla-control"
+                     or .name=="Spirit of Fire charge limit")
+               | (.conclusion // .status // "")] | unique | .[]
+            ') || car_states=""
+
+            if echo "$car_states" | grep -Eq '^(success|failure|in_progress|cancelled|timed_out|startup_failure)$'; then
+              # Car path actually ran → not status_only (status_only skips these steps).
+              echo "real"
+              return 0
+            fi
+
+            # Logs: unique lines from the primary workflow. Do not print log bodies
+            # (they can contain Tesla tokens). Delete the temp file immediately.
+            local tmp
+            tmp=$(mktemp)
+            if gh run view "$run_id" --repo "$GITHUB_REPOSITORY" --log >"$tmp" 2>/dev/null; then
+              if grep -qF 'status_only: no Powerwall writes' "$tmp"; then
+                rm -f "$tmp"
+                echo "status_only"
+                return 0
+              fi
+              if grep -qF 'Forced AEST hour' "$tmp"; then
+                rm -f "$tmp"
+                echo "real"
+                return 0
+              fi
+              if grep -qF 'Half-hour/late tick' "$tmp"; then
+                rm -f "$tmp"
+                echo "real"
+                return 0
+              fi
+            fi
+            rm -f "$tmp"
+
+            # Car-hour clock + tesla-control skipped and no force_hour log → status_only.
+            # Non-car hours skip tesla-control anyway, so stay uncertain (prefer dispatch).
+            local created_at="$2"
+            local aest_h
+            aest_h=$(TZ=Australia/Brisbane date -d "$created_at" +%H 2>/dev/null || echo "")
+            if echo "$car_states" | grep -qx 'skipped'; then
+              case "$aest_h" in
+                09|10|11|14|15|16)
+                  echo "status_only"
+                  return 0
+                  ;;
+              esac
+            fi
+
+            echo "uncertain"
+            return 0
+          }
+
+          SKIP_ID=""
+          SKIP_EVENT=""
+          SKIP_CREATED=""
+          SKIP_CLASS=""
+
+          while IFS=$'\t' read -r run_id event status conclusion created_at run_started_at; do
+            [ -z "$run_id" ] && continue
+            ts="${created_at:-$run_started_at}"
+            [ -z "$ts" ] && continue
+            epoch=$(date -u -d "$ts" +%s)
+            age=$((NOW_UTC - epoch))
+            if [ "$age" -lt 0 ] || [ "$age" -gt "$WINDOW_SECS" ]; then
+              continue
+            fi
+
+            active=0
+            case "$status" in
+              queued|waiting|in_progress|requested|pending|waiting_for_review)
+                active=1
+                ;;
+              completed)
+                [ "$conclusion" = "success" ] && active=1
+                ;;
+            esac
+            if [ "$active" -ne 1 ]; then
+              echo "ignore run=$run_id event=$event status=$status conclusion=${conclusion:-} created_at=$created_at age=${age}s (not in-progress/queued/waiting/success)"
+              continue
+            fi
+
+            if [ "$event" = "schedule" ]; then
+              echo "candidate REAL schedule run=$run_id status=$status conclusion=${conclusion:-} created_at=$created_at age=${age}s"
+              SKIP_ID="$run_id"
+              SKIP_EVENT="$event"
+              SKIP_CREATED="$created_at"
+              SKIP_CLASS="schedule"
+              break
+            fi
+
+            if [ "$event" = "workflow_dispatch" ]; then
+              class=$(classify_dispatch "$run_id" "$created_at")
+              echo "candidate dispatch run=$run_id class=$class status=$status conclusion=${conclusion:-} created_at=$created_at age=${age}s"
+              if [ "$class" = "real" ]; then
+                SKIP_ID="$run_id"
+                SKIP_EVENT="$event"
+                SKIP_CREATED="$created_at"
+                SKIP_CLASS="dispatch-real"
+                break
+              fi
+              echo "not counting run=$run_id as slot-fired (class=$class); continue"
+              continue
+            fi
+
+            echo "ignore run=$run_id event=$event (neither schedule nor dispatch)"
+          done < <(echo "$RUNS_JSON" | jq -r '.workflow_runs[] | [.id, .event, .status, (.conclusion // ""), .created_at, (.run_started_at // .created_at)] | @tsv')
+
+          if [ -n "$SKIP_ID" ]; then
+            echo "SKIP primary already ran (or is running) as real work"
+            echo "skip_run_id=$SKIP_ID skip_event=$SKIP_EVENT skip_created_at=$SKIP_CREATED skip_class=$SKIP_CLASS aest_hour=$AEST_HOUR utc_min=$UTC_MIN force_hour=n/a"
+            exit 0
+          fi
+
+          if [ "$UTC_MIN" -lt 15 ]; then
+            BODY=$(jq -n --arg h "$AEST_HOUR" '{ref:"main", inputs:{force_hour:$h}}')
+            echo "DISPATCH :00-aligned slot missed"
+            echo "aest_hour=$AEST_HOUR utc_min=$UTC_MIN force_hour=$AEST_HOUR (pass force_hour so a late MIN>=15 skip in primary cannot drop Powerwall writes)"
+          else
+            BODY=$(jq -n '{ref:"main"}')
+            echo "DISPATCH :30 solar tick missed"
+            echo "aest_hour=$AEST_HOUR utc_min=$UTC_MIN force_hour=none (no force_hour, do not set status_only)"
+          fi
+
+          echo "POST /repos/${GITHUB_REPOSITORY}/actions/workflows/${PRIMARY}/dispatches body=$BODY"
+          echo "$BODY" | gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/${PRIMARY}/dispatches" --input -
+          echo "DISPATCH ok"
