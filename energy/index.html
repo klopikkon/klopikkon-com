@@ -44,7 +44,7 @@ a{color:var(--car)}
   <button type="button" class="secondary" id="upd">Update</button>
 </div>
 <div class="grid">
-<div class="card"><div class="label">Powerwall</div><div class="big kw" id="pw-soc">—</div><div class="sub" id="pw-mode"></div></div>
+<div class="card"><div class="label">Powerwall</div><div class="big kw" id="pw-soc">—</div><div class="sub" id="pw-mode"></div><div class="sub" id="pw-rate"></div><div class="sub" id="pw-eta"></div></div>
 <div class="card"><div class="label">Spirit of Fire</div><div class="big kw car" id="car-soc">—</div><div class="sub" id="car-state"></div></div>
 <div class="card"><div class="label">Solar</div><div class="big kw solar" id="solar">—</div><div class="sub">production</div></div>
 <div class="card"><div class="label">Grid</div><div class="big kw" id="grid">—</div><div class="sub" id="grid-sub"></div></div>
@@ -62,8 +62,20 @@ let lastData = null;
 let updating = false;
 function hexToBytes(h){const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.substr(i*2,2),16);return a}
 function b64ToBytes(s){const bin=atob(s.trim());const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a}
+const PW_CAPACITY_WH = 10226; // Net Zero 100%
 function kw(w){if(w==null||isNaN(w))return "—";const k=w/1000;return (k>=0?"":"−")+Math.abs(k).toFixed(1)+" kW"}
 function pct(n){if(n==null||isNaN(n))return "—";return Math.round(n)+"%"}
+function fmtDur(hours){
+  if(!isFinite(hours) || hours < 0) return null;
+  const totalMin = Math.max(1, Math.round(hours * 60));
+  const d = Math.floor(totalMin / 1440);
+  const h = Math.floor((totalMin % 1440) / 60);
+  const m = totalMin % 60;
+  if(d > 0) return d+"d "+h+"h";
+  if(h === 0) return m+" min";
+  if(m === 0) return h+"h";
+  return h+"h "+m+"m";
+}
 async function deriveKey(password){
   const enc=new TextEncoder();
   const material=await crypto.subtle.importKey("raw",enc.encode(password),"PBKDF2",false,["deriveKey"]);
@@ -84,6 +96,31 @@ function render(d){
   document.getElementById("pw-soc").textContent=pct(p.soc);
   const mode=p.mode==="backup"?"Backup / grid fill":p.mode==="self_consumption"?"Self-Powered":(p.mode||"");
   document.getElementById("pw-mode").textContent=mode+(p.reserve!=null?" · reserve "+p.reserve+"%":"");
+  const batt = Number(p.battery_w);
+  const rateEl = document.getElementById("pw-rate");
+  const etaEl = document.getElementById("pw-eta");
+  const EPS = 50;
+  if(isNaN(batt)){
+    rateEl.textContent = "";
+    etaEl.textContent = "";
+  } else if(batt > EPS){
+    rateEl.textContent = "Discharging "+kw(batt);
+    const soc = Number(p.soc), reserve = Number(p.reserve);
+    if(!isNaN(soc) && !isNaN(reserve) && soc <= reserve){
+      etaEl.textContent = "At or below "+Math.round(reserve)+"% reserve";
+    } else if(!isNaN(soc) && !isNaN(reserve)){
+      const usable = PW_CAPACITY_WH * (soc - reserve) / 100;
+      etaEl.textContent = "~"+fmtDur(usable / batt)+" to "+Math.round(reserve)+"% reserve at this rate";
+    } else {
+      etaEl.textContent = "";
+    }
+  } else if(batt < -EPS){
+    rateEl.textContent = "Charging "+kw(Math.abs(batt));
+    etaEl.textContent = "Not draining toward reserve";
+  } else {
+    rateEl.textContent = "Holding";
+    etaEl.textContent = "";
+  }
   document.getElementById("car-soc").textContent=pct(c.soc);
   const plugged=c.plugged_in?"plugged in":"unplugged";
   const ch=c.charging&&c.charging!=="Disconnected"?c.charging:plugged;
