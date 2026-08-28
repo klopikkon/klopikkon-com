@@ -5,6 +5,7 @@ name: Tesla Powerwall Schedule
 # Car commands (Spirit of Fire) are signed with the klopikkon.com virtual key.
 # One-time: in the Tesla app, open https://tesla.com/_ak/klopikkon.com and approve
 # the key on Spirit of Fire. Australia uses the NA Fleet API (same as Powerwall).
+# Wake gate: 11 and 16 always. 09/10/14/15 only if car already online or PW>=95% and export>=1150W.
 
 on:
   schedule:
@@ -265,15 +266,58 @@ jobs:
           echo "VIN suffix ${VIN: -6}"
           export TESLA_VIN="$VIN"
 
-          echo "Waking vehicle..."
-          curl -sS -X POST "$BASE/vehicles/$VIN/wake_up" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{}' >/dev/null || true
-          curl -sS -X POST "$BASE/vehicles/$TESLA_VEHICLE_ID/wake_up" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{}' >/dev/null || true
-          for i in 1 2 3 4 5 6; do
-            STATE=$(curl -sS "$BASE/vehicles/$VIN" -H "Authorization: Bearer $TOKEN" | jq -r '.response.state // empty')
-            echo "state=$STATE"
-            [ "$STATE" = "online" ] && break
-            sleep 10
-          done
+          CAR_STATE=$(echo "$VEHICLES" | jq -r --arg id "$TESLA_VEHICLE_ID" --arg vin "$VIN" '.response[] | select((.id|tostring)==$id or (.vehicle_id|tostring)==$id or .vin==$vin or .display_name=="Spirit of Fire") | .state' | head -1)
+          echo "list_state=${CAR_STATE:-unknown}"
+
+          LIVE=$(curl -sS "$BASE/energy_sites/$SITE/live_status" -H "Authorization: Bearer $TOKEN")
+          echo "$LIVE" | jq '{solar:.response.solar_power, grid:.response.grid_power, battery:.response.battery_power, load:.response.load_power, pw:.response.percentage_charged}'
+          PW=$(echo "$LIVE" | jq -r '.response.percentage_charged // 0')
+          GRID=$(echo "$LIVE" | jq -r '.response.grid_power // 0')
+          # Tesla energy: +grid = import, -grid = export. Asleep-car surplus ~= export.
+          SURPLUS=$(echo "$GRID" | awk '{printf "%.0f", -$1}')
+          MIN_W=1150
+          echo "wake_gate hour=$HOUR pw=$PW surplus_w=$SURPLUS min_w=$MIN_W state=${CAR_STATE:-unknown}"
+
+          should_wake=0
+          case "$HOUR" in
+            11|16)
+              should_wake=1
+              echo "wake_gate: $HOUR is a fixed car window"
+              ;;
+            09|10|14|15)
+              if [ "$CAR_STATE" = "online" ]; then
+                should_wake=1
+                echo "wake_gate: car already online, no wake_up needed later"
+              elif awk -v pw="$PW" -v s="$SURPLUS" -v m="$MIN_W" 'BEGIN { exit !((pw+0) >= 95 && (s+0) >= m) }'; then
+                should_wake=1
+                echo "wake_gate: PW full and site exporting enough"
+              else
+                echo "wake_gate: skip wake (need PW>=95 and export>=${MIN_W}W, or car already online)"
+              fi
+              ;;
+            *)
+              echo "wake_gate: unexpected hour $HOUR"
+              ;;
+          esac
+
+          if [ "$should_wake" -ne 1 ]; then
+            rm -f /tmp/tesla-private.pem /tmp/tesla-token
+            exit 0
+          fi
+
+          if [ "$CAR_STATE" = "online" ]; then
+            echo "Car already online, skipping wake_up"
+          else
+            echo "Waking vehicle..."
+            curl -sS -X POST "$BASE/vehicles/$VIN/wake_up" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{}' >/dev/null || true
+            curl -sS -X POST "$BASE/vehicles/$TESLA_VEHICLE_ID/wake_up" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{}' >/dev/null || true
+            for i in 1 2 3 4 5 6; do
+              STATE=$(curl -sS "$BASE/vehicles/$VIN" -H "Authorization: Bearer $TOKEN" | jq -r '.response.state // empty')
+              echo "state=$STATE"
+              [ "$STATE" = "online" ] && break
+              sleep 10
+            done
+          fi
 
           set_limit() {
             local pct="$1"
@@ -318,7 +362,7 @@ jobs:
             exit 0
           fi
 
-          echo 'aW1wb3J0IGpzb24sIHN5cwpob3VyID0gc3lzLmFyZ3ZbMV0KbGl2ZSA9IGpzb24ubG9hZChvcGVuKHN5cy5hcmd2WzJdKSkuZ2V0KCJyZXNwb25zZSIpIG9yIHt9CmNzID0gKGpzb24ubG9hZChvcGVuKHN5cy5hcmd2WzNdKSkuZ2V0KCJyZXNwb25zZSIpIG9yIHt9KS5nZXQoImNoYXJnZV9zdGF0ZSIpIG9yIHt9CnNvbGFyID0gZmxvYXQobGl2ZS5nZXQoInNvbGFyX3Bvd2VyIikgb3IgMCkKZ3JpZCA9IGZsb2F0KGxpdmUuZ2V0KCJncmlkX3Bvd2VyIikgb3IgMCkgICAjICtpbXBvcnQgLyAtZXhwb3J0CmJhdHQgPSBmbG9hdChsaXZlLmdldCgiYmF0dGVyeV9wb3dlciIpIG9yIDApICAjICtkaXNjaGFyZ2UKcHcgPSBmbG9hdChsaXZlLmdldCgicGVyY2VudGFnZV9jaGFyZ2VkIikgb3IgMCkKc29jID0gY3MuZ2V0KCJiYXR0ZXJ5X2xldmVsIikKc3RhdGUgPSAoY3MuZ2V0KCJjaGFyZ2luZ19zdGF0ZSIpIG9yICIiKQphbXBzX25vdyA9IGZsb2F0KGNzLmdldCgiY2hhcmdlcl9hY3R1YWxfY3VycmVudCIpIG9yIDApCnZvbHRzID0gZmxvYXQoY3MuZ2V0KCJjaGFyZ2VyX3ZvbHRhZ2UiKSBvciAwKQpwaGFzZXNfcmF3ID0gY3MuZ2V0KCJjaGFyZ2VyX3BoYXNlcyIpIG9yIDEKdHJ5OgogICAgcGhhc2VzX3JhdyA9IGludChwaGFzZXNfcmF3KQpleGNlcHQgRXhjZXB0aW9uOgogICAgcGhhc2VzX3JhdyA9IDEKcGhhc2VzID0gMyBpZiBwaGFzZXNfcmF3ID49IDIgZWxzZSAxCnZvbHRzID0gdm9sdHMgaWYgdm9sdHMgPiA1MCBlbHNlIDIzMC4wCmNhcl93ID0gYW1wc19ub3cgKiB2b2x0cyAqIHBoYXNlcyBpZiBzdGF0ZSA9PSAiQ2hhcmdpbmciIGVsc2UgMC4wCnN1cnBsdXMgPSBjYXJfdyAtIGdyaWQKcGx1Z2dlZCA9IHN0YXRlIG5vdCBpbiAoIkRpc2Nvbm5lY3RlZCIsICIiLCAiVW5rbm93biIpCnB3X2Z1bGwgPSBwdyA+PSA5NQpwcmludCgKICAgIGYiaG91cj17aG91cn0gcHc9e3B3Oi4xZn0gc29sYXI9e3NvbGFyOi4wZn1XIGdyaWQ9e2dyaWQ6LjBmfVcgYmF0dD17YmF0dDouMGZ9VyAiCiAgICBmImNhcj17Y2FyX3c6LjBmfVcgc3VycGx1cz17c3VycGx1czouMGZ9VyBzb2M9e3NvY30gc3RhdGU9e3N0YXRlfSBwbHVnZ2VkPXtwbHVnZ2VkfSIsCiAgICBmaWxlPXN5cy5zdGRlcnIsCikKCmRlZiBlbWl0KGFjdGlvbiwgYW1wcz0wLCBsaW1pdD0wLCByZWFzb249IiIpOgogICAgcHJpbnQoanNvbi5kdW1wcyh7ImFjdGlvbiI6IGFjdGlvbiwgImFtcHMiOiBpbnQoYW1wcyksICJsaW1pdCI6IGludChsaW1pdCksICJyZWFzb24iOiByZWFzb24sICJzb2MiOiBzb2N9KSkKCmlmIHNvYyBpcyBOb25lOgogICAgZW1pdCgiZXJyb3IiLCByZWFzb249Im5vX3NvYyIpCiAgICBzeXMuZXhpdCgwKQoKaWYgaG91ciA9PSAiMTYiOgogICAgaWYgbm90IHBsdWdnZWQ6CiAgICAgICAgZW1pdCgic2tpcCIsIHJlYXNvbj0iZW5kIG9mIDItNHBtIHdpbmRvdywgY2FyIG5vdCBwbHVnZ2VkIGluIikKICAgIGVsc2U6CiAgICAgICAgZW1pdCgic3RvcF9mcmVlIiwgcmVhc29uPSJlbmQgb2YgMi00cG0gc29sYXIgd2luZG93IiwgbGltaXQ9bWF4KDUwLCBpbnQoc29jKSAtIDIpKQogICAgc3lzLmV4aXQoMCkKCmlmIG5vdCBwbHVnZ2VkOgogICAgZW1pdCgic2tpcCIsIHJlYXNvbj0iY2FyIG5vdCBwbHVnZ2VkIGluIikKICAgIHN5cy5leGl0KDApCgppZiBob3VyID09ICIxNCIgYW5kIHNvYyA+PSA4NToKICAgIGVtaXQoInN0b3BfZnJlZSIsIHJlYXNvbj0iZW5kIGZyZWUgd2luZG93LCBjYXIgYWxyZWFkeSA+PTg1JSIsIGxpbWl0PW1heCg1MCwgaW50KHNvYykgLSAyKSkKICAgIHN5cy5leGl0KDApCgppZiBzb2MgPj0gODU6CiAgICBlbWl0KCJzdG9wIiBpZiBzdGF0ZSA9PSAiQ2hhcmdpbmciIGVsc2UgInNraXAiLCByZWFzb249ImNhciBhbHJlYWR5IGF0IG9yIGFib3ZlIDg1JSIpCiAgICBzeXMuZXhpdCgwKQoKaWYgbm90IHB3X2Z1bGw6CiAgICBlbWl0KCJzdG9wIiBpZiBzdGF0ZSA9PSAiQ2hhcmdpbmciIGVsc2UgInNraXAiLCByZWFzb249ZiJQb3dlcndhbGwge3B3Oi4wZn0lIG5vdCBmdWxsLCBzb2xhciBzaG91bGQgZmlsbCBpdCBmaXJzdCIpCiAgICBzeXMuZXhpdCgwKQoKbWluX3cgPSA1ICogMjMwCmlmIHN1cnBsdXMgPCBtaW5fdzoKICAgIGVtaXQoInN0b3AiIGlmIHN0YXRlID09ICJDaGFyZ2luZyIgZWxzZSAic2tpcCIsIHJlYXNvbj1mInN1cnBsdXMge3N1cnBsdXM6LjBmfVcgYmVsb3cge21pbl93Oi4wZn1XIikKICAgIHN5cy5leGl0KDApCgphbXBzID0gaW50KChzdXJwbHVzIC0gMzAwKSAvICh2b2x0cyAqIHBoYXNlcykpCmFtcHMgPSBtYXgoNSwgbWluKDE2LCBhbXBzKSkKZW1pdCgic29sYXIiLCBhbXBzPWFtcHMsIGxpbWl0PTg1LCByZWFzb249ZiJkaXZlcnQgfnthbXBzICogdm9sdHMgKiBwaGFzZXM6LjBmfVcgdG8gY2FyIChjYXAgMTZBKSIpCg==' | base64 -d > /tmp/solar_plan.py
+          echo 'aW1wb3J0IGpzb24sIHN5cwpob3VyID0gc3lzLmFyZ3ZbMV0KbGl2ZSA9IGpzb24ubG9hZChvcGVuKHN5cy5hcmd2WzJdKSkuZ2V0KCJyZXNwb25zZSIpIG9yIHt9CmNzID0gKGpzb24ubG9hZChvcGVuKHN5cy5hcmd2WzNdKSkuZ2V0KCJyZXNwb25zZSIpIG9yIHt9KS5nZXQoImNoYXJnZV9zdGF0ZSIpIG9yIHt9CnNvbGFyID0gZmxvYXQobGl2ZS5nZXQoInNvbGFyX3Bvd2VyIikgb3IgMCkKZ3JpZCA9IGZsb2F0KGxpdmUuZ2V0KCJncmlkX3Bvd2VyIikgb3IgMCkgICAjICtpbXBvcnQgLyAtZXhwb3J0CmJhdHQgPSBmbG9hdChsaXZlLmdldCgiYmF0dGVyeV9wb3dlciIpIG9yIDApICAjICtkaXNjaGFyZ2UKcHcgPSBmbG9hdChsaXZlLmdldCgicGVyY2VudGFnZV9jaGFyZ2VkIikgb3IgMCkKc29jID0gY3MuZ2V0KCJiYXR0ZXJ5X2xldmVsIikKc3RhdGUgPSAoY3MuZ2V0KCJjaGFyZ2luZ19zdGF0ZSIpIG9yICIiKQphbXBzX25vdyA9IGZsb2F0KGNzLmdldCgiY2hhcmdlcl9hY3R1YWxfY3VycmVudCIpIG9yIDApCnZvbHRzID0gZmxvYXQoY3MuZ2V0KCJjaGFyZ2VyX3ZvbHRhZ2UiKSBvciAwKQpwaGFzZXNfcmF3ID0gY3MuZ2V0KCJjaGFyZ2VyX3BoYXNlcyIpIG9yIDEKdHJ5OgogICAgcGhhc2VzX3JhdyA9IGludChwaGFzZXNfcmF3KQpleGNlcHQgRXhjZXB0aW9uOgogICAgcGhhc2VzX3JhdyA9IDEKcGhhc2VzID0gMyBpZiBwaGFzZXNfcmF3ID49IDIgZWxzZSAxCnZvbHRzID0gdm9sdHMgaWYgdm9sdHMgPiA1MCBlbHNlIDIzMC4wCmNhcl93ID0gYW1wc19ub3cgKiB2b2x0cyAqIHBoYXNlcyBpZiBzdGF0ZSA9PSAiQ2hhcmdpbmciIGVsc2UgMC4wCnN1cnBsdXMgPSBjYXJfdzogLSBncmlkCnBsdWdnZWQgPSBzdGF0ZSBub3QgaW4gKCJEaXNjb25uZWN0ZWQiLCAiIiwgIlVua25vd24iKQpwd19mdWxsID0gcHcgPj0gOTUKcHJpbnQoCiAgICBmImhvdXI9e2hvdXJ9IHB3PXtwdzouMWZ9IHNvbGFyPXtzb2xhcjouMGZ9VyBncmlkPXtncmlkOi4wZn1XIGJhdHQ9e2JhdHQ6LjBmfVcgIgogICAgZiJjYXI9e2Nhcl93Oi4wZn1XIHN1cnBsdXM9e3N1cnBsdXM6LjBmfVcgIHNvYz17c29jfSBzdGF0ZT17c3RhdGV9IHBsdWdnZWQ9e3BsdWdnZWR9IiwKICAgIGZpbGU9c3lzLnN0ZGVyciwKKQoKZGVmIGVtaXQoYWN0aW9uLCBhbXBzPTAsIGxpbWl0PTAsIHJlYXNvbj0iIik6CiAgICBwcmludChqc29uLmR1bXBzeyJhY3Rpb24iOiBhY3Rpb24sICJhbXBzIjogint(amps),ICJsaW1pdCI6IGludChsaW1pdCksICJyZWFzb24iOiByZWFzb24sICJzb2MiOiBzb2N9KSkKCmlmIHNvYyBpcyBOb25lOgogICAgZW1pdCgiZXJyb3IiLCByZWFzb249Im5vX3NvYyIpCiAgICBzeXMuZXhpdCgwKQoKaWYgaG91ciA9PSAiMTYiOgogICAgaWYgbm90IHBsdWdnZWQ6CiAgICAgICAgZW1pdCgic2tpcCIsIHJlYXNvbj0iZW5kIG9mIDItNHBtIHdpbmRvdywgY2FyIG5vdCBwbHVnZ2VkIGluIikKICAgIGVsc2U6CiAgICAgICAgZW1pdCgic3RvcF9mcmVlIiwgcmVhc29uPSJlbmQgb2YgMi00cG0gc29sYXIgd2luZG93IiwgbGltaXQ9bWF4KDUwLCBpbnQoc29jKSAtIDIpKQogICAgc3lzLmV4aXQoMCkKCmlmIG5vdCBwbHVnZ2VkOgogICAgZW1pdCgic2tpcCIsIHJlYXNvbj0iY2FyIG5vdCBwbHVnZ2VkIGluIikKICAgIHN5cy5leGl0KDApCgppZiBob3VyID09ICIxNCIgYW5kIHNvYyA+PSA4NToKICAgIGVtaXQoInN0b3BfZnJlZSIsIHJlYXNvbj0iZW5kIGZyZWUgd2luZG93LCBjYXIgYWxyZWFkeSA+PTg1JSIsIGxpbWl0PW1heCg1MCwgaW50KHNvYykgLSAyKSkKICAgIHN5cy5leGl0KDApCgppZiBzb2MgPj0gODU6CiAgICBlbWl0KCJzdG9wIiBpZiBzdGF0ZSA9PSAiQ2hhcmdpbmciIGVsc2UgInNraXAiLCByZWFzb249ImNhciBhbHJlYWR5IGF0IG9yIGFib3ZlIDg1JSIpCiAgICBzeXMuZXhpdCgwKQoKaWYgbm90IHB3X2Z1bGw6CiAgICBlbWl0KCJzdG9wIiBpZiBzdGF0ZSA9PSAiQ2hhcmdpbmciIGVsc2UgInNraXAiLCByZWFzb249ZiJQb3dlcndhbGwge3B3Oi4wZn0lIG5vdCBmdWxsLCBzb2xhciBzaG91bGQgZmlsbCBpdCBmaXJzdCIpCiAgICBzeXMuZXhpdCgwKQoKbWluX3cgPSA1ICogMjMwCmlmIHN1cnBsdXMgPCBtaW5fdzoKICAgIGVtaXQoInN0b3AiIGlmIHN0YXRlID09ICJDaGFyZ2luZyIgZWxzZSAic2tpcCIsIHJlYXNvbj1mInN1cnBsdXMge3N1cnBsdXM6LjBmfVcgYmVsb3cge21pbl93Oi4wZn1XIikKICAgIHN5cy5leGl0KDApCgphbXBzID0gaW50KChzdXJwbHVzIC0gMzAwKSAvICh2b2x0cyAqIHBoYXNlcykpCmFtcHMgPSBtYXgoNSwgbWluKDE2LCBhbXBzKSkKZW1pdCgic29sYXIiLCBhbXBzPWFtcHMsIGxpbWl0PTg1LCByZWFzb249ZiJkaXZlcnQgfnthbXBzICogdm9sdHMgKiBwaGFzZXM6LjBmfVcgdG8gY2FyIChjYXAgMTZBKSIpCg==' | base64 -d > /tmp/solar_plan.py
           printf '%s' "$LIVE" > /tmp/live.json
           printf '%s' "$DATA" > /tmp/car.json
           PLAN=$(python3 /tmp/solar_plan.py "$HOUR" /tmp/live.json /tmp/car.json)
