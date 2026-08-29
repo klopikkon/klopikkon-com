@@ -1,5 +1,6 @@
 name: Tesla Powerwall Schedule
 
+# Timer is cron-job.org workflow_dispatch only. GitHub on.schedule is off.
 # Surplus solar to car (plugged in, SoC<85%, Powerwall >=95%): 09:00-10:30 and 14:00-15:30, stop 16:00.
 # 11:00 sets 90% and 20A for the free grid window. 14:00 stops the free-window charge unless solar can take over.
 # Wake gate: 11 and 16 always. 09/10/14/15 only if already online, or last poll plugged AND PW>=95% and export>=1150W.
@@ -7,13 +8,6 @@ name: Tesla Powerwall Schedule
 # Car commands (Spirit of Fire) are signed with the klopikkon.com virtual key.
 
 on:
-  schedule:
-    - cron: "1 18 * * *"
-    - cron: "1 19 * * *"
-    - cron: "1 20 * * *"
-    - cron: "1,31 23 * * *"
-    - cron: "1,31 0-6 * * *"
-    - cron: "1 7 * * *"
   workflow_dispatch:
     inputs:
       force_hour:
