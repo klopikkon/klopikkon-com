@@ -1,7 +1,6 @@
 {
-  "plugged": true,
-  "state": "unknown",
+  "plugged": false,
+  "state": "Unknown",
   "soc": null,
-  "ts": "2026-08-29T00:00:00+10:00",
-  "note": "Seed; first successful vehicle_data overwrites this."
+  "ts": "2026-08-30T09:32:01+1000"
 }
