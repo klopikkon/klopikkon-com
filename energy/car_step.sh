@@ -23,18 +23,33 @@ SURPLUS=$(echo "$GRID" | awk '{printf "%.0f", -$1}')
 MIN_W=1150
 
 LAST_PLUGGED=""
+LAST_SOC=""
 if [ -n "${GH_PAT:-}" ]; then
   PRES=$(curl -sS -H "Authorization: token $GH_PAT" -H "Accept: application/vnd.github.raw" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/contents/energy/car_presence.json?ref=main" || true)
   LAST_PLUGGED=$(echo "$PRES" | jq -r 'if .plugged==false then "false" elif .plugged==true then "true" else empty end' 2>/dev/null || true)
-  echo "presence_last plugged=${LAST_PLUGGED:-unknown} ts=$(echo "$PRES" | jq -r '.ts // empty' 2>/dev/null || true)"
+  LAST_SOC=$(echo "$PRES" | jq -r 'if .soc == null or .soc == "" then empty else .soc end' 2>/dev/null || true)
+  echo "presence_last plugged=${LAST_PLUGGED:-unknown} soc=${LAST_SOC:-unknown} ts=$(echo "$PRES" | jq -r '.ts // empty' 2>/dev/null || true)"
 fi
 
-echo "wake_gate hour=$HOUR pw=$PW surplus_w=$SURPLUS min_w=$MIN_W state=${CAR_STATE:-unknown} last_plugged=${LAST_PLUGGED:-unknown}"
+echo "wake_gate hour=$HOUR pw=$PW surplus_w=$SURPLUS min_w=$MIN_W state=${CAR_STATE:-unknown} last_plugged=${LAST_PLUGGED:-unknown} last_soc=${LAST_SOC:-unknown}"
 should_wake=0
 case "$HOUR" in
   11|16) should_wake=1; echo "wake_gate: $HOUR fixed window" ;;
-  09|10|14|15)
+  09|10)
+    if [ -n "${LAST_SOC:-}" ] && awk -v s="$LAST_SOC" 'BEGIN { exit !(s+0 > 80) }'; then
+      echo "wake_gate: skip morning solar, last soc=$LAST_SOC > 80"
+    elif [ "$CAR_STATE" = "online" ]; then
+      should_wake=1; echo "wake_gate: already online"
+    elif [ "$LAST_PLUGGED" = "false" ]; then
+      echo "wake_gate: last poll unplugged — skip wake (assumed not at home)"
+    elif awk -v pw="$PW" -v s="$SURPLUS" -v m="$MIN_W" 'BEGIN { exit !((pw+0) >= 95 && (s+0) >= m) }'; then
+      should_wake=1; echo "wake_gate: surplus"
+    else
+      echo "wake_gate: skip wake"
+    fi
+    ;;
+  14|15)
     if [ "$CAR_STATE" = "online" ]; then
       should_wake=1; echo "wake_gate: already online"
     elif [ "$LAST_PLUGGED" = "false" ]; then
