@@ -1,6 +1,6 @@
 {
-  "plugged": true,
-  "state": "Complete",
-  "soc": 90,
-  "ts": "2026-08-30T16:01:57+1000"
+  "plugged": false,
+  "state": "Unknown",
+  "soc": null,
+  "ts": "2026-08-31T11:02:49+1000"
 }
