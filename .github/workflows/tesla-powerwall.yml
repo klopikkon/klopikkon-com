@@ -4,7 +4,8 @@ name: Tesla Powerwall Schedule
 # Surplus solar to car (plugged in, SoC<85%, Powerwall >=95%): 09:00-10:30 and 14:00-15:30, stop 16:00.
 # 11:00 sets 90% and 20A for the free grid window. 14:00 stops the free-window charge unless solar can take over.
 # Wake gate: 11 and 16 always. 09/10/14/15 only if already online, or last poll plugged AND PW>=95% and export>=1150W.
-# Last plug state is stored in energy/car_presence.json (no Tesla location API).
+# Last plug/SoC is stored in energy/car_presence.json (no Tesla location API).
+# 09/10 morning solar skips if last SoC > 80 (do not wake the car to check). 11 and 14/15 unchanged.
 # Car commands (Spirit of Fire) are signed with the klopikkon.com virtual key.
 
 on:
