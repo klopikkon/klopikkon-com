@@ -3,10 +3,12 @@
   --card: #fbf7f0;
   --ink: #2c261f;
   --muted: #5a5248;
-  --ember: #e08a4c;
+  --ember: #c45c28;
+  --ember-soft: #e08a4c;
   --link: #8f4518;
   --line: #e2d5c4;
-  --pill-hover: #efe6d8;
+  --pill-hover: #f3e4d4;
+  --band: #c45c28;
 }
 
 *,
@@ -82,6 +84,7 @@ h3 {
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.22;
+  color: var(--ember);
 }
 
 h1 {
@@ -152,9 +155,19 @@ p:last-child {
 }
 
 .wordmark {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
   font-size: 1.32rem;
-  color: var(--ink);
+  color: var(--ember);
   text-decoration: none;
+}
+
+.wordmark .mark {
+  width: 1.7rem;
+  height: 1.7rem;
+  flex: 0 0 auto;
+  display: block;
 }
 
 .wordmark:hover {
@@ -164,9 +177,9 @@ p:last-child {
 .nav-toggle {
   display: none;
   margin-left: auto;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--ember);
   background: transparent;
-  color: var(--ink);
+  color: var(--ember);
   font: inherit;
   font-size: 0.95rem;
   padding: 0.4rem 0.95rem;
@@ -190,30 +203,30 @@ p:last-child {
 
 .site-nav a {
   display: inline-block;
-  color: var(--ink);
+  color: var(--ember);
   text-decoration: none;
   font-size: 0.98rem;
   line-height: 1.2;
   padding: 0.42rem 0.95rem;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--ember);
   border-radius: 999px;
   background: transparent;
 }
 
 .site-nav a:hover {
-  color: var(--ink);
+  color: var(--ember);
   background: var(--pill-hover);
 }
 
 .site-nav a[aria-current="page"] {
-  background: var(--ink);
-  color: #f6f0e6;
-  border-color: var(--ink);
+  background: var(--ember);
+  color: #fff;
+  border-color: var(--ember);
 }
 
 .site-nav a[aria-current="page"]:hover {
-  background: #3d352c;
-  color: #f6f0e6;
+  background: #a34b20;
+  color: #fff;
 }
 
 main {
@@ -300,9 +313,9 @@ main {
 }
 
 .offer h2 a {
-  color: var(--ink);
+  color: var(--ember);
   text-decoration: none;
-  border-bottom: 1px solid var(--ember);
+  border-bottom: 1px solid var(--ember-soft);
 }
 
 .offer h2 a:hover {
@@ -439,4 +452,56 @@ main {
   * {
     scroll-behavior: auto !important;
   }
+}
+
+.band {
+  background: var(--band);
+  color: #f6f0e6;
+  padding: 3.4rem 1.35rem 4.6rem;
+  margin-top: 0.4rem;
+}
+
+.band-inner {
+  width: 100%;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.panel {
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 1.2rem;
+  padding: 2rem 1.7rem 2.1rem;
+}
+
+.panel h2 {
+  margin-top: 0;
+}
+
+.panel .cta-pill {
+  margin-top: 0.4rem;
+}
+
+.panel .email-line {
+  margin: 1.4rem 0 0;
+}
+
+.panel .email-line span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+body.page-contact main,
+body.page-help main {
+  padding-bottom: 0;
+}
+
+body.page-contact .hero,
+body.page-help .hero {
+  margin-bottom: 2.2rem;
+}
+
+@media (max-width: 44rem) {
+  .band { padding: 2.6rem 1.15rem 3.4rem; }
 }
