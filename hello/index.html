@@ -1,134 +1,48 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-AU">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-<meta name="theme-color" content="#0a0706">
-<title>Adam Marcuccio</title>
-<style>
-:root{
-  color-scheme:dark;
-  --ink:#f4eadc;
-  --muted:#cbb6a0;
-  --ember:#e08a4c;
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100dvh}
-body{
-  font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  color:var(--ink);
-  background:#0a0706 url("img/bg.jpg") center top / cover no-repeat fixed;
-  padding:max(1.75rem, env(safe-area-inset-top)) max(1.4rem, env(safe-area-inset-right)) max(2.4rem, env(safe-area-inset-bottom)) max(1.4rem, env(safe-area-inset-left));
-}
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  background:
-    linear-gradient(180deg, rgba(8,5,4,.72) 0%, rgba(8,5,4,.55) 35%, rgba(8,5,4,.78) 100%),
-    radial-gradient(900px 520px at 50% 0%, rgba(224,138,76,.14), transparent 60%);
-}
-#page{
-  position:relative;
-  z-index:1;
-  max-width:38rem;
-  margin:0 auto;
-  padding:1.1rem 1.15rem 1.4rem;
-  border-radius:1.15rem;
-  background:rgba(12,8,6,.42);
-  border:1px solid rgba(224,138,76,.14);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  box-shadow:0 18px 50px rgba(0,0,0,.35);
-}
-h1{
-  font-family:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif;
-  font-weight:500;
-  font-size:clamp(2.05rem, 8.4vw, 3.15rem);
-  line-height:1.12;
-  letter-spacing:-.02em;
-  margin:0;
-}
-.subtitle{
-  color:var(--muted);
-  margin:.55rem 0 0;
-  font-size:.98rem;
-  letter-spacing:.02em;
-}
-.rule{
-  height:1px;width:4.2rem;
-  background:linear-gradient(90deg,var(--ember),transparent);
-  margin:1.55rem 0 0;
-}
-section{margin-top:2.15rem}
-h2{
-  font-size:.72rem;
-  font-weight:650;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:var(--ember);
-  margin:0 0 .75rem;
-}
-p{
-  margin:0 0 1.05rem;
-  font-size:1.05rem;
-  color:#eadccb;
-}
-p:last-child{margin-bottom:0}
-.note{
-  margin-top:2.4rem;
-  padding-top:1rem;
-  border-top:1px solid rgba(61,42,34,.65);
-  font-size:.72rem;
-  color:#9a8370;
-  line-height:1.5;
-}
-@media (prefers-reduced-motion:no-preference){
-  #page{animation:rise .65s ease}
-}
-@keyframes rise{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:none}
-}
-</style>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="theme-color" content="#f6f0e6">
+  <title>klopikkon · Adam Marcuccio</title>
+  <link rel="stylesheet" href="css/site.css">
+</head>
 <body>
-<div id="page">
-  <h1>Adam Marcuccio</h1>
-  <p class="subtitle">Donnybrook, Victoria</p>
-  <div class="rule"></div>
-
-  <section>
-    <h2>What makes me tick</h2>
-    <p>I like helping people, especially the people I work with. If a process is clunky or a tool is getting in the way, I want to fix it. Making someone's work day a bit easier is the bit I enjoy most.</p>
-    <p>I've been playing with AI for the same reason: not as a toy for its own sake, but to see how these new friends can actually take work off people's plates and get the best out of them.</p>
-  </section>
-
-  <section>
-    <h2>Green energy</h2>
-    <p>I'm pretty keen on green energy at home. Solar on the roof, a Tesla Powerwall in the garage, and Spirit of Fire (my Tesla Model 3) all talk to each other so surplus sun fills the battery and the car instead of just dumping to the grid.</p>
-    <p>It's half environmental, half a puzzle I enjoy: cheap overnight power, free daytime windows, and automation that actually makes the house run cleaner without me babysitting it every hour.</p>
-  </section>
-
-  <section>
-    <h2>Board games</h2>
-    <p>When friends are around the table, I love a good board game. Dice Thrones is a favourite — quick rounds, big character moments, and just enough chaos that nobody's sitting quietly waiting for their turn.</p>
-    <p>Anything that gets people talking, laughing, and plotting together is my kind of night.</p>
-  </section>
-
-  <section>
-    <h2>Looking up</h2>
-    <p>I'm also really interested in Starship. Watching those flights, it feels like the first time in a long while that going further into space looks like a real, near-term thing rather than a poster on a wall.</p>
-    <p>That hope matters to me: humanity heading out among the stars, not stuck on one planet forever. Even following it from Donnybrook, it makes the future feel bigger.</p>
-  </section>
-
-  <section>
-    <h2>A bit about me</h2>
-    <p>When I'm not doing that I'm usually on a disc golf course, at a table tennis table, in a computer game, or out on the road. Spirit of Fire, my Tesla Model 3, and I have been covering a fair bit of Australia.</p>
-  </section>
-
-  <p class="note">Background from Grok Imagine. Resume stays in the Google Doc.</p>
-</div>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="wordmark" href="./">klopikkon</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="./" aria-current="page">Home</a></li>
+          <li><a href="help/">How I can help</a></li>
+          <li><a href="about/">About</a></li>
+          <li><a href="contact/">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <div class="wrap">
+      <h1>I help small businesses find the useful work in AI</h1>
+      <p class="lede">Adam Marcuccio. Donnybrook, Greater Melbourne.</p>
+      <hr class="rule">
+      <p>I like helping people at work. If a process is clunky or a tool is getting in the way, I want to fix it. Making someone's day a bit easier is the bit I enjoy most.</p>
+      <p>I've been using AI for the same reason. Not as a toy. To see how it can take work off people's plates.</p>
+      <p>If you run a small business around Melbourne, or you are the person who has to make the tools behave, this is what I can help with.</p>
+      <p class="ctas">
+        <a class="cta" href="help/">How I can help</a>
+        <a class="cta" href="contact/">Get in touch</a>
+      </p>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>Adam Marcuccio · Donnybrook / Greater Melbourne · <a href="tel:0497571491">0497 571 491</a> · <a href="mailto:adamarc999@yahoo.com.au">adamarc999@yahoo.com.au</a></p>
+    </div>
+  </footer>
+  <script src="js/nav.js"></script>
 </body>
 </html>
