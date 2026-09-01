@@ -505,3 +505,70 @@ body.page-help .hero {
 @media (max-width: 44rem) {
   .band { padding: 2.6rem 1.15rem 3.4rem; }
 }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--ember);
+  min-width: 0;
+}
+.brand .mark {
+  width: 1.85rem;
+  height: 1.85rem;
+  flex: 0 0 auto;
+  display: block;
+}
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.brand-name {
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+  font-size: 1.28rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.brand-tag {
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  line-height: 1.25;
+}
+.brand:hover { color: var(--link); }
+.brand:hover .brand-tag { color: var(--ink); }
+
+.steps {
+  margin: 1.2rem 0 1.6rem;
+  padding-left: 1.2rem;
+  color: var(--ink);
+}
+.steps li { margin: 0 0 0.55rem; }
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr auto;
+  gap: 1.4rem 2rem;
+  align-items: start;
+}
+.footer-id p { margin: 0 0 0.35rem; }
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.footer-nav a {
+  color: var(--ember);
+  text-decoration: none;
+}
+.footer-nav a:hover { text-decoration: underline; }
+
+@media (max-width: 48rem) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+  .brand-tag { display: none; }
+}
