@@ -233,6 +233,22 @@ main {
   gap: 1.15rem 2rem;
 }
 
+
+.hero-photo {
+  width: 100%;
+  max-width: 70rem;
+  margin: 1.6rem auto 0;
+  padding: 0 1.35rem;
+}
+.hero-photo img {
+  display: block;
+  width: 100%;
+  height: min(22rem, 46vw);
+  object-fit: cover;
+  object-position: 50% 60%;
+  border-radius: 1.15rem;
+}
+
 .hero h1 {
   flex: 1 1 16rem;
   margin: 0;
