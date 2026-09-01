@@ -262,7 +262,22 @@ main { flex: 1 0 auto; padding: 3.2rem 0 0; }
 .footer-nav a:hover { color: var(--ember); }
 .footer-contact { margin: 0; }
 
-body.page-contact main, body.page-help main { padding-bottom: 0; }
+body.page-contact {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+body.page-contact main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+}
+body.page-contact .band {
+  flex: 1 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
 
 @media (max-width: 52rem) {
   .offers { grid-template-columns: 1fr; }
