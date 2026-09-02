@@ -379,6 +379,10 @@ html[data-look="glass"] .hero-photo--mark img { object-position: 50% 40%; }
 .form-status--ok { color: var(--ink); }
 .form-status--error { color: var(--ember); }
 
+html[data-look="circuit"] .band {
+  background: transparent;
+  color: var(--ink);
+}
 body.page-contact { display: flex; flex-direction: column; min-height: 100dvh; }
 body.page-contact main { flex: 1 0 auto; display: flex; flex-direction: column; padding-bottom: 0; }
 body.page-contact .band { flex: 1 0 auto; display: flex; align-items: flex-start; }
