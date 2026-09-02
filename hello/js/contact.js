@@ -82,7 +82,14 @@
         });
       })
       .then(function (result) {
-        if (!result.ok || (result.data && result.data.success === "false")) {
+        var data = result.data || {};
+        var failed = !result.ok || data.success === "false" || data.success === false;
+        if (failed) {
+          var msg = String(data.message || "");
+          if (/activat/i.test(msg)) {
+            setStatus("Check your inbox for FormSubmit's Activate Form email, click it, then send again.", "error");
+            return;
+          }
           throw new Error("not sent");
         }
         form.reset();
