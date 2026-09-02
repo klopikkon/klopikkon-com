@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap");
 
 :root {
-  --bg: #f4f1ea;
+  --bg: #f7f5f0;
   --paper: #fffcf7;
   --ink: #1c1916;
   --muted: #5f574e;
@@ -72,7 +72,7 @@ p:last-child { margin-bottom: 0; }
 .site-header {
   background: var(--paper);
   border-bottom: 1px solid var(--line);
-  padding: 1.15rem 0;
+  padding: 0.95rem 0;
 }
 
 .header-inner {
@@ -167,10 +167,10 @@ main { flex: 1 0 auto; padding: 3.2rem 0 0; }
 .hero-photo img {
   display: block;
   width: 100%;
-  height: min(20rem, 42vw);
+  height: min(24rem, 48vw);
   object-fit: cover;
   object-position: 50% 55%;
-  border-radius: 0.4rem;
+  border-radius: 0.2rem;
 }
 
 .cta-pill {
@@ -207,7 +207,7 @@ main { flex: 1 0 auto; padding: 3.2rem 0 0; }
   padding: 1.25rem 1.2rem 1.35rem;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 0.4rem;
+  border-radius: 0.2rem;
 }
 .offer h2 { margin: 0 0 0.45rem; font-size: 1.05rem; }
 .offer h2 a { color: var(--ink); text-decoration: none; }
@@ -226,7 +226,7 @@ main { flex: 1 0 auto; padding: 3.2rem 0 0; }
 .panel {
   background: var(--paper);
   color: var(--ink);
-  border-radius: 0.4rem;
+  border-radius: 0.2rem;
   padding: 2rem 1.7rem 2.1rem;
 }
 .panel h2 { margin-top: 0; }
@@ -262,10 +262,81 @@ main { flex: 1 0 auto; padding: 3.2rem 0 0; }
 .footer-nav a:hover { color: var(--ember); }
 .footer-contact { margin: 0; }
 
-body.page-contact main, body.page-help main { padding-bottom: 0; }
+
+.think { margin: 1.1rem 0 2.2rem; }
+.think dt {
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 1.3rem 0 0.35rem;
+  color: var(--ink);
+}
+.think dt:first-child { margin-top: 0.35rem; }
+.think dd { margin: 0; color: var(--muted); }
+
+.also {
+  margin: 0.8rem 0 2.4rem;
+  padding-left: 1.2rem;
+}
+.also li { margin: 0 0 0.55rem; }
+
+.offer h3 { margin: 0 0 0.45rem; font-size: 1.05rem; }
+
+body.page-contact {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+body.page-contact main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+}
+body.page-contact .band {
+  flex: 1 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+
+
+.rates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.4rem 0 2.2rem;
+}
+.rate {
+  padding: 1.35rem 1.25rem 1.45rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 0.2rem;
+}
+.rate .amount {
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-weight: 600;
+  font-size: 2.1rem;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 0.2rem;
+}
+.rate .unit {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0 0 0.85rem;
+}
+.disclaimer {
+  margin: 1rem 0 2.4rem;
+  padding: 1.25rem 1.3rem 1.35rem;
+  background: var(--paper);
+  border-left: 3px solid var(--ember);
+}
+.disclaimer p { margin: 0 0 0.7rem; }
+.disclaimer p:last-child { margin-bottom: 0; }
 
 @media (max-width: 52rem) {
   .offers { grid-template-columns: 1fr; }
+  .rates { grid-template-columns: 1fr; }
   .footer-inner { grid-template-columns: 1fr; }
   .brand-tag { max-width: 14rem; }
 }
