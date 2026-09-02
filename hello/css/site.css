@@ -505,3 +505,5 @@ body.page-contact .band {
   color: var(--ink);
 }
 #other-wrap { margin-top: 0.35rem; }
+
+.hero .lede { max-width: 38rem; margin: 0.85rem 0 0; }
