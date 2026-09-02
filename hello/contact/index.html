@@ -48,21 +48,10 @@
           <ul class="contact-list">
             <li>
               <span>Email</span>
-              <a href="mailto:adamarc999@yahoo.com.au?subject=Enquiry%20from%20klopikkon">adamarc999@yahoo.com.au</a>
-            </li>
-            <li>
-              <span>Also</span>
               <a href="mailto:klopikkon@gmail.com?subject=Enquiry%20from%20klopikkon">klopikkon@gmail.com</a>
             </li>
           </ul>
           <p class="reply">I reply by email, usually the same day. You do not need a brief.</p>
-          <h3>Common reasons people get in touch</h3>
-          <ul class="reasons">
-            <li>A late quote</li>
-            <li>An unsent invoice</li>
-            <li>The inbox doing the job of a CRM</li>
-            <li>A spreadsheet only one person understands</li>
-          </ul>
           <form class="enquiry" id="enquiry-form">
             <label class="honey" for="enq-honey">Leave blank</label>
             <input class="honey" id="enq-honey" name="_honey" type="text" tabindex="-1" autocomplete="off">
@@ -70,7 +59,20 @@
             <input id="enq-name" name="name" type="text" autocomplete="name" required>
             <label for="enq-email">Your email</label>
             <input id="enq-email" name="email" type="email" autocomplete="email" required>
-            <label for="enq-msg">What is getting in the way?</label>
+            <fieldset class="checks">
+              <legend>What is this about?</legend>
+              <label><input type="checkbox" name="reason" value="Get Started using AI"> Get Started using AI</label>
+              <label><input type="checkbox" name="reason" value="Explore Opportunity"> Explore Opportunity</label>
+              <label><input type="checkbox" name="reason" value="Invoicing &amp; Quoting"> Invoicing &amp; Quoting</label>
+              <label><input type="checkbox" name="reason" value="Building websites"> Building websites</label>
+              <label><input type="checkbox" name="reason" value="Customer Service"> Customer Service</label>
+              <label><input type="checkbox" name="reason" value="Other"> Other</label>
+            </fieldset>
+            <div id="other-wrap" hidden>
+              <label for="enq-other">If Other, add a note</label>
+              <input id="enq-other" name="other" type="text">
+            </div>
+            <label for="enq-msg">Anything else?</label>
             <textarea id="enq-msg" name="message" required></textarea>
             <button class="cta-pill" type="submit">Send an enquiry</button>
             <p class="form-status" id="enquiry-status" hidden></p>
@@ -94,7 +96,6 @@
         <a href="../legal/">Legal</a>
       </nav>
       <p class="footer-contact">
-        <a href="mailto:adamarc999@yahoo.com.au?subject=Enquiry%20from%20klopikkon">adamarc999@yahoo.com.au</a>
         <a href="mailto:klopikkon@gmail.com?subject=Enquiry%20from%20klopikkon">klopikkon@gmail.com</a>
       </p>
     </div>

@@ -468,3 +468,27 @@ body.page-contact .band {
 .form-status { margin: 0.8rem 0 0; font-size: 0.95rem; }
 .form-status--ok { color: var(--ink); }
 .form-status--error { color: var(--ember); }
+
+.checks {
+  border: 0;
+  margin: 0.7rem 0 0.4rem;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.checks legend {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin: 0 0 0.45rem;
+  padding: 0;
+}
+.checks label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: var(--ink);
+  font-size: 0.98rem;
+  margin: 0;
+}
+.checks input { margin-top: 0.3rem; flex: 0 0 auto; }
+#other-wrap { margin-top: 0.35rem; }
