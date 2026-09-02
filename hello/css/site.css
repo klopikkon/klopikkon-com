@@ -269,7 +269,9 @@ main { flex: 1 0 auto; padding: 3.2rem 0 0; }
 .footer-nav { display: flex; flex-direction: column; gap: 0.3rem; }
 .footer-nav a { color: var(--ink); text-decoration: none; }
 .footer-nav a:hover { color: var(--ember); }
-.footer-contact { margin: 0; }
+.footer-contact { margin: 0; display: flex; flex-direction: column; gap: 0.3rem; align-items: flex-start; }
+.footer-contact a { color: var(--ink); text-decoration: none; }
+.footer-contact a:hover { color: var(--ember); }
 
 
 .think { margin: 1.1rem 0 2.2rem; }
