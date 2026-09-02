@@ -456,3 +456,15 @@ body.page-contact .band {
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
 }
+
+.honey {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+#enquiry-form { position: relative; scroll-margin-top: 5rem; }
+.form-status { margin: 0.8rem 0 0; font-size: 0.95rem; }
+.form-status--ok { color: var(--ink); }
+.form-status--error { color: var(--ember); }

@@ -37,7 +37,7 @@
     <div class="hero">
       <div class="hero-inner">
         <h1>Get in touch</h1>
-        <a class="cta-pill" href="mailto:adamarc999@yahoo.com.au?subject=Enquiry%20from%20klopikkon">Send an enquiry</a>
+        <a class="cta-pill" href="#enquiry-form">Send an enquiry</a>
       </div>
     </div>
     <section class="band">
@@ -64,6 +64,8 @@
             <li>A spreadsheet only one person understands</li>
           </ul>
           <form class="enquiry" id="enquiry-form">
+            <label class="honey" for="enq-honey">Leave blank</label>
+            <input class="honey" id="enq-honey" name="_honey" type="text" tabindex="-1" autocomplete="off">
             <label for="enq-name">Your name</label>
             <input id="enq-name" name="name" type="text" autocomplete="name" required>
             <label for="enq-email">Your email</label>
@@ -71,6 +73,7 @@
             <label for="enq-msg">What is getting in the way?</label>
             <textarea id="enq-msg" name="message" required></textarea>
             <button class="cta-pill" type="submit">Send an enquiry</button>
+            <p class="form-status" id="enquiry-status" hidden></p>
           </form>
         </article>
       </div>
