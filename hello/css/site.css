@@ -490,5 +490,20 @@ body.page-contact .band {
   font-size: 0.98rem;
   margin: 0;
 }
-.checks input { margin-top: 0.3rem; flex: 0 0 auto; }
+.enquiry input[type="checkbox"] {
+  width: auto;
+  height: auto;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  flex: 0 0 auto;
+}
+.checks {
+  gap: 0.7rem;
+}
+.checks label {
+  color: var(--ink);
+}
 #other-wrap { margin-top: 0.35rem; }
