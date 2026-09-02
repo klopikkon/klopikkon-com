@@ -6,13 +6,16 @@ name: Tesla Powerwall Schedule
 # Wake gate: 11 and 16 always. 09/10/14/15 only if already online, or last poll plugged AND PW>=95% and export>=1150W.
 # Last plug/SoC is stored in energy/car_presence.json (no Tesla location API).
 # 09/10 morning solar skips if last SoC > 80 (do not wake the car to check). 11 and 14/15 unchanged.
+# Overnight: 04:00 if PW<40% enters Backup + grid charge + reserve 60%.
+# 05:00 stops that fill if SoC>=60% (Backup mode ignores reserve as a ceiling).
+# 06:00 always returns to Self-Powered + no grid charge + reserve 5%.
 # Car commands (Spirit of Fire) are signed with the klopikkon.com virtual key.
 
 on:
   workflow_dispatch:
     inputs:
       force_hour:
-        description: 'Override AEST hour (04, 09, 10, 11, 14, 15, 16). Empty = now.'
+        description: 'Override AEST hour (04, 05, 06, 09, 10, 11, 14, 15, 16). Empty = now.'
         required: false
         type: string
       status_only:
@@ -137,7 +140,16 @@ jobs:
               fi
               ;;
             05)
-              echo "05:00 status check"; get_soc
+              SOC=$(get_soc)
+              echo "Current SoC: $SOC%"
+              if (( $(echo "$SOC >= 60" | bc -l) )); then
+                echo "SoC >= 60% → stop overnight grid charge"
+                set_mode "self_consumption"
+                set_grid_charging true
+                set_backup 5
+              else
+                echo "SoC still under 60% → leave overnight charge running"
+              fi
               ;;
             06)
               set_mode "self_consumption"; set_grid_charging true; set_backup 5
