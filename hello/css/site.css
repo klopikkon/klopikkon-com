@@ -262,6 +262,26 @@ main { flex: 1 0 auto; padding: 3.2rem 0 0; }
 .footer-nav a:hover { color: var(--ember); }
 .footer-contact { margin: 0; }
 
+
+.think { margin: 1.1rem 0 2.2rem; }
+.think dt {
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 1.3rem 0 0.35rem;
+  color: var(--ink);
+}
+.think dt:first-child { margin-top: 0.35rem; }
+.think dd { margin: 0; color: var(--muted); }
+
+.also {
+  margin: 0.8rem 0 2.4rem;
+  padding-left: 1.2rem;
+}
+.also li { margin: 0 0 0.55rem; }
+
+.offer h3 { margin: 0 0 0.45rem; font-size: 1.05rem; }
+
 body.page-contact {
   display: flex;
   flex-direction: column;
