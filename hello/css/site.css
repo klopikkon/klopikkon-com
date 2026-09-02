@@ -173,6 +173,12 @@ main { flex: 1 0 auto; padding: 3.2rem 0 0; }
   border-radius: 0.2rem;
 }
 
+
+.hero-photo--mark img {
+  height: min(38rem, 62vw);
+  object-position: 50% 42%;
+}
+
 .cta-pill {
   display: inline-block;
   flex: 0 0 auto;
