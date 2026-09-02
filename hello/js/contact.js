@@ -61,7 +61,7 @@
     }
     setStatus("Sending");
 
-    fetch("https://formsubmit.co/ajax/adamarc999@yahoo.com.au", {
+    fetch("https://formsubmit.co/ajax/klopikkon@gmail.com", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
