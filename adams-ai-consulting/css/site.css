@@ -16,13 +16,13 @@
 html[data-look="studio"] {
   --bg: #f6f3ee;
   --paper: #fffcf8;
-  --ink: #1c1916;
+  --ink: #1b2834;
   --muted: #5c564e;
-  --ember: #3f6b4f;
-  --ember-hover: #2f513c;
+  --ember: #1a7478;
+  --ember-hover: #155e62;
   --ember-fg: #fffcf8;
   --line: #e4d9cc;
-  --band: #1c1916;
+  --band: #1b2834;
   --band-fg: #f6f3ee;
   color-scheme: light;
 }
@@ -131,22 +131,27 @@ p:last-child { margin-bottom: 0; }
 }
 .wrap a { overflow-wrap: anywhere; }
 .brand .mark {
-  width: 2.15rem;
-  height: 2.15rem;
+  width: 2.55rem;
+  height: 2.55rem;
   flex: 0 0 auto;
-  object-fit: cover;
-  border-radius: 0.55rem;
-  outline: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
-  outline-offset: -1px;
+  object-fit: contain;
+  border-radius: 0;
+  background: transparent;
 }
 .brand-text { display: flex; flex-direction: column; gap: 0.05rem; min-width: 0; }
 .brand-name {
   font-weight: 600;
-  font-size: 1.05rem;
-  letter-spacing: -0.03em;
+  font-size: 0.92rem;
+  letter-spacing: 0.06em;
   line-height: 1.1;
+  text-transform: uppercase;
 }
-.brand-tag { font-size: 0.72rem; color: var(--muted); }
+.brand-tag {
+  font-size: 0.62rem;
+  color: var(--ember);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
 .brand:hover { color: var(--ember); }
 
 .nav-toggle {
@@ -439,7 +444,64 @@ html[data-look="glass"] .footer-nav a { color: var(--band-fg); }
     align-items: flex-start;
     gap: 0.75rem;
   }
+  .page-banner-inner { flex-direction: column; align-items: flex-start; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
+}
+
+.page-banner {
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+.page-banner--dark {
+  background: #1b2834;
+  color: #f4f1ea;
+  border-bottom: 0;
+}
+.page-banner-inner {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem 1.5rem;
+}
+.page-banner-title {
+  margin: 0;
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(1.2rem, 2.6vw, 1.7rem);
+  letter-spacing: -0.02em;
+}
+.page-banner--dark .cta-pill {
+  background: #1a7478;
+  border-color: #1a7478;
+  color: #fff;
+}
+.page-banner--dark .cta-pill:hover {
+  background: #155e62;
+  border-color: #155e62;
+  color: #fff;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+.footer-brand .mark {
+  width: 2.2rem;
+  height: 2.2rem;
+  object-fit: contain;
+}
+.card .mark {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  border-radius: 0;
+  background: transparent;
 }
