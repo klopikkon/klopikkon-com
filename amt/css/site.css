@@ -6,6 +6,7 @@
   --win: #1f6b43;
   --lose: #8a3b28;
   --rare: #2c4a6e;
+  --rank: #5a3d1a;
   --card: #fffdf8;
   --link: #1d4f7a;
 }
@@ -21,7 +22,7 @@ body {
 .site-header, .site-footer { border-bottom: 1px solid var(--line); }
 .site-footer { border-bottom: 0; border-top: 1px solid var(--line); margin-top: 3rem; }
 .header-inner, .footer-inner, .wrap {
-  max-width: 1100px;
+  max-width: 1180px;
   margin: 0 auto;
   padding: 1rem 1.25rem;
 }
@@ -33,7 +34,7 @@ body {
 .site-nav a[aria-current="page"] { border-bottom: 1px solid var(--ink); }
 h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.15; margin: 0 0 .6rem; }
 h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
-.lede { font-size: 1.12rem; color: var(--muted); max-width: 46rem; }
+.lede { font-size: 1.12rem; color: var(--muted); max-width: 48rem; }
 .meta { font-size: .88rem; color: var(--muted); }
 .badge {
   display: inline-block;
@@ -47,6 +48,7 @@ h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
 .badge-win { color: var(--win); }
 .badge-lose { color: var(--lose); }
 .badge-rare { color: var(--rare); }
+.badge-rank { color: var(--rank); }
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0 2rem; }
 .card {
   background: var(--card);
@@ -64,9 +66,10 @@ a { color: var(--link); }
   padding: .85rem 1rem;
   margin: 1.2rem 0;
 }
-table { width: 100%; border-collapse: collapse; font-size: .92rem; background: var(--card); }
-th, td { border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; padding: .65rem .55rem; }
-th { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; background: var(--card); }
+th, td { border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; padding: .65rem .5rem; }
+th { font-size: .74rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+tr.amt-row { background: #f3eee3; }
 .delta { font-weight: 650; white-space: nowrap; }
 .delta-win { color: var(--win); }
 .delta-lose { color: var(--lose); }
@@ -76,6 +79,6 @@ th { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color:
 .footer-nav { display: flex; gap: .8rem; flex-wrap: wrap; }
 .footer-nav a { color: var(--muted); }
 @media (max-width: 800px) {
-  table { font-size: .84rem; }
-  th, td { padding: .5rem .35rem; }
+  table { font-size: .82rem; }
+  th, td { padding: .5rem .3rem; }
 }
