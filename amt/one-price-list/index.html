@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>AMT one price list · mockup · klopikkon</title>
+  <link rel="canonical" href="https://klopikkon.com/amt/one-price-list/">
+  <link rel="stylesheet" href="../css/site.css">
+  <style>
+    .filters { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0 1.2rem; }
+    .filters button {
+      font: inherit; font-size: .85rem; background: var(--card);
+      border: 1px solid var(--line); color: var(--ink); padding: .25rem .7rem; cursor: pointer;
+    }
+    .filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+    .pack { display: block; white-space: nowrap; }
+    .src { font-size: .82rem; }
+    .conflict { background: var(--lose-bg); }
+    code { font-size: .85em; }
+    .wp-steps { max-width: 46rem; }
+    .wp-steps ol { padding-left: 1.2rem; }
+    .wp-steps li { margin: .35rem 0; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/amt/">
+        <span class="brand-name">klopikkon</span>
+        <span class="brand-tag">AMT catalogue brief</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="/amt/">Overview</a></li>
+          <li><a href="/amt/ranking-on-price/">Ranking</a></li>
+          <li><a href="/amt/one-price-list/" aria-current="page">One list</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <p class="badge badge-rank">Mockup · not live on amtechpl.com</p>
+    <h1>One price list</h1>
+    <p class="lede">The commercial number for each SKU. Homepage cards, quote emails and this table should all print the same USD figure. Where the AMT homepage still disagrees with a dated PDF, the PDF wins and the homepage row is marked.</p>
+    <div class="note">
+      <p><strong>List rule.</strong> Lipid PDF 26 Aug 2026 · PEG PDF 3 Sep 2026 · dye PDF 2026 · boron PDF 21 Apr 2026. Homepage only when the SKU is not on a current PDF.</p>
+      <p>USD. Australian next-day if ordered before noon. International minimum USD $150. US PEG stock via Frontier Specialty Chemicals. Enquiry: <a href="mailto:enquiries@amtechpl.com">enquiries@amtechpl.com</a>.</p>
+    </div>
+    <p class="filters" role="group" aria-label="Filter by family">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="lipid">Lipids</button>
+      <button type="button" data-filter="peg">PEGs / linkers</button>
+      <button type="button" data-filter="dye">Dyes</button>
+      <button type="button" data-filter="boron">Borons</button>
+    </p>
+    <h2>Commercial list</h2>
+    <table id="one-list">
+      <thead>
+        <tr>
+          <th>Family</th>
+          <th>Product</th>
+          <th>CAS</th>
+          <th>Grade</th>
+          <th>Published packs</th>
+          <th>Source of the number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-family="lipid"><td>Lipid</td><td><span class="product-name">ALC-0315</span><span class="sku">AMTGC903-AL21</span></td><td>2036272-55-4</td><td>≥98%</td><td><span class="pack">500 mg · $250</span><span class="pack">1 g · $430</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf">Lipid PDF 26 Aug 2026</a></td></tr>
+        <tr data-family="lipid"><td>Lipid</td><td><span class="product-name">SM-102</span><span class="sku">AMTGC936-SM21</span></td><td>2089251-47-6</td><td>≥98%</td><td><span class="pack">100 mg · $150</span><span class="pack">500 mg · $410</span><span class="pack">1 g · $690</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf">Lipid PDF 26 Aug 2026</a></td></tr>
+        <tr data-family="lipid"><td>Lipid</td><td><span class="product-name">Lipid 5</span><span class="sku">AMTGC1533-LP25</span></td><td>2089251-33-0</td><td>≥97%</td><td><span class="pack">100 mg · $140</span><span class="pack">500 mg · $390</span><span class="pack">1 g · $595</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf">Lipid PDF 26 Aug 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">Azido-PEG3-amine</span><span class="sku">AMTGC125-AT15</span></td><td>134179-38-7</td><td>std / 99%</td><td><span class="pack">5 g std · $65</span><span class="pack">25 g std · $240</span><span class="pack">5 g 99% · $150</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf">PEG PDF 3 Sep 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">N3-PEG23-CH2CH2NH2</span><span class="sku">AMTGC1264-AH24</span></td><td>—</td><td>not on card</td><td><span class="pack">100 mg · $250</span><span class="pack">1 g · $780</span></td><td class="src"><a href="https://www.amtechpl.com/">Homepage 6 Sep 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">Pomalidomide 4'-PEG3-azide</span><span class="sku">AMTGC1223-PL23</span></td><td>2271036-46-3</td><td>not on card</td><td><span class="pack">100 mg · $120</span><span class="pack">500 mg · $360</span></td><td class="src"><a href="https://www.amtechpl.com/">Homepage 6 Sep 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">Desthiobiotin-PEG3-azide</span><span class="sku">AMTGC1441-DB25</span></td><td>—</td><td>not on card</td><td><span class="pack">10 mg · $120</span><span class="pack">25 mg · $210</span></td><td class="src"><a href="https://www.amtechpl.com/">Homepage 6 Sep 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">Biotin-PEG2-azide</span><span class="sku">AMTGC857-BA21</span></td><td>945633-30-7</td><td>97% on AKSci</td><td><span class="pack">100 mg · $90</span><span class="pack">250 mg · $190</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf">PEG PDF 3 Sep 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">Biotin-PEG3-amine</span><span class="sku">AMTGC856-BT21</span></td><td>359860-27-8</td><td>not on PDF</td><td><span class="pack">250 mg · $115</span><span class="pack">500 mg · $145</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf">PEG PDF 3 Sep 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">Biotin-PEG5-azide</span><span class="sku">AMTGC754-BZ21</span></td><td>1163732-89-5</td><td>not on PDF</td><td><span class="pack">100 mg · $130</span><span class="pack">500 mg · $290</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf">PEG PDF 3 Sep 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">N-Boc-PEG5-alcohol</span><span class="sku">AMTGC937-AT21</span></td><td>811442-84-9</td><td>not on PDF</td><td><span class="pack">1 g · $120</span><span class="pack">5 g · $360</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf">PEG PDF 3 Sep 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">17-Azido-5-oxo-6-aza-tetraoxaheptadecanoic acid</span><span class="sku">AMTGC1266-AO24</span></td><td>—</td><td>not on card</td><td><span class="pack">1 g · $120</span><span class="pack">5 g · $360</span></td><td class="src"><a href="https://www.amtechpl.com/">Homepage 6 Sep 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">Squaramide PEG4 azide</span><span class="sku">AMTGC1269-CB24</span></td><td>—</td><td>not on card</td><td><span class="pack">1 g · $120</span><span class="pack">5 g · $360</span></td><td class="src"><a href="https://www.amtechpl.com/">Homepage 6 Sep 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">N-methyl azido-PEG2-amine</span><span class="sku">AMTGC807-AM21</span></td><td>—</td><td>not on card</td><td><span class="pack">1 g · $80</span><span class="pack">5 g · $240</span></td><td class="src"><a href="https://www.amtechpl.com/">Homepage 6 Sep 2026</a></td></tr>
+        <tr data-family="peg"><td>PEG</td><td><span class="product-name">N3-PEG3-NHBoc</span><span class="sku">AMTGC187-AC16</span></td><td>642091-68-7</td><td>not on card</td><td><span class="pack">1 g · $80</span><span class="pack">5 g · $240</span></td><td class="src"><a href="https://www.amtechpl.com/">Homepage 6 Sep 2026</a></td></tr>
+        <tr data-family="dye"><td>Dye</td><td><span class="product-name">DBD-F</span><span class="sku">AMTH390-DF24</span></td><td>98358-90-8</td><td>not on card</td><td><span class="pack">250 mg · $195</span><span class="pack">1 g · $595</span></td><td class="src"><a href="https://www.amtechpl.com/">Homepage 6 Sep 2026</a></td></tr>
+        <tr data-family="dye"><td>Dye</td><td><span class="product-name">BODIPY 493/503 NHS</span><span class="sku">AMTB1264-NHS18</span></td><td>216961-98-7</td><td>not on PDF</td><td><span class="pack">10 mg · $135</span><span class="pack">50 mg · $405</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf">Dye PDF 2026</a></td></tr>
+        <tr data-family="dye"><td>Dye</td><td><span class="product-name">BODIPY 493/503 acid</span><span class="sku">AMTB1261-CB18</span></td><td>—</td><td>not on PDF</td><td><span class="pack">50 mg · $160</span><span class="pack">100 mg · $290</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf">Dye PDF 2026</a></td></tr>
+        <tr data-family="dye"><td>Dye</td><td><span class="product-name">7-Ethoxycoumarin</span><span class="sku">AMTGC115-EC15</span></td><td>31005-02-4</td><td>not on PDF</td><td><span class="pack">1 g · $30</span><span class="pack">5 g · $100</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf">Dye PDF 2026</a></td></tr>
+        <tr data-family="dye"><td>Dye</td><td><span class="product-name">5-Carboxyfluorescein</span><span class="sku">AMTGC270-CF17</span></td><td>—</td><td>not on PDF</td><td><span class="pack">250 mg · $55</span><span class="pack">1 g · $135</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf">Dye PDF 2026</a></td></tr>
+        <tr data-family="dye"><td>Dye</td><td><span class="product-name">Methylproamine</span><span class="sku">AMTBZ008-MP17</span></td><td>188247-01-0</td><td>not on PDF</td><td><span class="pack">50 mg · $80</span><span class="pack">250 mg · $240</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf">Dye PDF 2026</a></td></tr>
+        <tr data-family="dye"><td>Dye</td><td><span class="product-name">Tokyo Green</span><span class="sku">AMTGC308-TG16</span></td><td>643755-80-0</td><td>not on PDF</td><td><span class="pack">100 mg · $150</span><span class="pack">500 mg · $450</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf">Dye PDF 2026</a></td></tr>
+        <tr data-family="dye"><td>Dye</td><td><span class="product-name">Rhodamine B ethylenediamine</span><span class="sku">AMTGC007-AS11</span></td><td>950846-89-6</td><td>not on PDF</td><td><span class="pack">1 g · $60</span><span class="pack">5 g · $250</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf">Dye PDF 2026</a></td></tr>
+        <tr data-family="boron"><td>Boron</td><td><span class="product-name">Bis(pinacolato)diboron</span><span class="sku">AMTB148-B08</span></td><td>73183-34-3</td><td>not on PDF</td><td><span class="pack">25 g · $40</span><span class="pack">100 g · $110</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf">Boron PDF 21 Apr 2026</a></td></tr>
+        <tr data-family="boron"><td>Boron</td><td><span class="product-name">Phenylboronic acid</span><span class="sku">AMTB008-P06</span></td><td>98-80-6</td><td>not on PDF</td><td><span class="pack">25 g · $50</span></td><td class="src"><a href="https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf">Boron PDF 21 Apr 2026</a></td></tr>
+      </tbody>
+    </table>
+    <h2>Homepage still disagrees</h2>
+    <p class="meta">These featured cards on amtechpl.com (captured 6 Sep 2026) do not match the PDF used as the commercial list. The list above uses the PDF.</p>
+    <table>
+      <thead><tr><th>SKU</th><th>Homepage card</th><th>This list</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr class="conflict"><td>ALC-0315 AMTGC903-AL21</td><td>500 mg $310 / 1 g $470</td><td>500 mg $250 / 1 g $430</td><td>Change the homepage card</td></tr>
+        <tr class="conflict"><td>SM-102 AMTGC936-SM21</td><td>500 mg $420 / 1 g $680</td><td>500 mg $410 / 1 g $690</td><td>Change the homepage card</td></tr>
+        <tr class="conflict"><td>Azido-PEG3-amine AMTGC125-AT15</td><td>5 g $80 / 25 g $202</td><td>5 g $65 / 25 g $240 (std)</td><td>Change the homepage card</td></tr>
+      </tbody>
+    </table>
+    <h2 class="wp-steps">Move this onto AMT WordPress</h2>
+    <div class="wp-steps">
+      <p>AMT is a normal WordPress site (<code>wp-content/uploads/…</code> PDFs). This mockup is plain HTML on purpose so it pastes.</p>
+      <ol>
+        <li>Open <a href="/amt/one-price-list/wordpress-block.html">wordpress-block.html</a> and copy everything inside the page.</li>
+        <li>On amtechpl.com: Pages → Add New. Title <strong>Price list</strong>. Slug <code>price-list</code>.</li>
+        <li>In the Gutenberg editor, add a <strong>Custom HTML</strong> block. Paste. Publish.</li>
+        <li>Appearance → Menus: add the page next to Catalogue / Brochures.</li>
+        <li>Replace each homepage featured card so the dollars match this table. Do not keep two numbers for the same SKU.</li>
+      </ol>
+      <p>No plugin required. If they later want staff to edit rows without HTML, import the same table into TablePress — the columns already match.</p>
+      <p class="meta">This page is a mockup on klopikkon. It is not an AMT order form and it does not replace the PDFs until AMT adopts it.</p>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-id">Mockup 7 Sep 2026 · prices from AMT public lists only</p>
+      <nav class="footer-nav">
+        <a href="/amt/">Overview</a>
+        <a href="/amt/ranking-on-price/">Ranking</a>
+        <a href="/amt/one-price-list/wordpress-block.html">WordPress block</a>
+      </nav>
+    </div>
+  </footer>
+  <script>
+    (function () {
+      var buttons = document.querySelectorAll(".filters button");
+      var rows = document.querySelectorAll("#one-list tbody tr");
+      buttons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var family = btn.getAttribute("data-filter");
+          buttons.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+          rows.forEach(function (row) {
+            row.style.display = (family === "all" || row.getAttribute("data-family") === family) ? "" : "none";
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
