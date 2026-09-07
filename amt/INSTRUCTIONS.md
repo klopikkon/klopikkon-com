@@ -38,8 +38,31 @@ If Broadpharm, JenKem, Creative PEGWorks, Avanti, Cayman, TCI, Sigma, Lumiprobe,
 - Borons: https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf
 - Homepage featured cards (prices can differ from the PDF).
 
+## Watcher webhook (fire immediately; do not wait for a nudge)
+
+When ANY of these happen, POST the watcher webhook immediately (GET ok if POST fails):
+
+- (a) a ranking batch is committed/published to https://klopikkon.com/amt/ranking-on-price/
+- (b) you stall waiting for the next instruction
+- (c) you hit usage / rate limits
+
+Webhook URL: `https://api2.cursor.sh/automations/webhook/ee1b3e39-02e4-5214-ba4f-617b2368e94a`
+Sender key: `crsr_266304262db0a4817f2a225be242af04e7f84724f1f62c049450608e4a86561c`
+Authorization: `Bearer crsr_266304262db0a4817f2a225be242af04e7f84724f1f62c049450608e4a86561c`
+
+JSON body examples:
+
+```json
+{"event":"batch_done","family":"PEGs","note":"what just finished"}
+{"event":"stalled","note":"waiting for next continue"}
+{"event":"usage_exhausted","note":"hit rate limit"}
+```
+
+Do not wait for a human nudge between batches — fire the webhook, then wait for the next continue instruction in chat.
+
 ## Do not
 
 - Link Winning / Losing / Unique pages (they redirect to ranking).
 - Dump every commodity pinacol ester from the 120-page boron book.
 - Treat analogue CAS as a win/loss without saying so.
+- Touch `/hello` or `/energy`.
