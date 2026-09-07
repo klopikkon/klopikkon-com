@@ -46,9 +46,11 @@ When ANY of these happen, POST the watcher webhook immediately (GET ok if POST f
 - (b) you stall waiting for the next instruction
 - (c) you hit usage / rate limits
 
-Webhook URL: `https://api2.cursor.sh/automations/webhook/ee1b3e39-02e4-5214-ba4f-617b2368e94a`
-Sender key: `crsr_266304262db0a4817f2a225be242af04e7f84724f1f62c049450608e4a86561c`
-Authorization: `Bearer crsr_266304262db0a4817f2a225be242af04e7f84724f1f62c049450608e4a86561c`
+Webhook URL and Authorization bearer token are **secrets**. Do not commit them.
+
+- URL: set `AMT_WATCHER_WEBHOOK_URL` (Cursor automation webhook).
+- Auth: `Authorization: Bearer $AMT_WATCHER_TOKEN`.
+- Store both only in a private env / password manager / GitHub Actions secret. Never in this file, `AGENTS.md`, chat logs that get committed, or the public site.
 
 JSON body examples:
 
