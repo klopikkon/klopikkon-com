@@ -73,6 +73,9 @@ tr.amt-row { background: #f3eee3; }
 .delta { font-weight: 650; white-space: nowrap; }
 .delta-win { color: var(--win); }
 .delta-lose { color: var(--lose); }
+.subnav { display: flex; flex-wrap: wrap; gap: .35rem .85rem; font-size: .86rem; margin: 1rem 0 1.4rem; }
+.subnav a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); }
+.subnav a[aria-current="page"] { border-bottom-color: var(--ink); }
 .source-list { padding-left: 1.1rem; }
 .source-list li { margin: .25rem 0; }
 .footer-id, .footer-nav { font-size: .88rem; color: var(--muted); }
