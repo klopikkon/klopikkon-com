@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AMT one price list — WordPress paste block</title>
+  <style>
+    body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #f6f4ef; color: #1c1916; }
+    .paste-help { max-width: 720px; margin: 0 auto; padding: 1.2rem 1.25rem .4rem; font-family: system-ui, sans-serif; font-size: .92rem; color: #5c564e; }
+    .paste-help code { background: #efe8db; padding: .05rem .3rem; }
+  </style>
+</head>
+<body>
+  <div class="paste-help">
+    <p><strong>How to paste into WordPress.</strong> Select from the comment <code><!-- AMT-ONE-LIST START --></code> through <code><!-- AMT-ONE-LIST END --></code>. Gutenberg → Custom HTML block → paste. Delete this beige help strip first if you are pasting the whole file.</p>
+    <p>Live mockup: <a href="https://klopikkon.com/amt/one-price-list/">klopikkon.com/amt/one-price-list/</a></p>
+  </div>
+<!-- AMT-ONE-LIST START -->
+<style>
+  .amt-one-list { --ink:#1c1916; --muted:#5c564e; --line:#d7d0c4; --paper:#f4f1ea; --card:#fffdf8; --link:#1d4f7a; --lose-bg:#f6e3dc; font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; color: var(--ink); line-height: 1.5; max-width: 1100px; }
+  .amt-one-list * { box-sizing: border-box; }
+  .amt-one-list h2 { font-size: 1.25rem; margin: 1.6rem 0 .5rem; }
+  .amt-one-list p { margin: 0 0 .7rem; }
+  .amt-one-list .lede { color: var(--muted); font-size: 1.05rem; max-width: 46rem; }
+  .amt-one-list .note { background: #efe8db; border: 1px solid var(--line); padding: .85rem 1rem; margin: 1rem 0; }
+  .amt-one-list .filters { display: flex; flex-wrap: wrap; gap: .4rem; margin: .8rem 0 1rem; }
+  .amt-one-list .filters button { font: inherit; font-size: .85rem; background: var(--card); border: 1px solid var(--line); color: var(--ink); padding: .25rem .7rem; cursor: pointer; }
+  .amt-one-list .filters button[aria-pressed="true"] { background: var(--ink); color: #f4f1ea; }
+  .amt-one-list table { width: 100%; border-collapse: collapse; font-size: .9rem; background: var(--card); margin: 0 0 1.2rem; }
+  .amt-one-list th, .amt-one-list td { border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; padding: .65rem .5rem; }
+  .amt-one-list th { font-size: .74rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  .amt-one-list .product-name { font-weight: 700; display: block; }
+  .amt-one-list .sku { color: var(--muted); font-weight: 400; }
+  .amt-one-list .pack { display: block; white-space: nowrap; }
+  .amt-one-list .conflict { background: var(--lose-bg); }
+  .amt-one-list a { color: var(--link); }
+  .amt-one-list .meta { font-size: .88rem; color: var(--muted); }
+</style>
+<div class="amt-one-list" id="amt-one-list">
+  <h2>Price list</h2>
+  <p class="lede">One published USD number per pack. This table is the commercial list. Brochure PDFs and homepage cards should match it.</p>
+  <div class="note">
+    <p>Prices in USD. Next-day dispatch inside Australia if ordered before 12 noon. International orders: minimum USD $150. PEG linkers in the US: Frontier Specialty Chemicals.</p>
+    <p>Source dates: Lipids 26 Aug 2026 · PEGs 3 Sep 2026 · Dyes 2026 · Organoborons 21 Apr 2026. Homepage used only when the SKU is not on a current PDF.</p>
+  </div>
+  <p class="filters" role="group" aria-label="Filter by family">
+    <button type="button" data-filter="all" aria-pressed="true">All</button>
+    <button type="button" data-filter="lipid">Lipids</button>
+    <button type="button" data-filter="peg">PEGs / linkers</button>
+    <button type="button" data-filter="dye">Dyes</button>
+    <button type="button" data-filter="boron">Borons</button>
+  </p>
+  <table>
+    <thead><tr><th>Family</th><th>Product</th><th>CAS</th><th>Grade</th><th>Published packs</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr data-family="lipid"><td>Lipid</td><td><span class="product-name">ALC-0315</span><span class="sku">AMTGC903-AL21</span></td><td>2036272-55-4</td><td>≥98%</td><td><span class="pack">500 mg · $250</span><span class="pack">1 g · $430</span></td><td>Lipid PDF 26 Aug 2026</td></tr>
+      <tr data-family="lipid"><td>Lipid</td><td><span class="product-name">SM-102</span><span class="sku">AMTGC936-SM21</span></td><td>2089251-47-6</td><td>≥98%</td><td><span class="pack">100 mg · $150</span><span class="pack">500 mg · $410</span><span class="pack">1 g · $690</span></td><td>Lipid PDF 26 Aug 2026</td></tr>
+      <tr data-family="lipid"><td>Lipid</td><td><span class="product-name">Lipid 5</span><span class="sku">AMTGC1533-LP25</span></td><td>2089251-33-0</td><td>≥97%</td><td><span class="pack">100 mg · $140</span><span class="pack">500 mg · $390</span><span class="pack">1 g · $595</span></td><td>Lipid PDF 26 Aug 2026</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">Azido-PEG3-amine</span><span class="sku">AMTGC125-AT15</span></td><td>134179-38-7</td><td>std / 99%</td><td><span class="pack">5 g std · $65</span><span class="pack">25 g std · $240</span><span class="pack">5 g 99% · $150</span></td><td>PEG PDF 3 Sep 2026</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">N3-PEG23-CH2CH2NH2</span><span class="sku">AMTGC1264-AH24</span></td><td>—</td><td>not on card</td><td><span class="pack">100 mg · $250</span><span class="pack">1 g · $780</span></td><td>Homepage</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">Pomalidomide 4'-PEG3-azide</span><span class="sku">AMTGC1223-PL23</span></td><td>2271036-46-3</td><td>not on card</td><td><span class="pack">100 mg · $120</span><span class="pack">500 mg · $360</span></td><td>Homepage</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">Desthiobiotin-PEG3-azide</span><span class="sku">AMTGC1441-DB25</span></td><td>—</td><td>not on card</td><td><span class="pack">10 mg · $120</span><span class="pack">25 mg · $210</span></td><td>Homepage</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">Biotin-PEG2-azide</span><span class="sku">AMTGC857-BA21</span></td><td>945633-30-7</td><td>97% on AKSci</td><td><span class="pack">100 mg · $90</span><span class="pack">250 mg · $190</span></td><td>PEG PDF 3 Sep 2026</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">Biotin-PEG3-amine</span><span class="sku">AMTGC856-BT21</span></td><td>359860-27-8</td><td>not on PDF</td><td><span class="pack">250 mg · $115</span><span class="pack">500 mg · $145</span></td><td>PEG PDF 3 Sep 2026</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">Biotin-PEG5-azide</span><span class="sku">AMTGC754-BZ21</span></td><td>1163732-89-5</td><td>not on PDF</td><td><span class="pack">100 mg · $130</span><span class="pack">500 mg · $290</span></td><td>PEG PDF 3 Sep 2026</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">N-Boc-PEG5-alcohol</span><span class="sku">AMTGC937-AT21</span></td><td>811442-84-9</td><td>not on PDF</td><td><span class="pack">1 g · $120</span><span class="pack">5 g · $360</span></td><td>PEG PDF 3 Sep 2026</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">17-Azido-5-oxo-6-aza-tetraoxaheptadecanoic acid</span><span class="sku">AMTGC1266-AO24</span></td><td>—</td><td>not on card</td><td><span class="pack">1 g · $120</span><span class="pack">5 g · $360</span></td><td>Homepage</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">Squaramide PEG4 azide</span><span class="sku">AMTGC1269-CB24</span></td><td>—</td><td>not on card</td><td><span class="pack">1 g · $120</span><span class="pack">5 g · $360</span></td><td>Homepage</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">N-methyl azido-PEG2-amine</span><span class="sku">AMTGC807-AM21</span></td><td>—</td><td>not on card</td><td><span class="pack">1 g · $80</span><span class="pack">5 g · $240</span></td><td>Homepage</td></tr>
+      <tr data-family="peg"><td>PEG</td><td><span class="product-name">N3-PEG3-NHBoc</span><span class="sku">AMTGC187-AC16</span></td><td>642091-68-7</td><td>not on card</td><td><span class="pack">1 g · $80</span><span class="pack">5 g · $240</span></td><td>Homepage</td></tr>
+      <tr data-family="dye"><td>Dye</td><td><span class="product-name">DBD-F</span><span class="sku">AMTH390-DF24</span></td><td>98358-90-8</td><td>not on card</td><td><span class="pack">250 mg · $195</span><span class="pack">1 g · $595</span></td><td>Homepage</td></tr>
+      <tr data-family="dye"><td>Dye</td><td><span class="product-name">BODIPY 493/503 NHS</span><span class="sku">AMTB1264-NHS18</span></td><td>216961-98-7</td><td>not on PDF</td><td><span class="pack">10 mg · $135</span><span class="pack">50 mg · $405</span></td><td>Dye PDF 2026</td></tr>
+      <tr data-family="dye"><td>Dye</td><td><span class="product-name">BODIPY 493/503 acid</span><span class="sku">AMTB1261-CB18</span></td><td>—</td><td>not on PDF</td><td><span class="pack">50 mg · $160</span><span class="pack">100 mg · $290</span></td><td>Dye PDF 2026</td></tr>
+      <tr data-family="dye"><td>Dye</td><td><span class="product-name">7-Ethoxycoumarin</span><span class="sku">AMTGC115-EC15</span></td><td>31005-02-4</td><td>not on PDF</td><td><span class="pack">1 g · $30</span><span class="pack">5 g · $100</span></td><td>Dye PDF 2026</td></tr>
+      <tr data-family="dye"><td>Dye</td><td><span class="product-name">5-Carboxyfluorescein</span><span class="sku">AMTGC270-CF17</span></td><td>—</td><td>not on PDF</td><td><span class="pack">250 mg · $55</span><span class="pack">1 g · $135</span></td><td>Dye PDF 2026</td></tr>
+      <tr data-family="dye"><td>Dye</td><td><span class="product-name">Methylproamine</span><span class="sku">AMTBZ008-MP17</span></td><td>188247-01-0</td><td>not on PDF</td><td><span class="pack">50 mg · $80</span><span class="pack">250 mg · $240</span></td><td>Dye PDF 2026</td></tr>
+      <tr data-family="dye"><td>Dye</td><td><span class="product-name">Tokyo Green</span><span class="sku">AMTGC308-TG16</span></td><td>643755-80-0</td><td>not on PDF</td><td><span class="pack">100 mg · $150</span><span class="pack">500 mg · $450</span></td><td>Dye PDF 2026</td></tr>
+      <tr data-family="dye"><td>Dye</td><td><span class="product-name">Rhodamine B ethylenediamine</span><span class="sku">AMTGC007-AS11</span></td><td>950846-89-6</td><td>not on PDF</td><td><span class="pack">1 g · $60</span><span class="pack">5 g · $250</span></td><td>Dye PDF 2026</td></tr>
+      <tr data-family="boron"><td>Boron</td><td><span class="product-name">Bis(pinacolato)diboron</span><span class="sku">AMTB148-B08</span></td><td>73183-34-3</td><td>not on PDF</td><td><span class="pack">25 g · $40</span><span class="pack">100 g · $110</span></td><td>Boron PDF 21 Apr 2026</td></tr>
+      <tr data-family="boron"><td>Boron</td><td><span class="product-name">Phenylboronic acid</span><span class="sku">AMTB008-P06</span></td><td>98-80-6</td><td>not on PDF</td><td><span class="pack">25 g · $50</span></td><td>Boron PDF 21 Apr 2026</td></tr>
+    </tbody>
+  </table>
+  <h2>Align the homepage</h2>
+  <p class="meta">Featured cards that still disagree with this list (captured 6 Sep 2026).</p>
+  <table>
+    <thead><tr><th>SKU</th><th>Homepage card</th><th>This list</th></tr></thead>
+    <tbody>
+      <tr class="conflict"><td>ALC-0315 AMTGC903-AL21</td><td>500 mg $310 / 1 g $470</td><td>500 mg $250 / 1 g $430</td></tr>
+      <tr class="conflict"><td>SM-102 AMTGC936-SM21</td><td>500 mg $420 / 1 g $680</td><td>500 mg $410 / 1 g $690</td></tr>
+      <tr class="conflict"><td>Azido-PEG3-amine AMTGC125-AT15</td><td>5 g $80 / 25 g $202</td><td>5 g $65 / 25 g $240 (std)</td></tr>
+    </tbody>
+  </table>
+  <p class="meta">Custom synthesis and bulk: <a href="mailto:enquiries@amtechpl.com">enquiries@amtechpl.com</a> · 03 9764 9220</p>
+</div>
+<script>
+  (function () {
+    var root = document.getElementById("amt-one-list");
+    if (!root) return;
+    var buttons = root.querySelectorAll(".filters button");
+    var rows = root.querySelectorAll("table tbody tr[data-family]");
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var family = btn.getAttribute("data-filter");
+        buttons.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+        rows.forEach(function (row) {
+          row.style.display = (family === "all" || row.getAttribute("data-family") === family) ? "" : "none";
+        });
+      });
+    });
+  })();
+</script>
+<!-- AMT-ONE-LIST END -->
+</body>
+</html>
