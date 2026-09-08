@@ -1,1 +1,122 @@
-<!doctype html><title>klopikkon</title>
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="klopikkon">
+<title>klopikkon</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--ok:#3dd68c;--warn:#ff8b4a;--link:#6ea8fe;--line:#2a3440}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;font:16px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:1.25rem}
+h1{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:0 0 1rem;flex-wrap:wrap}
+.grid{display:grid;gap:.85rem}
+@media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border-radius:1rem;padding:1.1rem 1.15rem;text-decoration:none;color:inherit;display:block;border:1px solid transparent}
+a.card:hover{border-color:#314155}
+.label{color:var(--muted);font-size:.8rem}
+.big{font-size:1.35rem;font-weight:650;letter-spacing:-.02em;margin:.2rem 0 .35rem}
+.sub{color:var(--muted);font-size:.9rem}
+.badge{display:inline-block;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:.15rem .55rem;margin-right:.35rem;color:var(--muted)}
+.badge.public{color:var(--ok);border-color:#245c43}
+.badge.passworded{color:var(--warn);border-color:#6a3d28}
+form{display:flex;flex-direction:column;gap:.7rem;max-width:22rem;margin:18vh auto 0}
+input{font:inherit;padding:.8rem .9rem;border-radius:.7rem;border:1px solid var(--line);background:#0f141a;color:var(--ink)}
+button{font:inherit;font-weight:650;padding:.8rem;border:0;border-radius:.7rem;background:var(--ok);color:#062;cursor:pointer}
+button.secondary{background:#243041;color:var(--ink);padding:.55rem .9rem;font-size:.9rem}
+.err{color:var(--warn);min-height:1.2em}
+a{color:var(--link)}
+#dash[hidden],#lock[hidden]{display:none !important}
+</style>
+<body>
+<div id="lock">
+<h1>klopikkon</h1>
+<form id="f">
+<p class="sub">Password unlocks the site directory. Saved only on this device.</p>
+<input id="pw" type="password" autocomplete="current-password" placeholder="Password" required>
+<button type="submit">Unlock</button>
+<p class="err" id="err"></p>
+</form>
+</div>
+<div id="dash" hidden>
+<div class="top">
+  <h1>klopikkon</h1>
+  <button type="button" class="secondary" id="lockout">Lock</button>
+</div>
+<p class="sub" id="note" style="margin:0 0 1rem"></p>
+<p class="sub" id="updated" style="margin:0 0 1rem"></p>
+<div class="grid" id="list"></div>
+</div>
+<script>
+const SALT_HEX = "062888d3498cccef9f2550a90d07c521";
+const LS = "klopikkon-hub-pw";
+let lastData = null;
+function hexToBytes(h){const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.substr(i*2,2),16);return a}
+function b64ToBytes(s){const bin=atob(s.trim());const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a}
+async function deriveKey(password){
+  const enc=new TextEncoder();
+  const material=await crypto.subtle.importKey("raw",enc.encode(password),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt:hexToBytes(SALT_HEX),iterations:100000,hash:"SHA-256"},material,{name:"AES-GCM",length:256},false,["decrypt"]);
+}
+async function load(password){
+  const res=await fetch("hub.enc?t="+Date.now(),{cache:"no-store"});
+  if(!res.ok) throw new Error("No hub data yet");
+  const buf=b64ToBytes(await res.text());
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:buf.slice(0,12)},await deriveKey(password),buf.slice(12));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+function accessBadge(a){
+  const v=(a||"unlisted").toLowerCase();
+  const cls=v==="public"?"public":v==="passworded"?"passworded":"";
+  return '<span class="badge '+cls+'">'+escapeHtml(v)+"</span>";
+}
+function render(d){
+  lastData=d;
+  document.getElementById("lock").hidden=true;
+  document.getElementById("dash").hidden=false;
+  document.getElementById("note").textContent=d.note||"";
+  try{
+    const t=d.updated_at?new Date(d.updated_at):null;
+    document.getElementById("updated").textContent=t&&!isNaN(t)?("Updated "+t.toLocaleString("en-AU",{timeZone:"Australia/Sydney",weekday:"short",day:"numeric",month:"short",hour:"numeric",minute:"2-digit",hour12:true})):"Updated —";
+  }catch(e){document.getElementById("updated").textContent="Updated —"}
+  const list=document.getElementById("list");
+  list.innerHTML="";
+  const frag=document.createDocumentFragment();
+  for(const s of (d.sites||[])){
+    const a=document.createElement("a");
+    a.className="card";
+    a.href=s.path||"#";
+    a.innerHTML=accessBadge(s.access)+'<div class="big">'+escapeHtml(s.title||s.path||"—")+'</div><div class="label">'+escapeHtml(s.path||"")+'</div><div class="sub">'+escapeHtml(s.blurb||"")+"</div>";
+    frag.appendChild(a);
+  }
+  list.appendChild(frag);
+}
+async function unlock(password){
+  const err=document.getElementById("err");
+  err.textContent="";
+  try{
+    const d=await load(password);
+    localStorage.setItem(LS,password);
+    render(d);
+  }catch(e){
+    localStorage.removeItem(LS);
+    document.getElementById("dash").hidden=true;
+    document.getElementById("lock").hidden=false;
+    err.textContent=e.name==="OperationError"?"Wrong password.":String(e.message||e);
+    throw e;
+  }
+}
+document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();unlock(document.getElementById("pw").value).catch(()=>{})});
+document.getElementById("lockout").addEventListener("click",()=>{
+  localStorage.removeItem(LS); lastData=null;
+  document.getElementById("dash").hidden=true; document.getElementById("list").innerHTML="";
+  document.getElementById("lock").hidden=false; document.getElementById("pw").value=""; document.getElementById("err").textContent="";
+});
+const saved=localStorage.getItem(LS);
+if(saved) unlock(saved).catch(()=>{});
+</script>
+</body>
+</html>
