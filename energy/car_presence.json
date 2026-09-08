@@ -1,6 +1,6 @@
 {
-  "plugged": true,
-  "state": "Charging",
-  "soc": 84,
-  "ts": "2026-09-08T15:31:46+1000"
+  "plugged": false,
+  "state": "Disconnected",
+  "soc": 85,
+  "ts": "2026-09-08T16:01:55+1000"
 }
