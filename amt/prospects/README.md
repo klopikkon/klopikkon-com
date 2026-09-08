@@ -19,23 +19,25 @@ Live: https://klopikkon.com/amt/prospects/
       "region": "AU",
       "country": "Australia",
       "segment": "AU pub",
-      "notes": "short note",
-      "source": "Drive AMT accounts",
-      "source_year": 2026,
-      "why_sell": "…",
-      "geography": "Melbourne VIC",
-      "address": "…",
-      "contact_names": "…",
-      "contact_emails": "a@b; c@d",
-      "contact_phones": "…",
-      "contact_path": "…",
+      "why_sell": "why AMT fits",
+      "geography": "Melbourne CBD",
+      "address": "",
+      "contact_names": "Name — role",
+      "contact_emails": "public@example.edu.au",
+      "contact_phones": "",
+      "contact_path": "https://…",
       "current_customer": false,
-      "incumbent": "…",
-      "modality": "LNP / mRNA"
+      "incumbent": "DC Chemicals",
+      "modality": "LNP/mRNA",
+      "notes": "optional leftover",
+      "source": "https://…",
+      "source_year": 2026
     }
   ]
 }
 ```
+
+Card sections: Why sell (`why_sell`) · Company (`geography`/`address`/`region`/`country`) · Contacts (`contact_*`) · Category (`segment`/`current_customer`/`incumbent`/`modality`). Empty fields stay hidden. Legacy `notes`-only rows still render a Notes block.
 
 Segments examples: `AU pub`, `US-EU scale`, `AU-NZ vet`.
 
