@@ -21,7 +21,17 @@ Live: https://klopikkon.com/amt/prospects/
       "segment": "AU pub",
       "notes": "short note",
       "source": "Drive AMT accounts",
-      "source_year": 2026
+      "source_year": 2026,
+      "why_sell": "…",
+      "geography": "Melbourne VIC",
+      "address": "…",
+      "contact_names": "…",
+      "contact_emails": "a@b; c@d",
+      "contact_phones": "…",
+      "contact_path": "…",
+      "current_customer": false,
+      "incumbent": "…",
+      "modality": "LNP / mRNA"
     }
   ]
 }
