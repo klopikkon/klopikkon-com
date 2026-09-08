@@ -122,6 +122,17 @@ function escapeHtml(s){
 function hasText(v){
   return v != null && String(v).trim() !== "";
 }
+function normalizeUrl(u){
+  try{
+    const x = new URL(String(u).trim());
+    x.hash = "";
+    let path = x.pathname.replace(/\/+$/, "") || "/";
+    x.pathname = path;
+    return (x.origin + x.pathname + x.search).toLowerCase();
+  }catch(e){
+    return String(u || "").trim().replace(/\/+$/, "").toLowerCase();
+  }
+}
 function splitUrls(value){
   if(value == null) return [];
   const parts = Array.isArray(value) ? value : [value];
@@ -209,9 +220,13 @@ function renderCategory(a){
   if(hasText(a.modality)) badges.push('<span class="badge">' + escapeHtml(a.modality) + "</span>");
   if(a.source_year) badges.push('<span class="badge">' + escapeHtml(String(a.source_year)) + "</span>");
   let html = badges.length ? '<div class="meta">' + badges.join("") + "</div>" : "";
-  const sources = sourceList(a);
+  const pathNorm = new Set(pathList(a).map(normalizeUrl));
+  const sources = sourceList(a).filter(u => !pathNorm.has(normalizeUrl(u)));
   if(sources.length) html += '<div class="row" style="margin-top:.45rem"><span class="k">Source</span><span class="v">' + sources.map(anchor).join("<br>") + "</span></div>";
-  else if(hasText(a.source) && !/^https?:\/\//i.test(String(a.source).trim())) html += '<div class="row" style="margin-top:.45rem"><span class="k">Source</span><span class="v">' + escapeHtml(String(a.source)) + "</span></div>";
+  else if(hasText(a.source) && !/^https?:\/\//i.test(String(a.source).trim())) {
+    // non-URL source label only when no path URLs already cover discovery
+    if(!pathNorm.size) html += '<div class="row" style="margin-top:.45rem"><span class="k">Source</span><span class="v">' + escapeHtml(String(a.source)) + "</span></div>";
+  }
   return html;
 }
 function renderList(){
