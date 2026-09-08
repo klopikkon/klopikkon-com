@@ -1,0 +1,25 @@
+{
+  "updated_at": null,
+  "status": "awaiting_first_update",
+  "note": "Tap Update after saving the webhook URL and sender key on this device.",
+  "grok_bot": {
+    "label": "Grok Bot",
+    "period": "weekly",
+    "used_pct": null,
+    "remaining_pct": null,
+    "used_display": "—",
+    "limit_display": "—",
+    "reset_display": "—",
+    "source_url": "https://cursor.com/dashboard/spending"
+  },
+  "grok": {
+    "label": "Grok",
+    "period": "—",
+    "used_pct": null,
+    "remaining_pct": null,
+    "used_display": "—",
+    "limit_display": "—",
+    "reset_display": "—",
+    "source_url": "https://grok.com"
+  }
+}
