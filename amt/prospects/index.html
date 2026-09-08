@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AMT prospects">
+<title>AMT prospects</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--ok:#3dd68c;--warn:#ff8b4a;--link:#6ea8fe;--line:#2a3440}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;font:16px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:1.25rem}
+h1{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:0 0 1rem;flex-wrap:wrap}
+.grid{display:grid;gap:.85rem}
+.card{background:var(--card);border-radius:1rem;padding:1.1rem 1.15rem}
+.label{color:var(--muted);font-size:.8rem}
+.big{font-size:1.35rem;font-weight:650;letter-spacing:-.02em;margin:.2rem 0 .35rem}
+.sub{color:var(--muted);font-size:.9rem}
+.badge{display:inline-block;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.15rem .55rem;margin-right:.35rem}
+form{display:flex;flex-direction:column;gap:.7rem;max-width:22rem;margin:18vh auto 0}
+input,select{font:inherit;padding:.8rem .9rem;border-radius:.7rem;border:1px solid var(--line);background:#0f141a;color:var(--ink);width:100%}
+button{font:inherit;font-weight:650;padding:.8rem;border:0;border-radius:.7rem;background:var(--ok);color:#062;cursor:pointer}
+button.secondary{background:#243041;color:var(--ink);padding:.55rem .9rem;font-size:.9rem}
+.err{color:var(--warn);min-height:1.2em}
+.filters{display:grid;gap:.55rem;grid-template-columns:1fr}
+@media(min-width:640px){.filters{grid-template-columns:2fr 1fr}}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.45rem}
+.empty{color:var(--muted);padding:1rem 0}
+a{color:var(--link)}
+#dash[hidden],#lock[hidden]{display:none !important}
+</style>
+<body>
+<div id="lock">
+<h1>AMT prospects</h1>
+<form id="f">
+<p class="sub">Password unlocks the list. Saved only on this device.</p>
+<input id="pw" type="password" autocomplete="current-password" placeholder="Password" required>
+<button type="submit">Unlock</button>
+<p class="err" id="err"></p>
+</form>
+</div>
+<div id="dash" hidden>
+<div class="top">
+  <h1>AMT prospects</h1>
+  <button type="button" class="secondary" id="lockout">Lock</button>
+</div>
+<div class="card" style="margin-bottom:.85rem">
+  <div class="filters">
+    <input id="q" type="search" placeholder="Search company, notes, region…" autocomplete="off">
+    <select id="seg"><option value="">All segments</option></select>
+  </div>
+  <div class="sub" style="margin-top:.7rem" id="count"></div>
+  <div class="sub" id="updated"></div>
+  <div class="sub" id="note"></div>
+</div>
+<div class="grid" id="list"></div>
+</div>
+<script>
+const SALT_HEX = "9fb8b0b8a9fd5e3479239febceea8e5e";
+const LS = "amt-prospects-pw";
+let lastData = null;
+
+function hexToBytes(h){
+  const a = new Uint8Array(h.length / 2);
+  for(let i = 0; i < a.length; i++) a[i] = parseInt(h.substr(i * 2, 2), 16);
+  return a;
+}
+function b64ToBytes(s){
+  const bin = atob(s.trim());
+  const a = new Uint8Array(bin.length);
+  for(let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i);
+  return a;
+}
+async function deriveKey(password){
+  const enc = new TextEncoder();
+  const material = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    {name:"PBKDF2", salt:hexToBytes(SALT_HEX), iterations:100000, hash:"SHA-256"},
+    material,
+    {name:"AES-GCM", length:256},
+    false,
+    ["decrypt"]
+  );
+}
+async function load(password){
+  const res = await fetch("prospects.enc?t=" + Date.now(), {cache:"no-store"});
+  if(!res.ok) throw new Error("No prospects blob yet");
+  const buf = b64ToBytes(await res.text());
+  const pt = await crypto.subtle.decrypt(
+    {name:"AES-GCM", iv:buf.slice(0,12)},
+    await deriveKey(password),
+    buf.slice(12)
+  );
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+function fmtUpdated(iso){
+  if(!iso) return "Updated —";
+  try{
+    const d = new Date(iso);
+    if(isNaN(d.getTime())) return "Updated " + iso;
+    return "Updated " + d.toLocaleString("en-AU", {
+      timeZone:"Australia/Sydney",
+      weekday:"short", day:"numeric", month:"short",
+      hour:"numeric", minute:"2-digit", hour12:true
+    });
+  }catch(e){ return "Updated " + iso; }
+}
+function segments(accounts){
+  const s = new Set();
+  for(const a of accounts){
+    const v = (a.segment || "").trim();
+    if(v) s.add(v);
+  }
+  return [...s].sort((a,b)=>a.localeCompare(b));
+}
+function matches(a, q, seg){
+  if(seg && (a.segment || "") !== seg) return false;
+  if(!q) return true;
+  const hay = [a.company, a.region, a.country, a.segment, a.notes, a.source, a.source_year]
+    .map(x => (x == null ? "" : String(x)).toLowerCase()).join(" ");
+  return q.split(/\s+/).filter(Boolean).every(t => hay.includes(t));
+}
+function renderList(){
+  if(!lastData) return;
+  const accounts = Array.isArray(lastData.accounts) ? lastData.accounts : [];
+  const q = (document.getElementById("q").value || "").trim().toLowerCase();
+  const seg = document.getElementById("seg").value;
+  const rows = accounts.filter(a => matches(a, q, seg));
+  document.getElementById("count").textContent = rows.length + " of " + accounts.length + " accounts";
+  document.getElementById("updated").textContent = fmtUpdated(lastData.updated_at);
+  document.getElementById("note").textContent = lastData.note || "";
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  if(!rows.length){
+    list.innerHTML = '<div class="card empty">No matches.</div>';
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  for(const a of rows){
+    const card = document.createElement("div");
+    card.className = "card";
+    const region = [a.region, a.country].filter(Boolean).join(" · ") || "—";
+    const meta = [];
+    if(a.segment) meta.push('<span class="badge">' + escapeHtml(a.segment) + "</span>");
+    if(a.source_year) meta.push('<span class="badge">' + escapeHtml(String(a.source_year)) + "</span>");
+    if(a.source) meta.push('<span class="sub">' + escapeHtml(String(a.source)) + "</span>");
+    card.innerHTML =
+      '<div class="label">' + escapeHtml(region) + "</div>" +
+      '<div class="big">' + escapeHtml(a.company || "—") + "</div>" +
+      '<div class="sub">' + escapeHtml(a.notes || "") + "</div>" +
+      '<div class="meta">' + meta.join("") + "</div>";
+    frag.appendChild(card);
+  }
+  list.appendChild(frag);
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+function showDash(d){
+  lastData = d;
+  document.getElementById("lock").hidden = true;
+  document.getElementById("dash").hidden = false;
+  const sel = document.getElementById("seg");
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">All segments</option>';
+  for(const s of segments(d.accounts || [])){
+    const o = document.createElement("option");
+    o.value = s; o.textContent = s;
+    sel.appendChild(o);
+  }
+  if([...sel.options].some(o => o.value === cur)) sel.value = cur;
+  renderList();
+}
+async function unlock(password){
+  const err = document.getElementById("err");
+  err.textContent = "";
+  try{
+    const d = await load(password);
+    localStorage.setItem(LS, password);
+    showDash(d);
+  }catch(e){
+    localStorage.removeItem(LS);
+    document.getElementById("dash").hidden = true;
+    document.getElementById("lock").hidden = false;
+    err.textContent = e.name === "OperationError" ? "Wrong password." : String(e.message || e);
+    throw e;
+  }
+}
+document.getElementById("f").addEventListener("submit", e => {
+  e.preventDefault();
+  unlock(document.getElementById("pw").value).catch(()=>{});
+});
+document.getElementById("q").addEventListener("input", renderList);
+document.getElementById("seg").addEventListener("change", renderList);
+document.getElementById("lockout").addEventListener("click", () => {
+  localStorage.removeItem(LS);
+  lastData = null;
+  document.getElementById("dash").hidden = true;
+  document.getElementById("list").innerHTML = "";
+  document.getElementById("lock").hidden = false;
+  document.getElementById("pw").value = "";
+  document.getElementById("err").textContent = "";
+});
+const saved = localStorage.getItem(LS);
+if(saved) unlock(saved).catch(()=>{});
+</script>
+</body>
+</html>
