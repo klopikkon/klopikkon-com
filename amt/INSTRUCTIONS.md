@@ -68,3 +68,12 @@ Do not wait for a human nudge between batches — fire the webhook, then wait fo
 - Dump every commodity pinacol ester from the 120-page boron book.
 - Treat analogue CAS as a win/loss without saying so.
 - Touch `/hello` or `/energy`.
+
+## Prospects page (unlisted + password)
+
+- Live: https://klopikkon.com/amt/prospects/
+- Unlisted. Do **not** link from `/hello`, root, or the public `/amt/` ranking nav.
+- Password unlock uses PBKDF2 + AES-GCM (`prospects.enc`), same pattern as `/energy/`.
+- Source of truth for the account list: AMT account scout Drive folder **AMT accounts**.
+- When the scout list updates, export JSON and republish with `amt/prospects/publish.py` (secrets `AMT_PROSPECTS_PASSWORD`, `AMT_PROSPECTS_SALT`, `GH_PAT` — never commit those, never put webhook secrets in this tree).
+- See `amt/prospects/README.md` for the JSON shape.
