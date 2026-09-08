@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-09-08T01:50:22Z",
-  "status": "partial",
-  "note": "Grok Bot from Cursor Spending. Grok.com meter still loading.",
+  "updated_at": "2026-09-08T01:52:42Z",
+  "status": "ok",
+  "note": "Grok Bot from cursor.com/dashboard/spending; Grok from grok.com/?_s=usage",
   "grok_bot": {
     "label": "Grok Bot",
-    "period": "SuperGrok pool (resets ~weekly)",
+    "period": "SuperGrok pool",
     "used_pct": 13,
     "remaining_pct": 87,
     "used_display": "13% used",
@@ -14,12 +14,12 @@
   },
   "grok": {
     "label": "Grok",
-    "period": "\u2014",
-    "used_pct": null,
-    "remaining_pct": null,
-    "used_display": "\u2014",
-    "limit_display": "Checking grok.com\u2026",
-    "reset_display": "\u2014",
-    "source_url": "https://grok.com"
+    "period": "weekly SuperGrok",
+    "used_pct": 96,
+    "remaining_pct": 4,
+    "used_display": "96% used (Chat 91%, Imagine 4%, Automations 1%)",
+    "limit_display": "SuperGrok weekly limit",
+    "reset_display": "Weekly reset Sep 9, 2026 9:05 PM \u00b7 Usage Limit Reset available (expires Sep 12)",
+    "source_url": "https://grok.com/?_s=usage"
   }
 }
