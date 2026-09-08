@@ -1,27 +1,27 @@
 {
-  "updated_at": "2026-09-08T01:59:33Z",
+  "updated_at": "2026-09-08T11:50:42Z",
   "status": "ok",
   "note": "",
   "grok_bot": {
     "label": "Grok Bot",
-    "period": "SuperGrok pool \u00b7 separate from Grok",
-    "used_pct": 13,
-    "remaining_pct": 87,
-    "used_display": "13% used",
+    "period": "SuperGrok pool · separate from Grok",
+    "used_pct": 97,
+    "remaining_pct": 3,
+    "used_display": "97% used",
     "limit_display": "weekly SuperGrok Bot pool",
-    "reset_display": "Tue 9 Sep AEST \u00b7 2 days left",
-    "uses": "Tariff chemicals \u00b7 Personal assistant \u00b7 Updating dashboards \u00b7 Full automation of procedures",
+    "reset_display": "Wed 9 Sep AEST · 2 days left",
+    "uses": "Tariff chemicals · Personal assistant · Updating dashboards · Full automation of procedures",
     "source_url": "https://cursor.com/dashboard/spending"
   },
   "grok": {
     "label": "Grok",
-    "period": "Chat 91% \u00b7 Imagine 4% \u00b7 Automations 1%",
+    "period": "Chat 91% · Imagine 4% · Automations 1%",
     "used_pct": 96,
     "remaining_pct": 4,
     "used_display": "96% used",
     "limit_display": "weekly SuperGrok",
-    "reset_display": "Tue 9 Sep \u00b7 9:05 pm AEST",
-    "uses": "SDS creation \u00b7 Website development \u00b7 Strategy \u00b7 Bulk processing",
+    "reset_display": "Wed 9 Sep · 9:05 pm AEST",
+    "uses": "SDS creation · Website development · Strategy · Bulk processing",
     "source_url": "https://grok.com/?_s=usage"
   }
 }
