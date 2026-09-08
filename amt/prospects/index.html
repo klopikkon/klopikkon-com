@@ -122,12 +122,37 @@ function escapeHtml(s){
 function hasText(v){
   return v != null && String(v).trim() !== "";
 }
-function linkify(text){
-  const t = String(text).trim();
-  if(/^https?:\/\//i.test(t)){
-    return '<a href="' + escapeHtml(t) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(t) + "</a>";
+function splitUrls(value){
+  if(value == null) return [];
+  const parts = Array.isArray(value) ? value : [value];
+  const out = [];
+  for(const part of parts){
+    String(part).split(/[;|\n]+/).forEach(chunk => {
+      chunk.split(/\s+/).forEach(tok => {
+        const s = tok.trim().replace(/^[<(]+|[>),.]+$/g, "");
+        if(/^https?:\/\//i.test(s)) out.push(s);
+      });
+    });
   }
-  return escapeHtml(t);
+  return [...new Set(out)];
+}
+function anchor(url){
+  return '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(url) + "</a>";
+}
+function linkify(text){
+  const urls = splitUrls(text);
+  if(urls.length) return urls.map(anchor).join("<br>");
+  return escapeHtml(String(text == null ? "" : text).trim());
+}
+function pathList(a){
+  if(Array.isArray(a.contact_paths) && a.contact_paths.length) return splitUrls(a.contact_paths);
+  if(Array.isArray(a.contact_path)) return splitUrls(a.contact_path);
+  return splitUrls(a.contact_path);
+}
+function sourceList(a){
+  if(Array.isArray(a.sources) && a.sources.length) return splitUrls(a.sources);
+  if(Array.isArray(a.source)) return splitUrls(a.source);
+  return splitUrls(a.source);
 }
 function row(label, value, asHtml){
   if(!hasText(value)) return "";
@@ -152,7 +177,7 @@ function matches(a, q, seg){
   const hay = [
     a.company, a.region, a.country, a.segment, a.notes, a.source, a.source_year,
     a.why_sell, a.geography, a.address, a.contact_names, a.contact_emails,
-    a.contact_phones, a.contact_path, a.incumbent, a.modality,
+    a.contact_phones, a.contact_path, a.contact_paths, a.incumbent, a.modality,
     a.current_customer === true ? "current customer" : "",
     a.current_customer === false ? "not current" : ""
   ].map(x => (x == null ? "" : String(x)).toLowerCase()).join(" ");
@@ -171,10 +196,8 @@ function renderContacts(a){
   bits.push(row("People", a.contact_names));
   bits.push(row("Email", a.contact_emails));
   bits.push(row("Phone", a.contact_phones));
-  if(hasText(a.contact_path)){
-    const paths = String(a.contact_path).split(/\s*\|\s*|\n+/).map(s => s.trim()).filter(Boolean);
-    bits.push(row("Path", paths.map(linkify).join("<br>"), true));
-  }
+  const paths = pathList(a);
+  if(paths.length) bits.push(row("Path", paths.map(anchor).join("<br>"), true));
   return bits.filter(Boolean).join("");
 }
 function renderCategory(a){
@@ -186,7 +209,9 @@ function renderCategory(a){
   if(hasText(a.modality)) badges.push('<span class="badge">' + escapeHtml(a.modality) + "</span>");
   if(a.source_year) badges.push('<span class="badge">' + escapeHtml(String(a.source_year)) + "</span>");
   let html = badges.length ? '<div class="meta">' + badges.join("") + "</div>" : "";
-  if(hasText(a.source)) html += '<div class="row" style="margin-top:.45rem"><span class="k">Source</span><span class="v">' + linkify(a.source) + "</span></div>";
+  const sources = sourceList(a);
+  if(sources.length) html += '<div class="row" style="margin-top:.45rem"><span class="k">Source</span><span class="v">' + sources.map(anchor).join("<br>") + "</span></div>";
+  else if(hasText(a.source) && !/^https?:\/\//i.test(String(a.source).trim())) html += '<div class="row" style="margin-top:.45rem"><span class="k">Source</span><span class="v">' + escapeHtml(String(a.source)) + "</span></div>";
   return html;
 }
 function renderList(){
