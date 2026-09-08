@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Limits">
+<title>Limits</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--ok:#3dd68c;--warn:#ff8b4a;--link:#6ea8fe;--bar:#243041;--bar-fill:#3dd68c}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;font:16px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:1.25rem}
+.top{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:0 0 1rem;flex-wrap:wrap}
+h1{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0}
+.actions{display:flex;gap:.5rem;align-items:center}
+.grid{display:grid;gap:.85rem;grid-template-columns:1fr}
+@media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border-radius:1rem;padding:1.1rem 1.15rem}
+.wide{grid-column:1/-1}
+.label{color:var(--muted);font-size:.8rem}
+.big{font-size:2.4rem;font-weight:650;letter-spacing:-.03em;margin:.15rem 0;font-variant-numeric:tabular-nums}
+.sub{color:var(--muted);font-size:.9rem}
+.row{display:flex;justify-content:space-between;gap:.75rem;margin-top:.55rem}
+.bar{height:.55rem;background:var(--bar);border-radius:999px;overflow:hidden;margin-top:.75rem}
+.bar > span{display:block;height:100%;background:var(--bar-fill);width:0;transition:width .35s ease}
+button{font:inherit;font-weight:650;padding:.8rem;border:0;border-radius:.7rem;background:var(--ok);color:#062;cursor:pointer}
+button.secondary{background:#243041;color:var(--ink);padding:.55rem .9rem;font-size:.9rem}
+button:disabled{opacity:.55;cursor:wait}
+input{font:inherit;padding:.8rem .9rem;border-radius:.7rem;border:1px solid #2a3440;background:#0f141a;color:var(--ink);width:100%}
+.setup{display:flex;flex-direction:column;gap:.7rem;max-width:28rem}
+.err{color:var(--warn);min-height:1.2em}
+.ok{color:var(--ok)}
+a{color:var(--link)}
+.hidden{display:none !important}
+</style>
+<body>
+<div class="top">
+  <h1>Limits</h1>
+  <div class="actions">
+    <button type="button" class="secondary" id="setup-btn">Setup</button>
+    <button type="button" class="secondary" id="upd">Update</button>
+  </div>
+</div>
+
+<div id="setup" class="card wide setup hidden">
+  <div class="label">Webhook on this device</div>
+  <p class="sub">Paste the Grok Bot webhook URL and sender key. Saved only in this browser — never in the repo.</p>
+  <input id="wh-url" type="url" placeholder="https://… webhook URL" autocomplete="off">
+  <input id="wh-token" type="password" placeholder="Sender key / bearer token" autocomplete="off">
+  <button type="button" id="save-setup">Save on this device</button>
+  <p class="err" id="setup-msg"></p>
+</div>
+
+<div class="grid" id="dash">
+  <div class="card" id="card-bot">
+    <div class="label" id="bot-label">Grok Bot</div>
+    <div class="big" id="bot-used">—</div>
+    <div class="sub" id="bot-period">weekly</div>
+    <div class="row">
+      <span class="sub" id="bot-limit">Limit —</span>
+      <span class="sub" id="bot-reset">Reset —</span>
+    </div>
+    <div class="bar" id="bot-bar" hidden><span id="bot-bar-fill"></span></div>
+    <div class="sub" style="margin-top:.7rem"><a id="bot-link" href="https://cursor.com/dashboard/spending" target="_blank" rel="noopener">cursor.com/dashboard/spending</a></div>
+  </div>
+
+  <div class="card" id="card-grok">
+    <div class="label" id="grok-label">Grok</div>
+    <div class="big" id="grok-used">—</div>
+    <div class="sub" id="grok-period">—</div>
+    <div class="row">
+      <span class="sub" id="grok-limit">Limit —</span>
+      <span class="sub" id="grok-reset">Reset —</span>
+    </div>
+    <div class="bar" id="grok-bar" hidden><span id="grok-bar-fill"></span></div>
+    <div class="sub" style="margin-top:.7rem"><a id="grok-link" href="https://grok.com" target="_blank" rel="noopener">grok.com</a></div>
+  </div>
+
+  <div class="card wide">
+    <div class="sub" id="updated">Updated —</div>
+    <div class="sub" id="status">Status —</div>
+    <div class="sub" id="note"></div>
+    <div class="sub" id="upd-status"></div>
+  </div>
+</div>
+
+<script>
+const LS_URL = "limits-webhook-url";
+const LS_TOKEN = "limits-webhook-token";
+let lastUpdatedAt = null;
+let updating = false;
+
+function $(id){ return document.getElementById(id); }
+
+function hasCreds(){
+  return !!(localStorage.getItem(LS_URL) && localStorage.getItem(LS_TOKEN));
+}
+
+function showSetup(force){
+  const need = force || !hasCreds();
+  $("setup").classList.toggle("hidden", !need);
+  if(need){
+    $("wh-url").value = localStorage.getItem(LS_URL) || "";
+    $("wh-token").value = localStorage.getItem(LS_TOKEN) || "";
+  }
+}
+
+function fmtUpdated(iso){
+  if(!iso) return "Updated —";
+  try{
+    const d = new Date(iso);
+    if(isNaN(d.getTime())) return "Updated " + iso;
+    return "Updated " + d.toLocaleString("en-AU", {
+      timeZone: "Australia/Sydney",
+      weekday: "short", day: "numeric", month: "short",
+      hour: "numeric", minute: "2-digit", hour12: true
+    }) + " AEST/AEDT";
+  }catch(e){
+    return "Updated " + iso;
+  }
+}
+
+function fillCard(prefix, block){
+  const b = block || {};
+  $(prefix + "-label").textContent = b.label || (prefix === "bot" ? "Grok Bot" : "Grok");
+  $(prefix + "-used").textContent = b.used_display || "—";
+  $(prefix + "-period").textContent = b.period || "—";
+  $(prefix + "-limit").textContent = "Limit " + (b.limit_display || "—");
+  $(prefix + "-reset").textContent = "Reset " + (b.reset_display || "—");
+  const link = $(prefix + "-link");
+  if(b.source_url){
+    link.href = b.source_url;
+    try { link.textContent = new URL(b.source_url).host + new URL(b.source_url).pathname.replace(/\/$/, ""); }
+    catch(e){ link.textContent = b.source_url; }
+  }
+  const bar = $(prefix + "-bar");
+  const fill = $(prefix + "-bar-fill");
+  const pct = Number(b.used_pct);
+  if(b.used_pct != null && !isNaN(pct)){
+    bar.hidden = false;
+    fill.style.width = Math.max(0, Math.min(100, pct)) + "%";
+    if(pct >= 90) fill.style.background = "var(--warn)";
+    else fill.style.background = "var(--bar-fill)";
+  } else {
+    bar.hidden = true;
+    fill.style.width = "0";
+  }
+}
+
+function render(d){
+  lastUpdatedAt = d.updated_at || null;
+  fillCard("bot", d.grok_bot);
+  fillCard("grok", d.grok);
+  $("updated").textContent = fmtUpdated(d.updated_at);
+  $("status").textContent = "Status " + (d.status || "—");
+  $("note").textContent = d.note || "";
+}
+
+async function loadJson(){
+  const res = await fetch("limits.json?t=" + Date.now(), { cache: "no-store" });
+  if(!res.ok) throw new Error("Could not load limits.json (" + res.status + ")");
+  return res.json();
+}
+
+async function refreshView(){
+  const d = await loadJson();
+  render(d);
+  return d;
+}
+
+$("setup-btn").addEventListener("click", () => {
+  const open = $("setup").classList.contains("hidden");
+  showSetup(open || !hasCreds());
+  if(!open) $("setup").classList.add("hidden");
+});
+
+$("save-setup").addEventListener("click", () => {
+  const url = $("wh-url").value.trim();
+  const token = $("wh-token").value.trim();
+  if(!url || !token){
+    $("setup-msg").textContent = "URL and sender key are both required.";
+    $("setup-msg").className = "err";
+    return;
+  }
+  localStorage.setItem(LS_URL, url);
+  localStorage.setItem(LS_TOKEN, token);
+  $("setup-msg").textContent = "Saved on this device.";
+  $("setup-msg").className = "ok";
+  setTimeout(() => { $("setup").classList.add("hidden"); }, 600);
+});
+
+async function pollForUpdate(prev){
+  const deadline = Date.now() + 120000;
+  while(Date.now() < deadline){
+    await new Promise(r => setTimeout(r, 5000));
+    try{
+      const d = await loadJson();
+      const next = d.updated_at || null;
+      if(next && next !== prev){
+        render(d);
+        $("upd-status").textContent = "Fresh numbers loaded.";
+        $("upd-status").className = "sub ok";
+        return;
+      }
+      $("upd-status").textContent = "Waiting for refresh…";
+    }catch(e){
+      $("upd-status").textContent = "Poll error: " + e.message;
+      $("upd-status").className = "sub err";
+    }
+  }
+  $("upd-status").textContent = "Timed out waiting for a newer limits.json.";
+  $("upd-status").className = "sub err";
+}
+
+$("upd").addEventListener("click", async () => {
+  if(updating) return;
+  if(!hasCreds()){
+    showSetup(true);
+    $("setup-msg").textContent = "Save the webhook URL and sender key first.";
+    $("setup-msg").className = "err";
+    return;
+  }
+  updating = true;
+  $("upd").disabled = true;
+  $("upd-status").className = "sub";
+  $("upd-status").textContent = "Requesting refresh…";
+  const prev = lastUpdatedAt;
+  try{
+    const res = await fetch(localStorage.getItem(LS_URL), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem(LS_TOKEN)
+      },
+      body: JSON.stringify({ event: "limits_refresh", source: "klopikkon.com/limits" })
+    });
+    if(!res.ok){
+      throw new Error("Webhook HTTP " + res.status);
+    }
+    $("upd-status").textContent = "Webhook accepted. Polling…";
+    await pollForUpdate(prev);
+  }catch(e){
+    $("upd-status").textContent = "Update failed: " + e.message;
+    $("upd-status").className = "sub err";
+  }finally{
+    updating = false;
+    $("upd").disabled = false;
+  }
+});
+
+showSetup(false);
+refreshView().catch(e => {
+  $("status").textContent = "Status error";
+  $("note").textContent = e.message;
+  $("note").className = "sub err";
+});
+</script>
+</body>
+</html>
