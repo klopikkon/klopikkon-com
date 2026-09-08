@@ -47,7 +47,7 @@ a{color:var(--link)}
 </div>
 <div class="card" style="margin-bottom:.85rem">
   <div class="filters">
-    <input id="q" type="search" placeholder="Search company, notes, region…" autocomplete="off">
+    <input id="q" type="search" placeholder="Search company, contacts, why sell…" autocomplete="off">
     <select id="seg"><option value="">All segments</option></select>
   </div>
   <div class="sub" style="margin-top:.7rem" id="count"></div>
@@ -117,7 +117,9 @@ function segments(accounts){
 function matches(a, q, seg){
   if(seg && (a.segment || "") !== seg) return false;
   if(!q) return true;
-  const hay = [a.company, a.region, a.country, a.segment, a.notes, a.source, a.source_year]
+  const hay = [a.company, a.region, a.country, a.segment, a.notes, a.source, a.source_year,
+    a.why_sell, a.geography, a.address, a.contact_names, a.contact_emails, a.contact_phones,
+    a.contact_path, a.incumbent, a.modality, a.current_customer]
     .map(x => (x == null ? "" : String(x)).toLowerCase()).join(" ");
   return q.split(/\s+/).filter(Boolean).every(t => hay.includes(t));
 }
@@ -140,15 +142,26 @@ function renderList(){
   for(const a of rows){
     const card = document.createElement("div");
     card.className = "card";
-    const region = [a.region, a.country].filter(Boolean).join(" · ") || "—";
+    const region = [a.geography || a.region, a.country].filter(Boolean).join(" · ") || "—";
     const meta = [];
     if(a.segment) meta.push('<span class="badge">' + escapeHtml(a.segment) + "</span>");
+    if(a.modality) meta.push('<span class="badge">' + escapeHtml(a.modality) + "</span>");
+    if(a.current_customer === true) meta.push('<span class="badge">current customer</span>');
     if(a.source_year) meta.push('<span class="badge">' + escapeHtml(String(a.source_year)) + "</span>");
+    const bits = [];
+    if(a.why_sell) bits.push('<div class="sub"><strong>Why sell:</strong> ' + escapeHtml(a.why_sell) + "</div>");
+    if(a.incumbent) bits.push('<div class="sub"><strong>Incumbent:</strong> ' + escapeHtml(a.incumbent) + "</div>");
+    if(a.contact_names) bits.push('<div class="sub"><strong>Contacts:</strong> ' + escapeHtml(a.contact_names) + "</div>");
+    if(a.contact_emails) bits.push('<div class="sub"><strong>Email:</strong> ' + escapeHtml(a.contact_emails) + "</div>");
+    if(a.contact_phones) bits.push('<div class="sub"><strong>Phone:</strong> ' + escapeHtml(a.contact_phones) + "</div>");
+    if(a.address) bits.push('<div class="sub"><strong>Address:</strong> ' + escapeHtml(a.address) + "</div>");
+    if(a.contact_path) bits.push('<div class="sub"><strong>Path:</strong> ' + escapeHtml(a.contact_path) + "</div>");
+    if(a.notes) bits.push('<div class="sub">' + escapeHtml(a.notes) + "</div>");
     if(a.source) meta.push('<span class="sub">' + escapeHtml(String(a.source)) + "</span>");
     card.innerHTML =
       '<div class="label">' + escapeHtml(region) + "</div>" +
       '<div class="big">' + escapeHtml(a.company || "—") + "</div>" +
-      '<div class="sub">' + escapeHtml(a.notes || "") + "</div>" +
+      bits.join("") +
       '<div class="meta">' + meta.join("") + "</div>";
     frag.appendChild(card);
   }
