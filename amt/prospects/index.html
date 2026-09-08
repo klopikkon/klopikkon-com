@@ -180,7 +180,7 @@ function renderContacts(a){
 function renderCategory(a){
   const badges = [];
   if(hasText(a.segment)) badges.push('<span class="badge">' + escapeHtml(a.segment) + "</span>");
-  if(a.current_customer === true) badges.push('<span class="badge badge-ok">Current customer</span>');
+  if(a.current_customer === true) badges.push('<span class="badge badge-ok">Current</span>');
   else if(a.current_customer === false) badges.push('<span class="badge badge-warn">Not current</span>');
   if(hasText(a.incumbent)) badges.push('<span class="badge">' + escapeHtml("Incumbent: " + a.incumbent) + "</span>");
   if(hasText(a.modality)) badges.push('<span class="badge">' + escapeHtml(a.modality) + "</span>");
@@ -208,10 +208,10 @@ function renderList(){
   for(const a of rows){
     const card = document.createElement("div");
     card.className = "card";
-    const why = hasText(a.why_sell) ? section("Why sell", "<p>" + escapeHtml(a.why_sell) + "</p>") : "";
+    const why = hasText(a.why_sell) ? section("Why we'd sell", "<p>" + escapeHtml(a.why_sell) + "</p>") : "";
     const company = section("Company", renderCompany(a));
-    const contacts = section("Contacts", renderContacts(a));
-    const category = section("Category", renderCategory(a));
+    const contacts = section("People", renderContacts(a));
+    const category = section("Customer", renderCategory(a));
     const legacyNotes = (!hasText(a.why_sell) && !hasText(a.contact_names) && !hasText(a.geography) && hasText(a.notes))
       ? section("Notes", "<p>" + escapeHtml(a.notes) + "</p>")
       : (hasText(a.notes) && hasText(a.why_sell) ? section("Notes", "<p>" + escapeHtml(a.notes) + "</p>") : "");
