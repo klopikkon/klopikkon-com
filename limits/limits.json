@@ -1,25 +1,27 @@
 {
-  "updated_at": "2026-09-08T01:52:42Z",
+  "updated_at": "2026-09-08T01:59:33Z",
   "status": "ok",
-  "note": "Grok Bot from cursor.com/dashboard/spending; Grok from grok.com/?_s=usage",
+  "note": "",
   "grok_bot": {
     "label": "Grok Bot",
-    "period": "SuperGrok pool",
+    "period": "SuperGrok pool \u00b7 separate from Grok",
     "used_pct": 13,
     "remaining_pct": 87,
     "used_display": "13% used",
-    "limit_display": "SuperGrok usage (separate from existing Grok)",
-    "reset_display": "Resets Sep 9 (2 days left)",
+    "limit_display": "weekly SuperGrok Bot pool",
+    "reset_display": "Tue 9 Sep AEST \u00b7 2 days left",
+    "uses": "Tariff chemicals \u00b7 Personal assistant \u00b7 Updating dashboards \u00b7 Full automation of procedures",
     "source_url": "https://cursor.com/dashboard/spending"
   },
   "grok": {
     "label": "Grok",
-    "period": "weekly SuperGrok",
+    "period": "Chat 91% \u00b7 Imagine 4% \u00b7 Automations 1%",
     "used_pct": 96,
     "remaining_pct": 4,
-    "used_display": "96% used (Chat 91%, Imagine 4%, Automations 1%)",
-    "limit_display": "SuperGrok weekly limit",
-    "reset_display": "Weekly reset Sep 9, 2026 9:05 PM \u00b7 Usage Limit Reset available (expires Sep 12)",
+    "used_display": "96% used",
+    "limit_display": "weekly SuperGrok",
+    "reset_display": "Tue 9 Sep \u00b7 9:05 pm AEST",
+    "uses": "SDS creation \u00b7 Website development \u00b7 Strategy \u00b7 Bulk processing",
     "source_url": "https://grok.com/?_s=usage"
   }
 }
