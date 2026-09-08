@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-title" content="Limits">
 <title>Limits</title>
 <style>
-:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--ok:#3dd68c;--warn:#ff8b4a;--link:#6ea8fe;--bar:#243041;--bar-fill:#3dd68c}
+:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--ok:#3dd68c;--warn:#ff8b4a;--bar:#243041;--bar-fill:#3dd68c}
 *{box-sizing:border-box}
 body{margin:0;min-height:100dvh;font:16px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:1.25rem}
 .top{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:0 0 1rem;flex-wrap:wrap}
@@ -15,12 +15,14 @@ h1{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mut
 .actions{display:flex;gap:.5rem;align-items:center}
 .grid{display:grid;gap:.85rem;grid-template-columns:1fr}
 @media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
-.card{background:var(--card);border-radius:1rem;padding:1.1rem 1.15rem}
+.card{background:var(--card);border-radius:1rem;padding:1.1rem 1.15rem;min-width:0}
 .wide{grid-column:1/-1}
-.label{color:var(--muted);font-size:.8rem}
-.big{font-size:2.4rem;font-weight:650;letter-spacing:-.03em;margin:.15rem 0;font-variant-numeric:tabular-nums}
+.label{color:var(--muted);font-size:.8rem;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.big{font-size:2.4rem;font-weight:650;letter-spacing:-.03em;margin:.15rem 0;font-variant-numeric:tabular-nums;white-space:nowrap}
 .sub{color:var(--muted);font-size:.9rem}
-.row{display:flex;justify-content:space-between;gap:.75rem;margin-top:.55rem}
+.uses{margin-top:.65rem;font-size:.88rem;line-height:1.45;color:var(--ink)}
+.uses .tag{color:var(--muted);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:.2rem}
+.reset{margin-top:.45rem;font-size:.9rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar{height:.55rem;background:var(--bar);border-radius:999px;overflow:hidden;margin-top:.75rem}
 .bar > span{display:block;height:100%;background:var(--bar-fill);width:0;transition:width .35s ease}
 button{font:inherit;font-weight:650;padding:.8rem;border:0;border-radius:.7rem;background:var(--ok);color:#062;cursor:pointer}
@@ -30,7 +32,7 @@ input{font:inherit;padding:.8rem .9rem;border-radius:.7rem;border:1px solid #2a3
 .setup{display:flex;flex-direction:column;gap:.7rem;max-width:32rem}
 .err{color:var(--warn);min-height:1.2em}
 .ok{color:var(--ok)}
-a{color:var(--link)}
+code{font-size:.85em}
 .hidden{display:none !important}
 </style>
 <body>
@@ -44,8 +46,8 @@ a{color:var(--link)}
 
 <div id="setup" class="card wide setup hidden">
   <div class="label">GitHub PAT on this device</div>
-  <p class="sub">Update dispatches <code>limits-ping.yml</code> on <code>klopikkon/klopikkon-com</code> (same pattern as energy). Paste a fine-grained or classic PAT with Actions write on that repo only. Saved in this browser only.</p>
-  <p class="sub">Webhook URL and sender key go in <strong>GitHub → Settings → Secrets and variables → Actions</strong> as <code>LIMITS_WEBHOOK_URL</code> and <code>LIMITS_WEBHOOK_TOKEN</code>. Never paste those into this page.</p>
+  <p class="sub">Update dispatches <code>limits-ping.yml</code> on <code>klopikkon/klopikkon-com</code>. Paste a fine-grained PAT with Actions write on that repo only. Saved in this browser only.</p>
+  <p class="sub">Webhook URL and sender key go in GitHub Actions secrets <code>LIMITS_WEBHOOK_URL</code> and <code>LIMITS_WEBHOOK_TOKEN</code>. Never paste those here.</p>
   <input id="gh-token" type="password" placeholder="GitHub PAT (Actions: write)" autocomplete="off">
   <button type="button" id="save-setup">Save on this device</button>
   <p class="err" id="setup-msg"></p>
@@ -56,24 +58,20 @@ a{color:var(--link)}
     <div class="label" id="bot-label">Grok Bot</div>
     <div class="big" id="bot-used">—</div>
     <div class="sub" id="bot-period">weekly</div>
-    <div class="row">
-      <span class="sub" id="bot-limit">Limit —</span>
-      <span class="sub" id="bot-reset">Reset —</span>
-    </div>
+    <div class="sub" id="bot-limit">Limit —</div>
+    <div class="reset" id="bot-reset">Reset — AEST</div>
     <div class="bar" id="bot-bar" hidden><span id="bot-bar-fill"></span></div>
-    <div class="sub" style="margin-top:.7rem"><a id="bot-link" href="https://cursor.com/dashboard/spending" target="_blank" rel="noopener">cursor.com/dashboard/spending</a></div>
+    <div class="uses"><span class="tag">Used for</span><span id="bot-uses">—</span></div>
   </div>
 
   <div class="card" id="card-grok">
     <div class="label" id="grok-label">Grok</div>
     <div class="big" id="grok-used">—</div>
     <div class="sub" id="grok-period">—</div>
-    <div class="row">
-      <span class="sub" id="grok-limit">Limit —</span>
-      <span class="sub" id="grok-reset">Reset —</span>
-    </div>
+    <div class="sub" id="grok-limit">Limit —</div>
+    <div class="reset" id="grok-reset">Reset — AEST</div>
     <div class="bar" id="grok-bar" hidden><span id="grok-bar-fill"></span></div>
-    <div class="sub" style="margin-top:.7rem"><a id="grok-link" href="https://grok.com" target="_blank" rel="noopener">grok.com</a></div>
+    <div class="uses"><span class="tag">Used for</span><span id="grok-uses">—</span></div>
   </div>
 
   <div class="card wide">
@@ -109,7 +107,7 @@ function fmtUpdated(iso){
       timeZone: "Australia/Sydney",
       weekday: "short", day: "numeric", month: "short",
       hour: "numeric", minute: "2-digit", hour12: true
-    }) + " AEST/AEDT";
+    }) + " AEST";
   }catch(e){
     return "Updated " + iso;
   }
@@ -120,14 +118,10 @@ function fillCard(prefix, block){
   $(prefix + "-label").textContent = b.label || (prefix === "bot" ? "Grok Bot" : "Grok");
   $(prefix + "-used").textContent = b.used_display || "—";
   $(prefix + "-period").textContent = b.period || "—";
-  $(prefix + "-limit").textContent = "Limit " + (b.limit_display || "—");
-  $(prefix + "-reset").textContent = "Reset " + (b.reset_display || "—");
-  const link = $(prefix + "-link");
-  if(b.source_url){
-    link.href = b.source_url;
-    try { link.textContent = new URL(b.source_url).host + new URL(b.source_url).pathname.replace(/\/$/, ""); }
-    catch(e){ link.textContent = b.source_url; }
-  }
+  $(prefix + "-limit").textContent = b.limit_display ? ("Limit · " + b.limit_display) : "Limit —";
+  const reset = b.reset_display || "—";
+  $(prefix + "-reset").textContent = /AEST/i.test(reset) ? reset : ("Reset · " + reset + " AEST");
+  $(prefix + "-uses").textContent = b.uses || "—";
   const bar = $(prefix + "-bar");
   const fill = $(prefix + "-bar-fill");
   const pct = Number(b.used_pct);
@@ -220,7 +214,6 @@ $("save-setup").addEventListener("click", () => {
     return;
   }
   localStorage.setItem(LS_TOKEN, token);
-  // Drop any old browser webhook creds from the first build.
   localStorage.removeItem("limits-webhook-url");
   localStorage.removeItem("limits-webhook-token");
   $("setup-msg").textContent = "Saved on this device.";
