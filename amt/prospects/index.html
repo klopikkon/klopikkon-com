@@ -7,17 +7,19 @@
 <meta name="apple-mobile-web-app-title" content="AMT prospects">
 <title>AMT prospects</title>
 <style>
-:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--ok:#3dd68c;--warn:#ff8b4a;--link:#6ea8fe;--line:#2a3440}
+:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--ok:#3dd68c;--warn:#ff8b4a;--link:#6ea8fe;--line:#2a3440;--ember:#c45a2a}
 *{box-sizing:border-box}
-body{margin:0;min-height:100dvh;font:16px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:1.25rem}
+body{margin:0;min-height:100dvh;font:16px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:1.25rem}
 h1{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0}
 .top{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:0 0 1rem;flex-wrap:wrap}
-.grid{display:grid;gap:.85rem}
-.card{background:var(--card);border-radius:1rem;padding:1.1rem 1.15rem}
+.grid{display:grid;gap:1rem}
+.card{background:var(--card);border-radius:1rem;padding:1.15rem 1.2rem;border:1px solid var(--line)}
 .label{color:var(--muted);font-size:.8rem}
-.big{font-size:1.35rem;font-weight:650;letter-spacing:-.02em;margin:.2rem 0 .35rem}
+.big{font-size:1.3rem;font-weight:650;letter-spacing:-.02em;margin:.15rem 0 .55rem}
 .sub{color:var(--muted);font-size:.9rem}
-.badge{display:inline-block;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.15rem .55rem;margin-right:.35rem}
+.badge{display:inline-block;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.15rem .55rem;margin:0 .35rem .35rem 0}
+.badge-ok{color:#0a3;border-color:#1a5a3a;background:#0f2a1c}
+.badge-warn{color:var(--warn);border-color:#5a3a1a;background:#2a1a0f}
 form{display:flex;flex-direction:column;gap:.7rem;max-width:22rem;margin:18vh auto 0}
 input,select{font:inherit;padding:.8rem .9rem;border-radius:.7rem;border:1px solid var(--line);background:#0f141a;color:var(--ink);width:100%}
 button{font:inherit;font-weight:650;padding:.8rem;border:0;border-radius:.7rem;background:var(--ok);color:#062;cursor:pointer}
@@ -25,10 +27,18 @@ button.secondary{background:#243041;color:var(--ink);padding:.55rem .9rem;font-s
 .err{color:var(--warn);min-height:1.2em}
 .filters{display:grid;gap:.55rem;grid-template-columns:1fr}
 @media(min-width:640px){.filters{grid-template-columns:2fr 1fr}}
-.meta{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.45rem}
 .empty{color:var(--muted);padding:1rem 0}
 a{color:var(--link)}
 #dash[hidden],#lock[hidden]{display:none !important}
+.sections{display:grid;gap:.85rem;margin-top:.35rem}
+.section{padding-top:.7rem;border-top:1px solid var(--line)}
+.section-title{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:650;margin:0 0 .35rem}
+.section p{margin:0;white-space:pre-wrap}
+.section .row{margin:0 0 .35rem}
+.section .row:last-child{margin-bottom:0}
+.k{color:var(--muted);font-size:.82rem;display:block}
+.v{color:var(--ink)}
+.v a{word-break:break-word}
 </style>
 <body>
 <div id="lock">
@@ -47,7 +57,7 @@ a{color:var(--link)}
 </div>
 <div class="card" style="margin-bottom:.85rem">
   <div class="filters">
-    <input id="q" type="search" placeholder="Search company, contacts, why sell…" autocomplete="off">
+    <input id="q" type="search" placeholder="Search company, why sell, contacts, region…" autocomplete="off">
     <select id="seg"><option value="">All segments</option></select>
   </div>
   <div class="sub" style="margin-top:.7rem" id="count"></div>
@@ -106,6 +116,28 @@ function fmtUpdated(iso){
     });
   }catch(e){ return "Updated " + iso; }
 }
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+function hasText(v){
+  return v != null && String(v).trim() !== "";
+}
+function linkify(text){
+  const t = String(text).trim();
+  if(/^https?:\/\//i.test(t)){
+    return '<a href="' + escapeHtml(t) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(t) + "</a>";
+  }
+  return escapeHtml(t);
+}
+function row(label, value, asHtml){
+  if(!hasText(value)) return "";
+  const body = asHtml ? value : escapeHtml(String(value));
+  return '<div class="row"><span class="k">' + escapeHtml(label) + '</span><span class="v">' + body + "</span></div>";
+}
+function section(title, inner){
+  if(!inner) return "";
+  return '<div class="section"><div class="section-title">' + escapeHtml(title) + "</div>" + inner + "</div>";
+}
 function segments(accounts){
   const s = new Set();
   for(const a of accounts){
@@ -117,11 +149,45 @@ function segments(accounts){
 function matches(a, q, seg){
   if(seg && (a.segment || "") !== seg) return false;
   if(!q) return true;
-  const hay = [a.company, a.region, a.country, a.segment, a.notes, a.source, a.source_year,
-    a.why_sell, a.geography, a.address, a.contact_names, a.contact_emails, a.contact_phones,
-    a.contact_path, a.incumbent, a.modality, a.current_customer]
-    .map(x => (x == null ? "" : String(x)).toLowerCase()).join(" ");
+  const hay = [
+    a.company, a.region, a.country, a.segment, a.notes, a.source, a.source_year,
+    a.why_sell, a.geography, a.address, a.contact_names, a.contact_emails,
+    a.contact_phones, a.contact_path, a.incumbent, a.modality,
+    a.current_customer === true ? "current customer" : "",
+    a.current_customer === false ? "not current" : ""
+  ].map(x => (x == null ? "" : String(x)).toLowerCase()).join(" ");
   return q.split(/\s+/).filter(Boolean).every(t => hay.includes(t));
+}
+function renderCompany(a){
+  const bits = [];
+  bits.push(row("Geography", a.geography));
+  bits.push(row("Address", a.address));
+  const place = [a.region, a.country].filter(hasText).join(" · ");
+  bits.push(row("Region", place));
+  return bits.filter(Boolean).join("");
+}
+function renderContacts(a){
+  const bits = [];
+  bits.push(row("People", a.contact_names));
+  bits.push(row("Email", a.contact_emails));
+  bits.push(row("Phone", a.contact_phones));
+  if(hasText(a.contact_path)){
+    const paths = String(a.contact_path).split(/\s*\|\s*|\n+/).map(s => s.trim()).filter(Boolean);
+    bits.push(row("Path", paths.map(linkify).join("<br>"), true));
+  }
+  return bits.filter(Boolean).join("");
+}
+function renderCategory(a){
+  const badges = [];
+  if(hasText(a.segment)) badges.push('<span class="badge">' + escapeHtml(a.segment) + "</span>");
+  if(a.current_customer === true) badges.push('<span class="badge badge-ok">Current customer</span>');
+  else if(a.current_customer === false) badges.push('<span class="badge badge-warn">Not current</span>');
+  if(hasText(a.incumbent)) badges.push('<span class="badge">' + escapeHtml("Incumbent: " + a.incumbent) + "</span>");
+  if(hasText(a.modality)) badges.push('<span class="badge">' + escapeHtml(a.modality) + "</span>");
+  if(a.source_year) badges.push('<span class="badge">' + escapeHtml(String(a.source_year)) + "</span>");
+  let html = badges.length ? '<div class="meta">' + badges.join("") + "</div>" : "";
+  if(hasText(a.source)) html += '<div class="row" style="margin-top:.45rem"><span class="k">Source</span><span class="v">' + linkify(a.source) + "</span></div>";
+  return html;
 }
 function renderList(){
   if(!lastData) return;
@@ -142,33 +208,19 @@ function renderList(){
   for(const a of rows){
     const card = document.createElement("div");
     card.className = "card";
-    const region = [a.geography || a.region, a.country].filter(Boolean).join(" · ") || "—";
-    const meta = [];
-    if(a.segment) meta.push('<span class="badge">' + escapeHtml(a.segment) + "</span>");
-    if(a.modality) meta.push('<span class="badge">' + escapeHtml(a.modality) + "</span>");
-    if(a.current_customer === true) meta.push('<span class="badge">current customer</span>');
-    if(a.source_year) meta.push('<span class="badge">' + escapeHtml(String(a.source_year)) + "</span>");
-    const bits = [];
-    if(a.why_sell) bits.push('<div class="sub"><strong>Why sell:</strong> ' + escapeHtml(a.why_sell) + "</div>");
-    if(a.incumbent) bits.push('<div class="sub"><strong>Incumbent:</strong> ' + escapeHtml(a.incumbent) + "</div>");
-    if(a.contact_names) bits.push('<div class="sub"><strong>Contacts:</strong> ' + escapeHtml(a.contact_names) + "</div>");
-    if(a.contact_emails) bits.push('<div class="sub"><strong>Email:</strong> ' + escapeHtml(a.contact_emails) + "</div>");
-    if(a.contact_phones) bits.push('<div class="sub"><strong>Phone:</strong> ' + escapeHtml(a.contact_phones) + "</div>");
-    if(a.address) bits.push('<div class="sub"><strong>Address:</strong> ' + escapeHtml(a.address) + "</div>");
-    if(a.contact_path) bits.push('<div class="sub"><strong>Path:</strong> ' + escapeHtml(a.contact_path) + "</div>");
-    if(a.notes) bits.push('<div class="sub">' + escapeHtml(a.notes) + "</div>");
-    if(a.source) meta.push('<span class="sub">' + escapeHtml(String(a.source)) + "</span>");
+    const why = hasText(a.why_sell) ? section("Why sell", "<p>" + escapeHtml(a.why_sell) + "</p>") : "";
+    const company = section("Company", renderCompany(a));
+    const contacts = section("Contacts", renderContacts(a));
+    const category = section("Category", renderCategory(a));
+    const legacyNotes = (!hasText(a.why_sell) && !hasText(a.contact_names) && !hasText(a.geography) && hasText(a.notes))
+      ? section("Notes", "<p>" + escapeHtml(a.notes) + "</p>")
+      : (hasText(a.notes) && hasText(a.why_sell) ? section("Notes", "<p>" + escapeHtml(a.notes) + "</p>") : "");
     card.innerHTML =
-      '<div class="label">' + escapeHtml(region) + "</div>" +
       '<div class="big">' + escapeHtml(a.company || "—") + "</div>" +
-      bits.join("") +
-      '<div class="meta">' + meta.join("") + "</div>";
+      '<div class="sections">' + why + company + contacts + category + legacyNotes + "</div>";
     frag.appendChild(card);
   }
   list.appendChild(frag);
-}
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 }
 function showDash(d){
   lastData = d;
