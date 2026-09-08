@@ -3,6 +3,13 @@
 Site root: `https://klopikkon.com/amt/ranking-on-price/`
 Repo: `klopikkon/klopikkon-com` under `amt/`.
 
+## Ranking is unlisted
+
+- `/amt/ranking-on-price/` stays reachable by direct URL (and old winning/losing/unique redirects).
+- Every ranking HTML page already has `noindex,nofollow`.
+- Do **not** link Ranking from `/amt/` overview nav/cards, `/amt/one-price-list/`, `/hello`, or root.
+- Keep internal ranking ↔ breakdown links so the index still works when you have the URL.
+
 ## Every product on the ranking index MUST have a breakdown page
 
 When a SKU is added to `amt/ranking-on-price/index.html`:
