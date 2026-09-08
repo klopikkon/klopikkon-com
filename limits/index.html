@@ -27,7 +27,7 @@ button{font:inherit;font-weight:650;padding:.8rem;border:0;border-radius:.7rem;b
 button.secondary{background:#243041;color:var(--ink);padding:.55rem .9rem;font-size:.9rem}
 button:disabled{opacity:.55;cursor:wait}
 input{font:inherit;padding:.8rem .9rem;border-radius:.7rem;border:1px solid #2a3440;background:#0f141a;color:var(--ink);width:100%}
-.setup{display:flex;flex-direction:column;gap:.7rem;max-width:28rem}
+.setup{display:flex;flex-direction:column;gap:.7rem;max-width:32rem}
 .err{color:var(--warn);min-height:1.2em}
 .ok{color:var(--ok)}
 a{color:var(--link)}
@@ -43,10 +43,10 @@ a{color:var(--link)}
 </div>
 
 <div id="setup" class="card wide setup hidden">
-  <div class="label">Webhook on this device</div>
-  <p class="sub">Paste the Grok Bot webhook URL and sender key. Saved only in this browser — never in the repo.</p>
-  <input id="wh-url" type="url" placeholder="https://… webhook URL" autocomplete="off">
-  <input id="wh-token" type="password" placeholder="Sender key / bearer token" autocomplete="off">
+  <div class="label">GitHub PAT on this device</div>
+  <p class="sub">Update dispatches <code>limits-ping.yml</code> on <code>klopikkon/klopikkon-com</code> (same pattern as energy). Paste a fine-grained or classic PAT with Actions write on that repo only. Saved in this browser only.</p>
+  <p class="sub">Webhook URL and sender key go in <strong>GitHub → Settings → Secrets and variables → Actions</strong> as <code>LIMITS_WEBHOOK_URL</code> and <code>LIMITS_WEBHOOK_TOKEN</code>. Never paste those into this page.</p>
+  <input id="gh-token" type="password" placeholder="GitHub PAT (Actions: write)" autocomplete="off">
   <button type="button" id="save-setup">Save on this device</button>
   <p class="err" id="setup-msg"></p>
 </div>
@@ -85,24 +85,19 @@ a{color:var(--link)}
 </div>
 
 <script>
-const LS_URL = "limits-webhook-url";
-const LS_TOKEN = "limits-webhook-token";
+const LS_TOKEN = "limits-gh-token";
+const REPO = "klopikkon/klopikkon-com";
+const WORKFLOW = "limits-ping.yml";
 let lastUpdatedAt = null;
 let updating = false;
 
 function $(id){ return document.getElementById(id); }
-
-function hasCreds(){
-  return !!(localStorage.getItem(LS_URL) && localStorage.getItem(LS_TOKEN));
-}
+function hasCreds(){ return !!localStorage.getItem(LS_TOKEN); }
 
 function showSetup(force){
   const need = force || !hasCreds();
   $("setup").classList.toggle("hidden", !need);
-  if(need){
-    $("wh-url").value = localStorage.getItem(LS_URL) || "";
-    $("wh-token").value = localStorage.getItem(LS_TOKEN) || "";
-  }
+  if(need) $("gh-token").value = localStorage.getItem(LS_TOKEN) || "";
 }
 
 function fmtUpdated(iso){
@@ -139,8 +134,7 @@ function fillCard(prefix, block){
   if(b.used_pct != null && !isNaN(pct)){
     bar.hidden = false;
     fill.style.width = Math.max(0, Math.min(100, pct)) + "%";
-    if(pct >= 90) fill.style.background = "var(--warn)";
-    else fill.style.background = "var(--bar-fill)";
+    fill.style.background = pct >= 90 ? "var(--warn)" : "var(--bar-fill)";
   } else {
     bar.hidden = true;
     fill.style.width = "0";
@@ -168,31 +162,29 @@ async function refreshView(){
   return d;
 }
 
-$("setup-btn").addEventListener("click", () => {
-  const open = $("setup").classList.contains("hidden");
-  showSetup(open || !hasCreds());
-  if(!open) $("setup").classList.add("hidden");
-});
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-$("save-setup").addEventListener("click", () => {
-  const url = $("wh-url").value.trim();
-  const token = $("wh-token").value.trim();
-  if(!url || !token){
-    $("setup-msg").textContent = "URL and sender key are both required.";
-    $("setup-msg").className = "err";
-    return;
+async function triggerRefresh(){
+  const token = localStorage.getItem(LS_TOKEN);
+  if(!token) throw new Error("Save a GitHub PAT in Setup first.");
+  const res = await fetch("https://api.github.com/repos/" + REPO + "/actions/workflows/" + WORKFLOW + "/dispatches", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Accept": "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28"
+    },
+    body: JSON.stringify({ ref: "main" })
+  });
+  if(res.status !== 204 && res.status !== 200){
+    const t = await res.text();
+    throw new Error("Could not start update (" + res.status + "): " + t.slice(0, 160));
   }
-  localStorage.setItem(LS_URL, url);
-  localStorage.setItem(LS_TOKEN, token);
-  $("setup-msg").textContent = "Saved on this device.";
-  $("setup-msg").className = "ok";
-  setTimeout(() => { $("setup").classList.add("hidden"); }, 600);
-});
+}
 
 async function pollForUpdate(prev){
-  const deadline = Date.now() + 120000;
-  while(Date.now() < deadline){
-    await new Promise(r => setTimeout(r, 5000));
+  for(let i = 0; i < 24; i++){
+    await sleep(5000);
     try{
       const d = await loadJson();
       const next = d.updated_at || null;
@@ -200,44 +192,59 @@ async function pollForUpdate(prev){
         render(d);
         $("upd-status").textContent = "Fresh numbers loaded.";
         $("upd-status").className = "sub ok";
-        return;
+        return true;
       }
-      $("upd-status").textContent = "Waiting for refresh…";
+      $("upd-status").textContent = "Waiting for refresh… " + (i + 1) + "/24";
+      $("upd-status").className = "sub";
     }catch(e){
       $("upd-status").textContent = "Poll error: " + e.message;
       $("upd-status").className = "sub err";
     }
   }
-  $("upd-status").textContent = "Timed out waiting for a newer limits.json.";
+  $("upd-status").textContent = "Triggered, but no newer limits.json yet. Tap Update again in a minute.";
   $("upd-status").className = "sub err";
+  return false;
 }
+
+$("setup-btn").addEventListener("click", () => {
+  const open = $("setup").classList.contains("hidden");
+  if(open) showSetup(true);
+  else $("setup").classList.add("hidden");
+});
+
+$("save-setup").addEventListener("click", () => {
+  const token = $("gh-token").value.trim();
+  if(!token){
+    $("setup-msg").textContent = "GitHub PAT is required.";
+    $("setup-msg").className = "err";
+    return;
+  }
+  localStorage.setItem(LS_TOKEN, token);
+  // Drop any old browser webhook creds from the first build.
+  localStorage.removeItem("limits-webhook-url");
+  localStorage.removeItem("limits-webhook-token");
+  $("setup-msg").textContent = "Saved on this device.";
+  $("setup-msg").className = "ok";
+  setTimeout(() => { $("setup").classList.add("hidden"); }, 600);
+});
 
 $("upd").addEventListener("click", async () => {
   if(updating) return;
   if(!hasCreds()){
     showSetup(true);
-    $("setup-msg").textContent = "Save the webhook URL and sender key first.";
+    $("setup-msg").textContent = "Save a GitHub PAT first.";
     $("setup-msg").className = "err";
     return;
   }
   updating = true;
   $("upd").disabled = true;
+  $("upd").textContent = "Updating…";
   $("upd-status").className = "sub";
-  $("upd-status").textContent = "Requesting refresh…";
+  $("upd-status").textContent = "Dispatching limits-ping…";
   const prev = lastUpdatedAt;
   try{
-    const res = await fetch(localStorage.getItem(LS_URL), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem(LS_TOKEN)
-      },
-      body: JSON.stringify({ event: "limits_refresh", source: "klopikkon.com/limits" })
-    });
-    if(!res.ok){
-      throw new Error("Webhook HTTP " + res.status);
-    }
-    $("upd-status").textContent = "Webhook accepted. Polling…";
+    await triggerRefresh();
+    $("upd-status").textContent = "Workflow accepted. Polling…";
     await pollForUpdate(prev);
   }catch(e){
     $("upd-status").textContent = "Update failed: " + e.message;
@@ -245,6 +252,7 @@ $("upd").addEventListener("click", async () => {
   }finally{
     updating = false;
     $("upd").disabled = false;
+    $("upd").textContent = "Update";
   }
 });
 
