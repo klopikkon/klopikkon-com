@@ -1,0 +1,166 @@
+name: Tesla Start Charge
+
+# One-shot: wake Spirit of Fire and charging-start at the current limit.
+# Does not change charge limit, amps, or Powerwall settings.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  start-charge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install PyNaCl
+        run: pip install pynacl cryptography
+
+      - name: Refresh access token
+        id: token
+        run: |
+          set -euo pipefail
+          RESPONSE=$(curl -s -X POST "https://fleet-auth.prd.vn.cloud.tesla.com/oauth2/v3/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "grant_type=refresh_token" \
+            -d "client_id=${{ secrets.TESLA_CLIENT_ID }}" \
+            -d "refresh_token=${{ secrets.TESLA_REFRESH_TOKEN }}")
+          ACCESS_TOKEN=$(echo "$RESPONSE" | jq -r .access_token)
+          NEW_REFRESH=$(echo "$RESPONSE" | jq -r .refresh_token)
+          if [ "$ACCESS_TOKEN" = "null" ] || [ -z "$ACCESS_TOKEN" ]; then
+            echo "Failed to refresh token"
+            echo "$RESPONSE" | jq -c 'del(.access_token,.refresh_token) // .'
+            exit 1
+          fi
+          echo "access_token=$ACCESS_TOKEN" >> "$GITHUB_OUTPUT"
+          if [ "$NEW_REFRESH" != "null" ] && [ -n "$NEW_REFRESH" ]; then
+            echo "Rotating TESLA_REFRESH_TOKEN on klopikkon-com..."
+            cat > /tmp/encrypt.py << 'PY'
+          from base64 import b64encode
+          from nacl import encoding, public
+          import sys
+          public_key = public.PublicKey(sys.argv[1], encoding.Base64Encoder())
+          sealed_box = public.SealedBox(public_key)
+          encrypted = sealed_box.encrypt(sys.argv[2].encode("utf-8"))
+          print(b64encode(encrypted).decode("utf-8"))
+          PY
+            KEY_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/klopikkon/klopikkon-com/actions/secrets/public-key")
+            KEY_ID=$(echo "$KEY_RESPONSE" | jq -r .key_id)
+            PUBLIC_KEY=$(echo "$KEY_RESPONSE" | jq -r .key)
+            ENCRYPTED=$(python3 /tmp/encrypt.py "$PUBLIC_KEY" "$NEW_REFRESH")
+            HTTP=$(curl -s -o /tmp/secret-put.out -w "%{http_code}" -X PUT \
+              -H "Authorization: token ${{ secrets.GH_PAT }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/klopikkon/klopikkon-com/actions/secrets/TESLA_REFRESH_TOKEN" \
+              -d "{\"encrypted_value\":\"$ENCRYPTED\",\"key_id\":\"$KEY_ID\"}")
+            echo "TESLA_REFRESH_TOKEN HTTP $HTTP"
+          fi
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Build tesla-control
+        run: |
+          git clone --depth 1 https://github.com/teslamotors/vehicle-command.git /tmp/vehicle-command
+          cd /tmp/vehicle-command
+          go build -o "$HOME/go/bin/tesla-control" ./cmd/tesla-control
+          echo "$HOME/go/bin" >> "$GITHUB_PATH"
+
+      - name: Wake and start charge
+        env:
+          TOKEN: ${{ steps.token.outputs.access_token }}
+          TESLA_VEHICLE_ID: ${{ secrets.TESLA_VEHICLE_ID }}
+          TESLA_PRIVATE_KEY: ${{ secrets.TESLA_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          BASE="https://fleet-api.prd.na.vn.cloud.tesla.com/api/1"
+          umask 077
+          printf '%s' "$TESLA_PRIVATE_KEY" > /tmp/tesla-private.pem
+          printf '%s' "$TOKEN" > /tmp/tesla-token
+          export TESLA_KEY_FILE=/tmp/tesla-private.pem
+          export TESLA_TOKEN_FILE=/tmp/tesla-token
+          export PATH="$PATH:$(go env GOPATH)/bin"
+
+          VEHICLES=$(curl -sS "$BASE/vehicles" -H "Authorization: Bearer $TOKEN")
+          VIN=$(echo "$VEHICLES" | jq -r --arg id "$TESLA_VEHICLE_ID" '
+            .response[] | select((.id|tostring)==$id or (.vehicle_id|tostring)==$id or .display_name=="Spirit of Fire") | .vin' | head -1)
+          if [ -z "$VIN" ] || [ "$VIN" = "null" ]; then
+            echo "Could not resolve VIN"
+            echo "$VEHICLES" | jq '{count:(.response|length), names:[.response[].display_name]}'
+            exit 1
+          fi
+          export TESLA_VIN="$VIN"
+          echo "VIN suffix ${VIN: -6}"
+
+          STATE=$(echo "$VEHICLES" | jq -r --arg vin "$VIN" '.response[] | select(.vin==$vin) | .state' | head -1)
+          echo "initial_state=$STATE"
+          if [ "$STATE" != "online" ]; then
+            echo "Waking vehicle..."
+            curl -sS -X POST "$BASE/vehicles/$VIN/wake_up" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{}' >/dev/null || true
+            for i in 1 2 3 4 5 6 7 8; do
+              STATE=$(curl -sS "$BASE/vehicles/$VIN" -H "Authorization: Bearer $TOKEN" | jq -r '.response.state // empty')
+              echo "state=$STATE"
+              [ "$STATE" = "online" ] && break
+              sleep 8
+            done
+          fi
+
+          DATA=$(curl -sS "$BASE/vehicles/$VIN/vehicle_data?endpoints=charge_state" -H "Authorization: Bearer $TOKEN")
+          echo "$DATA" | jq '{
+            plugged:(.response.charge_state.charging_state != null and (.response.charge_state.charging_state|tostring) as $s | ($s != "Disconnected" and $s != "" and $s != "Unknown")),
+            charge_state:.response.charge_state.charging_state,
+            limit:.response.charge_state.charge_limit_soc,
+            soc:.response.charge_state.battery_level,
+            amps:.response.charge_state.charger_actual_current,
+            volts:.response.charge_state.charger_voltage
+          }'
+
+          CS=$(echo "$DATA" | jq -r '.response.charge_state.charging_state // "Unknown"')
+          SOC=$(echo "$DATA" | jq -r '.response.charge_state.battery_level // "null"')
+          LIMIT=$(echo "$DATA" | jq -r '.response.charge_state.charge_limit_soc // "null"')
+          echo "BEFORE charge_state=$CS soc=$SOC limit=$LIMIT"
+
+          if echo "$CS" | grep -Eiq 'disconnected|^$|unknown'; then
+            echo "RESULT=fail reason=not_plugged charge_state=$CS soc=$SOC limit=$LIMIT"
+            rm -f /tmp/tesla-private.pem /tmp/tesla-token
+            exit 1
+          fi
+
+          set +e
+          OUT=$(tesla-control charging-start 2>&1)
+          RC=$?
+          set -e
+          echo "$OUT"
+          if [ "$RC" -ne 0 ]; then
+            if echo "$OUT" | grep -Eiq 'already_set|is_charging|complete|requested'; then
+              echo "charging-start accepted (soft ok)"
+              RC=0
+            fi
+          fi
+
+          sleep 3
+          DATA2=$(curl -sS "$BASE/vehicles/$VIN/vehicle_data?endpoints=charge_state" -H "Authorization: Bearer $TOKEN")
+          echo "$DATA2" | jq '{
+            charge_state:.response.charge_state.charging_state,
+            limit:.response.charge_state.charge_limit_soc,
+            soc:.response.charge_state.battery_level,
+            amps:.response.charge_state.charger_actual_current
+          }'
+          CS2=$(echo "$DATA2" | jq -r '.response.charge_state.charging_state // "Unknown"')
+          SOC2=$(echo "$DATA2" | jq -r '.response.charge_state.battery_level // "null"')
+          LIMIT2=$(echo "$DATA2" | jq -r '.response.charge_state.charge_limit_soc // "null"')
+          PLUGGED=true
+          if echo "$CS2" | grep -Eiq 'disconnected|^$|unknown'; then PLUGGED=false; fi
+
+          if [ "$RC" -eq 0 ] || echo "$CS2" | grep -Eiq 'Charging|Starting|Complete'; then
+            echo "RESULT=success plugged=$PLUGGED charge_state=$CS2 soc=$SOC2 limit=$LIMIT2"
+            rm -f /tmp/tesla-private.pem /tmp/tesla-token
+            exit 0
+          fi
+          echo "RESULT=fail plugged=$PLUGGED charge_state=$CS2 soc=$SOC2 limit=$LIMIT2 rc=$RC"
+          rm -f /tmp/tesla-private.pem /tmp/tesla-token
+          exit 1
