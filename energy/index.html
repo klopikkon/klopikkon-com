@@ -41,7 +41,10 @@ a{color:var(--car)}
 <div id="dash" hidden>
 <div class="top">
   <h1>Home energy</h1>
-  <button type="button" class="secondary" id="upd">Update</button>
+  <div style="display:flex;gap:.5rem;align-items:center">
+    <button type="button" class="secondary" id="start-charge">Start charge</button>
+    <button type="button" class="secondary" id="upd">Update</button>
+  </div>
 </div>
 <div class="grid">
 <div class="card"><div class="label">Powerwall</div><div class="big kw" id="pw-soc">—</div><div class="sub" id="pw-mode"></div><div class="sub" id="pw-rate"></div><div class="sub" id="pw-eta"></div></div>
@@ -196,7 +199,43 @@ async function updateNow(){
     updating = false;
   }
 }
+async function triggerStartCharge(d){
+  const r = d && d.refresh;
+  if(!r || !r.token || !r.repo) throw new Error("Refresh not configured yet. Wait for the next scheduled publish.");
+  const workflow = "tesla-start-charge.yml";
+  const res = await fetch("https://api.github.com/repos/"+r.repo+"/actions/workflows/"+workflow+"/dispatches", {
+    method:"POST",
+    headers:{
+      "Authorization":"Bearer "+r.token,
+      "Accept":"application/vnd.github+json",
+      "X-GitHub-Api-Version":"2022-11-28"
+    },
+    body: JSON.stringify({ref: r.ref || "main"})
+  });
+  if(res.status !== 204 && res.status !== 200){
+    const t = await res.text();
+    throw new Error("Could not start charge ("+res.status+"): "+t.slice(0,120));
+  }
+}
+async function startChargeNow(){
+  const btn = document.getElementById("start-charge");
+  if(btn.disabled) return;
+  const password = localStorage.getItem(LS);
+  if(!password) return;
+  btn.disabled = true;
+  btn.textContent = "Sent…";
+  try{
+    setUpd("Start charge dispatched (not waiting).");
+    await triggerStartCharge(lastData || await load(password));
+    setUpd("Start charge dispatched.");
+  }catch(e){
+    setUpd(String(e.message || e));
+  }finally{
+    setTimeout(()=>{ btn.disabled = false; btn.textContent = "Start charge"; }, 1500);
+  }
+}
 document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();unlock(document.getElementById("pw").value)});
+document.getElementById("start-charge").addEventListener("click",()=>startChargeNow());
 document.getElementById("upd").addEventListener("click",()=>updateNow());
 const saved=localStorage.getItem(LS);
 if(saved) unlock(saved).catch(()=>{});
