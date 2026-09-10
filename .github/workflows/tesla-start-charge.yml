@@ -109,16 +109,14 @@ jobs:
           LIMIT=$(echo "$DATA" | jq -r '.response.charge_state.charge_limit_soc // "null"')
           echo "BEFORE charge_state=$CS soc=$SOC limit=$LIMIT"
 
-          if echo "$CS" | grep -Eiq 'disconnected|^$|unknown'; then
-            echo "RESULT=fail reason=not_plugged plugged=false charge_state=$CS soc=$SOC limit=$LIMIT"
-            rm -f /tmp/tesla-private.pem /tmp/tesla-token
-            exit 1
-          fi
-
           if echo "$CS" | grep -Eiq '^Charging$'; then
-            echo "RESULT=success already_charging plugged=true charge_state=$CS soc=$SOC limit=$LIMIT"
+            echo "RESULT=success already_charging charge_state=$CS soc=$SOC limit=$LIMIT"
             rm -f /tmp/tesla-private.pem /tmp/tesla-token
             exit 0
+          fi
+
+          if echo "$CS" | grep -Eiq 'disconnected|^$|unknown'; then
+            echo "WARN Fleet says $CS — still sending charging-start (cable may be unseen by API)"
           fi
 
           set +e
