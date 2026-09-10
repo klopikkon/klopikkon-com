@@ -1,6 +1,6 @@
 name: Tesla Start Charge
 
-# One-shot: wake Spirit of Fire and charging-start at the current limit.
+# One-shot: check awake first; wake only if needed; charging-start at current limit.
 # Does not change charge limit, amps, or Powerwall settings.
 
 on:
@@ -29,30 +29,24 @@ jobs:
           NEW_REFRESH=$(echo "$RESPONSE" | jq -r .refresh_token)
           if [ "$ACCESS_TOKEN" = "null" ] || [ -z "$ACCESS_TOKEN" ]; then
             echo "Failed to refresh token"
-            echo "$RESPONSE" | jq -c 'del(.access_token,.refresh_token) // .'
             exit 1
           fi
           echo "access_token=$ACCESS_TOKEN" >> "$GITHUB_OUTPUT"
           if [ "$NEW_REFRESH" != "null" ] && [ -n "$NEW_REFRESH" ]; then
-            echo "Rotating TESLA_REFRESH_TOKEN on klopikkon-com..."
-            cat > /tmp/encrypt.py << 'PY'
+            cat > /tmp/encrypt.py << 'EOPY'
           from base64 import b64encode
           from nacl import encoding, public
           import sys
           public_key = public.PublicKey(sys.argv[1], encoding.Base64Encoder())
-          sealed_box = public.SealedBox(public_key)
-          encrypted = sealed_box.encrypt(sys.argv[2].encode("utf-8"))
-          print(b64encode(encrypted).decode("utf-8"))
-          PY
-            KEY_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
-              -H "Accept: application/vnd.github+json" \
+          print(b64encode(public.SealedBox(public_key).encrypt(sys.argv[2].encode())).decode())
+          EOPY
+            KEY_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/klopikkon/klopikkon-com/actions/secrets/public-key")
             KEY_ID=$(echo "$KEY_RESPONSE" | jq -r .key_id)
             PUBLIC_KEY=$(echo "$KEY_RESPONSE" | jq -r .key)
             ENCRYPTED=$(python3 /tmp/encrypt.py "$PUBLIC_KEY" "$NEW_REFRESH")
             HTTP=$(curl -s -o /tmp/secret-put.out -w "%{http_code}" -X PUT \
-              -H "Authorization: token ${{ secrets.GH_PAT }}" \
-              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: token ${{ secrets.GH_PAT }}" -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/klopikkon/klopikkon-com/actions/secrets/TESLA_REFRESH_TOKEN" \
               -d "{\"encrypted_value\":\"$ENCRYPTED\",\"key_id\":\"$KEY_ID\"}")
             echo "TESLA_REFRESH_TOKEN HTTP $HTTP"
@@ -70,7 +64,7 @@ jobs:
           go build -o "$HOME/go/bin/tesla-control" ./cmd/tesla-control
           echo "$HOME/go/bin" >> "$GITHUB_PATH"
 
-      - name: Wake and start charge
+      - name: Check awake, then start charge if plugged
         env:
           TOKEN: ${{ steps.token.outputs.access_token }}
           TESLA_VEHICLE_ID: ${{ secrets.TESLA_VEHICLE_ID }}
@@ -86,20 +80,19 @@ jobs:
           export PATH="$PATH:$(go env GOPATH)/bin"
 
           VEHICLES=$(curl -sS "$BASE/vehicles" -H "Authorization: Bearer $TOKEN")
-          VIN=$(echo "$VEHICLES" | jq -r --arg id "$TESLA_VEHICLE_ID" '
-            .response[] | select((.id|tostring)==$id or (.vehicle_id|tostring)==$id or .display_name=="Spirit of Fire") | .vin' | head -1)
+          VIN=$(echo "$VEHICLES" | jq -r --arg id "$TESLA_VEHICLE_ID" '.response[] | select((.id|tostring)==$id or (.vehicle_id|tostring)==$id or .display_name=="Spirit of Fire") | .vin' | head -1)
           if [ -z "$VIN" ] || [ "$VIN" = "null" ]; then
-            echo "Could not resolve VIN"
-            echo "$VEHICLES" | jq '{count:(.response|length), names:[.response[].display_name]}'
-            exit 1
+            echo "Could not resolve VIN"; exit 1
           fi
           export TESLA_VIN="$VIN"
           echo "VIN suffix ${VIN: -6}"
 
           STATE=$(echo "$VEHICLES" | jq -r --arg vin "$VIN" '.response[] | select(.vin==$vin) | .state' | head -1)
-          echo "initial_state=$STATE"
-          if [ "$STATE" != "online" ]; then
-            echo "Waking vehicle..."
+          echo "awake_check initial_state=$STATE"
+          if [ "$STATE" = "online" ]; then
+            echo "Already awake — skipping wake_up"
+          else
+            echo "Not awake ($STATE) — waking..."
             curl -sS -X POST "$BASE/vehicles/$VIN/wake_up" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{}' >/dev/null || true
             for i in 1 2 3 4 5 6 7 8; do
               STATE=$(curl -sS "$BASE/vehicles/$VIN" -H "Authorization: Bearer $TOKEN" | jq -r '.response.state // empty')
@@ -110,24 +103,22 @@ jobs:
           fi
 
           DATA=$(curl -sS "$BASE/vehicles/$VIN/vehicle_data?endpoints=charge_state" -H "Authorization: Bearer $TOKEN")
-          echo "$DATA" | jq '{
-            plugged:(.response.charge_state.charging_state != null and (.response.charge_state.charging_state|tostring) as $s | ($s != "Disconnected" and $s != "" and $s != "Unknown")),
-            charge_state:.response.charge_state.charging_state,
-            limit:.response.charge_state.charge_limit_soc,
-            soc:.response.charge_state.battery_level,
-            amps:.response.charge_state.charger_actual_current,
-            volts:.response.charge_state.charger_voltage
-          }'
-
+          echo "$DATA" | jq '{charge_state:.response.charge_state.charging_state, limit:.response.charge_state.charge_limit_soc, soc:.response.charge_state.battery_level, amps:.response.charge_state.charger_actual_current}'
           CS=$(echo "$DATA" | jq -r '.response.charge_state.charging_state // "Unknown"')
           SOC=$(echo "$DATA" | jq -r '.response.charge_state.battery_level // "null"')
           LIMIT=$(echo "$DATA" | jq -r '.response.charge_state.charge_limit_soc // "null"')
           echo "BEFORE charge_state=$CS soc=$SOC limit=$LIMIT"
 
           if echo "$CS" | grep -Eiq 'disconnected|^$|unknown'; then
-            echo "RESULT=fail reason=not_plugged charge_state=$CS soc=$SOC limit=$LIMIT"
+            echo "RESULT=fail reason=not_plugged plugged=false charge_state=$CS soc=$SOC limit=$LIMIT"
             rm -f /tmp/tesla-private.pem /tmp/tesla-token
             exit 1
+          fi
+
+          if echo "$CS" | grep -Eiq '^Charging$'; then
+            echo "RESULT=success already_charging plugged=true charge_state=$CS soc=$SOC limit=$LIMIT"
+            rm -f /tmp/tesla-private.pem /tmp/tesla-token
+            exit 0
           fi
 
           set +e
@@ -135,26 +126,16 @@ jobs:
           RC=$?
           set -e
           echo "$OUT"
-          if [ "$RC" -ne 0 ]; then
-            if echo "$OUT" | grep -Eiq 'already_set|is_charging|complete|requested'; then
-              echo "charging-start accepted (soft ok)"
-              RC=0
-            fi
-          fi
+          if [ "$RC" -ne 0 ] && echo "$OUT" | grep -Eiq 'already_set|is_charging|complete|requested'; then RC=0; fi
 
           sleep 3
           DATA2=$(curl -sS "$BASE/vehicles/$VIN/vehicle_data?endpoints=charge_state" -H "Authorization: Bearer $TOKEN")
-          echo "$DATA2" | jq '{
-            charge_state:.response.charge_state.charging_state,
-            limit:.response.charge_state.charge_limit_soc,
-            soc:.response.charge_state.battery_level,
-            amps:.response.charge_state.charger_actual_current
-          }'
+          echo "$DATA2" | jq '{charge_state:.response.charge_state.charging_state, limit:.response.charge_state.charge_limit_soc, soc:.response.charge_state.battery_level, amps:.response.charge_state.charger_actual_current}'
           CS2=$(echo "$DATA2" | jq -r '.response.charge_state.charging_state // "Unknown"')
           SOC2=$(echo "$DATA2" | jq -r '.response.charge_state.battery_level // "null"')
           LIMIT2=$(echo "$DATA2" | jq -r '.response.charge_state.charge_limit_soc // "null"')
           PLUGGED=true
-          if echo "$CS2" | grep -Eiq 'disconnected|^$|unknown'; then PLUGGED=false; fi
+          echo "$CS2" | grep -Eiq 'disconnected|^$|unknown' && PLUGGED=false
 
           if [ "$RC" -eq 0 ] || echo "$CS2" | grep -Eiq 'Charging|Starting|Complete'; then
             echo "RESULT=success plugged=$PLUGGED charge_state=$CS2 soc=$SOC2 limit=$LIMIT2"
