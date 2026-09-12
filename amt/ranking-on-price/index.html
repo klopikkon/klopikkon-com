@@ -24,7 +24,7 @@
       </nav>
     </div>
   </header>
-  <main class="wrap">
+  <main class="wrap" id="ranking-main">
     <p class="badge badge-rank">Ranking</p>
     <h1>Price ranking at a glance</h1>
     <p class="lede">Grouped by catalogue family. Every row has a breakdown. Green = AMT cheapest published list. Red = a competitor is cheaper. Amber = split / analogue / no peer.</p>
@@ -41,16 +41,35 @@
       <a href="#not-found">Not found</a>
     </nav>
     <div class="note">Lipids <a href="https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf">26 Aug 2026</a> · PEGs <a href="https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf">3 Sep 2026</a> · Dyes <a href="https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf">2026</a> · Borons <a href="https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf">21 Apr 2026</a>. Rules: <a href="/amt/INSTRUCTIONS.md">every SKU gets a breakdown</a>.</div>
-    <h2 id="lipids">Ionizable / LNP lipids</h2>
-    <table>
-      <thead><tr><th>Product</th><th>AMT list</th><th>Ranking</th><th>Breakdown</th></tr></thead>
-      <tbody>
-        <tr class="row-win"><td><span class="product-name">ALC-0315</span><span class="sku">AMTGC903-AL21 · CAS 2036272-55-4 · ≥98%</span></td><td>500 mg $250 / 1 g $430</td><td><span class="rank-pill rank-win">AMT #1</span></td><td><a href="/amt/ranking-on-price/alc-0315/">breakdown</a></td></tr>
-        <tr class="row-win"><td><span class="product-name">SM-102</span><span class="sku">AMTGC936-SM21 · CAS 2089251-47-6 · ≥98%</span></td><td>100 mg $150 / 1 g $690</td><td><span class="rank-pill rank-win">AMT #1</span></td><td><a href="/amt/ranking-on-price/sm-102/">breakdown</a></td></tr>
-        <tr class="row-win"><td><span class="product-name">Lipid 5</span><span class="sku">AMTGC1533-LP25 · CAS 2089251-33-0 · ≥97%</span></td><td>100 mg $140 / 1 g $595</td><td><span class="rank-pill rank-win">AMT #1</span></td><td><a href="/amt/ranking-on-price/lipid-5/">breakdown</a></td></tr>
-      </tbody>
-    </table>
-    <p class="meta">Index restore in progress — full file follows in next commit if truncated.</p>
+    <div id="mount-lipids" data-src="fragments/lipids.html"></div>
+    <div id="mount-pegs" data-src="fragments/pegs.html"></div>
+    <div id="mount-dyes" data-src="fragments/dyes.html"></div>
+    <div id="mount-borons" data-src="fragments/borons.html"></div>
+    <div id="mount-not-found" data-src="fragments/not-found.html"></div>
   </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-id">Processed 6–11 Sep 2026 · public list prices only · PEG batch AMTGC349–442 spliced 11 Sep 2026 · previous 324–348 kept · index restored 12 Sep 2026</p>
+      <nav class="footer-nav"><a href="/amt/">Overview</a><a href="/amt/ranking-on-price/">Ranking</a><a href="/amt/INSTRUCTIONS.md">Rules</a></nav>
+    </div>
+  </footer>
+  <script>
+  (function () {
+    var mounts = document.querySelectorAll("[data-src]");
+    Promise.all(Array.prototype.map.call(mounts, function (el) {
+      return fetch(el.getAttribute("data-src"), { cache: "no-store" }).then(function (r) {
+        if (!r.ok) throw new Error(el.getAttribute("data-src") + " " + r.status);
+        return r.text();
+      }).then(function (html) {
+        el.outerHTML = html;
+      });
+    })).catch(function (err) {
+      var p = document.createElement("p");
+      p.className = "meta";
+      p.textContent = "Section load failed: " + err;
+      document.getElementById("ranking-main").appendChild(p);
+    });
+  })();
+  </script>
 </body>
 </html>
