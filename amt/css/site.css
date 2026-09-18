@@ -112,3 +112,30 @@ tr.row-same { background: #eee8dc; }
   table { font-size: .82rem; }
   th, td { padding: .5rem .3rem; }
 }
+
+
+/* Collapsible not-found tables under each ranking family */
+details.not-found-fold {
+  margin: 1rem 0 2rem;
+  padding: .75rem 1rem;
+  background: var(--card, #fff);
+  border: 1px solid var(--border, #ddd);
+  border-radius: 8px;
+}
+details.not-found-fold > summary {
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+details.not-found-fold > summary::-webkit-details-marker { display: none; }
+details.not-found-fold > summary::before {
+  content: "▸ ";
+  display: inline-block;
+  transition: transform .15s ease;
+}
+details.not-found-fold[open] > summary::before { content: "▾ "; }
+details.not-found-fold .nf-count {
+  font-weight: 500;
+  opacity: .7;
+}
+details.not-found-fold table { margin-top: .75rem; }
