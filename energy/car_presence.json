@@ -1,6 +1,6 @@
 {
   "plugged": false,
-  "state": "Unknown",
-  "soc": null,
-  "ts": "2026-09-19T11:02:55+1000"
+  "state": "Disconnected",
+  "soc": 80,
+  "ts": "2026-09-19T14:01:47+1000"
 }
