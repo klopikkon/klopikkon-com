@@ -18,14 +18,14 @@ function expectedCount(kc, item) {
   return expectedInCycle(kc, item.rate, item.cycle, item.cycleSize || 3);
 }
 const ROASTS = {
-  soon: ["Too early to cope", "Not enough kills to sue", "Innocent for now", "The grind hasn't started", "Don't blame Jagex yet"],
-  cursed: ["Extraordinarily bad", "Jagex has your IP", "This is a personal attack", "Drop table left the chat", "Start a change.org", "You are the content", "Restraining order", "Historically dry"],
-  dry: ["Painfully dry", "Off rate and coping", "Send help", "The wiki is laughing", "Dry enough to brine", "Not even close"],
-  unlucky: ["A bit dusty", "Slightly cursed", "Off rate, politely", "Could be worse", "The game giggled"],
-  ok: ["Painfully average", "On rate. Boring.", "The wiki was right", "Mid. Respectfully.", "Exactly as miserable as expected"],
-  nudged: ["A little spoon", "Suspiciously fine", "Don't tell the group", "Off rate, quietly"],
-  lucky: ["Spooned", "The boys are eating", "RNG apologised", "Off rate, the good way", "Lucky and you know it"],
-  spoon: ["Illegal spoon", "Extraordinarily illegal", "Ban speedrun", "This isn't allowed", "Touch grass", "The log is blushing"],
+  soon: ["Too early to cope", "Not enough kills to sue", "Innocent for now", "The grind hasn't started", "Don't blame Jagex yet", "No medal yet", "Warming up"],
+  cursed: ["Extraordinarily bad", "Jagex has your IP", "This is a personal attack", "Drop table left the chat", "Start a change.org", "You are the content", "Restraining order", "Historically dry", "Drypocalypse", "Unfrigginbelievably dry", "Death spree", "The announcer left"],
+  dry: ["Painfully dry", "Off rate and coping", "Send help", "The wiki is laughing", "Dry enough to brine", "Not even close", "Drytacular", "Drytrocity", "Running Dry", "Underkill", "Dryimanjaro"],
+  unlucky: ["A bit dusty", "Slightly cursed", "Off rate, politely", "Could be worse", "The game giggled", "Double nothing", "Medal denied"],
+  ok: ["Painfully average", "On rate. Boring.", "The wiki was right", "Mid. Respectfully.", "Exactly as miserable as expected", "No medal", "Perfection of average"],
+  nudged: ["A little spoon", "Suspiciously fine", "Don't tell the group", "Off rate, quietly", "Double kill", "Overkill"],
+  lucky: ["Spooned", "The boys are eating", "RNG apologised", "Off rate, the good way", "Lucky and you know it", "Killing Spree", "Killtacular", "Rampage", "Running Riot"],
+  spoon: ["Illegal spoon", "Extraordinarily illegal", "Ban speedrun", "This isn't allowed", "Touch grass", "The log is blushing", "Killtrocity", "Killimanjaro", "Killtastrophe", "Killpocalypse", "Killionaire", "Untouchable", "Invincible", "Inconceivable", "Unfrigginbelievable"],
 };
 function roastPick(list, key) {
   let hash = 0;
