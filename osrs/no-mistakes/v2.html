@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b0f14">
+<title>No mistakes GIM tracker</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--ok:#3dd68c;--warn:#ff8b4a;--link:#6ea8fe;--line:#2a3440;--dry:#ff6b6b;--mid:#e8c36a}
+*{box-sizing:border-box}
+body{margin:0;background:#0b0f14;color:var(--ink);font:16px/1.45 system-ui,sans-serif}
+a{color:var(--link);text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:1.15rem 1rem 3.2rem}
+.top{display:flex;flex-wrap:wrap;gap:.7rem 1rem;justify-content:space-between;align-items:baseline;margin-bottom:1.1rem}
+.brand{letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-size:.72rem;font-weight:700}
+.brand b{display:block;color:var(--ink);letter-spacing:0;text-transform:none;font-size:1.28rem;margin-top:.15rem}
+nav a{margin-right:.9rem;color:var(--muted)}
+h1{font-size:1.5rem;margin:.15rem 0 .4rem}
+.lede,.note{color:var(--muted)}
+.grid{display:grid;gap:.85rem}
+@media(min-width:720px){.grid.five{grid-template-columns:1fr 1fr}.grid.two{grid-template-columns:1.2fr .8fr}}
+@media(min-width:1100px){.grid.five{grid-template-columns:repeat(5,1fr)}}
+.card{background:#151b22;border:1px solid var(--line);border-radius:1rem;padding:1rem 1.05rem}
+.label{color:var(--muted);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase}
+.big{font-size:1.18rem;font-weight:700;margin:.2rem 0 .55rem}
+.row{display:flex;flex-wrap:wrap;gap:.4rem}
+.kpi{background:#0f141a;border:1px solid var(--line);border-radius:.7rem;padding:.4rem .55rem;min-width:5.2rem;flex:1}
+.kpi b{display:block;font-size:1.02rem}
+.badge{display:inline-block;font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:.12rem .5rem;color:var(--muted)}
+.luck{font-weight:700}
+.luck.dry{color:var(--dry)}
+.luck.mid{color:var(--mid)}
+.luck.ok{color:var(--ok)}
+table{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:.55rem}
+th,td{text-align:left;padding:.38rem .3rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-size:.72rem;text-transform:uppercase}
+form{display:grid;gap:.55rem}
+@media(min-width:720px){form{grid-template-columns:1fr 1fr} form .span{grid-column:1/-1}}
+input,select,button{font:inherit;padding:.6rem .7rem;border-radius:.7rem;border:1px solid var(--line);background:#0f141a;color:var(--ink);width:100%}
+button{background:var(--ok);color:#062013;font-weight:700;border:0;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.preview{max-width:100%;border-radius:.7rem;border:1px solid var(--line);margin-top:.4rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">klopikkon.com group ironman<br><b>No mistakes</b></div>
+    <nav>
+      <a href="#group">Group</a>
+      <a href="#luck">Luck</a>
+      <a href="#upload">Log drops</a>
+      <a href="#setup">Setup</a>
+    </nav>
+  </header>
+  <section id="group">
+    <h1>Alchemical Hydra week</h1>
+    <p class="lede">Five GIM accounts. Week KC from Wise Old Man. Luck KC is the loot-tracker number, never mixed with hiscores.</p>
+    <p class="note" id="status">Loading Wise Old Man...</p>
+    <div class="grid five" id="cards"></div>
+  </section>
+  <section id="luck" class="card" style="margin-top:1rem">
+    <div class="label">Group comparison - Hydra</div>
+    <table>
+      <thead><tr><th>Member</th><th>Week KC</th><th>Luck KC</th><th>WOM KC</th><th>Uniques</th><th>Luck</th></tr></thead>
+      <tbody id="cmp"></tbody>
+    </table>
+    <p class="note">Rates cached from the OSRS Wiki (29 Sep 2026). Unique rates are per-kill.</p>
+    <table>
+      <thead><tr><th>Unique</th><th>Rate</th><th>Expected at 1029 KC</th></tr></thead>
+      <tbody>
+        <tr><td>Eye / fang / heart</td><td>1/181.1 each</td><td>5.68 each</td></tr>
+        <tr><td>Tail</td><td>1/513</td><td>2.01</td></tr>
+        <tr><td>Leather</td><td>1/514</td><td>2.00</td></tr>
+        <tr><td>Claw</td><td>1/1001</td><td>1.03</td></tr>
+        <tr><td>Heads</td><td>1/256</td><td>4.02</td></tr>
+        <tr><td>Jar</td><td>1/2000</td><td>0.51</td></tr>
+        <tr><td>Pet</td><td>1/3000</td><td>0.34</td></tr>
+      </tbody>
+    </table>
+  </section>
+  <div class="grid two" style="margin-top:1rem">
+    <section id="upload" class="card">
+      <div class="label">Log a loot-tracker snapshot</div>
+      <p class="note">Counts from the RuneLite panel. Screenshot stays in this browser.</p>
+      <form id="f">
+        <label>Member <select name="member" id="memberSel"></select></label>
+        <label>Luck / panel KC <input name="kc" type="number" min="0" placeholder="1029" required></label>
+        <label>Week KC override <input name="week" type="number" min="0" placeholder="blank uses WOM"></label>
+        <label>Panel GP (m) <input name="gp" type="number" min="0" step="0.1" placeholder="127.1"></label>
+        <label>Claw <input name="claw" type="number" min="0" value="0"></label>
+        <label>Leather <input name="leather" type="number" min="0" value="0"></label>
+        <label>Tail <input name="tail" type="number" min="0" value="0"></label>
+        <label>Eye <input name="eye" type="number" min="0" value="0"></label>
+        <label>Fang <input name="fang" type="number" min="0" value="0"></label>
+        <label>Heart <input name="heart" type="number" min="0" value="0"></label>
+        <label>Heads <input name="heads" type="number" min="0" value="0"></label>
+        <label>Jar <input name="jar" type="number" min="0" value="0"></label>
+        <label>Pet <input name="pet" type="number" min="0" value="0"></label>
+        <label class="span">Screenshot (optional) <input name="shot" type="file" accept="image/*"></label>
+        <div class="span row">
+          <button type="submit">Save snapshot</button>
+          <button type="button" class="ghost" id="clearOne">Clear this member</button>
+        </div>
+        <p class="note span" id="saved"></p>
+        <img id="shotPrev" class="preview span" alt="" hidden>
+      </form>
+    </section>
+    <section id="setup" class="card">
+      <div class="label">DropTracker plugin</div>
+      <ol>
+        <li>RuneLite Plugin Hub - DropTracker</li>
+        <li>API Configuration - Use API Connections</li>
+        <li>Track drops, collection log, pets</li>
+      </ol>
+      <p class="note">Live plugin ingest still needs a backend. This page stores snapshots in the browser and refreshes WOM live.</p>
+      <p class="note">RSNs: Klopikkon, Am a ziggy, zavorea, riemser, ironshepe111.</p>
+      <p class="note">Klopikkon panel 1029 KC / 127.1M. WOM 350. Luck uses 1029 until you overwrite it.</p>
+    </section>
+  </div>
+</div>
+<script>
+(function () {
+  var MEMBERS = [
+    { id: "klopikkon", rsn: "Klopikkon", display: "klopikkon" },
+    { id: "am-a-ziggy", rsn: "Am a ziggy", display: "am a ziggy" },
+    { id: "zavorea", rsn: "zavorea", display: "Zavorea" },
+    { id: "riemser", rsn: "riemser", display: "Riemser" },
+    { id: "ironshepe111", rsn: "ironshepe111", display: "ironshepe111" }
+  ];
+  var RATES = [
+    { key: "eye", name: "Eye", rate: 181.1 },
+    { key: "fang", name: "Fang", rate: 181.1 },
+    { key: "heart", name: "Heart", rate: 181.1 },
+    { key: "tail", name: "Tail", rate: 513 },
+    { key: "leather", name: "Leather", rate: 514 },
+    { key: "claw", name: "Claw", rate: 1001 },
+    { key: "heads", name: "Heads", rate: 256 },
+    { key: "jar", name: "Jar", rate: 2000 },
+    { key: "pet", name: "Pet", rate: 3000 }
+  ];
+  var STORE = "no-mistakes-v2";
+  var live = {};
+  function num(n) {
+    if (n == null || n === "" || isNaN(n)) return "-";
+    return Number(n).toLocaleString("en-AU");
+  }
+  function loadStore() {
+    try { return JSON.parse(localStorage.getItem(STORE) || "{}"); }
+    catch (e) { return {}; }
+  }
+  function saveStore(obj) { localStorage.setItem(STORE, JSON.stringify(obj)); }
+  function seedIfEmpty() {
+    var s = loadStore();
+    if (!s.klopikkon) {
+      s.klopikkon = { kc: 1029, gp: 127.1, week: "", claw: 0, leather: 0, tail: 0, eye: 0, fang: 0, heart: 0, heads: 0, jar: 0, pet: 0 };
+      saveStore(s);
+    }
+    return s;
+  }
+  function luckFor(row) {
+    var kc = Number(row && row.kc || 0);
+    if (!kc) return { label: "no KC", cls: "", ratio: null, got: 0 };
+    var ratios = [];
+    var got = 0;
+    for (var i = 0; i < RATES.length; i++) {
+      var item = RATES[i];
+      var k = Number(row[item.key] || 0);
+      got += k;
+      var expected = kc / item.rate;
+      if (k > 0 || expected >= 0.5) ratios.push((k + 0.25) / (expected + 0.25));
+    }
+    if (!got && !ratios.length) return { label: "log uniques", cls: "mid", ratio: null, got: 0 };
+    if (!got) return { label: "dry so far", cls: "dry", ratio: 0, got: 0 };
+    var prod = 1;
+    for (var j = 0; j < ratios.length; j++) prod *= ratios[j];
+    var g = Math.pow(prod, 1 / ratios.length);
+    var label = "on rate"; var cls = "mid";
+    if (g < 0.45) { label = "very dry"; cls = "dry"; }
+    else if (g < 0.75) { label = "dry"; cls = "dry"; }
+    else if (g > 1.8) { label = "very lucky"; cls = "ok"; }
+    else if (g > 1.25) { label = "lucky"; cls = "ok"; }
+    return { label: label, cls: cls, ratio: g, got: got };
+  }
+  function uniqueLine(row) {
+    if (!row) return "No snapshot";
+    var bits = [];
+    for (var i = 0; i < RATES.length; i++) {
+      var k = Number(row[RATES[i].key] || 0);
+      if (k) bits.push(RATES[i].name + " x" + k);
+    }
+    return bits.length ? bits.join(" / ") : "Uniques not logged yet";
+  }
+  function render() {
+    var store = seedIfEmpty();
+    var cards = document.getElementById("cards");
+    var cmp = document.getElementById("cmp");
+    cards.innerHTML = "";
+    cmp.innerHTML = "";
+    var sel = document.getElementById("memberSel");
+    if (!sel.options.length) {
+      for (var s = 0; s < MEMBERS.length; s++) {
+        var opt = document.createElement("option");
+        opt.value = MEMBERS[s].id;
+        opt.textContent = MEMBERS[s].rsn;
+        sel.appendChild(opt);
+      }
+    }
+    for (var i = 0; i < MEMBERS.length; i++) {
+      var m = MEMBERS[i];
+      var wom = live[m.id] || {};
+      var row = store[m.id] || {};
+      var luck = luckFor(row);
+      var week = row.week !== "" && row.week != null ? Number(row.week) : wom.week;
+      var article = document.createElement("article");
+      article.className = "card";
+      article.innerHTML =
+        '<span class="badge">' + m.rsn + '</span>' +
+        '<div class="big">' + m.display + '</div>' +
+        '<div class="row">' +
+          '<div class="kpi"><span class="label">Week KC</span><b>' + num(week || 0) + '</b></div>' +
+          '<div class="kpi"><span class="label">Luck KC</span><b>' + num(row.kc) + '</b></div>' +
+          '<div class="kpi"><span class="label">WOM KC</span><b>' + num(wom.hydra) + '</b></div>' +
+          '<div class="kpi"><span class="label">Clog</span><b>' + num(wom.clog) + '</b></div>' +
+        '</div>' +
+        '<p class="luck ' + luck.cls + '">' + luck.label + (luck.ratio != null ? ' · ' + luck.ratio.toFixed(2) + 'x rate' : '') + '</p>' +
+        '<p class="note">' + uniqueLine(row) + '</p>' +
+        (row.gp ? '<p class="note">Panel ' + row.gp + 'M gp</p>' : '') +
+        (wom.total ? '<p class="note">Total level ' + num(wom.total) + '</p>' : '');
+      cards.appendChild(article);
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        '<td>' + m.rsn + '</td><td>' + num(week || 0) + '</td><td>' + num(row.kc) + '</td><td>' +
+        num(wom.hydra) + '</td><td>' + (luck.got || 0) + '</td><td class="luck ' + luck.cls + '">' + luck.label + '</td>';
+      cmp.appendChild(tr);
+    }
+  }
+  function pull(m) {
+    var base = "https://api.wiseoldman.net/v2/players/" + encodeURIComponent(m.rsn);
+    return Promise.all([
+      fetch(base).then(function (r) { return r.ok ? r.json() : null; }),
+      fetch(base + "/gained?period=week").then(function (r) { return r.ok ? r.json() : null; })
+    ]).then(function (pair) {
+      var d = pair[0] || {};
+      var g = pair[1] || {};
+      var data = ((d.latestSnapshot || {}).data || {});
+      var bosses = data.bosses || {};
+      var hydra = ((bosses.alchemical_hydra || {}).kills);
+      var total = (((data.skills || {}).overall || {}).level);
+      var clog = (((data.activities || {}).collections_logged || {}).score);
+      var week = (((((g.data || {}).bosses || {}).alchemical_hydra || {}).kills || {}).gained);
+      live[m.id] = { hydra: hydra > 0 ? hydra : 0, total: total, clog: clog, week: week > 0 ? week : 0 };
+    }).catch(function () {
+      if (!live[m.id]) live[m.id] = { hydra: null, total: null, clog: null, week: 0 };
+    });
+  }
+  document.getElementById("f").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var fd = new FormData(e.target);
+    var id = fd.get("member");
+    var store = seedIfEmpty();
+    store[id] = {
+      kc: Number(fd.get("kc") || 0),
+      week: fd.get("week"),
+      gp: fd.get("gp"),
+      claw: Number(fd.get("claw") || 0),
+      leather: Number(fd.get("leather") || 0),
+      tail: Number(fd.get("tail") || 0),
+      eye: Number(fd.get("eye") || 0),
+      fang: Number(fd.get("fang") || 0),
+      heart: Number(fd.get("heart") || 0),
+      heads: Number(fd.get("heads") || 0),
+      jar: Number(fd.get("jar") || 0),
+      pet: Number(fd.get("pet") || 0)
+    };
+    saveStore(store);
+    document.getElementById("saved").textContent = "Saved snapshot for " + id + " in this browser.";
+    render();
+  });
+  document.getElementById("clearOne").addEventListener("click", function () {
+    var id = document.getElementById("memberSel").value;
+    var store = seedIfEmpty();
+    delete store[id];
+    saveStore(store);
+    document.getElementById("saved").textContent = "Cleared " + id + ".";
+    render();
+  });
+  document.querySelector("input[name=shot]").addEventListener("change", function (e) {
+    var f = e.target.files && e.target.files[0];
+    var img = document.getElementById("shotPrev");
+    if (!f) { img.hidden = true; return; }
+    var reader = new FileReader();
+    reader.onload = function () { img.src = reader.result; img.hidden = false; };
+    reader.readAsDataURL(f);
+  });
+  seedIfEmpty();
+  render();
+  Promise.all(MEMBERS.map(pull)).then(function () {
+    document.getElementById("status").textContent = "Wise Old Man refreshed. Week KC is WOM gained this week unless you typed an override.";
+    render();
+  }).catch(function () {
+    document.getElementById("status").textContent = "Could not reach Wise Old Man. Seeded numbers still show.";
+    render();
+  });
+})();
+</script>
+</body>
+</html>
