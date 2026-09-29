@@ -85,7 +85,16 @@ function render(d){
   const list=document.getElementById("list");
   list.innerHTML="";
   const frag=document.createDocumentFragment();
-  for(const s of (d.sites||[])){
+  const sites = (d.sites || []).slice();
+  if (!sites.some(function (s) { return String(s.path || "").replace(/\/+$/, "") === "/osrs/no-mistakes"; })) {
+    sites.push({
+      path: "/osrs/no-mistakes/",
+      title: "No mistakes",
+      access: "unlisted",
+      blurb: "OSRS group Ironman. Kill counts, collection log, and how far off rate you are."
+    });
+  }
+  for (const s of sites) {
     const a=document.createElement("a");
     a.className="card";
     a.href=s.path||"#";
