@@ -1,4 +1,4 @@
-:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--line:#2a3440;--gold:#e8c36a;--dry:#d64545;--unlucky:#e08a3c;--ok:#d6b25e;--lucky:#3cbf86}
+:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--line:#2a3440;--gold:#e8c36a;--dry:#d64545;--unlucky:#e08a3c;--ok:#d6b25e;--lucky:#3cbf86;--cursed:#ff6b6b;--spoon:#8dffc0}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,sans-serif;overflow-x:hidden}
 a{color:var(--gold);text-decoration:none}
@@ -21,16 +21,18 @@ h1{font-size:1.55rem;margin:.15rem 0 .35rem}
 .pick{display:none;width:100%;margin-top:.6rem;background:#0f141a;border:1px solid var(--line);border-radius:.7rem;padding:.6rem}
 @media(max-width:859px){.bosses{display:none}.pick{display:block}}
 .tag{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
-.tag.dry{color:var(--dry)}.tag.unlucky{color:var(--unlucky)}.tag.ok{color:var(--ok)}.tag.lucky{color:var(--lucky)}
+.tag.dry{color:var(--dry)}.tag.unlucky{color:var(--unlucky)}.tag.ok{color:var(--ok)}.tag.lucky{color:var(--lucky)}.tag.cursed{color:var(--cursed)}.tag.spoon{color:var(--spoon)}
 .meter{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.15rem .55rem;align-items:center;margin-top:.65rem}
-.name{font-weight:650}
+.name{font-weight:650;display:flex;flex-wrap:wrap;gap:.35rem;align-items:baseline}
 .sub{color:var(--muted);font-size:.8rem}
 .track{grid-column:1 / -1;position:relative;height:1.7rem;background:#100e0c;border:1px solid #3a3128;border-radius:.35rem;overflow:hidden}
 .fill{position:absolute;inset:0 auto 0 0;border-radius:.3rem}
 .fill.dry{background:linear-gradient(90deg,#7a1d1d,#d64545)}
+.fill.cursed{background:linear-gradient(90deg,#4a0d0d,#ff4d4d)}
 .fill.unlucky{background:linear-gradient(90deg,#8a4b16,#e08a3c)}
 .fill.ok{background:linear-gradient(90deg,#6d5420,#d6b25e)}
 .fill.lucky{background:linear-gradient(90deg,#145c40,#3cbf86)}
+.fill.spoon{background:linear-gradient(90deg,#0d4a32,#8dffc0)}
 .delta{position:absolute;right:.45rem;top:0;bottom:0;display:flex;align-items:center;font-variant-numeric:tabular-nums;font-weight:700;text-shadow:0 1px 2px #000}
 .got{min-width:2rem;text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
 .kpis{display:flex;flex-wrap:wrap;gap:.45rem;margin:.7rem 0}

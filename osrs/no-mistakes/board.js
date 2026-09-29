@@ -17,17 +17,34 @@ function expectedCount(kc, item) {
   if (item.cycle == null) return kc / item.rate;
   return expectedInCycle(kc, item.rate, item.cycle, item.cycleSize || 3);
 }
-function toneOf(got, expected) {
-  if (expected < 1 && got <= 0) return "ok";
-  if (expected <= 0) return "ok";
-  const ratio = got / expected;
-  if (ratio < 0.5) return "dry";
-  if (ratio < 0.85) return "unlucky";
-  if (ratio > 1.35) return "lucky";
-  return "ok";
+const ROASTS = {
+  soon: ["Too early to cope", "Not enough kills to sue", "Innocent for now", "The grind hasn't started", "Don't blame Jagex yet"],
+  cursed: ["Extraordinarily bad", "Jagex has your IP", "This is a personal attack", "Drop table left the chat", "Start a change.org", "You are the content", "Restraining order", "Historically dry"],
+  dry: ["Painfully dry", "Off rate and coping", "Send help", "The wiki is laughing", "Dry enough to brine", "Not even close"],
+  unlucky: ["A bit dusty", "Slightly cursed", "Off rate, politely", "Could be worse", "The game giggled"],
+  ok: ["Painfully average", "On rate. Boring.", "The wiki was right", "Mid. Respectfully.", "Exactly as miserable as expected"],
+  nudged: ["A little spoon", "Suspiciously fine", "Don't tell the group", "Off rate, quietly"],
+  lucky: ["Spooned", "The boys are eating", "RNG apologised", "Off rate, the good way", "Lucky and you know it"],
+  spoon: ["Illegal spoon", "Extraordinarily illegal", "Ban speedrun", "This isn't allowed", "Touch grass", "The log is blushing"],
+};
+function roastPick(list, key) {
+  let hash = 0;
+  const text = String(key);
+  for (let i = 0; i < text.length; i++) hash = (hash * 33 + text.charCodeAt(i)) >>> 0;
+  return list[hash % list.length];
 }
-function toneWord(tone) {
-  return { dry: "Dry", unlucky: "Unlucky", ok: "On rate", lucky: "Lucky" }[tone];
+function roast(got, expected, key) {
+  if ((expected < 1 && got <= 0) || expected <= 0) {
+    return { tone: got > 0 ? "spoon" : "ok", word: got > 0 ? roastPick(ROASTS.spoon, key) : roastPick(ROASTS.soon, key) };
+  }
+  const ratio = got / expected;
+  if (ratio < 0.15) return { tone: "cursed", word: roastPick(ROASTS.cursed, key) };
+  if (ratio < 0.5) return { tone: "dry", word: roastPick(ROASTS.dry, key) };
+  if (ratio < 0.85) return { tone: "unlucky", word: roastPick(ROASTS.unlucky, key) };
+  if (ratio <= 1.15) return { tone: "ok", word: roastPick(ROASTS.ok, key) };
+  if (ratio <= 1.35) return { tone: "ok", word: roastPick(ROASTS.nudged, key) };
+  if (ratio <= 2.2) return { tone: "lucky", word: roastPick(ROASTS.lucky, key) };
+  return { tone: "spoon", word: roastPick(ROASTS.spoon, key) };
 }
 function signed(n) {
   const v = (n >= 0 ? "+" : "") + n.toFixed(2);
@@ -188,19 +205,21 @@ function renderNav() {
 
 function meterRow(label, sub, got, expected) {
   const delta = got - expected;
-  const tone = toneOf(got, expected);
+  const verdict = roast(got, expected, label);
   const width = Math.max(8, Math.min(100, Math.abs(delta) / Math.max(expected, 1) * 100));
   const row = el("div", "meter");
   const copy = el("div");
-  copy.appendChild(el("div", "name", label));
+  const name = el("div", "name");
+  name.append(label, el("span", "tag " + verdict.tone, verdict.word));
+  copy.appendChild(name);
   if (sub) copy.appendChild(el("div", "sub", sub));
   const track = el("div", "track");
-  const fill = el("div", "fill " + tone);
+  const fill = el("div", "fill " + verdict.tone);
   fill.style.width = width + "%";
   const deltaEl = el("div", "delta", signed(delta));
   track.append(fill, deltaEl);
   row.append(copy, el("div", "got", String(got)), track);
-  return { row, delta, expected, got, tone };
+  return { row, delta, expected, got, tone: verdict.tone, word: verdict.word };
 }
 
 function renderMain() {
@@ -281,7 +300,7 @@ function renderMain() {
     main.append(heading);
     if (items.length > 1) {
       const any = meterRow("Any", "This table only", sumGot, sumExpected);
-      main.append(el("p", "tag " + any.tone, toneWord(any.tone)), head, any.row);
+      main.append(el("p", "tag " + any.tone, any.word), head, any.row);
     } else {
       main.append(head);
     }
