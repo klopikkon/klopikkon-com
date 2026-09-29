@@ -38,6 +38,9 @@ h1{font-size:1.55rem;margin:.15rem 0 .35rem}
 .kpis{display:flex;flex-wrap:wrap;gap:.45rem;margin:.7rem 0}
 .kpi{background:#0f141a;border:1px solid var(--line);border-radius:.7rem;padding:.4rem .6rem;min-width:6.2rem}
 .kpi b{display:block}
-.label{color:var(--muted);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase}
+.who-block{margin-top:1.1rem}
+.who-block h2{font-size:1.05rem;margin:0 0 .35rem}
+.next-row{display:block;padding:.45rem 0;border-top:1px solid var(--line);color:inherit}
+.next-row:hover .name{color:var(--gold)}
 .head{display:grid;grid-template-columns:minmax(0,1fr) auto;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.8rem}
 .head span:last-child{text-align:right}

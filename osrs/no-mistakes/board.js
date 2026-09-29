@@ -95,14 +95,23 @@ function folderFor(slug) {
   const item = BOARD.bosses.find((b) => b.slug === slug);
   return item && item.kind === "monster" ? "monster" : "boss";
 }
+function depthPrefix() {
+  if (/\/(?:boss|monster)\/[^/]+\/?$/.test(location.pathname)) return "../../";
+  if (/\/next\/?$/.test(location.pathname)) return "../";
+  return "";
+}
+function isNext() {
+  return location.hash === "#next" || /\/next\/?$/.test(location.pathname);
+}
 function bossHref(slug) {
-  const folder = folderFor(slug);
-  if (/\/(?:boss|monster)\/[^/]+/.test(location.pathname)) return "../../" + folder + "/" + slug + "/";
-  return folder + "/" + slug + "/";
+  return depthPrefix() + folderFor(slug) + "/" + slug + "/";
+}
+function goNext() {
+  history.pushState(null, "", depthPrefix() + "next/");
+  render();
 }
 function goBoss(slug) {
-  const href = bossHref(slug);
-  history.pushState(null, "", href);
+  history.pushState(null, "", bossHref(slug));
   render();
 }
 function currentBoss() {
@@ -169,6 +178,104 @@ function rateText(member, boss, item, expected) {
   return rate + " · expected " + expected.toFixed(2);
 }
 
+function gotCount(member, boss, item) {
+  const counts = BOARD.clog[member.id] && BOARD.clog[member.id][boss.slug];
+  if (!counts || counts[item.id] == null) return null;
+  return counts[item.id];
+}
+function nextCycleId(member, boss) {
+  const pieces = boss.uniques.filter(function (item) { return item.cycle != null; }).sort(function (a, b) { return a.cycle - b.cycle; });
+  if (!pieces.length) return null;
+  const counts = pieces.map(function (item) { return gotCount(member, boss, item); });
+  if (counts.some(function (n) { return n == null; })) return null;
+  const low = Math.min.apply(null, counts);
+  const next = pieces.find(function (item) { return gotCount(member, boss, item) === low; });
+  return next ? next.id : null;
+}
+function oneKill(member, boss, item) {
+  if (item.delveRates) {
+    const levels = Object.keys(item.delveRates).map(Number).filter(function (level) { return delveAt(member.id, level) > 0; });
+    if (!levels.length) return null;
+    const level = Math.max.apply(null, levels);
+    return { p: 1 / item.delveRates[level], place: "level " + (level >= 9 ? "9+" : level), kc: delveTotal(member.id) };
+  }
+  if (item.sources) {
+    let best = null;
+    item.sources.forEach(function (src) {
+      const kc = partKc(member, boss, src.part);
+      if (kc <= 0) return;
+      const p = src.num / src.den;
+      if (!best || p > best.p) {
+        const part = (boss.parts || []).find(function (row) { return row.id === src.part; });
+        best = { p: p, place: part ? part.name : src.part, kc: kc };
+      }
+    });
+    return best;
+  }
+  const kc = item.part ? partKc(member, boss, item.part) : kcFor(member, boss).kc;
+  if (kc <= 0 || !item.rate) return null;
+  const part = item.part && (boss.parts || []).find(function (row) { return row.id === item.part; });
+  return { p: 1 / item.rate, place: part ? part.name : boss.name, kc: kc };
+}
+function nextDrops(member) {
+  if (!BOARD.clog[member.id]) return [];
+  const ranked = [];
+  const seen = {};
+  BOARD.bosses.forEach(function (boss) {
+    const cycleId = nextCycleId(member, boss);
+    boss.uniques.forEach(function (item) {
+      const got = gotCount(member, boss, item);
+      if (got == null) return;
+      const cyclePiece = item.cycle != null;
+      if (cyclePiece && item.id !== cycleId) return;
+      if (!cyclePiece && got > 0) return;
+      const chance = oneKill(member, boss, item);
+      if (!chance) return;
+      const key = item.name.toLowerCase();
+      const row = { boss: boss, item: item, got: got, chance: chance, cyclePiece: cyclePiece };
+      if (!seen[key] || chance.p > seen[key].chance.p) seen[key] = row;
+    });
+  });
+  Object.keys(seen).forEach(function (key) { ranked.push(seen[key]); });
+  ranked.sort(function (a, b) { return b.chance.p - a.chance.p; });
+  return ranked.slice(0, 8);
+}
+function renderNext() {
+  const main = document.getElementById("main");
+  main.innerHTML = "";
+  main.appendChild(el("div", "label", "Group"));
+  main.appendChild(el("h1", "", "Next drops"));
+  main.appendChild(el("p", "note", "Missing collection log items, ranked by the chance on one more kill. Being dry does not make the next kill luckier. Hydra and Araxxor only list the piece the cycle can roll."));
+  BOARD.members.forEach(function (member) {
+    const block = el("section", "who-block");
+    block.appendChild(el("h2", "", member.rsn));
+    const rows = nextDrops(member);
+    if (!BOARD.clog[member.id]) {
+      block.appendChild(el("p", "note", "No DropTracker collection log yet, so this would be a guess."));
+      main.appendChild(block);
+      return;
+    }
+    if (!rows.length) {
+      block.appendChild(el("p", "note", "Nothing to rank. Either the log is finished where there is kill count, or the KC is still missing."));
+      main.appendChild(block);
+      return;
+    }
+    rows.forEach(function (row, index) {
+      const link = document.createElement("a");
+      link.className = "next-row";
+      link.href = bossHref(row.boss.slug);
+      const rate = Math.max(1, Math.round(1 / row.chance.p));
+      const title = el("div", "name");
+      title.append((index + 1) + ". " + row.item.name);
+      if (row.cyclePiece) title.append(el("span", "tag ok", "Next piece"));
+      link.appendChild(title);
+      const where = row.chance.place === row.boss.name ? "" : row.chance.place + " · ";
+      link.appendChild(el("div", "sub", row.boss.name + " · " + where + num(row.chance.kc) + " kc · 1/" + num(rate) + (row.got ? " · already " + row.got : "")));
+      block.appendChild(link);
+    });
+    main.appendChild(block);
+  });
+}
 function el(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -199,13 +306,17 @@ function renderNav() {
       };
       kinds.appendChild(button);
     });
+    const nextButton = el("button", isNext() ? "on" : "", "Next drops");
+    nextButton.type = "button";
+    nextButton.onclick = goNext;
+    kinds.appendChild(nextButton);
   }
   const label = aside && aside.querySelector(".label");
   if (label) label.textContent = section === "monster" ? "Monsters" : "Bosses";
   regionBox.innerHTML = "";
   list.innerHTML = "";
   pick.innerHTML = "";
-  const active = currentBoss().slug;
+  const active = isNext() ? "" : currentBoss().slug;
   const pool = BOARD.bosses.filter(function (b) { return (b.kind || "boss") === section; });
   const regions = ["All"].concat(pool.map(function (b) { return b.region; }).filter(function (v, i, a) { return a.indexOf(v) === i; }));
   regions.forEach((name) => {
@@ -247,6 +358,7 @@ function meterRow(label, sub, got, expected) {
 }
 
 function renderMain() {
+  if (isNext()) return renderNext();
   const boss = currentBoss();
   const main = document.getElementById("main");
   main.innerHTML = "";
@@ -415,11 +527,10 @@ function renderMain() {
 }
 
 function render() {
-  const current = currentBoss();
-  section = current.kind === "monster" ? "monster" : "boss";
+  if (!isNext()) section = (currentBoss().kind === "monster") ? "monster" : "boss";
   renderNav();
   renderMain();
-  document.title = current.name + " · No mistakes";
+  document.title = isNext() ? "Next drops · No mistakes" : currentBoss().name + " · No mistakes";
 }
 
 async function refreshWom() {
