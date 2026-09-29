@@ -1,0 +1,17 @@
+{
+  "updatedAt": "2026-09-29T00:00:00Z",
+  "snapshots": [
+    {
+      "id": "klopikkon-hydra-1029",
+      "memberId": "klopikkon",
+      "boss": "alchemical-hydra",
+      "source": "loot_tracker",
+      "kc": 1029,
+      "gp": 127100000,
+      "takenAt": "2026-09-29",
+      "note": "RuneLite loot tracker panel. Unique counts not yet confirmed — edit on Upload.",
+      "uniques": {}
+    }
+  ],
+  "events": []
+}

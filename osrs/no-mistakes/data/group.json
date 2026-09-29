@@ -1,0 +1,17 @@
+{
+  "groupName": "No mistakes",
+  "mode": "group_ironman",
+  "size": 5,
+  "weekStarts": "Monday",
+  "timezone": "Australia/Sydney",
+  "womGroupId": null,
+  "dropTrackerGroupId": null,
+  "defaultBoss": "alchemical-hydra",
+  "members": [
+    { "id": "klopikkon", "rsn": "Klopikkon", "display": "klopikkon" },
+    { "id": "am-a-ziggy", "rsn": "Am a ziggy", "display": "am a ziggy" },
+    { "id": "zavorea", "rsn": "zavorea", "display": "Zavorea" },
+    { "id": "riemser", "rsn": "riemser", "display": "Riemser" },
+    { "id": "ironshepe111", "rsn": "ironshepe111", "display": "ironshepe111" }
+  ]
+}
