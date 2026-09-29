@@ -66,17 +66,19 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
       <thead><tr><th>Member</th><th>Week KC</th><th>Luck KC</th><th>WOM KC</th><th>Uniques</th><th>Luck</th></tr></thead>
       <tbody id="cmp"></tbody>
     </table>
-    <p class="note">Rates cached from the OSRS Wiki (29 Sep 2026). Unique rates are per-kill.</p>
+    <p class="note">Collection log from DropTracker (29 Sep 2026). Eye, fang, then heart share one 1/181.1 roll, so expected is about two of each, not 5.68 of each.</p>
     <table>
-      <thead><tr><th>Unique</th><th>Rate</th><th>Expected at 1029 KC</th></tr></thead>
+      <thead><tr><th>Unique</th><th>Collection log</th><th>Rate</th><th>Expected at 1029 KC</th></tr></thead>
       <tbody>
-        <tr><td>Eye / fang / heart</td><td>1/181.1 each</td><td>5.68 each</td></tr>
-        <tr><td>Tail</td><td>1/513</td><td>2.01</td></tr>
-        <tr><td>Leather</td><td>1/514</td><td>2.00</td></tr>
-        <tr><td>Claw</td><td>1/1001</td><td>1.03</td></tr>
-        <tr><td>Heads</td><td>1/256</td><td>4.02</td></tr>
-        <tr><td>Jar</td><td>1/2000</td><td>0.51</td></tr>
-        <tr><td>Pet</td><td>1/3000</td><td>0.34</td></tr>
+        <tr><td>Eye</td><td>2</td><td>1/181.1 next</td><td>2.23</td></tr>
+        <tr><td>Fang</td><td>2</td><td>1/181.1 next</td><td>1.89</td></tr>
+        <tr><td>Heart</td><td>1</td><td>1/181.1 next</td><td>1.56</td></tr>
+        <tr><td>Tail</td><td>3</td><td>1/513</td><td>2.01</td></tr>
+        <tr><td>Leather</td><td>1</td><td>1/514</td><td>2.00</td></tr>
+        <tr><td>Claw</td><td>0</td><td>1/1001</td><td>1.03</td></tr>
+        <tr><td>Heads</td><td>6</td><td>1/256</td><td>4.02</td></tr>
+        <tr><td>Jar</td><td>1</td><td>1/2000</td><td>0.51</td></tr>
+        <tr><td>Pet</td><td>0</td><td>1/3000</td><td>0.34</td></tr>
       </tbody>
     </table>
   </section>
@@ -130,9 +132,9 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
     { id: "ironshepe111", rsn: "ironshepe111", display: "ironshepe111" }
   ];
   var RATES = [
-    { key: "eye", name: "Eye", rate: 181.1 },
-    { key: "fang", name: "Fang", rate: 181.1 },
-    { key: "heart", name: "Heart", rate: 181.1 },
+    { key: "eye", name: "Eye", rate: 181.1, cycle: 0 },
+    { key: "fang", name: "Fang", rate: 181.1, cycle: 1 },
+    { key: "heart", name: "Heart", rate: 181.1, cycle: 2 },
     { key: "tail", name: "Tail", rate: 513 },
     { key: "leather", name: "Leather", rate: 514 },
     { key: "claw", name: "Claw", rate: 1001 },
@@ -151,10 +153,35 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
     catch (e) { return {}; }
   }
   function saveStore(obj) { localStorage.setItem(STORE, JSON.stringify(obj)); }
+  function blankUniques(row) {
+    var keys = ["claw", "leather", "tail", "eye", "fang", "heart", "heads", "jar", "pet"];
+    for (var i = 0; i < keys.length; i++) if (Number(row && row[keys[i]] || 0) > 0) return false;
+    return true;
+  }
+  function clogSeed() {
+    return { kc: 1029, gp: 127.1, week: "", claw: 0, leather: 1, tail: 3, eye: 2, fang: 2, heart: 1, heads: 6, jar: 1, pet: 0 };
+  }
+  function expectedCount(kc, item) {
+    if (item.cycle == null) return kc / item.rate;
+    var lambda = kc / item.rate;
+    var pmf = Math.exp(-lambda);
+    var expected = 0;
+    var limit = Math.max(40, Math.ceil(lambda + 8 * Math.sqrt(lambda + 1)));
+    for (var n = 0; n <= limit; n++) {
+      if (n > 0) pmf *= lambda / n;
+      if (n > item.cycle) expected += (Math.floor((n - item.cycle - 1) / 3) + 1) * pmf;
+    }
+    return expected;
+  }
   function seedIfEmpty() {
     var s = loadStore();
-    if (!s.klopikkon) {
-      s.klopikkon = { kc: 1029, gp: 127.1, week: "", claw: 0, leather: 0, tail: 0, eye: 0, fang: 0, heart: 0, heads: 0, jar: 0, pet: 0 };
+    if (!s.klopikkon || blankUniques(s.klopikkon)) {
+      var prev = s.klopikkon || {};
+      var next = clogSeed();
+      if (prev.kc) next.kc = prev.kc;
+      if (prev.gp) next.gp = prev.gp;
+      if (prev.week) next.week = prev.week;
+      s.klopikkon = next;
       saveStore(s);
     }
     return s;
@@ -168,7 +195,7 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
       var item = RATES[i];
       var k = Number(row[item.key] || 0);
       got += k;
-      var expected = kc / item.rate;
+      var expected = expectedCount(kc, item);
       if (k > 0 || expected >= 0.5) ratios.push((k + 0.25) / (expected + 0.25));
     }
     if (!got && !ratios.length) return { label: "log uniques", cls: "mid", ratio: null, got: 0 };
