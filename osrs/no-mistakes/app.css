@@ -1,0 +1,80 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b0f14;
+  --card: #151b22;
+  --ink: #e8eef5;
+  --muted: #8b9aab;
+  --ok: #3dd68c;
+  --warn: #ff8b4a;
+  --bad: #ff6b6b;
+  --link: #6ea8fe;
+  --line: #2a3440;
+  --lucky: #3dd68c;
+  --onrate: #8b9aab;
+  --dry: #ffb020;
+  --vdry: #ff6b6b;
+}
+* { box-sizing: border-box }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, sans-serif }
+a { color: var(--link); text-decoration: none }
+a:hover { text-decoration: underline }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 1.1rem 1rem 3rem }
+header.top { display: flex; flex-wrap: wrap; gap: .7rem 1rem; align-items: baseline; justify-content: space-between; margin-bottom: 1.1rem }
+.brand { letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-size: .78rem; font-weight: 650 }
+.brand b { color: var(--ink); letter-spacing: 0; text-transform: none; font-size: 1.15rem; display: block }
+nav.sub a { margin-right: .85rem; font-size: .92rem; color: var(--muted) }
+nav.sub a.on, nav.sub a:hover { color: var(--ink); text-decoration: none }
+h1 { font-size: 1.45rem; letter-spacing: -.02em; margin: 0 0 .35rem }
+.lede, .sub { color: var(--muted); margin: 0 0 1rem }
+.grid { display: grid; gap: .85rem }
+@media (min-width: 720px) { .grid.members { grid-template-columns: repeat(2, 1fr) } }
+@media (min-width: 1040px) { .grid.members { grid-template-columns: repeat(3, 1fr) } }
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 1rem;
+  padding: 1rem 1.05rem; display: block; color: inherit;
+}
+a.card:hover { border-color: #3a4a5c; text-decoration: none }
+.label { color: var(--muted); font-size: .78rem; letter-spacing: .04em; text-transform: uppercase }
+.big { font-size: 1.28rem; font-weight: 650; letter-spacing: -.02em; margin: .15rem 0 .4rem }
+.row { display: flex; flex-wrap: wrap; gap: .45rem .7rem; align-items: center }
+.kpi { background: #0f141a; border: 1px solid var(--line); border-radius: .7rem; padding: .45rem .6rem; min-width: 5.5rem }
+.kpi b { display: block; font-size: 1.05rem }
+.badge {
+  display: inline-block; font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
+  border: 1px solid var(--line); border-radius: 999px; padding: .14rem .55rem; color: var(--muted);
+}
+.badge.live { color: var(--ok); border-color: #245c43 }
+.badge.stale, .badge.missing { color: var(--warn); border-color: #6a3d28 }
+.badge.lucky { color: var(--lucky); border-color: #245c43 }
+.badge.onrate { color: var(--onrate) }
+.badge.dry { color: var(--dry); border-color: #6a4d18 }
+.badge.vdry { color: var(--vdry); border-color: #6a2828 }
+.totals { display: grid; gap: .7rem; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin: 0 0 1rem }
+table { width: 100%; border-collapse: collapse; font-size: .92rem }
+th, td { text-align: left; padding: .45rem .4rem; border-bottom: 1px solid var(--line); vertical-align: top }
+th { color: var(--muted); font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em }
+.muted { color: var(--muted) }
+.ok { color: var(--ok) }
+.warn { color: var(--warn) }
+.bad { color: var(--vdry) }
+form.stack { display: flex; flex-direction: column; gap: .7rem; max-width: 36rem }
+label { font-size: .85rem; color: var(--muted) }
+input, select, textarea, button {
+  font: inherit; padding: .7rem .8rem; border-radius: .7rem; border: 1px solid var(--line);
+  background: #0f141a; color: var(--ink); width: 100%;
+}
+button {
+  background: var(--ok); color: #062; font-weight: 650; border: 0; cursor: pointer; width: auto;
+}
+button.secondary { background: #243041; color: var(--ink) }
+.actions { display: flex; flex-wrap: wrap; gap: .5rem }
+ol.setup { padding-left: 1.2rem }
+ol.setup li { margin: .4rem 0 }
+.note { font-size: .88rem; color: var(--muted) }
+.err { color: var(--warn) }
+footer.tiny { margin-top: 2rem; color: var(--muted); font-size: .8rem }
+.uniques input { width: 4.5rem; padding: .35rem .45rem }
+.hidden { display: none !important }
+.pillrow { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1rem }
+.pillrow button { padding: .35rem .7rem; font-size: .85rem }
+.pillrow button.on { outline: 1px solid var(--link) }

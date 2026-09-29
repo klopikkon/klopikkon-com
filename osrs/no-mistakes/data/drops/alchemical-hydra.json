@@ -1,0 +1,35 @@
+{
+  "slug": "alchemical-hydra",
+  "name": "Alchemical Hydra",
+  "wikiPage": "Alchemical_Hydra",
+  "womMetric": "alchemical_hydra",
+  "fetchedAt": "2026-09-29T00:00:00Z",
+  "source": "OSRS Wiki Bucket API dropsline",
+  "license": "CC BY-NC-SA — drop rates from the OSRS Wiki",
+  "notes": [
+    "Two rolls per kill. First roll may be a unique; second is standard loot.",
+    "Wiki unique rates are already per-kill; do not double them.",
+    "Hydra's eye / fang / heart each listed at 1/181.1.",
+    "Brimstone key is Konar-task only and excluded from default luck.",
+    "Dragon knives / thrownaxes sit on the unique table but are excluded from the composite luck score."
+  ],
+  "uniques": [
+    { "item": "Hydra's eye", "rate": "1/181.1", "p": 0.005521811154058531, "composite": true },
+    { "item": "Hydra's fang", "rate": "1/181.1", "p": 0.005521811154058531, "composite": true },
+    { "item": "Hydra's heart", "rate": "1/181.1", "p": 0.005521811154058531, "composite": true },
+    { "item": "Hydra tail", "rate": "1/513", "p": 0.001949317738791423, "composite": true },
+    { "item": "Hydra leather", "rate": "1/514", "p": 0.0019455252918287938, "composite": true },
+    { "item": "Hydra's claw", "rate": "1/1001", "p": 0.000999000999000999, "composite": true },
+    { "item": "Alchemical hydra heads", "rate": "1/256", "p": 0.00390625, "composite": true },
+    { "item": "Jar of Chemicals", "rate": "1/2000", "p": 0.0005, "composite": true },
+    { "item": "Ikkle Hydra", "rate": "1/3000", "p": 0.0003333333333333333, "composite": true },
+    { "item": "Dragon thrownaxe", "rate": "1/2000", "p": 0.0005, "composite": false },
+    { "item": "Dragon knife", "rate": "1/2001", "p": 0.0004997501249375312, "composite": false }
+  ],
+  "tertiary": [
+    { "item": "Brimstone key", "rate": "1/40", "p": 0.025, "note": "Konar task only" },
+    { "item": "Clue scroll (hard)", "rate": "1/100", "p": 0.01 },
+    { "item": "Clue scroll (elite)", "rate": "1/256", "p": 0.00390625 }
+  ],
+  "always": [{ "item": "Hydra bones", "rate": "Always", "qty": "2" }]
+}
