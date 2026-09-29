@@ -1,13 +1,203 @@
 <!doctype html>
 <html lang="en-AU">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#0b0f14">
-<title>No mistakes · GIM tracker</title>
-<link rel="stylesheet" href="app.css">
+<title>No mistakes GIM tracker</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0f14;--card:#151b22;--ink:#e8eef5;--muted:#8b9aab;--ok:#3dd68c;--warn:#ff8b4a;--link:#6ea8fe;--line:#2a3440}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,sans-serif}
+a{color:var(--link);text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:1.1rem 1rem 3rem}
+.top{display:flex;flex-wrap:wrap;gap:.7rem 1rem;justify-content:space-between;align-items:baseline;margin-bottom:1rem}
+.brand{letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-size:.78rem;font-weight:650}
+.brand b{display:block;color:var(--ink);letter-spacing:0;text-transform:none;font-size:1.15rem}
+nav a{margin-right:.85rem;color:var(--muted)}
+h1{font-size:1.45rem;margin:0 0 .35rem}
+.lede,.note{color:var(--muted)}
+.grid{display:grid;gap:.85rem}
+@media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+@media(min-width:1040px){.grid{grid-template-columns:1fr 1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:1rem;padding:1rem 1.05rem}
+.label{color:var(--muted);font-size:.78rem;letter-spacing:.04em;text-transform:uppercase}
+.big{font-size:1.28rem;font-weight:650;margin:.15rem 0 .45rem}
+.row{display:flex;flex-wrap:wrap;gap:.45rem}
+.kpi{background:#0f141a;border:1px solid var(--line);border-radius:.7rem;padding:.45rem .6rem;min-width:5.4rem}
+.kpi b{display:block}
+.badge{display:inline-block;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:.14rem .55rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:.7rem}
+th,td{text-align:left;padding:.4rem;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-size:.78rem;text-transform:uppercase}
+form{display:flex;flex-direction:column;gap:.55rem;max-width:36rem;margin-top:1rem}
+input,select,textarea,button{font:inherit;padding:.65rem .75rem;border-radius:.7rem;border:1px solid var(--line);background:#0f141a;color:var(--ink)}
+button{background:var(--ok);color:#062;font-weight:650;border:0;cursor:pointer;width:auto}
+</style>
+</head>
 <body>
-  <div class="wrap" id="app"></div>
-  <script src="app.js"></script>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">klopikkon.com<br><b>No mistakes</b></div>
+    <nav>
+      <a href="#group">Group</a>
+      <a href="#hydra">Hydra</a>
+      <a href="#upload">Upload</a>
+      <a href="#setup">Setup</a>
+    </nav>
+  </header>
+
+  <section id="group">
+    <h1>Group Ironman - No mistakes</h1>
+    <p class="lede">Five accounts. Luck KC is the loot-tracker panel, not a mixed hiscores number. Drop rates are stored on this site.</p>
+    <p class="note" id="status">Seeded numbers below. Live WOM refresh runs in the background.</p>
+    <div class="grid" id="cards">
+      <article class="card" id="card-klopikkon">
+        <span class="badge">Klopikkon</span>
+        <div class="big">klopikkon</div>
+        <div class="row">
+          <div class="kpi"><span class="label">Luck KC</span><b>1,029</b><span class="note">loot tracker</span></div>
+          <div class="kpi"><span class="label">WOM Hydra</span><b data-wom-hydra>350</b><span class="note">hiscores</span></div>
+          <div class="kpi"><span class="label">Panel GP</span><b>127.1M</b></div>
+          <div class="kpi"><span class="label">Total lvl</span><b data-wom-total>2266</b></div>
+        </div>
+        <p class="note">Uniques not entered yet - use Upload.</p>
+      </article>
+      <article class="card" id="card-am-a-ziggy">
+        <span class="badge">Am a ziggy</span>
+        <div class="big">am a ziggy</div>
+        <div class="row">
+          <div class="kpi"><span class="label">WOM Hydra</span><b data-wom-hydra>0</b></div>
+          <div class="kpi"><span class="label">Total lvl</span><b data-wom-total>2037</b></div>
+        </div>
+      </article>
+      <article class="card" id="card-zavorea">
+        <span class="badge">zavorea</span>
+        <div class="big">Zavorea</div>
+        <div class="row">
+          <div class="kpi"><span class="label">WOM Hydra</span><b data-wom-hydra>0</b></div>
+          <div class="kpi"><span class="label">Total lvl</span><b data-wom-total>2145</b></div>
+        </div>
+      </article>
+      <article class="card" id="card-riemser">
+        <span class="badge">riemser</span>
+        <div class="big">Riemser</div>
+        <div class="row">
+          <div class="kpi"><span class="label">WOM Hydra</span><b data-wom-hydra>0</b></div>
+          <div class="kpi"><span class="label">Total lvl</span><b data-wom-total>2036</b></div>
+        </div>
+      </article>
+      <article class="card" id="card-ironshepe111">
+        <span class="badge">ironshepe111</span>
+        <div class="big">ironshepe111</div>
+        <div class="row">
+          <div class="kpi"><span class="label">WOM Hydra</span><b data-wom-hydra>855</b></div>
+          <div class="kpi"><span class="label">Total lvl</span><b data-wom-total>2250</b></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="hydra" class="card" style="margin-top:1rem">
+    <div class="label">Alchemical Hydra - cached wiki rates</div>
+    <p class="note">Fetched 29 Sep 2026 from the OSRS Wiki. This page does not call the wiki when you load it.</p>
+    <table>
+      <thead><tr><th>Item</th><th>Rate</th><th>Expected at 1,029 KC</th></tr></thead>
+      <tbody>
+        <tr><td>Hydra eye / fang / heart</td><td>1/181.1 each</td><td>5.68 each</td></tr>
+        <tr><td>Hydra tail</td><td>1/513</td><td>2.01</td></tr>
+        <tr><td>Hydra leather</td><td>1/514</td><td>2.00</td></tr>
+        <tr><td>Hydra claw</td><td>1/1001</td><td>1.03</td></tr>
+        <tr><td>Alchemical hydra heads</td><td>1/256</td><td>4.02</td></tr>
+        <tr><td>Jar of chemicals</td><td>1/2000</td><td>0.51</td></tr>
+        <tr><td>Ikkle hydra</td><td>1/3000</td><td>0.34</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Klopikkon loot-tracker panel is 1,029 KC / 127.1M. WOM snapshot is 350 KC. Luck uses 1,029.</p>
+  </section>
+
+  <section id="upload" class="card" style="margin-top:1rem">
+    <div class="label">Upload unique counts</div>
+    <p class="note">Stored in this browser only until we add a server ingest.</p>
+    <form id="f">
+      <label>Member
+        <select name="member">
+          <option value="klopikkon">Klopikkon</option>
+          <option value="am-a-ziggy">Am a ziggy</option>
+          <option value="zavorea">zavorea</option>
+          <option value="riemser">riemser</option>
+          <option value="ironshepe111">ironshepe111</option>
+        </select>
+      </label>
+      <label>Panel KC <input name="kc" type="number" min="0" placeholder="1029"></label>
+      <label>Week KC <input name="week" type="number" min="0" placeholder="200"></label>
+      <label>Claw <input name="claw" type="number" min="0"></label>
+      <label>Leather <input name="leather" type="number" min="0"></label>
+      <label>Tail <input name="tail" type="number" min="0"></label>
+      <label>Eye fang heart (three numbers, spaces)
+        <input name="ring" placeholder="1 1 1">
+      </label>
+      <button type="submit">Save in this browser</button>
+      <p class="note" id="saved"></p>
+    </form>
+  </section>
+
+  <section id="setup" class="card" style="margin-top:1rem">
+    <div class="label">DropTracker setup</div>
+    <ol>
+      <li>RuneLite Plugin Hub - DropTracker</li>
+      <li>API Configuration - Use API Connections</li>
+      <li>Track drops, collection log, pets</li>
+    </ol>
+    <p class="note">RSNs: Klopikkon, Am a ziggy, zavorea, riemser, ironshepe111. Rates: OSRS Wiki, CC BY-NC-SA.</p>
+  </section>
+</div>
+<script>
+(function () {
+  var members = [
+    { id: "klopikkon", rsn: "Klopikkon" },
+    { id: "am-a-ziggy", rsn: "Am a ziggy" },
+    { id: "zavorea", rsn: "zavorea" },
+    { id: "riemser", rsn: "riemser" },
+    { id: "ironshepe111", rsn: "ironshepe111" }
+  ];
+  var status = document.getElementById("status");
+  function num(n) {
+    if (n == null || n < 0) return "0";
+    return Number(n).toLocaleString("en-AU");
+  }
+  function pull(m) {
+    return fetch("https://api.wiseoldman.net/v2/players/" + encodeURIComponent(m.rsn))
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d) return;
+        var card = document.getElementById("card-" + m.id);
+        if (!card) return;
+        var bosses = (((d.latestSnapshot || {}).data || {}).bosses || {});
+        var hydra = (bosses.alchemical_hydra || {}).kills;
+        var total = ((((d.latestSnapshot || {}).data || {}).skills || {}).overall || {}).level;
+        var hEl = card.querySelector("[data-wom-hydra]");
+        var tEl = card.querySelector("[data-wom-total]");
+        if (hEl) hEl.textContent = hydra > 0 ? num(hydra) : "0";
+        if (tEl && total) tEl.textContent = num(total);
+      })
+      .catch(function () {});
+  }
+  Promise.all(members.map(pull)).then(function () {
+    status.textContent = "Wise Old Man figures refreshed. Week KC stays 0 until WOM records new Hydra kills.";
+  }).catch(function () {
+    status.textContent = "Could not refresh Wise Old Man. Seeded numbers above are still valid.";
+  });
+  document.getElementById("f").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var fd = new FormData(e.target);
+    var row = {};
+    fd.forEach(function (v, k) { row[k] = v; });
+    try { localStorage.setItem("no-mistakes-hydra-" + row.member, JSON.stringify(row)); } catch (err) {}
+    document.getElementById("saved").textContent = "Saved locally for " + row.member + ".";
+  });
+})();
+</script>
 </body>
 </html>
