@@ -527,31 +527,89 @@ function renderMain() {
 }
 
 function render() {
+  ensureUpdateButton();
   if (!isNext()) section = (currentBoss().kind === "monster") ? "monster" : "boss";
   renderNav();
   renderMain();
   document.title = isNext() ? "Next drops · No mistakes" : currentBoss().name + " · No mistakes";
 }
 
+let refreshing = false;
+function applySnapshot(member, data) {
+  const bosses = (data.latestSnapshot && data.latestSnapshot.data && data.latestSnapshot.data.bosses) || {};
+  liveKc[member.id] = {};
+  liveUpdated[member.id] = data.updatedAt || "";
+  Object.keys(bosses).forEach(function (key) {
+    const kills = bosses[key] && bosses[key].kills;
+    if (kills > 0) liveKc[member.id][key] = kills;
+  });
+}
+function ensureUpdateButton() {
+  if (document.getElementById("update")) return;
+  const status = document.getElementById("status");
+  if (!status || !status.parentNode) return;
+  const group = document.createElement("div");
+  group.className = "actions";
+  const button = document.createElement("button");
+  button.id = "update";
+  button.type = "button";
+  button.className = "update";
+  button.textContent = "Update";
+  button.onclick = refreshAll;
+  status.parentNode.insertBefore(group, status);
+  group.append(button, status);
+}
 async function refreshWom() {
   const status = document.getElementById("status");
   try {
     for (const member of BOARD.members) {
       const response = await fetch("https://api.wiseoldman.net/v2/players/" + encodeURIComponent(member.rsn));
       if (!response.ok) continue;
-      const data = await response.json();
-      const bosses = (data.latestSnapshot && data.latestSnapshot.data && data.latestSnapshot.data.bosses) || {};
-      liveKc[member.id] = {};
-      liveUpdated[member.id] = data.updatedAt || "";
-      Object.keys(bosses).forEach((key) => {
-        const kills = bosses[key] && bosses[key].kills;
-        if (kills > 0) liveKc[member.id][key] = kills;
-      });
+      applySnapshot(member, await response.json());
     }
-    status.textContent = "Hiscores refreshed. Luck uses a loot-tracker KC when one is saved.";
+    if (!refreshing) status.textContent = "Saved hiscores loaded. Update checks them again.";
   } catch (e) {
-    status.textContent = "Hiscores did not answer. Saved kill counts still work.";
+    if (!refreshing) status.textContent = "Hiscores did not answer. Saved kill counts still work.";
   }
+  if (!refreshing) renderMain();
+}
+async function refreshAll() {
+  if (refreshing) return;
+  refreshing = true;
+  const button = document.getElementById("update");
+  const status = document.getElementById("status");
+  if (button) { button.disabled = true; button.textContent = "Checking…"; }
+  let updated = 0;
+  let failed = 0;
+  for (const member of BOARD.members) {
+    status.textContent = "Checking hiscores for " + member.rsn + "…";
+    try {
+      let response = await fetch("https://api.wiseoldman.net/v2/players/" + encodeURIComponent(member.rsn), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "{}",
+      });
+      if (!response.ok) response = await fetch("https://api.wiseoldman.net/v2/players/" + encodeURIComponent(member.rsn));
+      if (!response.ok) { failed++; continue; }
+      applySnapshot(member, await response.json());
+      updated++;
+    } catch (e) {
+      failed++;
+    }
+  }
+  let clogNote = " Collection logs stay on the last DropTracker sync.";
+  try {
+    status.textContent = "Checking DropTracker…";
+    await fetch("https://api.droptracker.io/player?name=" + encodeURIComponent(BOARD.members[0].rsn));
+    clogNote = " DropTracker answered, but it does not send the collection log to other sites.";
+  } catch (e) {
+    clogNote = " Collection logs stay on the last DropTracker sync. DropTracker blocks this site from reading them.";
+  }
+  status.textContent = (failed
+    ? "Checked " + updated + " hiscores. " + failed + " did not answer."
+    : "Hiscores checked for all 5.") + clogNote;
+  if (button) { button.disabled = false; button.textContent = "Update"; }
+  refreshing = false;
   renderMain();
 }
 

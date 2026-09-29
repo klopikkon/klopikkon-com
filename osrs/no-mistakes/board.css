@@ -7,7 +7,9 @@ button,select,input{font:inherit;color:inherit}
 .top{display:flex;flex-wrap:wrap;gap:.6rem 1rem;justify-content:space-between;align-items:end;margin-bottom:1rem}
 .brand{letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-size:.72rem;font-weight:700}
 .brand b{display:block;color:var(--ink);letter-spacing:0;text-transform:none;font-size:1.35rem;margin-top:.1rem}
-.layout{display:grid;gap:1rem;min-width:0}
+.actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:flex-end;max-width:100%}
+.update{background:#243041;border:1px solid var(--line);border-radius:.7rem;padding:.45rem .8rem;cursor:pointer;font-weight:650}
+.update:disabled{opacity:.55;cursor:wait}
 @media(min-width:860px){.layout{grid-template-columns:16rem minmax(0,1fr);align-items:start}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:1rem;padding:1rem;min-width:0}
 .note{color:var(--muted);font-size:.92rem}
