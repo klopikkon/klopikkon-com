@@ -120,29 +120,31 @@ body::before{
   -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 95%);
 }
 .atmosphere .atm-cg-title{
-  position:absolute; left:50%; top:12%;
-  transform: translate(-50%, -50%);
-  width:min(96vw, 42rem);
+  /* Clear band ABOVE sidebar/main cards (header strip). No -50% Y — that buried half the phrase under the card. */
+  position:absolute; left:50%; top:2.4%;
+  transform: translateX(-50%);
+  width:min(92vw, 34rem);
   text-align:center;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.4rem, 9vw, 5.6rem);
+  font-size: clamp(1.35rem, 3.6vw, 2.35rem);
   font-weight:700;
   letter-spacing:.04em;
-  line-height:1.05;
-  color: rgba(255, 90, 90, 0.85);
+  line-height:1.1;
+  color: rgba(255, 110, 110, 0.95);
   text-shadow:
-    0 0 2px rgba(0,0,0,.95),
-    0 2px 0 rgba(0,0,0,.85),
-    0 0 18px rgba(220,30,40,.55),
-    0 0 42px rgba(180,20,30,.4),
-    -1px -1px 0 rgba(40,0,0,.7),
-    1px 1px 0 rgba(40,0,0,.7);
+    0 0 2px rgba(0,0,0,.98),
+    0 2px 0 rgba(0,0,0,.9),
+    0 0 14px rgba(220,30,40,.65),
+    0 0 28px rgba(180,20,30,.45),
+    -1px -1px 0 rgba(40,0,0,.8),
+    1px 1px 0 rgba(40,0,0,.8);
   text-transform: none;
   opacity:0;
   transition: opacity .5s ease;
   pointer-events:none;
   user-select:none;
   z-index:0;
+  white-space: nowrap;
 }
 body[data-atm="cg"]{
   background:
@@ -181,38 +183,46 @@ body[data-atm="cg"] .update{
   background:linear-gradient(180deg, #3a2028, #2a141a);
   border-color:rgba(220,70,80,.28);
 }
-/* DT mode: four bosses as corner float-size art — left = Duke+Whisperer (replace Zulrah/Vorkath), right = Leviathan+Vard */
+/* DT mode: top atmosphere band — four bosses in a horizontal row under brand / above cards (clear of sidebar + main). */
 .atmosphere .atm-dt{
   display:none;
   position:absolute; inset:0;
   pointer-events:none;
 }
-.atmosphere .atm-dt.on{ display:block }
+.atmosphere .atm-dt.on{
+  display:flex;
+  inset:auto;
+  left:50%;
+  top:2.2%;
+  transform:translateX(-50%);
+  width:min(94vw, 46rem);
+  height:min(11vh, 5.75rem);
+  justify-content:space-evenly;
+  align-items:center;
+  gap:.35rem;
+  pointer-events:none;
+}
 .atmosphere .atm-dt-boss{
-  position:absolute;
-  width:min(22vw, 28vh, 14rem);
-  height:min(22vw, 28vh, 14rem);
-  max-width:24vw; max-height:30vh;
+  position:relative;
+  left:auto !important; right:auto !important; top:auto !important; bottom:auto !important;
+  flex:0 0 auto;
+  width:min(10vw, 9.5vh, 5.25rem);
+  height:min(10vw, 9.5vh, 5.25rem);
+  max-width:5.5rem; max-height:5.5rem;
   object-fit:contain; object-position:center;
-  opacity:.78;
-  filter:saturate(1.12) contrast(1.15) brightness(1.1);
+  opacity:.88;
+  filter:saturate(1.12) contrast(1.15) brightness(1.12);
   transform: scale(var(--atm-scale, 1));
   transform-origin:center center;
   mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
   -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
-  animation: atm-drift 30s ease-in-out infinite;
+  animation:none;
 }
-.atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{
-  left:1%; top:10%; right:auto; bottom:auto; animation-duration:32s; animation-delay:-3s;
-}
-.atmosphere .atm-dt-boss[data-slug="the-whisperer"]{
-  left:0.5%; top:44%; bottom:auto; right:auto; animation-duration:36s; animation-delay:-10s;
-}
-.atmosphere .atm-dt-boss[data-slug="the-leviathan"]{
-  right:2%; top:8%; left:auto; bottom:auto; animation-duration:34s; animation-delay:-6s;
-}
+.atmosphere .atm-dt-boss[data-slug="duke-sucellus"],
+.atmosphere .atm-dt-boss[data-slug="the-whisperer"],
+.atmosphere .atm-dt-boss[data-slug="the-leviathan"],
 .atmosphere .atm-dt-boss[data-slug="vardorvis"]{
-  right:1%; top:48%; bottom:auto; left:auto; animation-duration:38s; animation-delay:-14s;
+  left:auto; top:auto; right:auto; bottom:auto;
 }
 body[data-atm="dt"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="dt"] .atmosphere .atm-hero{ opacity:0 !important }
@@ -237,22 +247,26 @@ body[data-atm="dt"] .atmosphere .atm-yama{ display:none !important }
   animation: atm-drift 34s ease-in-out infinite;
 }
 .atmosphere .atm-yama-glyph{
+  /* Identical box + baseline for fire and shadow. No atm-drift — phase offset made heights diverge live. */
   position:absolute;
-  width:min(14vw, 16vh, 9rem);
-  height:min(14vw, 16vh, 9rem);
+  width:min(12vw, 14vh, 7.5rem);
+  height:min(12vw, 14vh, 7.5rem);
+  max-width:7.5rem; max-height:7.5rem;
   object-fit:contain;
-  opacity:.55;
+  object-position:center;
+  opacity:.62;
   filter:drop-shadow(0 0 18px rgba(0,0,0,.35));
-  animation: atm-drift 40s ease-in-out infinite;
+  animation:none;
+  transform:none;
+  bottom:10%;
+  top:auto;
 }
 .atmosphere .atm-yama-glyph-fire{
-  left:4%; bottom:12%; right:auto; top:auto;
-  animation-delay:-8s;
+  left:3%; right:auto;
   filter:drop-shadow(0 0 16px rgba(220,80,20,.35));
 }
 .atmosphere .atm-yama-glyph-shadow{
-  right:8%; bottom:12%; left:auto; top:auto;
-  animation-delay:-18s;
+  right:6%; left:auto;
   filter:drop-shadow(0 0 16px rgba(90,40,160,.35));
 }
 body[data-atm="yama"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
@@ -419,17 +433,19 @@ h1{ letter-spacing:-.02em }
     width:min(28vw, 18vh, 9rem); height:min(28vw, 18vh, 9rem);
     max-width:30vw; max-height:20vh;
   }
-  .atmosphere .atm-dt-boss{
-    width:min(34vw, 22vh, 10rem); height:min(34vw, 22vh, 10rem);
-    max-width:36vw; max-height:24vh; opacity:.6;
+  .atmosphere .atm-dt.on{
+    top:1.6%;
+    width:min(98vw, 36rem);
+    height:min(9.5vh, 4.75rem);
   }
-  .atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{ left:0; top:6%; }
-  .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{ left:0; top:42%; bottom:auto; }
-  .atmosphere .atm-dt-boss[data-slug="the-leviathan"]{ right:0; top:4%; }
-  .atmosphere .atm-dt-boss[data-slug="vardorvis"]{ right:0; top:46%; bottom:auto; }
+  .atmosphere .atm-dt-boss{
+    width:min(18vw, 8vh, 4.25rem); height:min(18vw, 8vh, 4.25rem);
+    max-width:4.5rem; max-height:4.5rem; opacity:.82;
+  }
   .atmosphere .atm-cg-title{
-    top:10%;
-    font-size: clamp(1.8rem, 11vw, 3.2rem);
+    top:1.8%;
+    font-size: clamp(1.15rem, 5.2vw, 1.85rem);
+    white-space: nowrap;
   }
   .atmosphere .atm-zulrah-title,
   .atmosphere .atm-title-plate{
@@ -455,7 +471,13 @@ h1{ letter-spacing:-.02em }
     max-width:40vw; max-height:38vh; left:0; top:4%; opacity:.6;
   }
   .atmosphere .atm-yama-glyph{
-    width:min(22vw, 14vh, 7rem); height:min(22vw, 14vh, 7rem); opacity:.45;
+    width:min(18vw, 11vh, 5.5rem); height:min(18vw, 11vh, 5.5rem);
+    max-width:5.5rem; max-height:5.5rem;
+    opacity:.55;
+    bottom:8%;
+    top:auto;
+    animation:none;
+    transform:none;
   }
   body[data-atm="yama"] .atmosphere .atm-hero{
     width:min(72vw, 48vh, 22rem); height:min(72vw, 48vh, 22rem);
