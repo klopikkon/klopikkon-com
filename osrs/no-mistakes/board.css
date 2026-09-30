@@ -647,26 +647,29 @@ h1{ letter-spacing:-.02em }
   .atmosphere .atm-gwd-boss{
     right:1%; top:clamp(11rem, 26vh, 14.5rem); left:auto; bottom:auto;
   }
-  /* Phone is tall: cover crops wide Imagine titles. Fit width so full wordmark shows. */
+  /* Phone is tall: cover side-crops wide Imagine titles (e.g. “dos Wa”).
+     Force full-bleed box + contain so the whole baked wordmark stays readable.
+     Match on .on (not only .integrated) so cover cannot win. */
+  body[data-atm="gwd"] .atmosphere .atm-theme-wash.on,
   body[data-atm="gwd"] .atmosphere .atm-theme-wash.on.integrated,
   body[data-atm="dt"] .atmosphere .atm-theme-wash.on.integrated{
-    inset:auto;
-    top:0; left:0; right:0;
-    width:100%;
-    height:auto;
-    max-height:min(42vh, 20rem);
-    object-fit:contain;
-    object-position:center top;
-    opacity:.7;
+    inset:0 !important;
+    top:0 !important; right:0 !important; bottom:0 !important; left:0 !important;
+    width:100% !important;
+    height:100% !important;
+    max-height:none !important;
+    object-fit:contain !important;
+    object-position:center top !important;
+    opacity:.72;
   }
-  /* Keep 2×2 below the contained title band */
+  /* 2×2 clearly BELOW contained title band (~top ~25% of 16:9 wash ≈ 8–10rem), above cards */
   body[data-atm="gwd"] .atmosphere .atm-gwd-minion[data-slot="0"],
   body[data-atm="gwd"] .atmosphere .atm-gwd-minion[data-slot="1"]{
-    top:clamp(6.5rem, 16vh, 9rem);
+    top:clamp(9.5rem, 24vh, 12.5rem);
   }
   body[data-atm="gwd"] .atmosphere .atm-gwd-minion[data-slot="2"],
   body[data-atm="gwd"] .atmosphere .atm-gwd-boss{
-    top:clamp(12.5rem, 30vh, 16.5rem);
+    top:clamp(15.5rem, 38vh, 20rem);
   }
   .atmosphere .atm-cg-title,
   .atmosphere .atm-theme-title,
@@ -688,8 +691,8 @@ h1{ letter-spacing:-.02em }
     padding-top: clamp(18rem, 44vh, 22rem);
   }
   body[data-atm="gwd"] .wrap{
-    /* Title + 2×2 faction sprites clear above full-width cards */
-    padding-top: clamp(16rem, 44vh, 22rem);
+    /* Title + lowered 2×2 faction sprites clear above full-width cards */
+    padding-top: clamp(18.5rem, 50vh, 26rem);
   }
   .atmosphere .atm-zulrah-form[data-form="tanzanite"]{
     left:0; top:12%;
