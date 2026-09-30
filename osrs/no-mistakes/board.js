@@ -933,35 +933,38 @@ const ATM_THEMES = {
   "cerberus": { title: "Hell's lobby", washFile: "cerberus-scene.webp", credit: "imagine" },
   "vorkath": { title: "The blue wall", washFile: "vorkath-scene.webp", credit: "imagine" },
   "nightmare": { title: "The dream that kills", washFile: "nightmare-scene.webp", credit: "imagine" },
-  "phantom-muspah": { title: "Ancient rupture", titleFile: "phantom-muspah-title.webp", credit: "imagine" },
-  "araxxor": { title: "Noxious", titleFile: "araxxor-title.webp", credit: "imagine" },
-  "nex": { title: "Frozen throne", titleFile: "nex-title.webp", credit: "imagine" },
-  "corporeal-beast": { title: "The dark core", titleFile: "corporeal-beast-title.webp", credit: "imagine" },
-  "kalphite-queen": { title: "Queen of the nest", titleFile: "kalphite-queen-title.webp", credit: "imagine" },
-  "the-hueycoatl": { title: "River serpent", titleFile: "the-hueycoatl-title.webp", credit: "imagine" },
-  "tzkal-zuk": { title: "Infernal gate", titleFile: "tzkal-zuk-title.webp", credit: "imagine" },
-  "doom-of-mokhaiotl": { title: "Deep delve", titleFile: "doom-of-mokhaiotl-title.webp", credit: "imagine" },
-  "yama": { title: "Oathbound" },
-  "desert-treasure-ii": { title: "Four awakenings" },
-  "phosanis-nightmare": { title: "Alone in the dream" },
-  "abyssal-sire": { title: "Unsired depths" },
-  "kraken": { title: "Tentacle throne" },
-  "thermonuclear-smoke-devil": { title: "Smoke and mirrors" },
-  "grotesque-guardians": { title: "Stone and sunrise" },
-  "general-graardor": { title: "Bandos warlord" },
-  "kreearra": { title: "Winged justice" },
-  "commander-zilyana": { title: "Saradomin's light" },
+  "phantom-muspah": { title: "Ancient rupture", washFile: "phantom-muspah-scene.webp", credit: "imagine" },
+  "araxxor": { title: "Noxious", washFile: "araxxor-scene.webp", credit: "imagine" },
+  "nex": { title: "Frozen throne", washFile: "nex-scene.webp", credit: "imagine" },
+  "corporeal-beast": { title: "The dark core", washFile: "corporeal-beast-scene.webp", credit: "imagine" },
+  "kalphite-queen": { title: "Queen of the nest", washFile: "kalphite-queen-scene.webp", credit: "imagine" },
+  "the-hueycoatl": { title: "River serpent", washFile: "the-hueycoatl-scene.webp", credit: "imagine" },
+  "tzkal-zuk": { title: "Infernal gate", washFile: "tzkal-zuk-scene.webp", credit: "imagine" },
+  "doom-of-mokhaiotl": { title: "Deep delve", washFile: "doom-of-mokhaiotl-scene.webp", credit: "imagine" },
+  "yama": { title: "Oathbound", washFile: "yama-scene.webp", credit: "imagine" },
+  "desert-treasure-ii": { title: "Four awakenings", washFile: "desert-treasure-ii-scene.webp", credit: "imagine" },
+  "phosanis-nightmare": { title: "Alone in the dream", washFile: "phosanis-nightmare-scene.webp", credit: "imagine" },
+  "abyssal-sire": { title: "Unsired depths", washFile: "abyssal-sire-scene.webp", credit: "imagine" },
+  "kraken": { title: "Tentacle throne", washFile: "kraken-scene.webp", credit: "imagine" },
+  "thermonuclear-smoke-devil": { title: "Smoke and mirrors", washFile: "thermonuclear-smoke-devil-scene.webp", credit: "imagine" },
+  "grotesque-guardians": { title: "Stone and sunrise", washFile: "grotesque-guardians-scene.webp", credit: "imagine" },
+  "general-graardor": { title: "Bandos warlord", washFile: "general-graardor-scene.webp", credit: "imagine" },
+  "kreearra": { title: "Winged justice", washFile: "kreearra-scene.webp", credit: "imagine" },
+  "commander-zilyana": { title: "Saradomin's light", washFile: "commander-zilyana-scene.webp", credit: "imagine" },
   "kril-tsutsaroth": { title: "Zamorak's spear" },
-  "chambers-of-xeric": { title: "The chambers" },
+  "chambers-of-xeric": { title: "The chambers", washFile: "chambers-of-xeric-scene.webp", credit: "imagine" },
   "chambers-of-xeric-cm": { title: "Challenge mode" },
   "theatre-of-blood": { title: "The theatre" },
   "theatre-of-blood-hm": { title: "Hard mode theatre" },
   "tombs-of-amascut": { title: "The tombs" },
   "tombs-of-amascut-expert": { title: "Expert tombs" },
-  "sol-heredit": { title: "Colosseum crown" },
+  "sol-heredit": { title: "Colosseum crown", washFile: "sol-heredit-scene.webp", credit: "imagine" },
 };
 function themeFor(slug) {
-  return ATM_THEMES[slug] || null;
+  if (ATM_THEMES[slug]) return ATM_THEMES[slug];
+  // DT corners share the desert-treasure-ii integrated wash.
+  if (typeof ATM_DT !== "undefined" && ATM_DT.indexOf(slug) !== -1) return ATM_THEMES["desert-treasure-ii"] || null;
+  return null;
 }
 function themeTitleFile(slug) {
   const t = themeFor(slug);
@@ -1104,7 +1107,9 @@ function setAtmCredit(mode) {
   if (mode === "cg") {
     credit.innerHTML = 'Corrupted Gauntlet scene + title (The red prison): Grok Imagine. Boss sprites from the ' + wiki + '. Fan utility — Jagex trademarks belong to Jagex Ltd.';
   } else if (mode === "yama") {
-    credit.innerHTML = 'Yama &amp; Judge of Yama from the ' + wiki + '. Floor glyphs styled after Glyph of Fire / Glyph of Shadow. Fan utility — Jagex trademarks belong to Jagex Ltd.';
+    credit.innerHTML = (hasAtmIntegratedWash("yama")
+      ? 'Yama scene + title (Oathbound): Grok Imagine. Judge + glyphs from the '
+      : 'Yama &amp; Judge of Yama from the ') + wiki + '. Floor glyphs styled after Glyph of Fire / Glyph of Shadow. Fan utility — Jagex trademarks belong to Jagex Ltd.';
   } else if (mode === "zulrah") {
     credit.innerHTML = 'Zulrah scene + title (The money Snake): Grok Imagine. Forms from the ' + wiki + '. Fan utility — Jagex trademarks belong to Jagex Ltd.';
   } else if (mode === "theme") {
@@ -1180,7 +1185,7 @@ function updateAtmosphere() {
     hero.removeAttribute("src");
     hero.style.opacity = "0";
     if (dt) dt.classList.add("on");
-    setAtmCredit("default");
+    setAtmCredit(hasAtmIntegratedWash(slug) || hasAtmIntegratedWash("desert-treasure-ii") ? "theme" : "default");
     return;
   }
   if (isZulrahAtmosphere(slug)) {

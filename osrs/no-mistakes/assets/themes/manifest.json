@@ -7,14 +7,34 @@
       "zulrah": "zulrah-scene.webp",
       "the-corrupted-gauntlet": "cg-red-prison-scene.webp"
     },
-    "note": "Integrated Imagine scene+title \u2192 washFile only (no titleFile). Floating titleFile still used for non-integrated bosses. Drop new webps into /workspace/imagine-plates/integrated/ then copy here.",
+    "note": "Integrated Imagine scene+title → washFile only (no titleFile). Titles from /workspace/imagine-plates/TITLES.json (exact casing).",
     "integrated": [
       "zulrah-scene.webp",
       "cg-red-prison-scene.webp",
       "alchemical-hydra-scene.webp",
       "cerberus-scene.webp",
       "vorkath-scene.webp",
-      "nightmare-scene.webp"
+      "nightmare-scene.webp",
+      "phantom-muspah-scene.webp",
+      "araxxor-scene.webp",
+      "nex-scene.webp",
+      "corporeal-beast-scene.webp",
+      "kalphite-queen-scene.webp",
+      "the-hueycoatl-scene.webp",
+      "tzkal-zuk-scene.webp",
+      "doom-of-mokhaiotl-scene.webp",
+      "yama-scene.webp",
+      "desert-treasure-ii-scene.webp",
+      "phosanis-nightmare-scene.webp",
+      "abyssal-sire-scene.webp",
+      "kraken-scene.webp",
+      "thermonuclear-smoke-devil-scene.webp",
+      "grotesque-guardians-scene.webp",
+      "general-graardor-scene.webp",
+      "kreearra-scene.webp",
+      "commander-zilyana-scene.webp",
+      "chambers-of-xeric-scene.webp",
+      "sol-heredit-scene.webp"
     ]
   },
   "themes": {
@@ -56,79 +76,123 @@
     },
     "phantom-muspah": {
       "title": "Ancient rupture",
-      "titleFile": "phantom-muspah-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "phantom-muspah-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "araxxor": {
       "title": "Noxious",
-      "titleFile": "araxxor-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "araxxor-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "nex": {
       "title": "Frozen throne",
-      "titleFile": "nex-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "nex-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "corporeal-beast": {
       "title": "The dark core",
-      "titleFile": "corporeal-beast-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "corporeal-beast-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "kalphite-queen": {
       "title": "Queen of the nest",
-      "titleFile": "kalphite-queen-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "kalphite-queen-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "the-hueycoatl": {
       "title": "River serpent",
-      "titleFile": "the-hueycoatl-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "the-hueycoatl-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "tzkal-zuk": {
       "title": "Infernal gate",
-      "titleFile": "tzkal-zuk-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "tzkal-zuk-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "doom-of-mokhaiotl": {
       "title": "Deep delve",
-      "titleFile": "doom-of-mokhaiotl-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "doom-of-mokhaiotl-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "yama": {
-      "title": "Oathbound"
+      "title": "Oathbound",
+      "washFile": "yama-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true,
+      "keep": "keep Judge + fire/shadow glyphs"
     },
     "desert-treasure-ii": {
-      "title": "Four awakenings"
+      "title": "Four awakenings",
+      "washFile": "desert-treasure-ii-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true,
+      "keep": "keep DT four-boss top band"
     },
     "phosanis-nightmare": {
-      "title": "Alone in the dream"
+      "title": "Alone in the dream",
+      "washFile": "phosanis-nightmare-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "abyssal-sire": {
-      "title": "Unsired depths"
+      "title": "Unsired depths",
+      "washFile": "abyssal-sire-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "kraken": {
-      "title": "Tentacle throne"
+      "title": "Tentacle throne",
+      "washFile": "kraken-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "thermonuclear-smoke-devil": {
-      "title": "Smoke and mirrors"
+      "title": "Smoke and mirrors",
+      "washFile": "thermonuclear-smoke-devil-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "grotesque-guardians": {
-      "title": "Stone and sunrise"
+      "title": "Stone and sunrise",
+      "washFile": "grotesque-guardians-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "general-graardor": {
-      "title": "Bandos warlord"
+      "title": "Bandos warlord",
+      "washFile": "general-graardor-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "kreearra": {
-      "title": "Winged justice"
+      "title": "Winged justice",
+      "washFile": "kreearra-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "commander-zilyana": {
-      "title": "Saradomin's light"
+      "title": "Saradomin's light",
+      "washFile": "commander-zilyana-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "kril-tsutsaroth": {
       "title": "Zamorak's spear"
     },
     "chambers-of-xeric": {
-      "title": "The chambers"
+      "title": "The chambers",
+      "washFile": "chambers-of-xeric-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true,
+      "keep": "CLog list unchanged"
     },
     "chambers-of-xeric-cm": {
       "title": "Challenge mode"
@@ -146,7 +210,10 @@
       "title": "Expert tombs"
     },
     "sol-heredit": {
-      "title": "Colosseum crown"
+      "title": "Colosseum crown",
+      "washFile": "sol-heredit-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     }
   }
 }

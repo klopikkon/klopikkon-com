@@ -7,17 +7,28 @@ Integrated scene+title washes (one Imagine per boss — background AND heading b
 - cerberus-scene.webp — Hell's lobby (cerberus)
 - vorkath-scene.webp — The blue wall (vorkath)
 - nightmare-scene.webp — The dream that kills (nightmare)
+- phantom-muspah-scene.webp — Ancient rupture (phantom-muspah)
+- araxxor-scene.webp — Noxious (araxxor)
+- nex-scene.webp — Frozen throne (nex)
+- corporeal-beast-scene.webp — The dark core (corporeal-beast)
+- kalphite-queen-scene.webp — Queen of the nest (kalphite-queen)
+- the-hueycoatl-scene.webp — River serpent (the-hueycoatl)
+- tzkal-zuk-scene.webp — Infernal gate (tzkal-zuk)
+- doom-of-mokhaiotl-scene.webp — Deep delve (doom-of-mokhaiotl)
+- yama-scene.webp — Oathbound (yama) (keep Judge + fire/shadow glyphs)
+- desert-treasure-ii-scene.webp — Four awakenings (desert-treasure-ii) (keep DT four-boss top band)
+- phosanis-nightmare-scene.webp — Alone in the dream (phosanis-nightmare)
+- abyssal-sire-scene.webp — Unsired depths (abyssal-sire)
+- kraken-scene.webp — Tentacle throne (kraken)
+- thermonuclear-smoke-devil-scene.webp — Smoke and mirrors (thermonuclear-smoke-devil)
+- grotesque-guardians-scene.webp — Stone and sunrise (grotesque-guardians)
+- general-graardor-scene.webp — Bandos warlord (general-graardor)
+- kreearra-scene.webp — Winged justice (kreearra)
+- commander-zilyana-scene.webp — Saradomin's light (commander-zilyana)
+- chambers-of-xeric-scene.webp — The chambers (chambers-of-xeric) (CLog list unchanged)
+- sol-heredit-scene.webp — Colosseum crown (sol-heredit)
 
-Legacy floating title plates still shipped for other bosses (see manifest.json titleFile):
-- araxxor-title.webp — Noxious (araxxor)
-- nex-title.webp — Frozen throne (nex)
-- corporeal-beast-title.webp — The dark core (corporeal-beast)
-- kalphite-queen-title.webp — Queen of the nest (kalphite-queen)
-- phantom-muspah-title.webp — Ancient rupture (phantom-muspah)
-- the-hueycoatl-title.webp — River serpent (the-hueycoatl)
-- tzkal-zuk-title.webp — Infernal gate (tzkal-zuk)
-- doom-of-mokhaiotl-title.webp — Deep delve (doom-of-mokhaiotl)
-- money-snake.webp / red-prison-title.webp / *-title.webp for hydra/cerberus/vorkath/nightmare — superseded by integrated scenes above
+Legacy floating title plates may remain on disk but are unused when washFile is wired.
 
-Convention: <slug>-scene.webp (integrated) or <slug>-title.webp (floating plate). Aliases historically: money-snake.webp, red-prison*.webp.
+Convention: <slug>-scene.webp (integrated) or <slug>-title.webp (floating plate). Aliases: money-snake.webp, red-prison*.webp, cg-red-prison-scene.webp.
 Fan site; Jagex trademarks belong to Jagex Ltd.
