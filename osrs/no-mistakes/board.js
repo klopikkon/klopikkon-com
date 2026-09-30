@@ -956,7 +956,7 @@ const ATM_COX = ["tekton","vasa-nistirio","vespula","great-olm"];
 const ATM_TOB = ["the-maiden-of-sugadinti","pestilent-bloat","nylocas-vasilias","sotetseg"];
 const ATM_TOA = ["akkha","ba-ba","kephri","zebak"];
 const ATM_ARAXXOR = ["mirrorback-araxyte","araxxor","ruptura-araxyte","acidic-araxyte"];
-const ATM_COLOSSEUM = ["jaguar-warrior","javelin-colossus","serpent-shaman","manticore"];
+const ATM_COLOSSEUM = ["jaguar-warrior","sol-heredit","serpent-shaman","manticore"];
 const ATM_RAID = {
   "chambers-of-xeric": ATM_COX,
   "chambers-of-xeric-cm": ATM_COX,
