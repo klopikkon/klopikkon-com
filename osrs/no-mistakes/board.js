@@ -371,31 +371,32 @@ function medalFile(tone) {
   return "ok";
 }
 let soundOn = false;
-function playCall(item, word) {
-  if (!soundOn || !word || !window.speechSynthesis) return null;
-  const voices = window.speechSynthesis.getVoices();
-  const pick = voices.find(function (voice) { return /en/i.test(voice.lang) && /male|daniel|david|guy|ryan|alex|fred|george/i.test(voice.name); })
-    || voices.find(function (voice) { return /^en/i.test(voice.lang); });
-  function line(text, rate, pitch) {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = rate;
-    utter.pitch = pitch;
-    utter.volume = 1;
-    if (pick) utter.voice = pick;
-    return utter;
+let callAudio = null;
+function callSlug(value) {
+  return String(value || "").toLowerCase().replace(/'/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+function playClip(src, done) {
+  if (callAudio) { callAudio.onended = null; callAudio.onerror = null; callAudio.pause(); }
+  const audio = new Audio(src);
+  callAudio = audio;
+  let finished = false;
+  function finish() {
+    if (finished) return;
+    finished = true;
+    done();
   }
-  window.speechSynthesis.cancel();
-  const result = line(word, 0.7, 0.38);
-  if (item) {
-    const lead = line(item, 0.92, 0.55);
-    lead.onend = function () {
-      window.setTimeout(function () { window.speechSynthesis.speak(result); }, 240);
-    };
-    window.speechSynthesis.speak(lead);
-  } else {
-    window.speechSynthesis.speak(result);
-  }
-  return result;
+  audio.onended = finish;
+  audio.onerror = finish;
+  const pending = audio.play();
+  if (pending && pending.catch) pending.catch(finish);
+}
+function playCall(item, word, done) {
+  const base = depthPrefix() + "calls/";
+  playClip(base + callSlug(item) + ".mp3", function () {
+    window.setTimeout(function () {
+      playClip(base + callSlug(word) + ".mp3", done);
+    }, 180);
+  });
 }
 let hydraRun = 0;
 function runHydraSequence(fills) {
@@ -413,10 +414,9 @@ function runHydraSequence(fills) {
     fill.addEventListener("transitionend", function (event) {
       if (event.propertyName !== "width" || run !== hydraRun) return;
       if (medal) medal.classList.add("pop");
-      const utter = playCall(fill.dataset.item, fill.dataset.word);
-      if (utter) {
-        utter.onend = goNext;
-        window.setTimeout(goNext, 6500);
+      if (soundOn) {
+        playCall(fill.dataset.item, fill.dataset.word, goNext);
+        window.setTimeout(goNext, 8000);
       } else {
         window.setTimeout(goNext, 280);
       }
@@ -429,7 +429,7 @@ function runHydraSequence(fills) {
 }
 function replayHydra() {
   soundOn = true;
-  if (window.speechSynthesis) window.speechSynthesis.resume();
+  if (callAudio) { callAudio.pause(); callAudio = null; }
   const fills = Array.from(document.querySelectorAll("#main .fill.arm"));
   fills.forEach(function (fill) {
     const medal = fill.closest(".meter") && fill.closest(".meter").querySelector(".medal");
