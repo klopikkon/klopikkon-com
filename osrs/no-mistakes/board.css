@@ -5,7 +5,7 @@ a{color:var(--gold);text-decoration:none}
 button,select,input{font:inherit;color:inherit}
 .wrap{max-width:1100px;margin:0 auto;padding:1rem 1rem 3rem;min-width:0}
 .top{display:flex;flex-wrap:wrap;gap:.6rem 1rem;justify-content:space-between;align-items:end;margin-bottom:1rem}
-.brand{letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-size:.72rem;font-weight:700}
+.brand{letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-size:0;font-weight:700}/* hide group-ironman line; .brand b restores */
 .brand b{display:block;color:var(--ink);letter-spacing:0;text-transform:none;font-size:1.35rem;margin-top:.1rem}
 .actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:flex-end;max-width:100%}
 /* Update + status live BELOW the boss list — clear of centered Imagine title plates */
@@ -251,50 +251,44 @@ body[data-atm="cg"] .update{
   background:linear-gradient(180deg, #3a2028, #2a141a);
   border-color:rgba(220,70,80,.28);
 }
-/* DT mode: top atmosphere band — four bosses in a horizontal row under brand / above cards (clear of sidebar + main). */
+/* DT mode: four bosses as one horizontal centered row under baked "Four awakenings". */
 .atmosphere .atm-dt{
   display:none;
   position:absolute; inset:0;
   pointer-events:none;
 }
-.atmosphere .atm-dt.on{ display:block }
+.atmosphere .atm-dt.on{
+  display:flex;
+  justify-content:center;
+  align-items:flex-end; /* shared baseline */
+  gap:clamp(.25rem, 1vw, .75rem);
+  top:clamp(7rem, 16vh, 11rem); /* under baked title band */
+  left:50%;
+  transform:translateX(-50%);
+  width:min(96vw, 58rem);
+  height:auto;
+  inset:auto;
+  z-index:1;
+}
 .atmosphere .atm-dt-boss{
-  position:absolute;
-  width:min(22vw, 28vh, 14rem);
-  height:min(22vw, 28vh, 14rem);
-  max-width:24vw; max-height:30vh;
-  object-fit:contain; object-position:center;
+  position:relative;
+  left:auto; right:auto; top:auto; bottom:auto;
+  width:min(18vw, 22vh, 11rem);
+  height:min(18vw, 22vh, 11rem);
+  max-width:none; max-height:none;
+  object-fit:contain;
+  object-position:center bottom;
   opacity:.72;
   filter:saturate(1.12) contrast(1.15) brightness(1.1);
-  transform: scale(var(--atm-scale, 1));
-  transform-origin:center center;
-  mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
-  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
-  animation: atm-drift 30s ease-in-out infinite;
+  transform:none;
+  transform-origin:center bottom;
+  mask-image:radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
+  -webkit-mask-image:radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
+  animation:none !important;
+  flex:0 0 auto;
 }
-/* DT corner art must stay fully inside the clipped atmosphere frame. */
-.atmosphere .atm-dt-boss{
-  animation: none !important;
-  transform: scale(var(--atm-scale, 1));
-}
-/* Keep each DT boss in a page corner, clear of the centered baked title. */
-.atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{
-  /* Fit in the left pad ABOVE brand "No mistakes" (wrap pad-top ~12–17rem). */
-  left:0.5%; top:clamp(1.1rem, 2.2vh, 1.75rem); right:auto; bottom:auto;
-  width:min(14vw, 16vh, 8.5rem);
-  height:min(14vw, 16vh, 8.5rem);
-  max-width:16vw; max-height:18vh;
-  object-position:center top;
-}
-.atmosphere .atm-dt-boss[data-slug="the-whisperer"]{
-  right:2%; top:8%; left:auto; bottom:auto; animation-duration:36s; animation-delay:-10s;
-}
-.atmosphere .atm-dt-boss[data-slug="the-leviathan"]{
-  left:2%; bottom:12%; right:auto; top:auto; animation-duration:34s; animation-delay:-6s;
-}
-.atmosphere .atm-dt-boss[data-slug="vardorvis"]{
-  right:2%; bottom:clamp(4rem, 10vh, 7rem); left:auto; top:auto;
-}
+/* Hide colliding brand on DT pages (No mistakes + group ironman overlap title/row). */
+body[data-atm="dt"] .brand{ display:none !important }
 body[data-atm="dt"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="dt"] .atmosphere .atm-hero{ opacity:0 !important }
 body[data-atm="dt"] .atmosphere .atm-zulrah{ display:none !important }
@@ -527,8 +521,8 @@ body[data-atm="theme"] .wrap{
   padding-top: clamp(12rem, 36vh, 18rem);
 }
 body[data-atm="dt"] .wrap{
-  /* Keep brand/cards below the centered baked Four awakenings title and corner art. */
-  padding-top: clamp(12rem, 30vh, 17rem);
+  /* Cards below baked Four awakenings + centered DT boss row (brand hidden on DT). */
+  padding-top: clamp(14rem, 34vh, 20rem);
 }
 body[data-atm="gwd"] .wrap{
   /* Keep brand/cards below baked faction title + corner bodyguards. */
@@ -608,19 +602,17 @@ h1{ letter-spacing:-.02em }
     width:min(28vw, 18vh, 9rem); height:min(28vw, 18vh, 9rem);
     max-width:30vw; max-height:20vh;
   }
+  .atmosphere .atm-dt.on{
+    top:clamp(5.5rem, 14vh, 8.5rem);
+    width:min(98vw, 36rem);
+    gap:clamp(.15rem, .8vw, .45rem);
+  }
   .atmosphere .atm-dt-boss{
-    width:min(34vw, 22vh, 10rem); height:min(34vw, 22vh, 10rem);
-    max-width:36vw; max-height:24vh; opacity:.6;
+    width:min(22vw, 16vh, 7.5rem); height:min(22vw, 16vh, 7.5rem);
+    max-width:none; max-height:none; opacity:.68;
+    left:auto; right:auto; top:auto; bottom:auto;
+    object-position:center bottom;
   }
-  .atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{
-    left:0.5%; top:clamp(1rem, 2vh, 1.5rem);
-    width:min(22vw, 14vh, 6.5rem); height:min(22vw, 14vh, 6.5rem);
-    max-width:24vw; max-height:16vh;
-    object-position:center top;
-  }
-  .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{ right:1%; top:6%; }
-  .atmosphere .atm-dt-boss[data-slug="the-leviathan"]{ left:1%; bottom:8%; }
-  .atmosphere .atm-dt-boss[data-slug="vardorvis"]{ right:2%; bottom:clamp(3rem, 8vh, 5rem); }
   .atmosphere .atm-gwd-boss,
   .atmosphere .atm-gwd-minion{
     width:min(34vw, 22vh, 10rem); height:min(34vw, 22vh, 10rem);
@@ -646,8 +638,8 @@ h1{ letter-spacing:-.02em }
     padding-top: clamp(9rem, 30vh, 14rem);
   }
   body[data-atm="dt"] .wrap{
-    /* Reserve the title zone; corner sprites stay outside the centered heading. */
-    padding-top: clamp(10rem, 30vh, 14rem);
+    /* Title + centered DT row; brand hidden. */
+    padding-top: clamp(12rem, 32vh, 16rem);
   }
   body[data-atm="gwd"] .wrap{
     padding-top: clamp(10rem, 30vh, 14rem);
