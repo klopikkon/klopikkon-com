@@ -371,19 +371,31 @@ function medalFile(tone) {
   return "ok";
 }
 let soundOn = false;
-function playCall(word) {
+function playCall(item, word) {
   if (!soundOn || !word || !window.speechSynthesis) return null;
-  const utter = new SpeechSynthesisUtterance(word);
-  utter.rate = 0.78;
-  utter.pitch = 0.5;
-  utter.volume = 1;
   const voices = window.speechSynthesis.getVoices();
   const pick = voices.find(function (voice) { return /en/i.test(voice.lang) && /male|daniel|david|guy|ryan|alex|fred|george/i.test(voice.name); })
     || voices.find(function (voice) { return /^en/i.test(voice.lang); });
-  if (pick) utter.voice = pick;
+  function line(text, rate, pitch) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = rate;
+    utter.pitch = pitch;
+    utter.volume = 1;
+    if (pick) utter.voice = pick;
+    return utter;
+  }
   window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(utter);
-  return utter;
+  const result = line(word, 0.7, 0.38);
+  if (item) {
+    const lead = line(item, 0.92, 0.55);
+    lead.onend = function () {
+      window.setTimeout(function () { window.speechSynthesis.speak(result); }, 240);
+    };
+    window.speechSynthesis.speak(lead);
+  } else {
+    window.speechSynthesis.speak(result);
+  }
+  return result;
 }
 let hydraRun = 0;
 function runHydraSequence(fills) {
@@ -401,10 +413,10 @@ function runHydraSequence(fills) {
     fill.addEventListener("transitionend", function (event) {
       if (event.propertyName !== "width" || run !== hydraRun) return;
       if (medal) medal.classList.add("pop");
-      const utter = playCall(fill.dataset.word);
+      const utter = playCall(fill.dataset.item, fill.dataset.word);
       if (utter) {
         utter.onend = goNext;
-        window.setTimeout(goNext, 3200);
+        window.setTimeout(goNext, 6500);
       } else {
         window.setTimeout(goNext, 280);
       }
@@ -479,6 +491,7 @@ function meterRow(label, sub, got, expected, animate) {
     fill.dataset.width = width + "%";
     fill.dataset.tone = verdict.tone;
     fill.dataset.word = verdict.word;
+    fill.dataset.item = label === "Any" ? "This table" : label;
   }
   const deltaEl = el("div", "delta", signed(delta));
   track.append(fill, deltaEl);
