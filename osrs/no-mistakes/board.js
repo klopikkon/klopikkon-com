@@ -885,6 +885,14 @@ function isDtAtmosphere(slug) {
 function isCgAtmosphere(slug) {
   return slug === "the-corrupted-gauntlet";
 }
+function isYamaAtmosphere(slug) {
+  return slug === "yama";
+}
+const ATM_YAMA_EXTRA = [
+  { slug: "judge-of-yama", cls: "atm-yama-judge" },
+  { slug: "glyph-fire", cls: "atm-yama-glyph atm-yama-glyph-fire" },
+  { slug: "glyph-shadow", cls: "atm-yama-glyph atm-yama-glyph-shadow" }
+];
 function ensureAtmosphere() {
   if (document.getElementById("atmosphere")) return;
   const root = document.createElement("div");
@@ -908,6 +916,19 @@ function ensureAtmosphere() {
   hero.id = "atm-hero";
   hero.alt = "";
   root.appendChild(hero);
+  const yama = document.createElement("div");
+  yama.className = "atm-yama";
+  yama.id = "atm-yama";
+  ATM_YAMA_EXTRA.forEach(function (item) {
+    const img = document.createElement("img");
+    img.className = item.cls;
+    img.alt = "";
+    img.dataset.slug = item.slug;
+    img.src = depthPrefix() + "assets/bosses/" + item.slug + ".webp";
+    img.onerror = function () { img.remove(); };
+    yama.appendChild(img);
+  });
+  root.appendChild(yama);
   const dt = document.createElement("div");
   dt.className = "atm-dt";
   dt.id = "atm-dt";
@@ -947,6 +968,8 @@ function setAtmCredit(mode) {
   if (!credit) return;
   if (mode === "cg") {
     credit.innerHTML = 'Corrupted Gauntlet backdrop: generated art (Grok Imagine). Boss sprites from the <a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA). Fan utility — Jagex trademarks belong to Jagex Ltd.';
+  } else if (mode === "yama") {
+    credit.innerHTML = 'Yama &amp; Judge of Yama from the <a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA). Floor glyphs styled after Glyph of Fire / Glyph of Shadow. Fan utility — Jagex trademarks belong to Jagex Ltd.';
   } else {
     credit.innerHTML = 'Boss art from the <a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA). Fan utility — Jagex trademarks belong to Jagex Ltd.';
   }
@@ -957,7 +980,9 @@ function updateAtmosphere() {
   document.body.dataset.slug = slug;
   const hero = document.getElementById("atm-hero");
   const dt = document.getElementById("atm-dt");
+  const yama = document.getElementById("atm-yama");
   if (!hero) return;
+  if (yama) yama.classList.remove("on");
   if (isCgAtmosphere(slug)) {
     document.body.dataset.atm = "cg";
     hero.removeAttribute("src");
@@ -972,6 +997,31 @@ function updateAtmosphere() {
     hero.style.opacity = "0";
     if (dt) dt.classList.add("on");
     setAtmCredit("default");
+    return;
+  }
+  if (isYamaAtmosphere(slug)) {
+    document.body.dataset.atm = "yama";
+    if (dt) dt.classList.remove("on");
+    if (yama) yama.classList.add("on");
+    setAtmCredit("yama");
+    const next = depthPrefix() + "assets/bosses/yama.webp";
+    if (hero.getAttribute("src") === next) {
+      hero.style.opacity = "";
+      return;
+    }
+    hero.style.opacity = "0";
+    const probe = new Image();
+    probe.onload = function () {
+      hero.dataset.slug = "yama";
+      hero.style.setProperty("--atm-scale", String(ATM_SCALE.yama || 1));
+      hero.src = next;
+      hero.style.opacity = "";
+    };
+    probe.onerror = function () {
+      hero.removeAttribute("src");
+      hero.style.opacity = "0";
+    };
+    probe.src = next;
     return;
   }
   document.body.dataset.atm = "";
