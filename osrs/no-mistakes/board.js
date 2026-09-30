@@ -856,7 +856,7 @@ async function refreshAll() {
 }
 
 
-const ATM_DT = ["duke-sucellus","the-leviathan","the-whisperer","vardorvis"];
+const ATM_DT = ["duke-sucellus","the-whisperer","the-leviathan","vardorvis"];
 const ATM_BOSSES = ["zulrah","alchemical-hydra","phantom-muspah","vorkath","cerberus","kraken","nightmare","nex","yama","araxxor","abyssal-sire","general-graardor","corporeal-beast","kalphite-queen","tzkal-zuk","thermonuclear-smoke-devil","kreearra","commander-zilyana","kril-tsutsaroth","grotesque-guardians","sol-heredit","the-hueycoatl","doom-of-mokhaiotl"];
 const ATM_FLOAT = ["zulrah","vorkath","cerberus"];
 /* Fine-tune within the shared viewport box (1 = fill box). */
