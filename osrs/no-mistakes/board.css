@@ -267,14 +267,14 @@ body[data-atm="cg"] .update{
   justify-content:center;
   align-items:flex-end; /* shared baseline */
   gap:clamp(.45rem, 1.4vw, 1.1rem);
-  /* Baked title is tall — strip must start BELOW the full wordmark */
-  top:clamp(11rem, 20vh, 14rem);
+  /* Imagine title sits ~y=167–215 in 720p wash (~12–15rem on desktop cover). Clear it. */
+  top:clamp(16.5rem, 28vh, 20rem);
   left:0 !important;
   right:0 !important;
   bottom:auto !important;
   width:100% !important;
   max-width:none;
-  height:min(18vh, 10rem);
+  height:min(16vh, 9rem);
   transform:none !important;
   box-sizing:border-box;
   padding:0 clamp(1rem, 4vw, 2.5rem);
@@ -283,9 +283,9 @@ body[data-atm="cg"] .update{
 .atmosphere .atm-dt-boss{
   position:relative !important;
   left:auto !important; right:auto !important; top:auto !important; bottom:auto !important;
-  width:min(14vw, 14vh, 7.75rem);
-  height:min(17vw, 17vh, 9rem);
-  max-width:7.75rem; max-height:9rem;
+  width:min(13vw, 13vh, 7.25rem);
+  height:min(15vw, 15vh, 8.25rem);
+  max-width:7.25rem; max-height:8.25rem;
   object-fit:contain;
   object-position:center bottom;
   opacity:1;
@@ -533,7 +533,7 @@ body[data-atm="theme"] .wrap{
 }
 body[data-atm="dt"] .wrap{
   /* Cards below baked Four awakenings + centered DT boss row (brand hidden on DT). */
-  padding-top: clamp(18rem, 42vh, 24rem);
+  padding-top: clamp(22rem, 48vh, 28rem);
 }
 body[data-atm="gwd"] .wrap{
   /* Keep brand/cards below baked faction title + corner bodyguards. */
@@ -614,18 +614,18 @@ h1{ letter-spacing:-.02em }
     max-width:30vw; max-height:20vh;
   }
   .atmosphere .atm-dt.on{
-    top:clamp(8.5rem, 18vh, 11rem);
+    top:clamp(11rem, 24vh, 14rem);
     left:0 !important; right:0 !important; bottom:auto !important;
     width:100% !important;
-    height:min(16vh, 8rem);
+    height:min(14vh, 7rem);
     gap:clamp(.25rem, 1.2vw, .6rem);
     transform:none !important;
     padding:0 .6rem;
     align-items:flex-end;
   }
   .atmosphere .atm-dt-boss{
-    width:min(16vw, 12vh, 4.75rem); height:min(18vw, 14vh, 5.75rem);
-    max-width:4.75rem; max-height:5.75rem; opacity:1;
+    width:min(15vw, 11vh, 4.5rem); height:min(16vw, 13vh, 5.25rem);
+    max-width:4.5rem; max-height:5.25rem; opacity:1;
     left:auto !important; right:auto !important; top:auto !important; bottom:auto !important;
     object-position:center bottom;
   }
@@ -685,7 +685,7 @@ h1{ letter-spacing:-.02em }
   }
   body[data-atm="dt"] .wrap{
     /* Title + centered DT row; brand hidden. */
-    padding-top: clamp(16rem, 40vh, 20rem);
+    padding-top: clamp(18rem, 44vh, 22rem);
   }
   body[data-atm="gwd"] .wrap{
     /* Title + 2×2 faction sprites clear above full-width cards */
