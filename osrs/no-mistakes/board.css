@@ -271,9 +271,14 @@ body[data-atm="cg"] .update{
   -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
   animation: atm-drift 30s ease-in-out infinite;
 }
+/* DT corner art must stay fully inside the clipped atmosphere frame. */
+.atmosphere .atm-dt-boss{
+  animation: none !important;
+  transform: scale(var(--atm-scale, 1));
+}
 /* Keep each DT boss in a page corner, clear of the centered baked title. */
 .atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{
-  left:1%; top:10%; right:auto; bottom:auto; animation-duration:32s; animation-delay:-3s;
+  left:1%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
 }
 .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{
   right:2%; top:8%; left:auto; bottom:auto; animation-duration:36s; animation-delay:-10s;
@@ -282,7 +287,7 @@ body[data-atm="cg"] .update{
   left:2%; bottom:12%; right:auto; top:auto; animation-duration:34s; animation-delay:-6s;
 }
 .atmosphere .atm-dt-boss[data-slug="vardorvis"]{
-  right:3%; bottom:6%; left:auto; top:auto; animation-duration:38s; animation-delay:-14s;
+  right:2%; bottom:clamp(4rem, 10vh, 7rem); left:auto; top:auto;
 }
 body[data-atm="dt"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="dt"] .atmosphere .atm-hero{ opacity:0 !important }
@@ -549,10 +554,10 @@ h1{ letter-spacing:-.02em }
     width:min(34vw, 22vh, 10rem); height:min(34vw, 22vh, 10rem);
     max-width:36vw; max-height:24vh; opacity:.6;
   }
-  .atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{ left:0; top:6%; }
+  .atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{ left:1%; top:clamp(4rem, 9vh, 5.5rem); }
   .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{ right:1%; top:6%; }
   .atmosphere .atm-dt-boss[data-slug="the-leviathan"]{ left:1%; bottom:8%; }
-  .atmosphere .atm-dt-boss[data-slug="vardorvis"]{ right:1%; bottom:4%; }
+  .atmosphere .atm-dt-boss[data-slug="vardorvis"]{ right:2%; bottom:clamp(3rem, 8vh, 5rem); }
   .atmosphere .atm-cg-title,
   .atmosphere .atm-theme-title,
   .atmosphere .atm-zulrah-title,
