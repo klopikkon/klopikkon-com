@@ -445,21 +445,26 @@ body[data-atm="raid"] .wrap{
 .atmosphere .atm-kq.on{ display:block }
 .atmosphere .atm-kq-form{
   position:absolute;
-  width:min(28vw, 36vh, 17rem);
-  height:min(28vw, 36vh, 17rem);
-  max-width:30vw; max-height:40vh;
+  /* DT gutter lesson: fit ~(100vw-1020px)/2 at ~1280 — clear of sidebar/card */
+  width:min(5.75vw, 10vh, 4.75rem);
+  height:min(5.75vw, 10vh, 4.75rem);
+  max-width:5rem; max-height:5rem;
   object-fit:contain; object-position:center bottom;
-  opacity:.78;
-  filter:saturate(1.12) contrast(1.12) brightness(1.08);
-  mask-image: radial-gradient(circle at 50% 45%, #000 50%, transparent 86%);
-  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 50%, transparent 86%);
+  opacity:.88;
+  filter:saturate(1.15) contrast(1.18) brightness(1.2) drop-shadow(0 0 14px rgba(0,0,0,.85));
+  mask-image:none;
+  -webkit-mask-image:none;
   animation:none !important;
 }
 .atmosphere .atm-kq-form[data-form="crawling"]{
+  /* LEFT gutter — smaller + top-based like DT; clear of sidebar */
   left:0.35%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+  object-position:center;
 }
 .atmosphere .atm-kq-form[data-form="flying"]{
+  /* RIGHT gutter — match crawler size so both stay in gutters */
   right:0.35%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
+  object-position:center;
 }
 /* Hide colliding brand on KQ (crawler sits in brand band). */
 body[data-atm="kq"] .brand{ display:none !important }
@@ -484,6 +489,8 @@ body[data-atm="kq"] .card > h1{
   white-space:nowrap !important; border:0 !important;
 }
 body[data-atm="kq"] .wrap{
+  /* Narrow wrap widens side gutters so crawler/flyer clear sidebar/card at ~1280. */
+  max-width:1020px;
   padding-top: clamp(12rem, 30vh, 17rem);
 }
 
@@ -538,13 +545,17 @@ body[data-atm="yama"] .atmosphere .atm-gwd{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-raid{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-kq{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-hero{
-  /* Full-body Yama on the RIGHT — clear of title band, Judge, bottom glyphs */
-  opacity:.82 !important;
-  right:1%; left:auto; top:clamp(5.5rem, 12vh, 8rem); bottom:auto;
-  width:min(34vw, 48vh, 22rem);
-  height:min(40vw, 56vh, 26rem);
-  max-width:38vw; max-height:58vh;
-  object-position:center bottom;
+  /* Full-body Yama RIGHT — gutter-sized clear of drop card (Judge stays left) */
+  opacity:.88 !important;
+  right:0.35%; left:auto; top:clamp(5.5rem, 12vh, 8rem); bottom:auto;
+  width:min(6.5vw, 12vh, 5.5rem);
+  height:min(6.5vw, 12vh, 5.5rem);
+  max-width:5.75rem; max-height:5.75rem;
+  object-position:center;
+  mask-image:none;
+  -webkit-mask-image:none;
+  animation:none !important;
+  transform:none;
   z-index:1;
 }
 /* Integrated wash under DT four-boss band / Yama glyphs (title baked in) */
@@ -644,13 +655,17 @@ body[data-atm="zulrah"] .atmosphere .atm-gwd{ display:none !important }
 body[data-atm="zulrah"] .atmosphere .atm-raid{ display:none !important }
 body[data-atm="zulrah"] .atmosphere .atm-kq{ display:none !important }
 body[data-atm="zulrah"] .atmosphere .atm-hero{
-  /* Main serpentine form on the RIGHT */
-  opacity:.84 !important;
-  right:1%; left:auto; top:clamp(5.5rem, 12vh, 8rem); bottom:auto;
-  width:min(38vw, 50vh, 24rem);
-  height:min(38vw, 50vh, 24rem);
-  max-width:42vw; max-height:54vh;
-  object-position:center bottom;
+  /* Main serpentine RIGHT — gutter-sized clear of drop card (match left forms) */
+  opacity:.86 !important;
+  right:0.35%; left:auto; top:clamp(5.5rem, 12vh, 8rem); bottom:auto;
+  width:min(6.5vw, 12vh, 5.5rem);
+  height:min(6.5vw, 12vh, 5.5rem);
+  max-width:5.75rem; max-height:5.75rem;
+  object-position:center;
+  mask-image:none;
+  -webkit-mask-image:none;
+  animation:none !important;
+  transform:none;
 }
 body[data-atm="zulrah"] .card{
   border-color: rgba(90,180,100,.26);
