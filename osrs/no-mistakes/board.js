@@ -918,48 +918,46 @@ const ATM_SCALE = {
 const ATM_THEMES = {
   "zulrah": { title: "The money Snake", titleFile: "money-snake.webp", credit: "imagine" },
   "the-corrupted-gauntlet": { title: "The red prison", titleFile: "red-prison-title.webp", washFile: "red-prison.webp", credit: "imagine" },
-  "alchemical-hydra": { title: "The poison clock" },
-  "cerberus": { title: "Hell's lobby" },
-  "vorkath": { title: "The blue wall" },
-  "nightmare": { title: "The dream that kills" },
-  "phosanis-nightmare": { title: "The longer dream" },
-  "phantom-muspah": { title: "Ancient rupture" },
-  "araxxor": { title: "Noxious" },
-  "nex": { title: "Frozen throne" },
-  "corporeal-beast": { title: "The dark core" },
-  "kalphite-queen": { title: "Queen of the nest" },
-  "the-hueycoatl": { title: "River serpent" },
-  "tzkal-zuk": { title: "Infernal gate" },
-  "doom-of-mokhaiotl": { title: "Deep delve" },
-  "yama": { title: "The oath" },
-  "desert-treasure-ii": { title: "Four shadows" },
-  "duke-sucellus": { title: "Awakened hunger" },
-  "the-leviathan": { title: "Abyssal tide" },
-  "the-whisperer": { title: "Siren's call" },
-  "vardorvis": { title: "Executioner's floor" },
-  "general-graardor": { title: "Bandos brute" },
-  "kreearra": { title: "Armadyl sky" },
+  "alchemical-hydra": { title: "The poison clock", titleFile: "alchemical-hydra-title.webp", credit: "imagine" },
+  "cerberus": { title: "Hell's lobby", titleFile: "cerberus-title.webp", credit: "imagine" },
+  "vorkath": { title: "The blue wall", titleFile: "vorkath-title.webp", credit: "imagine" },
+  "nightmare": { title: "The dream that kills", titleFile: "nightmare-title.webp", credit: "imagine" },
+  "phantom-muspah": { title: "Ancient rupture", titleFile: "phantom-muspah-title.webp", credit: "imagine" },
+  "araxxor": { title: "Noxious", titleFile: "araxxor-title.webp", credit: "imagine" },
+  "nex": { title: "Frozen throne", titleFile: "nex-title.webp", credit: "imagine" },
+  "corporeal-beast": { title: "The dark core", titleFile: "corporeal-beast-title.webp", credit: "imagine" },
+  "kalphite-queen": { title: "Queen of the nest", titleFile: "kalphite-queen-title.webp", credit: "imagine" },
+  "the-hueycoatl": { title: "River serpent", titleFile: "the-hueycoatl-title.webp", credit: "imagine" },
+  "tzkal-zuk": { title: "Infernal gate", titleFile: "tzkal-zuk-title.webp", credit: "imagine" },
+  "doom-of-mokhaiotl": { title: "Deep delve", titleFile: "doom-of-mokhaiotl-title.webp", credit: "imagine" },
+  "yama": { title: "Oathbound" },
+  "desert-treasure-ii": { title: "Four awakenings" },
+  "phosanis-nightmare": { title: "Alone in the dream" },
+  "abyssal-sire": { title: "Unsired depths" },
+  "kraken": { title: "Tentacle throne" },
+  "thermonuclear-smoke-devil": { title: "Smoke and mirrors" },
+  "grotesque-guardians": { title: "Stone and sunrise" },
+  "general-graardor": { title: "Bandos warlord" },
+  "kreearra": { title: "Winged justice" },
   "commander-zilyana": { title: "Saradomin's light" },
   "kril-tsutsaroth": { title: "Zamorak's spear" },
-  "abyssal-sire": { title: "Unsired pit" },
-  "grotesque-guardians": { title: "Stone dawn" },
-  "kraken": { title: "Whirlpool" },
-  "thermonuclear-smoke-devil": { title: "Smoke stack" },
-  "chambers-of-xeric": { title: "Chambers deep" },
-  "chambers-of-xeric-cm": { title: "Chambers challenged" },
-  "theatre-of-blood": { title: "Verzik's stage" },
-  "theatre-of-blood-hm": { title: "Hard mode curtain" },
-  "tombs-of-amascut": { title: "Tombs below" },
+  "chambers-of-xeric": { title: "The chambers" },
+  "chambers-of-xeric-cm": { title: "Challenge mode" },
+  "theatre-of-blood": { title: "The theatre" },
+  "theatre-of-blood-hm": { title: "Hard mode theatre" },
+  "tombs-of-amascut": { title: "The tombs" },
   "tombs-of-amascut-expert": { title: "Expert tombs" },
   "sol-heredit": { title: "Colosseum crown" },
-  "the-gauntlet": { title: "Crystal trial" }
 };
 function themeFor(slug) {
   return ATM_THEMES[slug] || null;
 }
 function themeTitleFile(slug) {
   const t = themeFor(slug);
-  return t && t.titleFile ? t.titleFile : null;
+  if (!t) return null;
+  if (t.titleFile) return t.titleFile;
+  // Convention: assets/themes/<slug>-title.webp (wired once the file is shipped / titleFile set in manifest).
+  return null;
 }
 function themeWashFile(slug) {
   const t = themeFor(slug);

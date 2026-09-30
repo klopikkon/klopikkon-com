@@ -1,5 +1,19 @@
-red-prison.webp — generated wash/backdrop (Grok Imagine) for Corrupted Gauntlet / The red prison.
-red-prison-title.webp — Imagine title plate for Corrupted Gauntlet / The red prison.
-money-snake.webp — Imagine title plate for Zulrah / The money Snake.
-Convention for future plates: <slug>-title.webp and <slug>-wash.webp (see themes/manifest.json).
-Not OSRS Wiki art. Fan site; Jagex trademarks belong to Jagex Ltd.
+Theme title plates and washes in this folder are Grok Imagine site art (not OSRS Wiki sprites).
+Shipped plates (see manifest.json titleFile):
+- money-snake.webp — The money Snake (zulrah)
+- red-prison-title.webp — The red prison (the-corrupted-gauntlet)
+- alchemical-hydra-title.webp — The poison clock (alchemical-hydra)
+- cerberus-title.webp — Hell's lobby (cerberus)
+- vorkath-title.webp — The blue wall (vorkath)
+- nightmare-title.webp — The dream that kills (nightmare)
+- phantom-muspah-title.webp — Ancient rupture (phantom-muspah)
+- araxxor-title.webp — Noxious (araxxor)
+- nex-title.webp — Frozen throne (nex)
+- corporeal-beast-title.webp — The dark core (corporeal-beast)
+- kalphite-queen-title.webp — Queen of the nest (kalphite-queen)
+- the-hueycoatl-title.webp — River serpent (the-hueycoatl)
+- tzkal-zuk-title.webp — Infernal gate (tzkal-zuk)
+- doom-of-mokhaiotl-title.webp — Deep delve (doom-of-mokhaiotl)
+- red-prison.webp — Corrupted Gauntlet wash / The red prison
+Convention: <slug>-title.webp and <slug>-wash.webp. Aliases: money-snake.webp (zulrah), red-prison-title.webp (CG).
+Fan site; Jagex trademarks belong to Jagex Ltd.
