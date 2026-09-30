@@ -256,40 +256,33 @@ body[data-atm="cg"] .update{
   position:absolute; inset:0;
   pointer-events:none;
 }
-.atmosphere .atm-dt.on{
-  display:flex;
-  inset:auto;
-  left:50%; top: 4.25rem;
-  transform:translateX(-50%);
-  width:min(96vw, 52rem);
-  height:min(22vh, 11rem);
-  justify-content:space-evenly;
-  align-items:flex-end;
-  gap:.5rem;
-  pointer-events:none;
-  z-index:0;
-}
+.atmosphere .atm-dt.on{ display:block }
 .atmosphere .atm-dt-boss{
-  position:relative;
-  left:auto !important; right:auto !important; top:auto !important; bottom:auto !important;
-  flex:0 0 auto;
-  width:min(16vw, 16vh, 8rem);
-  height:min(16vw, 16vh, 8rem);
-  max-width:8.5rem; max-height:8.5rem;
-  object-fit:contain; object-position:center bottom;
-  opacity:.9;
-  filter:saturate(1.12) contrast(1.15) brightness(1.12);
+  position:absolute;
+  width:min(22vw, 28vh, 14rem);
+  height:min(22vw, 28vh, 14rem);
+  max-width:24vw; max-height:30vh;
+  object-fit:contain; object-position:center;
+  opacity:.72;
+  filter:saturate(1.12) contrast(1.15) brightness(1.1);
   transform: scale(var(--atm-scale, 1));
-  transform-origin:center bottom;
-  mask-image: radial-gradient(circle at 50% 55%, #000 55%, transparent 90%);
-  -webkit-mask-image: radial-gradient(circle at 50% 55%, #000 55%, transparent 90%);
-  animation:none;
+  transform-origin:center center;
+  mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
+  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
+  animation: atm-drift 30s ease-in-out infinite;
 }
-.atmosphere .atm-dt-boss[data-slug="duke-sucellus"],
-.atmosphere .atm-dt-boss[data-slug="the-whisperer"],
-.atmosphere .atm-dt-boss[data-slug="the-leviathan"],
+/* Keep each DT boss in a page corner, clear of the centered baked title. */
+.atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{
+  left:1%; top:10%; right:auto; bottom:auto; animation-duration:32s; animation-delay:-3s;
+}
+.atmosphere .atm-dt-boss[data-slug="the-whisperer"]{
+  right:2%; top:8%; left:auto; bottom:auto; animation-duration:36s; animation-delay:-10s;
+}
+.atmosphere .atm-dt-boss[data-slug="the-leviathan"]{
+  left:2%; bottom:12%; right:auto; top:auto; animation-duration:34s; animation-delay:-6s;
+}
 .atmosphere .atm-dt-boss[data-slug="vardorvis"]{
-  left:auto; top:auto; right:auto; bottom:auto;
+  right:3%; bottom:6%; left:auto; top:auto; animation-duration:38s; animation-delay:-14s;
 }
 body[data-atm="dt"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="dt"] .atmosphere .atm-hero{ opacity:0 !important }
@@ -342,7 +335,7 @@ body[data-atm="yama"] .atmosphere .atm-float{ opacity:0 !important; visibility:h
 body[data-atm="yama"] .atmosphere .atm-dt{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-zulrah{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-hero{
-  opacity:.72;
+  opacity:0 !important;
   right:0; top:4%;
   width:min(42vw, 52vh, 26rem);
   height:min(42vw, 52vh, 26rem);
@@ -434,7 +427,7 @@ body[data-atm="zulrah"] .atmosphere .atm-float{ opacity:0 !important; visibility
 body[data-atm="zulrah"] .atmosphere .atm-dt{ display:none !important }
 body[data-atm="zulrah"] .atmosphere .atm-yama{ display:none !important }
 body[data-atm="zulrah"] .atmosphere .atm-hero{
-  opacity:.78;
+  opacity:0 !important;
   right:0; top:8%;
   width:min(46vw, 58vh, 30rem);
   height:min(46vw, 58vh, 30rem);
@@ -475,8 +468,8 @@ body[data-atm="theme"] .wrap{
   padding-top: clamp(12rem, 36vh, 18rem);
 }
 body[data-atm="dt"] .wrap{
-  /* Tall enough for DT four-boss row + title above cards */
-  padding-top: clamp(10rem, 22vh, 13rem);
+  /* Keep brand/cards below the centered baked Four awakenings title and corner art. */
+  padding-top: clamp(12rem, 30vh, 17rem);
 }
 
 .card{
@@ -552,17 +545,14 @@ h1{ letter-spacing:-.02em }
     width:min(28vw, 18vh, 9rem); height:min(28vw, 18vh, 9rem);
     max-width:30vw; max-height:20vh;
   }
-  .atmosphere .atm-dt.on{
-    top:3.25rem;
-    left:50%;
-    transform:translateX(-50%);
-    width:min(98vw, 40rem);
-    height:min(18vh, 8.5rem);
-  }
   .atmosphere .atm-dt-boss{
-    width:min(22vw, 12vh, 6rem); height:min(22vw, 12vh, 6rem);
-    max-width:6.25rem; max-height:6.25rem; opacity:.86;
+    width:min(34vw, 22vh, 10rem); height:min(34vw, 22vh, 10rem);
+    max-width:36vw; max-height:24vh; opacity:.6;
   }
+  .atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{ left:0; top:6%; }
+  .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{ right:1%; top:6%; }
+  .atmosphere .atm-dt-boss[data-slug="the-leviathan"]{ left:1%; bottom:8%; }
+  .atmosphere .atm-dt-boss[data-slug="vardorvis"]{ right:1%; bottom:4%; }
   .atmosphere .atm-cg-title,
   .atmosphere .atm-theme-title,
   .atmosphere .atm-zulrah-title,
@@ -579,7 +569,8 @@ h1{ letter-spacing:-.02em }
     padding-top: clamp(9rem, 30vh, 14rem);
   }
   body[data-atm="dt"] .wrap{
-    padding-top: clamp(8rem, 18vh, 11rem);
+    /* Reserve the title zone; corner sprites stay outside the centered heading. */
+    padding-top: clamp(10rem, 30vh, 14rem);
   }
   .atmosphere .atm-zulrah-form[data-form="tanzanite"]{
     left:0; top:12%;
