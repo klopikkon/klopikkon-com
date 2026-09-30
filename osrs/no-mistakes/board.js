@@ -870,7 +870,7 @@ const ATM_SCALE = {
   "the-leviathan": 0.9,
   nightmare: 0.9,
   nex: 0.92,
-  yama: 1.15,
+  yama: 0.95,
   araxxor: 0.95,
   "phantom-muspah": 0.95,
   "general-graardor": 0.92,
