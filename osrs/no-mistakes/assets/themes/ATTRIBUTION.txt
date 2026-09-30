@@ -1,3 +1,5 @@
-red-prison.webp — generated backdrop (Grok Imagine) for Corrupted Gauntlet / The red prison theme.
-money-snake.webp — title plate for Zulrah / The money Snake theme (Grok Imagine).
+red-prison.webp — generated wash/backdrop (Grok Imagine) for Corrupted Gauntlet / The red prison.
+red-prison-title.webp — Imagine title plate for Corrupted Gauntlet / The red prison.
+money-snake.webp — Imagine title plate for Zulrah / The money Snake.
+Convention for future plates: <slug>-title.webp and <slug>-wash.webp (see themes/manifest.json).
 Not OSRS Wiki art. Fan site; Jagex trademarks belong to Jagex Ltd.
