@@ -635,7 +635,16 @@ function renderMain() {
       sumExpected += expected;
       rows.push(meterRow(item.name, rateText(member, boss, item, expected), got, expected, animate));
     });
-    const heading = el("div", "label", table.label + kcHeadingBit(member, boss, table, { firstVisible: firstVisibleTable }));
+    const verdict = roast(sumGot, sumExpected, table.label);
+    const heading = el("div", "label table-heading");
+    heading.appendChild(el("span", "heading-text", table.label));
+    const kcBit = kcHeadingBit(member, boss, table, { firstVisible: firstVisibleTable });
+    if (kcBit) heading.appendChild(el("span", "heading-kc", kcBit));
+    const tableHasRate = items.some(function (item) { return item.rate != null; });
+    if (tableHasRate) {
+      heading.appendChild(el("span", "heading-separator", " · "));
+      heading.appendChild(el("span", "tag " + verdict.tone, "Luck · " + verdict.word));
+    }
     firstVisibleTable = false;
     heading.style.marginTop = "1.15rem";
     const head = el("div", "head");
@@ -643,7 +652,7 @@ function renderMain() {
     main.append(heading);
     if (items.length > 1) {
       const any = meterRow("Any", "This table only", sumGot, sumExpected, animate);
-      main.append(el("p", "tag " + any.tone, any.word), head, any.row);
+      main.append(head, any.row);
     } else {
       main.append(head);
     }
