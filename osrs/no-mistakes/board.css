@@ -254,7 +254,8 @@ body[data-atm="cg"] .update{
   border-color:rgba(220,70,80,.28);
 }
 /* DT corners (desktop gutters): Duke+Whisperer LEFT, Leviathan+Vardorvis RIGHT.
-   Mid pair uses top:% (not bottom:) so sprites clear glass cards. Never inset:auto. */
+   Sprites must fit ~(100vw-1100px)/2 gutters at ~1280 (~90px). Mid uses top:%
+   (not bottom:) so they clear glass cards. Never inset:auto after left/top. */
 .atmosphere .atm-dt{
   display:none;
   position:absolute; inset:0;
@@ -264,13 +265,13 @@ body[data-atm="cg"] .update{
 .atmosphere .atm-dt.on{ display:block }
 .atmosphere .atm-dt-boss{
   position:absolute;
-  /* Fit side gutters beside ~1100px wrap at 1280 */
-  width:min(11vw, 16vh, 8.5rem);
-  height:min(11vw, 16vh, 8.5rem);
-  max-width:9rem; max-height:9rem;
+  /* ~70–80px at 1280 — stays in page-edge gutter beside sidebar/card */
+  width:min(5.75vw, 10vh, 4.75rem);
+  height:min(5.75vw, 10vh, 4.75rem);
+  max-width:5rem; max-height:5rem;
   object-fit:contain;
   object-position:center bottom;
-  opacity:.88;
+  opacity:.9;
   /* Pop dark wiki sprites (Whisperer/Leviathan) off purple wash */
   filter:saturate(1.2) contrast(1.25) brightness(1.4) drop-shadow(0 0 16px rgba(0,0,0,.9)) drop-shadow(0 2px 10px rgba(232,195,106,.4));
   transform:none;
@@ -282,23 +283,29 @@ body[data-atm="cg"] .update{
 /* LEFT: Duke top, Whisperer mid — clear of sidebar + Four awakenings */
 .atmosphere .atm-dt-boss[data-slug="duke-sucellus"],
 .atmosphere .atm-dt-boss[data-corner="left-top"]{
-  left:0.5%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+  left:0.35%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
   object-position:center;
 }
 .atmosphere .atm-dt-boss[data-slug="the-whisperer"],
 .atmosphere .atm-dt-boss[data-corner="left-mid"]{
-  left:0.5%; top:48%; right:auto; bottom:auto;
+  left:0.35%; top:44%; right:auto; bottom:auto;
+  width:min(5.25vw, 9vh, 4.35rem);
+  height:min(5.25vw, 9vh, 4.35rem);
+  max-width:4.5rem; max-height:4.5rem;
   object-position:center bottom;
 }
 /* RIGHT: Leviathan top, Vardorvis mid — clear of drop card */
 .atmosphere .atm-dt-boss[data-slug="the-leviathan"],
 .atmosphere .atm-dt-boss[data-corner="right-top"]{
-  right:0.5%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
+  right:0.35%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
   object-position:center;
 }
 .atmosphere .atm-dt-boss[data-slug="vardorvis"],
 .atmosphere .atm-dt-boss[data-corner="right-mid"]{
-  right:0.5%; top:52%; left:auto; bottom:auto;
+  right:0.35%; top:48%; left:auto; bottom:auto;
+  width:min(5.25vw, 9vh, 4.35rem);
+  height:min(5.25vw, 9vh, 4.35rem);
+  max-width:4.5rem; max-height:4.5rem;
   object-position:center bottom;
 }
 /* Hide colliding brand on DT (helps Four awakenings title band). */
@@ -663,7 +670,9 @@ body[data-atm="theme"] .wrap{
   padding-top: clamp(12rem, 36vh, 18rem);
 }
 body[data-atm="dt"] .wrap{
-  /* Corners sit in atmosphere; title band only — closer to other theme pads. */
+  /* Corners sit in atmosphere; title band only — closer to other theme pads.
+     Slightly narrower wrap widens side gutters so mid sprites clear cards at ~1280. */
+  max-width:1020px;
   padding-top: clamp(12rem, 30vh, 17rem);
 }
 body[data-atm="gwd"] .wrap{
@@ -746,27 +755,27 @@ h1{ letter-spacing:-.02em }
   }
   /* Phone OK to fail for DT corners — keep absolute slots, smaller sprites. */
   .atmosphere .atm-dt-boss{
-    width:min(22vw, 14vh, 6.5rem); height:min(22vw, 14vh, 6.5rem);
-    max-width:7rem; max-height:7rem; opacity:.82;
+    width:min(18vw, 12vh, 5.5rem); height:min(18vw, 12vh, 5.5rem);
+    max-width:5.75rem; max-height:5.75rem; opacity:.82;
   }
   .atmosphere .atm-dt-boss[data-slug="duke-sucellus"],
   .atmosphere .atm-dt-boss[data-corner="left-top"]{
-    left:0.5%; top:clamp(4.5rem, 10vh, 6.5rem); right:auto; bottom:auto;
+    left:0.35%; top:clamp(4.5rem, 10vh, 6.5rem); right:auto; bottom:auto;
     object-position:center;
   }
   .atmosphere .atm-dt-boss[data-slug="the-whisperer"],
   .atmosphere .atm-dt-boss[data-corner="left-mid"]{
-    left:0.5%; top:48%; right:auto; bottom:auto;
+    left:0.35%; top:44%; right:auto; bottom:auto;
     object-position:center bottom;
   }
   .atmosphere .atm-dt-boss[data-slug="the-leviathan"],
   .atmosphere .atm-dt-boss[data-corner="right-top"]{
-    right:0.5%; top:clamp(4.5rem, 10vh, 6.5rem); left:auto; bottom:auto;
+    right:0.35%; top:clamp(4.5rem, 10vh, 6.5rem); left:auto; bottom:auto;
     object-position:center;
   }
   .atmosphere .atm-dt-boss[data-slug="vardorvis"],
   .atmosphere .atm-dt-boss[data-corner="right-mid"]{
-    right:0.5%; top:52%; left:auto; bottom:auto;
+    right:0.35%; top:48%; left:auto; bottom:auto;
     object-position:center bottom;
   }
   /* Phone: 2×2 under the baked title (full-width card covers true bottom corners). */
