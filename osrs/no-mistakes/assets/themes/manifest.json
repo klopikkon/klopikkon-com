@@ -7,7 +7,7 @@
       "zulrah": "zulrah-scene.webp",
       "the-corrupted-gauntlet": "cg-red-prison-scene.webp"
     },
-    "note": "Integrated Imagine scene+title → washFile only (no titleFile). Titles from /workspace/imagine-plates/TITLES.json (exact casing).",
+    "note": "Integrated Imagine scene+title → washFile only (no titleFile). Titles from TITLES.json exact casing.",
     "integrated": [
       "zulrah-scene.webp",
       "cg-red-prison-scene.webp",
@@ -33,7 +33,13 @@
       "general-graardor-scene.webp",
       "kreearra-scene.webp",
       "commander-zilyana-scene.webp",
+      "kril-tsutsaroth-scene.webp",
       "chambers-of-xeric-scene.webp",
+      "chambers-of-xeric-cm-scene.webp",
+      "theatre-of-blood-scene.webp",
+      "theatre-of-blood-hm-scene.webp",
+      "tombs-of-amascut-scene.webp",
+      "tombs-of-amascut-expert-scene.webp",
       "sol-heredit-scene.webp"
     ]
   },
@@ -185,7 +191,10 @@
       "integrated": true
     },
     "kril-tsutsaroth": {
-      "title": "Zamorak's spear"
+      "title": "Zamorak's spear",
+      "washFile": "kril-tsutsaroth-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "chambers-of-xeric": {
       "title": "The chambers",
@@ -195,19 +204,39 @@
       "keep": "CLog list unchanged"
     },
     "chambers-of-xeric-cm": {
-      "title": "Challenge mode"
+      "title": "Challenge mode",
+      "washFile": "chambers-of-xeric-cm-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true,
+      "keep": "CLog list unchanged"
     },
     "theatre-of-blood": {
-      "title": "The theatre"
+      "title": "The theatre",
+      "washFile": "theatre-of-blood-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true,
+      "keep": "CLog list unchanged"
     },
     "theatre-of-blood-hm": {
-      "title": "Hard mode theatre"
+      "title": "Hard mode theatre",
+      "washFile": "theatre-of-blood-hm-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true,
+      "keep": "CLog list unchanged"
     },
     "tombs-of-amascut": {
-      "title": "The tombs"
+      "title": "The tombs",
+      "washFile": "tombs-of-amascut-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true,
+      "keep": "CLog list unchanged"
     },
     "tombs-of-amascut-expert": {
-      "title": "Expert tombs"
+      "title": "Expert tombs",
+      "washFile": "tombs-of-amascut-expert-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true,
+      "keep": "CLog list unchanged"
     },
     "sol-heredit": {
       "title": "Colosseum crown",
