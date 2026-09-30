@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "66";
+const ASSET_V = "67";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -941,6 +941,7 @@ async function refreshAll() {
 const ATM_DT = ["duke-sucellus","the-whisperer","the-leviathan","vardorvis"];
 /* Stable corner assignment — CSS keys off data-corner as well as slug. */
 const ATM_DT_CORNERS = {
+  /* Verified 2026-09-30: webps match names; live TL=Duke, TR=Leviathan. No swap. */
   "duke-sucellus": "left-top",
   "the-whisperer": "left-mid",
   "the-leviathan": "right-top",
