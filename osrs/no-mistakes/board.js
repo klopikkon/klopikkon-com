@@ -707,6 +707,7 @@ function renderMain() {
 function render() {
   ensureUpdateButton();
   if (!isNext()) section = (currentBoss().kind === "monster") ? "monster" : "boss";
+  updateAtmosphere();
   renderNav();
   renderMain();
   document.title = isNext() ? "Next drops · No mistakes" : currentBoss().name + " · No mistakes";
@@ -852,6 +853,66 @@ async function refreshAll() {
   if (button) { button.disabled = false; button.textContent = "Update"; }
   refreshing = false;
   renderMain();
+}
+
+
+const ATM_BOSSES = ["zulrah","alchemical-hydra","phantom-muspah","vorkath","cerberus","kraken","vardorvis","the-leviathan","duke-sucellus","the-whisperer","nightmare","nex","yama","araxxor","abyssal-sire","general-graardor","corporeal-beast","kalphite-queen","tzkal-zuk","thermonuclear-smoke-devil","kreearra","commander-zilyana","kril-tsutsaroth","grotesque-guardians","sol-heredit","the-hueycoatl","doom-of-mokhaiotl"];
+const ATM_FLOAT = ["zulrah","vorkath","cerberus","kraken","araxxor","nex","alchemical-hydra","nightmare"];
+function ensureAtmosphere() {
+  if (document.getElementById("atmosphere")) return;
+  const root = document.createElement("div");
+  root.id = "atmosphere";
+  root.className = "atmosphere";
+  root.setAttribute("aria-hidden", "true");
+  const hero = document.createElement("img");
+  hero.className = "atm-hero";
+  hero.id = "atm-hero";
+  hero.alt = "";
+  root.appendChild(hero);
+  ATM_FLOAT.forEach(function (slug, i) {
+    const img = document.createElement("img");
+    img.className = "atm-float";
+    img.alt = "";
+    img.src = depthPrefix() + "assets/bosses/" + slug + ".webp";
+    img.onerror = function () { img.remove(); };
+    root.appendChild(img);
+  });
+  document.body.prepend(root);
+  if (!document.querySelector(".atm-credit")) {
+    const credit = document.createElement("p");
+    credit.className = "atm-credit";
+    credit.innerHTML = 'Boss art from the <a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA). Fan utility — Jagex trademarks belong to Jagex Ltd.';
+    const wrap = document.querySelector(".wrap");
+    if (wrap) wrap.appendChild(credit);
+  }
+}
+function updateAtmosphere() {
+  ensureAtmosphere();
+  const slug = slugFromHash();
+  document.body.dataset.slug = slug;
+  const hero = document.getElementById("atm-hero");
+  if (!hero) return;
+  if (ATM_BOSSES.indexOf(slug) === -1) {
+    hero.removeAttribute("src");
+    hero.style.opacity = "0";
+    return;
+  }
+  const next = depthPrefix() + "assets/bosses/" + slug + ".webp";
+  if (hero.getAttribute("src") === next) {
+    hero.style.opacity = "";
+    return;
+  }
+  hero.style.opacity = "0";
+  const probe = new Image();
+  probe.onload = function () {
+    hero.src = next;
+    hero.style.opacity = "";
+  };
+  probe.onerror = function () {
+    hero.removeAttribute("src");
+    hero.style.opacity = "0";
+  };
+  probe.src = next;
 }
 
 window.addEventListener("pointerdown", function () { soundOn = true; });

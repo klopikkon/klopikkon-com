@@ -59,3 +59,92 @@ h1{font-size:1.55rem;margin:.15rem 0 .35rem}
 .next-row:hover .name{color:var(--gold)}
 .head{display:grid;grid-template-columns:minmax(0,1fr) auto;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.8rem}
 .head span:last-child{text-align:right}
+
+
+/* atmosphere — monster vibe, keep cards readable */
+body{
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(80,55,20,.28), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 100% 100%, rgba(40,20,60,.35), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 0% 80%, rgba(20,50,40,.25), transparent 45%),
+    linear-gradient(180deg, #070a0e 0%, #0b0f14 40%, #0a0d12 100%);
+  min-height:100vh;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(232,195,106,.04), transparent 28%),
+    radial-gradient(circle at 80% 70%, rgba(60,191,134,.03), transparent 30%);
+  box-shadow: inset 0 0 120px rgba(0,0,0,.55);
+}
+.atmosphere{
+  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+}
+.atmosphere .atm-hero{
+  position:absolute; right:-2%; top:8%; width:min(42vw, 28rem); height:min(42vw, 28rem);
+  opacity:.14; filter:saturate(.85) contrast(1.05);
+  object-fit:contain; object-position:center;
+  mask-image: radial-gradient(circle at 50% 45%, #000 35%, transparent 72%);
+  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 35%, transparent 72%);
+  transition: opacity .45s ease, transform .6s ease;
+  transform: translateZ(0);
+}
+.atmosphere .atm-float{
+  position:absolute; opacity:.07; filter:grayscale(.15) saturate(.7);
+  object-fit:contain; width:9rem; height:9rem;
+  animation: atm-drift 28s ease-in-out infinite;
+}
+.atmosphere .atm-float:nth-child(2){ left:4%; top:18%; width:7.5rem; height:7.5rem; animation-duration:32s; animation-delay:-4s }
+.atmosphere .atm-float:nth-child(3){ left:12%; bottom:12%; width:8.5rem; height:8.5rem; animation-duration:36s; animation-delay:-11s }
+.atmosphere .atm-float:nth-child(4){ right:18%; bottom:8%; width:7rem; height:7rem; animation-duration:30s; animation-delay:-7s; opacity:.06 }
+.atmosphere .atm-float:nth-child(5){ left:40%; top:6%; width:6rem; height:6rem; animation-duration:40s; animation-delay:-15s; opacity:.05 }
+@keyframes atm-drift{
+  0%,100%{ transform: translateY(0) rotate(-2deg) }
+  50%{ transform: translateY(-14px) rotate(3deg) }
+}
+@media (prefers-reduced-motion: reduce){
+  .atmosphere .atm-float{ animation:none }
+}
+.wrap,.rare-pop{ position:relative; z-index:1 }
+.card{
+  background:rgba(21,27,34,.88);
+  border:1px solid rgba(232,195,106,.18);
+  box-shadow: 0 10px 36px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.brand b{
+  text-shadow: 0 0 18px rgba(232,195,106,.25);
+}
+.brand{
+  color:#a89b7a;
+}
+.bosses button.on,.regions button.on,.who button.on{
+  border-color:var(--gold);
+  background:linear-gradient(90deg, rgba(232,195,106,.14), rgba(34,28,18,.9));
+  box-shadow: 0 0 0 1px rgba(232,195,106,.08), 0 0 16px rgba(232,195,106,.08);
+}
+.update{
+  background:linear-gradient(180deg, #2c3a4d, #243041);
+  border-color:rgba(232,195,106,.22);
+}
+.update:hover{ border-color:var(--gold) }
+h1{ letter-spacing:-.02em }
+.track{ box-shadow: inset 0 1px 2px rgba(0,0,0,.55) }
+.kpi{
+  background:rgba(15,20,26,.92);
+  border-color:rgba(232,195,106,.12);
+}
+.atm-credit{
+  margin-top:1.6rem;
+  color:var(--muted);
+  font-size:.72rem;
+  line-height:1.4;
+  max-width:42rem;
+}
+.atm-credit a{ color:#a89b7a }
+@media (max-width:700px){
+  .atmosphere .atm-hero{ width:70vw; height:70vw; right:-10%; top:4%; opacity:.1 }
+  .atmosphere .atm-float{ opacity:.045; width:5.5rem; height:5.5rem }
+}
