@@ -2,3 +2,7 @@ OSRS monster/boss art in this folder is from the Old School RuneScape Wiki
 (https://oldschool.runescape.wiki/) and is licensed under CC BY-NC-SA 3.0 / 4.0
 as stated on the wiki. Used with attribution for a personal unlisted fan utility.
 Jagex / Old School RuneScape trademarks belong to Jagex Ltd.
+
+Additional Zulrah form sprites (zulrah-serpentine.webp, zulrah-tanzanite.webp, zulrah-magma.webp):
+File:Zulrah (serpentine).png / File:Zulrah (tanzanite).png / File:Zulrah (magma).png from the Old School RuneScape Wiki (CC BY-NC-SA).
+zulrah.webp retained as serpentine hero alias.
