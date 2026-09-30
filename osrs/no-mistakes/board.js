@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "61";
+const ASSET_V = "62";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -939,6 +939,13 @@ async function refreshAll() {
 
 
 const ATM_DT = ["duke-sucellus","the-whisperer","the-leviathan","vardorvis"];
+/* Stable corner assignment — CSS keys off data-corner as well as slug. */
+const ATM_DT_CORNERS = {
+  "duke-sucellus": "left-top",
+  "the-whisperer": "left-mid",
+  "the-leviathan": "right-top",
+  vardorvis: "right-mid"
+};
 const ATM_GWD = {
   "general-graardor": ["sergeant-strongstack","sergeant-steelwill","sergeant-grimspike"],
   "kreearra": ["flight-kilisa","wingman-skree","flockleader-geerin"],
@@ -1119,6 +1126,7 @@ function ensureAtmosphere() {
     img.className = "atm-dt-boss";
     img.alt = "";
     img.dataset.slug = slug;
+    img.dataset.corner = ATM_DT_CORNERS[slug] || "";
     img.style.setProperty("--atm-scale", String(ATM_SCALE[slug] || 1));
     img.src = depthPrefix() + "assets/bosses/" + slug + ".webp";
     img.onerror = function () { img.remove(); };
