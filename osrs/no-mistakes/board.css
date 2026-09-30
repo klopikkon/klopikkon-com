@@ -82,29 +82,39 @@ body::before{
   position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
 }
 .atmosphere .atm-hero{
-  position:absolute; right:-4%; top:4%; width:min(68vw, 46rem); height:min(68vw, 46rem);
+  position:absolute; right:-2%; top:6%;
+  /* viewport-capped box — all boss art fits the same frame */
+  width:min(40vw, 52vh, 26rem);
+  height:min(40vw, 52vh, 26rem);
+  max-width:42vw; max-height:56vh;
   opacity:.65; filter:saturate(1.12) contrast(1.2) brightness(1.12);
   object-fit:contain; object-position:center;
   mask-image: radial-gradient(circle at 50% 45%, #000 48%, transparent 85%);
   -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 48%, transparent 85%);
-  transition: opacity .45s ease, transform .6s ease;
-  transform: translateZ(0);
+  transition: opacity .45s ease;
+  transform: scale(var(--atm-scale, 1));
+  transform-origin: center center;
 }
 .atmosphere .atm-float{
   position:absolute; opacity:.42; filter:grayscale(0) saturate(1.05) contrast(1.12) brightness(1.08);
-  object-fit:contain; width:15rem; height:15rem;
+  object-fit:contain; object-position:center;
+  /* same viewport box for every float — intrinsic art size no longer dominates */
+  width:min(16vw, 20vh, 11rem);
+  height:min(16vw, 20vh, 11rem);
+  max-width:18vw; max-height:22vh;
   animation: atm-drift 28s ease-in-out infinite;
+  transform-origin: center center;
   /* fallback park off-pile if a float lacks nth rules */
   left: auto; right: 2%; top: auto; bottom: 40%;
 }
-/* nth-child 1 = hero; 2–5 = four floats only (no pile) */
-.atmosphere .atm-float:nth-child(2){ left:2%; top:12%; width:13rem; height:13rem; animation-duration:32s; animation-delay:-4s; opacity:.4 } /* zulrah */
-.atmosphere .atm-float:nth-child(3){ left:3%; bottom:14%; width:14rem; height:14rem; animation-duration:36s; animation-delay:-11s; opacity:.38 } /* vorkath */
-.atmosphere .atm-float:nth-child(4){ right:4%; top:28%; width:12.5rem; height:12.5rem; animation-duration:30s; animation-delay:-7s; opacity:.36 } /* kraken */
-.atmosphere .atm-float:nth-child(5){ right:6%; bottom:3%; left:auto; top:auto; width:15rem; height:15rem; animation-duration:34s; animation-delay:-15s; opacity:.4 } /* cerberus — clear bottom-right */
+/* nth-child 1 = hero; 2–5 = four floats only (no pile). Size from .atm-float. */
+.atmosphere .atm-float:nth-child(2){ left:2%; top:12%; right:auto; bottom:auto; animation-duration:32s; animation-delay:-4s; opacity:.4 } /* zulrah */
+.atmosphere .atm-float:nth-child(3){ left:3%; bottom:14%; right:auto; top:auto; animation-duration:36s; animation-delay:-11s; opacity:.38 } /* vorkath */
+.atmosphere .atm-float:nth-child(4){ right:4%; top:28%; left:auto; bottom:auto; animation-duration:30s; animation-delay:-7s; opacity:.36 } /* kraken */
+.atmosphere .atm-float:nth-child(5){ right:5%; bottom:4%; left:auto; top:auto; animation-duration:34s; animation-delay:-15s; opacity:.4 } /* cerberus — clear bottom-right */
 @keyframes atm-drift{
-  0%,100%{ transform: translateY(0) rotate(-2deg) }
-  50%{ transform: translateY(-14px) rotate(3deg) }
+  0%,100%{ transform: translateY(0) rotate(-2deg) scale(var(--atm-scale, 1)) }
+  50%{ transform: translateY(-12px) rotate(3deg) scale(var(--atm-scale, 1)) }
 }
 @media (prefers-reduced-motion: reduce){
   .atmosphere .atm-float{ animation:none }
@@ -148,6 +158,13 @@ h1{ letter-spacing:-.02em }
 }
 .atm-credit a{ color:#a89b7a }
 @media (max-width:700px){
-  .atmosphere .atm-hero{ width:95vw; height:95vw; right:-14%; top:0; opacity:.5 }
-  .atmosphere .atm-float{ opacity:.3; width:11rem; height:11rem }
+  .atmosphere .atm-hero{
+    width:min(70vw, 42vh, 20rem); height:min(70vw, 42vh, 20rem);
+    max-width:72vw; max-height:46vh; right:-8%; top:2%; opacity:.5;
+  }
+  .atmosphere .atm-float{
+    opacity:.3;
+    width:min(28vw, 18vh, 9rem); height:min(28vw, 18vh, 9rem);
+    max-width:30vw; max-height:20vh;
+  }
 }

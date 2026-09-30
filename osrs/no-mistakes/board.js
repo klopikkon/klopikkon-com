@@ -858,6 +858,24 @@ async function refreshAll() {
 
 const ATM_BOSSES = ["zulrah","alchemical-hydra","phantom-muspah","vorkath","cerberus","kraken","vardorvis","the-leviathan","duke-sucellus","the-whisperer","nightmare","nex","yama","araxxor","abyssal-sire","general-graardor","corporeal-beast","kalphite-queen","tzkal-zuk","thermonuclear-smoke-devil","kreearra","commander-zilyana","kril-tsutsaroth","grotesque-guardians","sol-heredit","the-hueycoatl","doom-of-mokhaiotl"];
 const ATM_FLOAT = ["zulrah","vorkath","kraken","cerberus"];
+/* Fine-tune within the shared viewport box (1 = fill box). */
+const ATM_SCALE = {
+  zulrah: 1.05,
+  vorkath: 0.9,
+  kraken: 1,
+  cerberus: 0.92,
+  "alchemical-hydra": 0.88,
+  "corporeal-beast": 0.85,
+  "duke-sucellus": 0.88,
+  "the-leviathan": 0.9,
+  nightmare: 0.9,
+  nex: 0.92,
+  yama: 1.15,
+  araxxor: 0.95,
+  "phantom-muspah": 0.95,
+  "general-graardor": 0.92,
+  "abyssal-sire": 0.9,
+};
 function ensureAtmosphere() {
   if (document.getElementById("atmosphere")) return;
   const root = document.createElement("div");
@@ -873,6 +891,8 @@ function ensureAtmosphere() {
     const img = document.createElement("img");
     img.className = "atm-float";
     img.alt = "";
+    img.dataset.slug = slug;
+    img.style.setProperty("--atm-scale", String(ATM_SCALE[slug] || 1));
     img.src = depthPrefix() + "assets/bosses/" + slug + ".webp";
     img.onerror = function () { img.remove(); };
     root.appendChild(img);
@@ -905,6 +925,8 @@ function updateAtmosphere() {
   hero.style.opacity = "0";
   const probe = new Image();
   probe.onload = function () {
+    hero.dataset.slug = slug;
+    hero.style.setProperty("--atm-scale", String(ATM_SCALE[slug] || 1));
     hero.src = next;
     hero.style.opacity = "";
   };
