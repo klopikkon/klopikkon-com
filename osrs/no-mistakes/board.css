@@ -343,12 +343,27 @@ body[data-atm="yama"] .atmosphere .atm-hero{
   height:min(46vw, 58vh, 30rem);
   max-width:50vw; max-height:62vh;
 }
+/* Integrated wash under DT four-boss band / Yama glyphs (title baked in) */
+body[data-atm="dt"] .atmosphere .atm-theme-wash.on.integrated,
+body[data-atm="yama"] .atmosphere .atm-theme-wash.on.integrated{
+  opacity:.58;
+  object-position: center top;
+}
+body[data-atm="dt"] .atmosphere .atm-theme-title,
+body[data-atm="yama"] .atmosphere .atm-theme-title{
+  display:none !important;
+}
+
 
 /* Hide in-card region label + h1 when atmosphere supplies the heading */
 body[data-atm="cg"] .card > .label:first-of-type,
 body[data-atm="cg"] .card > h1,
 body[data-atm="zulrah"] .card > .label:first-of-type,
-body[data-atm="zulrah"] .card > h1{
+body[data-atm="zulrah"] .card > h1,
+body[data-atm="dt"] .card > .label:first-of-type,
+body[data-atm="dt"] .card > h1,
+body[data-atm="yama"] .card > .label:first-of-type,
+body[data-atm="yama"] .card > h1{
   position:absolute !important;
   width:1px !important; height:1px !important;
   padding:0 !important; margin:-1px !important;
