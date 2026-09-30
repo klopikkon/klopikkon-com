@@ -35,7 +35,7 @@ h1{font-size:1.55rem;margin:.15rem 0 .35rem}
 .fill.ok{background:linear-gradient(90deg,#6d5420,#d6b25e)}
 .fill.lucky{background:linear-gradient(90deg,#145c40,#3cbf86)}
 .fill.spoon{background:linear-gradient(90deg,#0d4a32,#8dffc0)}
-.fill.arm{width:0;transition:width .75s cubic-bezier(.16,1,.3,1)}
+.fill.arm{width:0;transition:width 2.2s cubic-bezier(.16,1,.3,1)}
 .fill.arm.go{filter:saturate(1.15)}
 .medal{width:1.7rem;height:1.7rem;margin-left:.15rem;vertical-align:-.35rem;border-radius:50%;object-fit:cover;opacity:0;transform:scale(.35) rotate(-18deg)}
 .medal.pop{animation:medal-pop .48s cubic-bezier(.16,1.4,.3,1) forwards}

@@ -370,63 +370,89 @@ function medalFile(tone) {
   if (tone === "cursed" || tone === "dry" || tone === "unlucky" || tone === "lucky" || tone === "spoon") return tone;
   return "ok";
 }
-let audioCtx;
-function unlockAudio() {
-  const Ctx = window.AudioContext || window.webkitAudioContext;
-  if (!Ctx) return;
-  if (!audioCtx) audioCtx = new Ctx();
-  if (audioCtx.state === "suspended") audioCtx.resume();
+let soundOn = false;
+function playCall(word) {
+  if (!soundOn || !word || !window.speechSynthesis) return null;
+  const utter = new SpeechSynthesisUtterance(word);
+  utter.rate = 0.78;
+  utter.pitch = 0.5;
+  utter.volume = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const pick = voices.find(function (voice) { return /en/i.test(voice.lang) && /male|daniel|david|guy|ryan|alex|fred|george/i.test(voice.name); })
+    || voices.find(function (voice) { return /^en/i.test(voice.lang); });
+  if (pick) utter.voice = pick;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+  return utter;
 }
-function medalSound(tone) {
-  unlockAudio();
-  if (!audioCtx || audioCtx.state !== "running") return;
-  const now = audioCtx.currentTime;
-  const notes = {
-    cursed: [98, 82],
-    dry: [146, 123],
-    unlucky: [196, 174],
-    ok: [262, 330],
-    lucky: [392, 494, 587],
-    spoon: [523, 659, 784, 1046],
-  }[tone] || [262];
-  notes.forEach(function (freq, i) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = tone === "spoon" || tone === "lucky" ? "triangle" : "sawtooth";
-    osc.frequency.value = freq;
-    const start = now + i * 0.045;
-    gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(tone === "spoon" ? 0.11 : 0.05, start + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.32);
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start(start);
-    osc.stop(start + 0.36);
+let hydraRun = 0;
+function runHydraSequence(fills) {
+  const run = ++hydraRun;
+  function step(index) {
+    if (run !== hydraRun || index >= fills.length) return;
+    const fill = fills[index];
+    const medal = fill.closest(".meter") && fill.closest(".meter").querySelector(".medal");
+    let moved = false;
+    function goNext() {
+      if (moved || run !== hydraRun) return;
+      moved = true;
+      step(index + 1);
+    }
+    fill.addEventListener("transitionend", function (event) {
+      if (event.propertyName !== "width" || run !== hydraRun) return;
+      if (medal) medal.classList.add("pop");
+      const utter = playCall(fill.dataset.word);
+      if (utter) {
+        utter.onend = goNext;
+        window.setTimeout(goNext, 3200);
+      } else {
+        window.setTimeout(goNext, 280);
+      }
+    });
+    window.setTimeout(function () {
+      if (run === hydraRun) fill.style.width = fill.dataset.width;
+    }, 50);
+  }
+  step(0);
+}
+function replayHydra() {
+  soundOn = true;
+  if (window.speechSynthesis) window.speechSynthesis.resume();
+  const fills = Array.from(document.querySelectorAll("#main .fill.arm"));
+  fills.forEach(function (fill) {
+    const medal = fill.closest(".meter") && fill.closest(".meter").querySelector(".medal");
+    if (medal) medal.classList.remove("pop");
+    fill.style.transition = "none";
+    fill.style.width = "0%";
+  });
+  window.requestAnimationFrame(function () {
+    window.requestAnimationFrame(function () {
+      fills.forEach(function (fill) { fill.style.transition = ""; });
+      runHydraSequence(fills);
+    });
   });
 }
 let hydraIntroDone = false;
 function armHydraMeters(root) {
   const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const fills = root.querySelectorAll(".fill.arm");
-  if (hydraIntroDone || reduce) {
+  const fills = Array.from(root.querySelectorAll(".fill.arm"));
+  if (reduce) {
     fills.forEach(function (fill) {
       fill.style.width = fill.dataset.width;
       const medal = fill.closest(".meter") && fill.closest(".meter").querySelector(".medal");
       if (medal) medal.classList.add("pop");
     });
-    hydraIntroDone = true;
     return;
   }
-  hydraIntroDone = true;
-  fills.forEach(function (fill, index) {
+  if (!hydraIntroDone) {
+    hydraIntroDone = true;
+    runHydraSequence(fills);
+    return;
+  }
+  fills.forEach(function (fill) {
+    fill.style.width = fill.dataset.width;
     const medal = fill.closest(".meter") && fill.closest(".meter").querySelector(".medal");
-    fill.addEventListener("transitionend", function (event) {
-      if (event.propertyName !== "width") return;
-      if (medal) medal.classList.add("pop");
-      medalSound(fill.dataset.tone || "ok");
-    });
-    window.setTimeout(function () {
-      fill.style.width = fill.dataset.width;
-    }, 160 + index * 130);
+    if (medal) medal.classList.add("pop");
   });
 }
 function meterRow(label, sub, got, expected, animate) {
@@ -452,6 +478,7 @@ function meterRow(label, sub, got, expected, animate) {
   if (animate) {
     fill.dataset.width = width + "%";
     fill.dataset.tone = verdict.tone;
+    fill.dataset.word = verdict.word;
   }
   const deltaEl = el("div", "delta", signed(delta));
   track.append(fill, deltaEl);
@@ -547,6 +574,13 @@ function renderMain() {
     rows.forEach(function (entry) { main.appendChild(entry.row); });
   });
   if (animate) armHydraMeters(main);
+  if (animate) {
+    const hear = el("button", "update", "Hear the calls");
+    hear.type = "button";
+    hear.style.marginTop = "1rem";
+    hear.onclick = replayHydra;
+    main.appendChild(hear);
+  }
   } else {
     main.appendChild(el("p", "note", "No flat unique rate for this boss. KC only."));
   }
@@ -727,7 +761,7 @@ async function refreshWom() {
   } catch (e) {
     if (!refreshing) status.textContent = "Hiscores did not answer. Saved kill counts still work.";
   }
-  if (!refreshing) renderMain();
+  if (!refreshing && !document.querySelector(".fill.arm")) renderMain();
 }
 async function refreshAll() {
   if (refreshing) return;
@@ -771,12 +805,12 @@ async function refreshAll() {
   renderMain();
 }
 
-window.addEventListener("pointerdown", unlockAudio);
+window.addEventListener("pointerdown", function () { soundOn = true; });
 window.addEventListener("hashchange", render);
 window.addEventListener("popstate", render);
 render();
 refreshWom();
 refreshLogs().then(function () {
-  const wait = document.querySelector(".fill.arm") ? 2800 : 0;
-  window.setTimeout(function () { if (!refreshing) renderMain(); }, wait);
+  if (document.querySelector(".fill.arm")) return;
+  if (!refreshing) renderMain();
 });
