@@ -39,7 +39,11 @@ h1{font-size:1.55rem;margin:.15rem 0 .35rem}
 .fill.arm.go{filter:saturate(1.15)}
 .medal{width:1.7rem;height:1.7rem;margin-left:.15rem;vertical-align:-.35rem;border-radius:50%;object-fit:cover;opacity:0;transform:scale(.35) rotate(-18deg)}
 .medal.pop{animation:medal-pop .48s cubic-bezier(.16,1.4,.3,1) forwards}
-@keyframes medal-pop{to{opacity:1;transform:scale(1) rotate(0)}}
+.rare-pop{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:1rem}
+.rare-card{width:16.6vw;min-width:11rem;background:#151b22;border:1px solid var(--gold);border-radius:1rem;padding:.7rem .7rem .85rem;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.45)}
+.rare-card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;display:block}
+.rare-title{font-weight:750;margin-top:.45rem}
+.rare-card .tag{display:block;margin-top:.15rem}
 @media (prefers-reduced-motion: reduce){
   .fill.arm{transition:none}
   .medal{opacity:1;transform:none}

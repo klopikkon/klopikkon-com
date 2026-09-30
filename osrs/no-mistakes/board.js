@@ -390,6 +390,38 @@ function playClip(src, done) {
   const pending = audio.play();
   if (pending && pending.catch) pending.catch(finish);
 }
+function hideRarePopup() {
+  const pop = document.getElementById("rare-pop");
+  if (pop) pop.remove();
+}
+function showRarePopup(fill) {
+  const item = fill.dataset.item || "";
+  if (!/leather|claw/i.test(item)) return false;
+  hideRarePopup();
+  const medal = fill.closest(".meter") && fill.closest(".meter").querySelector(".medal");
+  const pop = document.createElement("div");
+  pop.id = "rare-pop";
+  pop.className = "rare-pop";
+  const card = document.createElement("div");
+  card.className = "rare-card";
+  if (medal) {
+    const img = document.createElement("img");
+    img.src = medal.src;
+    img.alt = "";
+    card.appendChild(img);
+  }
+  const title = document.createElement("div");
+  title.className = "rare-title";
+  title.textContent = item;
+  const word = document.createElement("div");
+  word.className = "tag " + (fill.dataset.tone || "");
+  word.textContent = fill.dataset.word || "";
+  card.append(title, word);
+  pop.appendChild(card);
+  pop.addEventListener("click", hideRarePopup);
+  document.body.appendChild(pop);
+  return true;
+}
 function playCall(item, word, done) {
   const base = depthPrefix() + "calls/";
   playClip(base + callSlug(item) + ".mp3", function () {
@@ -414,9 +446,12 @@ function runHydraSequence(fills) {
     fill.addEventListener("transitionend", function (event) {
       if (event.propertyName !== "width" || run !== hydraRun) return;
       if (medal) medal.classList.add("pop");
+      const rare = showRarePopup(fill);
       if (soundOn) {
-        playCall(fill.dataset.item, fill.dataset.word, goNext);
-        window.setTimeout(goNext, 8000);
+        playCall(fill.dataset.item, fill.dataset.word, function () { hideRarePopup(); goNext(); });
+        window.setTimeout(function () { hideRarePopup(); goNext(); }, 8000);
+      } else if (rare) {
+        window.setTimeout(function () { hideRarePopup(); goNext(); }, 1600);
       } else {
         window.setTimeout(goNext, 280);
       }
@@ -429,6 +464,7 @@ function runHydraSequence(fills) {
 }
 function replayHydra() {
   soundOn = true;
+  hideRarePopup();
   if (callAudio) { callAudio.pause(); callAudio = null; }
   const fills = Array.from(document.querySelectorAll("#main .fill.arm"));
   fills.forEach(function (fill) {
