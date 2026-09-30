@@ -294,6 +294,22 @@ function renderNav() {
     kinds.id = "kinds";
     aside.insertBefore(kinds, aside.firstChild);
   }
+  let who = document.getElementById("who");
+  if (!who && aside) {
+    who = el("div", "who");
+    who.id = "who";
+    aside.insertBefore(who, aside.firstChild);
+  }
+  if (who) {
+    who.innerHTML = "";
+    const member = BOARD.members.find(function (m) { return m.id === memberId; }) || BOARD.members[0];
+    BOARD.members.forEach(function (m) {
+      const button = el("button", m.id === member.id ? "on" : "", m.rsn);
+      button.type = "button";
+      button.onclick = function () { memberId = m.id; renderMain(); renderNav(); };
+      who.appendChild(button);
+    });
+  }
   if (kinds) {
     kinds.innerHTML = "";
     [["boss", "Bosses"], ["monster", "Monsters"]].forEach(function (pair) {
@@ -302,7 +318,9 @@ function renderNav() {
       button.onclick = function () {
         section = pair[0];
         region = "All";
-        renderNav();
+        const first = BOARD.bosses.find(function (b) { return (b.kind || "boss") === section; });
+        if (first) goBoss(first.slug);
+        else renderNav();
       };
       kinds.appendChild(button);
     });
@@ -322,7 +340,12 @@ function renderNav() {
   regions.forEach((name) => {
     const button = el("button", name === region ? "on" : "", name);
     button.type = "button";
-    button.onclick = () => { region = name; renderNav(); };
+    button.onclick = function () {
+      region = name;
+      const first = pool.find(function (b) { return name === "All" || b.region === name; });
+      if (first) goBoss(first.slug);
+      else renderNav();
+    };
     regionBox.appendChild(button);
   });
   pool.filter((b) => region === "All" || b.region === region).forEach((boss) => {
@@ -369,15 +392,6 @@ function renderMain() {
   const title = el("h1", "", boss.name);
   main.appendChild(title);
   if (boss.note) main.appendChild(el("p", "note", boss.note));
-
-  const who = el("div", "who");
-  BOARD.members.forEach((m) => {
-    const button = el("button", m.id === member.id ? "on" : "", m.rsn);
-    button.type = "button";
-    button.onclick = () => { memberId = m.id; renderMain(); };
-    who.appendChild(button);
-  });
-  main.appendChild(who);
 
   const kpis = el("div", "kpis");
   if (boss.parts) {

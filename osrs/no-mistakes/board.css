@@ -10,6 +10,7 @@ button,select,input{font:inherit;color:inherit}
 .actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:flex-end;max-width:100%}
 .update{background:#243041;border:1px solid var(--line);border-radius:.7rem;padding:.45rem .8rem;cursor:pointer;font-weight:650}
 .update:disabled{opacity:.55;cursor:wait}
+.layout{display:grid;gap:1rem;min-width:0}
 @media(min-width:860px){.layout{grid-template-columns:16rem minmax(0,1fr);align-items:start}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:1rem;padding:1rem;min-width:0}
 .note{color:var(--muted);font-size:.92rem}
@@ -17,8 +18,8 @@ h1{font-size:1.55rem;margin:.15rem 0 .35rem}
 .bosses{display:flex;flex-direction:column;gap:.25rem;max-height:70vh;overflow:auto}
 .bosses button,.regions button,.who button{border:1px solid transparent;background:transparent;text-align:left;border-radius:.7rem;padding:.45rem .6rem;cursor:pointer}
 .bosses button.on,.regions button.on,.who button.on{border-color:var(--gold);background:#221c12}
-.regions{display:flex;gap:.4rem;overflow-x:auto;max-width:100%;padding-bottom:.2rem}
-.who{display:flex;flex-wrap:wrap;gap:.4rem;max-width:100%}
+.regions{display:flex;flex-direction:column;gap:.25rem;align-items:stretch}
+.who{display:flex;flex-direction:column;gap:.25rem;align-items:stretch;margin-bottom:.7rem}
 .regions button,.who button{white-space:nowrap;border-color:var(--line);color:var(--muted)}
 .pick{display:none;width:100%;margin-top:.6rem;background:#0f141a;border:1px solid var(--line);border-radius:.7rem;padding:.6rem}
 @media(max-width:859px){.bosses{display:none}.pick{display:block}}
