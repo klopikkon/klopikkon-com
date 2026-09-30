@@ -821,18 +821,22 @@ function applySnapshot(member, data) {
 }
 function ensureUpdateButton() {
   if (document.getElementById("update")) return;
-  const status = document.getElementById("status");
-  if (!status || !status.parentNode) return;
+  const aside = document.querySelector("aside.card") || document.querySelector("aside");
+  if (!aside) return;
   const group = document.createElement("div");
   group.className = "actions";
+  group.id = "board-actions";
   const button = document.createElement("button");
   button.id = "update";
   button.type = "button";
   button.className = "update";
   button.textContent = "Update";
   button.onclick = refreshAll;
-  status.parentNode.insertBefore(group, status);
-  group.append(button, status);
+  // Sidebar chrome — keep Update out of the Imagine title band (header pad)
+  aside.insertBefore(group, aside.firstChild);
+  group.append(button);
+  const status = document.getElementById("status");
+  if (status) group.append(status);
 }
 async function refreshWom() {
   const status = document.getElementById("status");
