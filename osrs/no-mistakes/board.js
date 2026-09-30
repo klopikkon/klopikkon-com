@@ -856,7 +856,8 @@ async function refreshAll() {
 }
 
 
-const ATM_BOSSES = ["zulrah","alchemical-hydra","phantom-muspah","vorkath","cerberus","kraken","vardorvis","the-leviathan","duke-sucellus","the-whisperer","nightmare","nex","yama","araxxor","abyssal-sire","general-graardor","corporeal-beast","kalphite-queen","tzkal-zuk","thermonuclear-smoke-devil","kreearra","commander-zilyana","kril-tsutsaroth","grotesque-guardians","sol-heredit","the-hueycoatl","doom-of-mokhaiotl"];
+const ATM_DT = ["duke-sucellus","the-leviathan","the-whisperer","vardorvis"];
+const ATM_BOSSES = ["zulrah","alchemical-hydra","phantom-muspah","vorkath","cerberus","kraken","nightmare","nex","yama","araxxor","abyssal-sire","general-graardor","corporeal-beast","kalphite-queen","tzkal-zuk","thermonuclear-smoke-devil","kreearra","commander-zilyana","kril-tsutsaroth","grotesque-guardians","sol-heredit","the-hueycoatl","doom-of-mokhaiotl"];
 const ATM_FLOAT = ["zulrah","vorkath","cerberus"];
 /* Fine-tune within the shared viewport box (1 = fill box). */
 const ATM_SCALE = {
@@ -866,8 +867,10 @@ const ATM_SCALE = {
   cerberus: 0.92,
   "alchemical-hydra": 0.88,
   "corporeal-beast": 0.85,
-  "duke-sucellus": 0.88,
-  "the-leviathan": 0.9,
+  "duke-sucellus": 0.95,
+  "the-leviathan": 0.95,
+  "the-whisperer": 0.95,
+  vardorvis: 0.95,
   nightmare: 0.9,
   nex: 0.92,
   yama: 0.95,
@@ -876,6 +879,9 @@ const ATM_SCALE = {
   "general-graardor": 0.92,
   "abyssal-sire": 0.9,
 };
+function isDtAtmosphere(slug) {
+  return slug === "desert-treasure-ii" || ATM_DT.indexOf(slug) !== -1;
+}
 function ensureAtmosphere() {
   if (document.getElementById("atmosphere")) return;
   const root = document.createElement("div");
@@ -887,7 +893,21 @@ function ensureAtmosphere() {
   hero.id = "atm-hero";
   hero.alt = "";
   root.appendChild(hero);
-  ATM_FLOAT.forEach(function (slug, i) {
+  const dt = document.createElement("div");
+  dt.className = "atm-dt";
+  dt.id = "atm-dt";
+  ATM_DT.forEach(function (slug) {
+    const img = document.createElement("img");
+    img.className = "atm-dt-boss";
+    img.alt = "";
+    img.dataset.slug = slug;
+    img.style.setProperty("--atm-scale", String(ATM_SCALE[slug] || 1));
+    img.src = depthPrefix() + "assets/bosses/" + slug + ".webp";
+    img.onerror = function () { img.remove(); };
+    dt.appendChild(img);
+  });
+  root.appendChild(dt);
+  ATM_FLOAT.forEach(function (slug) {
     const img = document.createElement("img");
     img.className = "atm-float";
     img.alt = "";
@@ -911,7 +931,17 @@ function updateAtmosphere() {
   const slug = slugFromHash();
   document.body.dataset.slug = slug;
   const hero = document.getElementById("atm-hero");
+  const dt = document.getElementById("atm-dt");
   if (!hero) return;
+  if (isDtAtmosphere(slug)) {
+    document.body.dataset.atm = "dt";
+    hero.removeAttribute("src");
+    hero.style.opacity = "0";
+    if (dt) dt.classList.add("on");
+    return;
+  }
+  document.body.dataset.atm = "";
+  if (dt) dt.classList.remove("on");
   if (ATM_BOSSES.indexOf(slug) === -1) {
     hero.removeAttribute("src");
     hero.style.opacity = "0";
