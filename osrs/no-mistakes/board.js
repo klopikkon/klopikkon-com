@@ -536,8 +536,9 @@ function meterRow(label, sub, got, expected, animate) {
 }
 
 
-function kcHeadingBit(member, boss, table) {
-  // Fold auto-updating KC into Rare drop table (or DT part-table) subheadings.
+function kcHeadingBit(member, boss, table, opts) {
+  // Fold auto-updating KC into the first visible drop-table heading (or each DT part).
+  opts = opts || {};
   if (boss.parts && table) {
     const part = boss.parts.find(function (p) { return p.id === table.id; });
     if (part) {
@@ -547,8 +548,8 @@ function kcHeadingBit(member, boss, table) {
     return "";
   }
   if (boss.delves) return "";
-  // Only the Rare drop table (or Collection log when table is null) — not tertiary/mutagen.
-  if (table && table.id !== "rare") return "";
+  // Normal bosses: KC on the first visible table only (Vorkath tertiary, Zulrah rare, …).
+  if (table && opts.firstVisible === false) return "";
   const kc = kcFor(member, boss);
   if (!kc.kc) return "";
   return " · " + num(kc.kc) + " KC";
@@ -620,6 +621,7 @@ function renderMain() {
     { id: "mutagen", label: "Mutagens" },
     { id: "tertiary", label: "Tertiary" }
   ];
+  let firstVisibleTable = true;
   tables.forEach(function (table) {
     const items = boss.uniques.filter(function (item) { return (item.table || "rare") === table.id; });
     if (!items.length) return;
@@ -633,7 +635,8 @@ function renderMain() {
       sumExpected += expected;
       rows.push(meterRow(item.name, rateText(member, boss, item, expected), got, expected, animate));
     });
-    const heading = el("div", "label", table.label + kcHeadingBit(member, boss, table));
+    const heading = el("div", "label", table.label + kcHeadingBit(member, boss, table, { firstVisible: firstVisibleTable }));
+    firstVisibleTable = false;
     heading.style.marginTop = "1.15rem";
     const head = el("div", "head");
     head.append(el("span", "", "Expected"), el("span", "", "Received"));
@@ -827,23 +830,31 @@ function applySnapshot(member, data) {
   });
 }
 function ensureUpdateButton() {
-  if (document.getElementById("update")) return;
+  // Prefer Update/status below the boss list so Imagine title plates stay clear.
+  let button = document.getElementById("update");
+  let group = document.getElementById("board-actions");
   const aside = document.querySelector("aside.card") || document.querySelector("aside");
-  if (!aside) return;
-  const group = document.createElement("div");
-  group.className = "actions";
-  group.id = "board-actions";
-  const button = document.createElement("button");
-  button.id = "update";
-  button.type = "button";
-  button.className = "update";
-  button.textContent = "Update";
+  if (!button) {
+    if (!aside) return;
+    group = document.createElement("div");
+    group.className = "actions";
+    group.id = "board-actions";
+    button = document.createElement("button");
+    button.id = "update";
+    button.type = "button";
+    button.className = "update";
+    button.textContent = "Update";
+    group.append(button);
+    const status = document.getElementById("status");
+    if (status) group.append(status);
+    aside.appendChild(group);
+  }
   button.onclick = refreshAll;
-  // Sidebar chrome — keep Update out of the Imagine title band (header pad)
-  aside.insertBefore(group, aside.firstChild);
-  group.append(button);
-  const status = document.getElementById("status");
-  if (status) group.append(status);
+  // If an older layout left actions at the top, pin them under the boss list.
+  if (aside && group && group.parentNode === aside) {
+    const bosses = document.getElementById("bosses");
+    if (bosses && group.previousElementSibling !== bosses) aside.appendChild(group);
+  }
 }
 async function refreshWom() {
   const status = document.getElementById("status");
