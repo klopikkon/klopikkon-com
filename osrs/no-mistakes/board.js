@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "69";
+const ASSET_V = "70";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -953,8 +953,8 @@ const ATM_GWD = {
   "commander-zilyana": ["starlight","growler","bree"],
   "kril-tsutsaroth": ["tstanon-karlak","zakln-gritch","balfrug-kreeyath"]
 };
-const ATM_COX = ["tekton","vasa-nistirio","vespula","great-olm"];
-const ATM_TOB = ["the-maiden-of-sugadinti","pestilent-bloat","nylocas-vasilias","sotetseg"];
+const ATM_COX = ["tekton","great-olm","vasa-nistirio","vespula"];
+const ATM_TOB = ["the-maiden-of-sugadinti","sotetseg","pestilent-bloat","nylocas-vasilias"];
 const ATM_TOA = ["akkha","ba-ba","kephri","zebak"];
 const ATM_ARAXXOR = ["mirrorback-araxyte","araxxor","ruptura-araxyte","acidic-araxyte"];
 const ATM_COLOSSEUM = ["serpent-shaman","sol-heredit","jaguar-warrior","manticore"];
@@ -1331,7 +1331,7 @@ function updateAtmosphere() {
     if (kq) kq.classList.remove("on");
     if (zulrah) zulrah.classList.add("on");
     setAtmCredit("zulrah");
-    // Main serpentine on RIGHT (hero); tanzanite+magma LEFT via atm-zulrah-form. Keep money-snake wash.
+    // Main serpentine TOP-RIGHT (hero); tanzanite TL + magma LM via atm-zulrah-form (GWD pattern).
     const next = depthPrefix() + "assets/bosses/zulrah-serpentine.webp";
     if (hero.getAttribute("src") === next) {
       hero.style.opacity = "";
@@ -1364,7 +1364,7 @@ function updateAtmosphere() {
     if (kq) kq.classList.remove("on");
     if (yama) yama.classList.add("on");
     setAtmCredit("yama");
-    // Full-body Yama on the RIGHT (hero); Judge left + glyphs bottom stay via atm-yama.
+    // Full-body Yama TOP-RIGHT (hero); Judge TL + glyphs LM/RM via atm-yama (GWD pattern).
     const next = depthPrefix() + "assets/bosses/yama.webp";
     if (hero.getAttribute("src") === next) {
       hero.style.opacity = "";
