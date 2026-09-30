@@ -1,19 +1,23 @@
-Theme title plates and washes in this folder are Grok Imagine site art (not OSRS Wiki sprites).
-Shipped plates (see manifest.json titleFile):
-- money-snake.webp — The money Snake (zulrah)
-- red-prison-title.webp — The red prison (the-corrupted-gauntlet)
-- alchemical-hydra-title.webp — The poison clock (alchemical-hydra)
-- cerberus-title.webp — Hell's lobby (cerberus)
-- vorkath-title.webp — The blue wall (vorkath)
-- nightmare-title.webp — The dream that kills (nightmare)
-- phantom-muspah-title.webp — Ancient rupture (phantom-muspah)
+Theme washes and title plates in this folder are Grok Imagine site art (not OSRS Wiki sprites).
+
+Integrated scene+title washes (one Imagine per boss — background AND heading baked in; wire as washFile only, no floating titleFile):
+- zulrah-scene.webp — The money Snake (zulrah)
+- cg-red-prison-scene.webp — The red prison (the-corrupted-gauntlet)
+- alchemical-hydra-scene.webp — The poison clock (alchemical-hydra)
+- cerberus-scene.webp — Hell's lobby (cerberus)
+- vorkath-scene.webp — The blue wall (vorkath)
+- nightmare-scene.webp — The dream that kills (nightmare)
+
+Legacy floating title plates still shipped for other bosses (see manifest.json titleFile):
 - araxxor-title.webp — Noxious (araxxor)
 - nex-title.webp — Frozen throne (nex)
 - corporeal-beast-title.webp — The dark core (corporeal-beast)
 - kalphite-queen-title.webp — Queen of the nest (kalphite-queen)
+- phantom-muspah-title.webp — Ancient rupture (phantom-muspah)
 - the-hueycoatl-title.webp — River serpent (the-hueycoatl)
 - tzkal-zuk-title.webp — Infernal gate (tzkal-zuk)
 - doom-of-mokhaiotl-title.webp — Deep delve (doom-of-mokhaiotl)
-- red-prison.webp — Corrupted Gauntlet wash / The red prison
-Convention: <slug>-title.webp and <slug>-wash.webp. Aliases: money-snake.webp (zulrah), red-prison-title.webp (CG).
+- money-snake.webp / red-prison-title.webp / *-title.webp for hydra/cerberus/vorkath/nightmare — superseded by integrated scenes above
+
+Convention: <slug>-scene.webp (integrated) or <slug>-title.webp (floating plate). Aliases historically: money-snake.webp, red-prison*.webp.
 Fan site; Jagex trademarks belong to Jagex Ltd.

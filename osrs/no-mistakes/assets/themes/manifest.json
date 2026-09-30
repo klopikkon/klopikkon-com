@@ -4,42 +4,55 @@
     "title": "assets/themes/<slug>-title.webp",
     "wash": "assets/themes/<slug>-wash.webp",
     "aliases": {
-      "zulrah": "money-snake.webp",
-      "the-corrupted-gauntlet": "red-prison-title.webp"
+      "zulrah": "zulrah-scene.webp",
+      "the-corrupted-gauntlet": "cg-red-prison-scene.webp"
     },
-    "note": "Drop Imagine webps into /workspace/imagine-plates/; copy into assets/themes/. titleFile overrides convention."
+    "note": "Integrated Imagine scene+title \u2192 washFile only (no titleFile). Floating titleFile still used for non-integrated bosses. Drop new webps into /workspace/imagine-plates/integrated/ then copy here.",
+    "integrated": [
+      "zulrah-scene.webp",
+      "cg-red-prison-scene.webp",
+      "alchemical-hydra-scene.webp",
+      "cerberus-scene.webp",
+      "vorkath-scene.webp",
+      "nightmare-scene.webp"
+    ]
   },
   "themes": {
     "zulrah": {
       "title": "The money Snake",
-      "titleFile": "money-snake.webp",
-      "credit": "Grok Imagine"
+      "washFile": "zulrah-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "the-corrupted-gauntlet": {
       "title": "The red prison",
-      "titleFile": "red-prison-title.webp",
+      "washFile": "cg-red-prison-scene.webp",
       "credit": "Grok Imagine",
-      "washFile": "red-prison.webp"
+      "integrated": true
     },
     "alchemical-hydra": {
       "title": "The poison clock",
-      "titleFile": "alchemical-hydra-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "alchemical-hydra-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "cerberus": {
       "title": "Hell's lobby",
-      "titleFile": "cerberus-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "cerberus-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "vorkath": {
       "title": "The blue wall",
-      "titleFile": "vorkath-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "vorkath-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "nightmare": {
       "title": "The dream that kills",
-      "titleFile": "nightmare-title.webp",
-      "credit": "Grok Imagine"
+      "washFile": "nightmare-scene.webp",
+      "credit": "Grok Imagine",
+      "integrated": true
     },
     "phantom-muspah": {
       "title": "Ancient rupture",
