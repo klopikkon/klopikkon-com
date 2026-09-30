@@ -691,8 +691,8 @@ h1{ letter-spacing:-.02em }
     padding-top: clamp(18rem, 44vh, 22rem);
   }
   body[data-atm="gwd"] .wrap{
-    /* Title + lowered 2×2 faction sprites clear above full-width cards */
-    padding-top: clamp(18.5rem, 50vh, 26rem);
+    /* Title + lowered 2×2 clear above cards (row2+sprite ≈20rem on short phones). */
+    padding-top: clamp(22rem, 56vh, 30rem);
   }
   .atmosphere .atm-zulrah-form[data-form="tanzanite"]{
     left:0; top:12%;
