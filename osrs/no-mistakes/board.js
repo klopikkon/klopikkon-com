@@ -923,6 +923,12 @@ async function refreshAll() {
 
 
 const ATM_DT = ["duke-sucellus","the-whisperer","the-leviathan","vardorvis"];
+const ATM_GWD = {
+  "general-graardor": ["sergeant-strongstack","sergeant-steelwill","sergeant-grimspike"],
+  "kreearra": ["flight-kilisa","wingman-skree","flockleader-geerin"],
+  "commander-zilyana": ["starlight","growler","bree"],
+  "kril-tsutsaroth": ["tstanon-karlak","zakln-gritch","balfrug-kreeyath"]
+};
 const ATM_BOSSES = ["zulrah","alchemical-hydra","phantom-muspah","vorkath","cerberus","kraken","nightmare","nex","yama","araxxor","abyssal-sire","general-graardor","corporeal-beast","kalphite-queen","tzkal-zuk","thermonuclear-smoke-devil","kreearra","commander-zilyana","kril-tsutsaroth","grotesque-guardians","sol-heredit","the-hueycoatl","doom-of-mokhaiotl"];
 const ATM_FLOAT = ["zulrah","vorkath","cerberus"];
 /* Fine-tune within the shared viewport box (1 = fill box). */
@@ -1009,6 +1015,9 @@ function isYamaAtmosphere(slug) {
 }
 function isZulrahAtmosphere(slug) {
   return slug === "zulrah";
+}
+function isGwdAtmosphere(slug) {
+  return Object.prototype.hasOwnProperty.call(ATM_GWD, slug);
 }
 function hasAtmTitlePlate(slug) {
   // washFile with baked title OR floating titleFile both supply the heading
@@ -1100,6 +1109,24 @@ function ensureAtmosphere() {
     dt.appendChild(img);
   });
   root.appendChild(dt);
+  const gwd = document.createElement("div");
+  gwd.className = "atm-gwd";
+  gwd.id = "atm-gwd";
+  const gwdBoss = document.createElement("img");
+  gwdBoss.className = "atm-gwd-boss";
+  gwdBoss.alt = "";
+  gwdBoss.dataset.role = "boss";
+  gwdBoss.onerror = function () { gwdBoss.remove(); };
+  gwd.appendChild(gwdBoss);
+  for (let slot = 0; slot < 3; slot++) {
+    const img = document.createElement("img");
+    img.className = "atm-gwd-minion";
+    img.alt = "";
+    img.dataset.slot = String(slot);
+    img.onerror = function () { img.remove(); };
+    gwd.appendChild(img);
+  }
+  root.appendChild(gwd);
   ATM_FLOAT.forEach(function (slug) {
     const img = document.createElement("img");
     img.className = "atm-float";
@@ -1184,11 +1211,13 @@ function updateAtmosphere() {
   document.body.dataset.slug = slug;
   const hero = document.getElementById("atm-hero");
   const dt = document.getElementById("atm-dt");
+  const gwd = document.getElementById("atm-gwd");
   const yama = document.getElementById("atm-yama");
   const zulrah = document.getElementById("atm-zulrah");
   if (!hero) return;
   if (yama) yama.classList.remove("on");
   if (zulrah) zulrah.classList.remove("on");
+  if (gwd) gwd.classList.remove("on");
   applyThemeAssets(slug);
   if (isCgAtmosphere(slug)) {
     document.body.dataset.atm = "cg";
@@ -1196,6 +1225,7 @@ function updateAtmosphere() {
     hero.removeAttribute("src");
     hero.style.opacity = "0";
     if (dt) dt.classList.remove("on");
+    if (gwd) gwd.classList.remove("on");
     setAtmCredit("cg");
     return;
   }
@@ -1205,6 +1235,7 @@ function updateAtmosphere() {
     hero.removeAttribute("src");
     hero.style.opacity = "0";
     if (dt) dt.classList.add("on");
+    if (gwd) gwd.classList.remove("on");
     setAtmCredit(hasAtmIntegratedWash(slug) || hasAtmIntegratedWash("desert-treasure-ii") ? "theme" : "default");
     return;
   }
@@ -1212,6 +1243,7 @@ function updateAtmosphere() {
     document.body.dataset.atm = "zulrah";
     document.body.dataset.theme = "zulrah";
     if (dt) dt.classList.remove("on");
+    if (gwd) gwd.classList.remove("on");
     if (zulrah) zulrah.classList.add("on");
     setAtmCredit("zulrah");
     // Integrated Zulrah scene already contains the boss and baked title; never stack hero art on it.
@@ -1247,6 +1279,7 @@ function updateAtmosphere() {
     document.body.dataset.atm = "yama";
     document.body.dataset.theme = "yama";
     if (dt) dt.classList.remove("on");
+    if (gwd) gwd.classList.remove("on");
     if (yama) yama.classList.add("on");
     setAtmCredit("yama");
     // Integrated Yama scene already contains the boss and baked title; never stack hero art on it.
@@ -1275,9 +1308,42 @@ function updateAtmosphere() {
     probe.src = next;
     return;
   }
+  if (isGwdAtmosphere(slug)) {
+    document.body.dataset.atm = "gwd";
+    document.body.dataset.theme = slug;
+    if (dt) dt.classList.remove("on");
+    if (yama) yama.classList.remove("on");
+    if (zulrah) zulrah.classList.remove("on");
+    if (gwd) {
+      gwd.classList.add("on");
+      const bossImg = gwd.querySelector(".atm-gwd-boss");
+      const minions = ATM_GWD[slug] || [];
+      const prefix = depthPrefix() + "assets/bosses/";
+      if (bossImg) {
+        bossImg.dataset.slug = slug;
+        bossImg.src = prefix + slug + ".webp";
+      }
+      gwd.querySelectorAll(".atm-gwd-minion").forEach(function (img) {
+        const slot = Number(img.dataset.slot);
+        const mSlug = minions[slot];
+        if (mSlug) {
+          img.dataset.slug = mSlug;
+          img.src = prefix + mSlug + ".webp";
+        } else {
+          img.removeAttribute("src");
+          img.removeAttribute("data-slug");
+        }
+      });
+    }
+    hero.removeAttribute("src");
+    hero.style.opacity = "0";
+    setAtmCredit(hasAtmIntegratedWash(slug) ? "theme" : "default");
+    return;
+  }
   document.body.dataset.atm = hasAtmTitlePlate(slug) ? "theme" : "";
   document.body.dataset.theme = slug;
   if (dt) dt.classList.remove("on");
+  if (gwd) gwd.classList.remove("on");
   setAtmCredit(hasAtmTitlePlate(slug) ? "theme" : "default");
   if (ATM_BOSSES.indexOf(slug) === -1) {
     hero.removeAttribute("src");

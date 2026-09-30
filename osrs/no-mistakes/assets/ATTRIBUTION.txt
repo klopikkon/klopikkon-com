@@ -6,3 +6,9 @@ Jagex / Old School RuneScape trademarks belong to Jagex Ltd.
 Additional Zulrah form sprites (zulrah-serpentine.webp, zulrah-tanzanite.webp, zulrah-magma.webp):
 File:Zulrah (serpentine).png / File:Zulrah (tanzanite).png / File:Zulrah (magma).png from the Old School RuneScape Wiki (CC BY-NC-SA).
 zulrah.webp retained as serpentine hero alias.
+
+GWD faction bodyguard sprites (flight-kilisa, wingman-skree, flockleader-geerin,
+sergeant-strongstack, sergeant-steelwill, sergeant-grimspike, starlight, growler, bree,
+tstanon-karlak, zakln-gritch, balfrug-kreeyath):
+OSRS Wiki monster art (CC BY-NC-SA), used as atmosphere corner sprites on the four
+God Wars Dungeon boss pages.

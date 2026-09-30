@@ -160,5 +160,77 @@
     "source": "File:Doom of Mokhaiotl.png",
     "wiki_url": "https://oldschool.runescape.wiki/images/Doom_of_Mokhaiotl.png",
     "bytes": 22834
+  },
+  "flight-kilisa": {
+    "file": "flight-kilisa.webp",
+    "source": "File:Flight Kilisa.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Flight_Kilisa.png",
+    "bytes": 23522
+  },
+  "wingman-skree": {
+    "file": "wingman-skree.webp",
+    "source": "File:Wingman Skree.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Wingman_Skree.png",
+    "bytes": 25406
+  },
+  "flockleader-geerin": {
+    "file": "flockleader-geerin.webp",
+    "source": "File:Flockleader Geerin.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Flockleader_Geerin.png",
+    "bytes": 23764
+  },
+  "sergeant-strongstack": {
+    "file": "sergeant-strongstack.webp",
+    "source": "File:Sergeant Strongstack.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Sergeant_Strongstack.png",
+    "bytes": 20796
+  },
+  "sergeant-steelwill": {
+    "file": "sergeant-steelwill.webp",
+    "source": "File:Sergeant Steelwill.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Sergeant_Steelwill.png",
+    "bytes": 22644
+  },
+  "sergeant-grimspike": {
+    "file": "sergeant-grimspike.webp",
+    "source": "File:Sergeant Grimspike.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Sergeant_Grimspike.png",
+    "bytes": 20034
+  },
+  "starlight": {
+    "file": "starlight.webp",
+    "source": "File:Starlight.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Starlight.png",
+    "bytes": 23684
+  },
+  "growler": {
+    "file": "growler.webp",
+    "source": "File:Growler.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Growler.png",
+    "bytes": 20800
+  },
+  "bree": {
+    "file": "bree.webp",
+    "source": "File:Bree.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Bree.png",
+    "bytes": 37812
+  },
+  "tstanon-karlak": {
+    "file": "tstanon-karlak.webp",
+    "source": "File:Tstanon Karlak.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Tstanon_Karlak.png",
+    "bytes": 43290
+  },
+  "zakln-gritch": {
+    "file": "zakln-gritch.webp",
+    "source": "File:Zakl'n Gritch.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Zakl%27n_Gritch.png",
+    "bytes": 20618
+  },
+  "balfrug-kreeyath": {
+    "file": "balfrug-kreeyath.webp",
+    "source": "File:Balfrug Kreeyath.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Balfrug_Kreeyath.png",
+    "bytes": 19310
   }
 }

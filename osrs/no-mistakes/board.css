@@ -233,6 +233,7 @@ body[data-atm="cg"] .atmosphere .atm-hero{ opacity:0 !important }
 body[data-atm="cg"] .atmosphere .atm-dt{ display:none !important }
 body[data-atm="cg"] .atmosphere .atm-zulrah{ display:none !important }
 body[data-atm="cg"] .atmosphere .atm-yama{ display:none !important }
+body[data-atm="cg"] .atmosphere .atm-gwd{ display:none !important }
 body[data-atm="cg"] .card{
   border-color: rgba(220,70,80,.28);
   box-shadow: 0 10px 36px rgba(40,0,8,.45), inset 0 1px 0 rgba(255,120,120,.06);
@@ -293,6 +294,48 @@ body[data-atm="dt"] .atmosphere .atm-float{ opacity:0 !important; visibility:hid
 body[data-atm="dt"] .atmosphere .atm-hero{ opacity:0 !important }
 body[data-atm="dt"] .atmosphere .atm-zulrah{ display:none !important }
 body[data-atm="dt"] .atmosphere .atm-yama{ display:none !important }
+body[data-atm="dt"] .atmosphere .atm-gwd{ display:none !important }
+/* GWD faction corners: boss + three bodyguards, clear of baked title band. */
+.atmosphere .atm-gwd{
+  display:none;
+  position:absolute; inset:0;
+  pointer-events:none;
+  z-index:1;
+}
+.atmosphere .atm-gwd.on{ display:block }
+.atmosphere .atm-gwd-boss,
+.atmosphere .atm-gwd-minion{
+  position:absolute;
+  width:min(22vw, 28vh, 14rem);
+  height:min(22vw, 28vh, 14rem);
+  max-width:24vw; max-height:30vh;
+  object-fit:contain; object-position:center bottom;
+  opacity:.72;
+  filter:saturate(1.12) contrast(1.15) brightness(1.1);
+  animation: none !important;
+  transform: none;
+  mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
+  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
+}
+/* Corners clear of top-center baked title (same clearance as Duke). */
+.atmosphere .atm-gwd-minion[data-slot="0"]{
+  left:1%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+}
+.atmosphere .atm-gwd-minion[data-slot="1"]{
+  right:2%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
+}
+.atmosphere .atm-gwd-minion[data-slot="2"]{
+  left:2%; bottom:12%; right:auto; top:auto;
+}
+.atmosphere .atm-gwd-boss{
+  right:2%; bottom:clamp(4rem, 10vh, 7rem); left:auto; top:auto;
+}
+body[data-atm="gwd"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
+body[data-atm="gwd"] .atmosphere .atm-hero{ opacity:0 !important }
+body[data-atm="gwd"] .atmosphere .atm-dt{ display:none !important }
+body[data-atm="gwd"] .atmosphere .atm-zulrah{ display:none !important }
+body[data-atm="gwd"] .atmosphere .atm-yama{ display:none !important }
+
 .atmosphere .atm-yama{
   display:none;
   position:absolute; inset:0;
@@ -339,6 +382,7 @@ body[data-atm="dt"] .atmosphere .atm-yama{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="yama"] .atmosphere .atm-dt{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-zulrah{ display:none !important }
+body[data-atm="yama"] .atmosphere .atm-gwd{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-hero{
   opacity:0 !important;
   right:0; top:4%;
@@ -350,12 +394,14 @@ body[data-atm="yama"] .atmosphere .atm-hero{
 }
 /* Integrated wash under DT four-boss band / Yama glyphs (title baked in) */
 body[data-atm="dt"] .atmosphere .atm-theme-wash.on.integrated,
-body[data-atm="yama"] .atmosphere .atm-theme-wash.on.integrated{
+body[data-atm="yama"] .atmosphere .atm-theme-wash.on.integrated,
+body[data-atm="gwd"] .atmosphere .atm-theme-wash.on.integrated{
   opacity:.58;
   object-position: center top;
 }
 body[data-atm="dt"] .atmosphere .atm-theme-title,
-body[data-atm="yama"] .atmosphere .atm-theme-title{
+body[data-atm="yama"] .atmosphere .atm-theme-title,
+body[data-atm="gwd"] .atmosphere .atm-theme-title{
   display:none !important;
 }
 
@@ -368,7 +414,9 @@ body[data-atm="zulrah"] .card > h1,
 body[data-atm="dt"] .card > .label:first-of-type:not(.table-heading),
 body[data-atm="dt"] .card > h1,
 body[data-atm="yama"] .card > .label:first-of-type:not(.table-heading),
-body[data-atm="yama"] .card > h1{
+body[data-atm="yama"] .card > h1,
+body[data-atm="gwd"] .card > .label:first-of-type:not(.table-heading),
+body[data-atm="gwd"] .card > h1{
   position:absolute !important;
   width:1px !important; height:1px !important;
   padding:0 !important; margin:-1px !important;
@@ -431,6 +479,7 @@ body[data-atm="zulrah"]::before{
 body[data-atm="zulrah"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="zulrah"] .atmosphere .atm-dt{ display:none !important }
 body[data-atm="zulrah"] .atmosphere .atm-yama{ display:none !important }
+body[data-atm="zulrah"] .atmosphere .atm-gwd{ display:none !important }
 body[data-atm="zulrah"] .atmosphere .atm-hero{
   opacity:0 !important;
   right:0; top:8%;
@@ -474,6 +523,10 @@ body[data-atm="theme"] .wrap{
 }
 body[data-atm="dt"] .wrap{
   /* Keep brand/cards below the centered baked Four awakenings title and corner art. */
+  padding-top: clamp(12rem, 30vh, 17rem);
+}
+body[data-atm="gwd"] .wrap{
+  /* Keep brand/cards below baked faction title + corner bodyguards. */
   padding-top: clamp(12rem, 30vh, 17rem);
 }
 
@@ -558,6 +611,15 @@ h1{ letter-spacing:-.02em }
   .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{ right:1%; top:6%; }
   .atmosphere .atm-dt-boss[data-slug="the-leviathan"]{ left:1%; bottom:8%; }
   .atmosphere .atm-dt-boss[data-slug="vardorvis"]{ right:2%; bottom:clamp(3rem, 8vh, 5rem); }
+  .atmosphere .atm-gwd-boss,
+  .atmosphere .atm-gwd-minion{
+    width:min(34vw, 22vh, 10rem); height:min(34vw, 22vh, 10rem);
+    max-width:36vw; max-height:24vh; opacity:.6;
+  }
+  .atmosphere .atm-gwd-minion[data-slot="0"]{ left:1%; top:clamp(4rem, 9vh, 5.5rem); }
+  .atmosphere .atm-gwd-minion[data-slot="1"]{ right:1%; top:clamp(4rem, 9vh, 5.5rem); }
+  .atmosphere .atm-gwd-minion[data-slot="2"]{ left:1%; bottom:8%; }
+  .atmosphere .atm-gwd-boss{ right:2%; bottom:clamp(3rem, 8vh, 5rem); }
   .atmosphere .atm-cg-title,
   .atmosphere .atm-theme-title,
   .atmosphere .atm-zulrah-title,
@@ -575,6 +637,9 @@ h1{ letter-spacing:-.02em }
   }
   body[data-atm="dt"] .wrap{
     /* Reserve the title zone; corner sprites stay outside the centered heading. */
+    padding-top: clamp(10rem, 30vh, 14rem);
+  }
+  body[data-atm="gwd"] .wrap{
     padding-top: clamp(10rem, 30vh, 14rem);
   }
   .atmosphere .atm-zulrah-form[data-form="tanzanite"]{
