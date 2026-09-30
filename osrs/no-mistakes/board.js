@@ -857,7 +857,7 @@ async function refreshAll() {
 
 
 const ATM_BOSSES = ["zulrah","alchemical-hydra","phantom-muspah","vorkath","cerberus","kraken","vardorvis","the-leviathan","duke-sucellus","the-whisperer","nightmare","nex","yama","araxxor","abyssal-sire","general-graardor","corporeal-beast","kalphite-queen","tzkal-zuk","thermonuclear-smoke-devil","kreearra","commander-zilyana","kril-tsutsaroth","grotesque-guardians","sol-heredit","the-hueycoatl","doom-of-mokhaiotl"];
-const ATM_FLOAT = ["zulrah","vorkath","cerberus","kraken","araxxor","nex","alchemical-hydra","nightmare"];
+const ATM_FLOAT = ["zulrah","vorkath","kraken","cerberus"];
 function ensureAtmosphere() {
   if (document.getElementById("atmosphere")) return;
   const root = document.createElement("div");

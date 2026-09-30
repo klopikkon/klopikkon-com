@@ -94,11 +94,14 @@ body::before{
   position:absolute; opacity:.42; filter:grayscale(0) saturate(1.05) contrast(1.12) brightness(1.08);
   object-fit:contain; width:15rem; height:15rem;
   animation: atm-drift 28s ease-in-out infinite;
+  /* fallback park off-pile if a float lacks nth rules */
+  left: auto; right: 2%; top: auto; bottom: 40%;
 }
-.atmosphere .atm-float:nth-child(2){ left:1%; top:10%; width:14rem; height:14rem; animation-duration:32s; animation-delay:-4s; opacity:.4 }
-.atmosphere .atm-float:nth-child(3){ left:5%; bottom:8%; width:16rem; height:16rem; animation-duration:36s; animation-delay:-11s; opacity:.38 }
-.atmosphere .atm-float:nth-child(4){ right:10%; bottom:4%; width:13rem; height:13rem; animation-duration:30s; animation-delay:-7s; opacity:.36 }
-.atmosphere .atm-float:nth-child(5){ left:32%; top:2%; width:12rem; height:12rem; animation-duration:40s; animation-delay:-15s; opacity:.35 }
+/* nth-child 1 = hero; 2–5 = four floats only (no pile) */
+.atmosphere .atm-float:nth-child(2){ left:2%; top:12%; width:13rem; height:13rem; animation-duration:32s; animation-delay:-4s; opacity:.4 } /* zulrah */
+.atmosphere .atm-float:nth-child(3){ left:3%; bottom:14%; width:14rem; height:14rem; animation-duration:36s; animation-delay:-11s; opacity:.38 } /* vorkath */
+.atmosphere .atm-float:nth-child(4){ right:4%; top:28%; width:12.5rem; height:12.5rem; animation-duration:30s; animation-delay:-7s; opacity:.36 } /* kraken */
+.atmosphere .atm-float:nth-child(5){ right:6%; bottom:3%; left:auto; top:auto; width:15rem; height:15rem; animation-duration:34s; animation-delay:-15s; opacity:.4 } /* cerberus — clear bottom-right */
 @keyframes atm-drift{
   0%,100%{ transform: translateY(0) rotate(-2deg) }
   50%{ transform: translateY(-14px) rotate(3deg) }
