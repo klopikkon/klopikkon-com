@@ -302,13 +302,17 @@ function renderNav() {
   }
   if (who) {
     who.innerHTML = "";
-    const member = BOARD.members.find(function (m) { return m.id === memberId; }) || BOARD.members[0];
+    who.appendChild(el("div", "label", "Player"));
+    const playerPick = document.createElement("select");
+    playerPick.className = "menu-select";
     BOARD.members.forEach(function (m) {
-      const button = el("button", m.id === member.id ? "on" : "", m.rsn);
-      button.type = "button";
-      button.onclick = function () { memberId = m.id; renderMain(); renderNav(); };
-      who.appendChild(button);
+      const option = el("option", "", m.rsn);
+      option.value = m.id;
+      if (m.id === memberId) option.selected = true;
+      playerPick.appendChild(option);
     });
+    playerPick.onchange = function () { memberId = playerPick.value; renderMain(); };
+    who.appendChild(playerPick);
   }
   if (kinds) {
     kinds.innerHTML = "";
@@ -333,32 +337,33 @@ function renderNav() {
   if (label) label.textContent = section === "monster" ? "Monsters" : "Bosses";
   regionBox.innerHTML = "";
   list.innerHTML = "";
-  pick.innerHTML = "";
+  if (pick) pick.innerHTML = "";
   const active = isNext() ? "" : currentBoss().slug;
   const pool = BOARD.bosses.filter(function (b) { return (b.kind || "boss") === section; });
   const regions = ["All"].concat(pool.map(function (b) { return b.region; }).filter(function (v, i, a) { return a.indexOf(v) === i; }));
-  regions.forEach((name) => {
-    const button = el("button", name === region ? "on" : "", name);
-    button.type = "button";
-    button.onclick = function () {
-      region = name;
-      const first = pool.find(function (b) { return name === "All" || b.region === name; });
-      if (first) goBoss(first.slug);
-      else renderNav();
-    };
-    regionBox.appendChild(button);
+  regionBox.appendChild(el("div", "label", "Category"));
+  const regionPick = document.createElement("select");
+  regionPick.className = "menu-select";
+  regions.forEach(function (name) {
+    const option = el("option", "", name);
+    option.value = name;
+    if (name === region) option.selected = true;
+    regionPick.appendChild(option);
   });
+  regionPick.onchange = function () {
+    const name = regionPick.value;
+    region = name;
+    const first = pool.find(function (b) { return name === "All" || b.region === name; });
+    if (first) goBoss(first.slug);
+    else renderNav();
+  };
+  regionBox.appendChild(regionPick);
   pool.filter((b) => region === "All" || b.region === region).forEach((boss) => {
     const button = el("button", boss.slug === active ? "on" : "", boss.name);
     button.type = "button";
     button.onclick = () => { goBoss(boss.slug); };
     list.appendChild(button);
-    const option = el("option", "", boss.name);
-    option.value = boss.slug;
-    if (boss.slug === active) option.selected = true;
-    pick.appendChild(option);
   });
-  pick.onchange = () => { goBoss(pick.value); };
 }
 
 function meterRow(label, sub, got, expected) {

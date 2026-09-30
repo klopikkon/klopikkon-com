@@ -19,10 +19,9 @@ h1{font-size:1.55rem;margin:.15rem 0 .35rem}
 .bosses button,.regions button,.who button{border:1px solid transparent;background:transparent;text-align:left;border-radius:.7rem;padding:.45rem .6rem;cursor:pointer}
 .bosses button.on,.regions button.on,.who button.on{border-color:var(--gold);background:#221c12}
 .regions{display:flex;flex-direction:column;gap:.25rem;align-items:stretch}
-.who{display:flex;flex-direction:column;gap:.25rem;align-items:stretch;margin-bottom:.7rem}
-.regions button,.who button{white-space:nowrap;border-color:var(--line);color:var(--muted)}
-.pick{display:none;width:100%;margin-top:.6rem;background:#0f141a;border:1px solid var(--line);border-radius:.7rem;padding:.6rem}
-@media(max-width:859px){.bosses{display:none}.pick{display:block}}
+.who{margin-bottom:.7rem}
+.menu-select{width:100%;margin:.3rem 0 .55rem;background:#0f141a;border:1px solid var(--line);border-radius:.7rem;padding:.55rem .6rem}
+.pick{display:none}
 .tag{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
 .tag.dry{color:var(--dry)}.tag.unlucky{color:var(--unlucky)}.tag.ok{color:var(--ok)}.tag.lucky{color:var(--lucky)}.tag.cursed{color:var(--cursed)}.tag.spoon{color:var(--spoon)}
 .meter{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.15rem .55rem;align-items:center;margin-top:.65rem}
