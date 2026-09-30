@@ -267,8 +267,8 @@ body[data-atm="cg"] .update{
   justify-content:center;
   align-items:flex-end; /* shared baseline */
   gap:clamp(.45rem, 1.4vw, 1.1rem);
-  /* Imagine title sits ~y=167–215 in 720p wash (~12–15rem on desktop cover). Clear it. */
-  top:clamp(16.5rem, 28vh, 20rem);
+  /* Imagine title gold ~y=184–239 on 800px cover; PR58 top was visually tight on letter bottoms — extra safety margin so row sits clearly below “Four awakenings”. */
+  top:clamp(18.75rem, 34vh, 23rem);
   left:0 !important;
   right:0 !important;
   bottom:auto !important;
@@ -614,7 +614,7 @@ h1{ letter-spacing:-.02em }
     max-width:30vw; max-height:20vh;
   }
   .atmosphere .atm-dt.on{
-    top:clamp(11rem, 24vh, 14rem);
+    top:clamp(13.5rem, 28vh, 16rem);
     left:0 !important; right:0 !important; bottom:auto !important;
     width:100% !important;
     height:min(14vh, 7rem);
