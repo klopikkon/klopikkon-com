@@ -120,7 +120,7 @@ body::before{
   -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 95%);
 }
 .atmosphere .atm-cg-title{
-  position:absolute; left:50%; top:42%;
+  position:absolute; left:50%; top:12%;
   transform: translate(-50%, -50%);
   width:min(96vw, 42rem);
   text-align:center;
@@ -129,13 +129,20 @@ body::before{
   font-weight:700;
   letter-spacing:.04em;
   line-height:1.05;
-  color: rgba(255, 70, 70, .18);
-  text-shadow: 0 0 40px rgba(180,20,30,.25), 0 2px 0 rgba(0,0,0,.4);
+  color: rgba(255, 90, 90, 0.85);
+  text-shadow:
+    0 0 2px rgba(0,0,0,.95),
+    0 2px 0 rgba(0,0,0,.85),
+    0 0 18px rgba(220,30,40,.55),
+    0 0 42px rgba(180,20,30,.4),
+    -1px -1px 0 rgba(40,0,0,.7),
+    1px 1px 0 rgba(40,0,0,.7);
   text-transform: none;
   opacity:0;
   transition: opacity .5s ease;
   pointer-events:none;
   user-select:none;
+  z-index:0;
 }
 body[data-atm="cg"]{
   background:
@@ -155,6 +162,8 @@ body[data-atm="cg"] .atmosphere .atm-cg-title{ opacity:1 }
 body[data-atm="cg"] .atmosphere .atm-float{ opacity:.08; filter:grayscale(.6) brightness(.7) }
 body[data-atm="cg"] .atmosphere .atm-hero{ opacity:0 !important }
 body[data-atm="cg"] .atmosphere .atm-dt{ display:none !important }
+body[data-atm="cg"] .atmosphere .atm-zulrah{ display:none !important }
+body[data-atm="cg"] .atmosphere .atm-yama{ display:none !important }
 body[data-atm="cg"] .card{
   border-color: rgba(220,70,80,.28);
   box-shadow: 0 10px 36px rgba(40,0,8,.45), inset 0 1px 0 rgba(255,120,120,.06);
@@ -185,7 +194,7 @@ body[data-atm="cg"] .update{
   height:min(22vw, 28vh, 14rem);
   max-width:24vw; max-height:30vh;
   object-fit:contain; object-position:center;
-  opacity:.72;
+  opacity:.78;
   filter:saturate(1.12) contrast(1.15) brightness(1.1);
   transform: scale(var(--atm-scale, 1));
   transform-origin:center center;
@@ -197,16 +206,18 @@ body[data-atm="cg"] .update{
   left:1%; top:10%; right:auto; bottom:auto; animation-duration:32s; animation-delay:-3s;
 }
 .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{
-  left:2%; bottom:12%; right:auto; top:auto; animation-duration:36s; animation-delay:-10s;
+  left:0.5%; top:44%; bottom:auto; right:auto; animation-duration:36s; animation-delay:-10s;
 }
 .atmosphere .atm-dt-boss[data-slug="the-leviathan"]{
   right:2%; top:8%; left:auto; bottom:auto; animation-duration:34s; animation-delay:-6s;
 }
 .atmosphere .atm-dt-boss[data-slug="vardorvis"]{
-  right:3%; bottom:6%; left:auto; top:auto; animation-duration:38s; animation-delay:-14s;
+  right:1%; top:48%; bottom:auto; left:auto; animation-duration:38s; animation-delay:-14s;
 }
 body[data-atm="dt"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="dt"] .atmosphere .atm-hero{ opacity:0 !important }
+body[data-atm="dt"] .atmosphere .atm-zulrah{ display:none !important }
+body[data-atm="dt"] .atmosphere .atm-yama{ display:none !important }
 .atmosphere .atm-yama{
   display:none;
   position:absolute; inset:0;
@@ -235,23 +246,123 @@ body[data-atm="dt"] .atmosphere .atm-hero{ opacity:0 !important }
   animation: atm-drift 40s ease-in-out infinite;
 }
 .atmosphere .atm-yama-glyph-fire{
-  left:4%; bottom:10%; right:auto; top:auto;
+  left:4%; bottom:12%; right:auto; top:auto;
   animation-delay:-8s;
   filter:drop-shadow(0 0 16px rgba(220,80,20,.35));
 }
 .atmosphere .atm-yama-glyph-shadow{
-  right:8%; bottom:16%; left:auto; top:auto;
+  right:8%; bottom:12%; left:auto; top:auto;
   animation-delay:-18s;
   filter:drop-shadow(0 0 16px rgba(90,40,160,.35));
 }
 body[data-atm="yama"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="yama"] .atmosphere .atm-dt{ display:none !important }
+body[data-atm="yama"] .atmosphere .atm-zulrah{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-hero{
   opacity:.72;
   right:0; top:4%;
   width:min(46vw, 58vh, 30rem);
   height:min(46vw, 58vh, 30rem);
   max-width:50vw; max-height:62vh;
+}
+
+/* Hide in-card region label + h1 when atmosphere supplies the heading */
+body[data-atm="cg"] .card > .label:first-of-type,
+body[data-atm="cg"] .card > h1,
+body[data-atm="zulrah"] .card > .label:first-of-type,
+body[data-atm="zulrah"] .card > h1{
+  position:absolute !important;
+  width:1px !important; height:1px !important;
+  padding:0 !important; margin:-1px !important;
+  overflow:hidden !important; clip:rect(0,0,0,0) !important;
+  white-space:nowrap !important; border:0 !important;
+}
+
+/* Zulrah — The money Snake */
+.atmosphere .atm-zulrah{
+  display:none;
+  position:absolute; inset:0;
+  pointer-events:none;
+}
+.atmosphere .atm-zulrah.on{ display:block }
+.atmosphere .atm-zulrah-title,
+.atmosphere .atm-title-plate{
+  position:absolute; left:50%; top:12%;
+  transform: translate(-50%, -50%);
+  width:min(92vw, 44rem);
+  height:auto;
+  max-height:28vh;
+  object-fit:contain;
+  object-position:center;
+  opacity:0;
+  transition: opacity .5s ease;
+  pointer-events:none;
+  filter: drop-shadow(0 0 18px rgba(40,120,60,.35));
+  z-index:0;
+}
+body[data-atm="zulrah"] .atmosphere .atm-zulrah-title{ opacity:.92 }
+.atmosphere .atm-zulrah-form{
+  position:absolute;
+  object-fit:contain; object-position:center;
+  filter:saturate(1.12) contrast(1.12) brightness(1.08);
+  mask-image: radial-gradient(circle at 50% 45%, #000 50%, transparent 86%);
+  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 50%, transparent 86%);
+  animation: atm-drift 32s ease-in-out infinite;
+  transform-origin:center center;
+}
+.atmosphere .atm-zulrah-form[data-form="tanzanite"]{
+  left:1%; top:14%; right:auto; bottom:auto;
+  width:min(18vw, 24vh, 12rem);
+  height:min(18vw, 24vh, 12rem);
+  opacity:.78;
+  animation-duration:34s; animation-delay:-5s;
+}
+.atmosphere .atm-zulrah-form[data-form="magma"]{
+  left:2%; top:42%; right:auto; bottom:auto;
+  width:min(17vw, 22vh, 11rem);
+  height:min(17vw, 22vh, 11rem);
+  opacity:.76;
+  animation-duration:36s; animation-delay:-12s;
+}
+body[data-atm="zulrah"]{
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(30,80,40,.42), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 100% 100%, rgba(20,50,35,.45), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 0% 80%, rgba(40,70,30,.35), transparent 45%),
+    linear-gradient(180deg, #07110c 0%, #0a1410 40%, #08100c 100%) !important;
+}
+body[data-atm="zulrah"]::before{
+  background:
+    radial-gradient(circle at 25% 35%, rgba(80,180,90,.06), transparent 32%),
+    radial-gradient(circle at 75% 65%, rgba(180,160,60,.05), transparent 34%);
+  box-shadow: inset 0 0 110px rgba(0,30,15,.5);
+}
+body[data-atm="zulrah"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
+body[data-atm="zulrah"] .atmosphere .atm-dt{ display:none !important }
+body[data-atm="zulrah"] .atmosphere .atm-yama{ display:none !important }
+body[data-atm="zulrah"] .atmosphere .atm-hero{
+  opacity:.78;
+  right:0; top:8%;
+  width:min(46vw, 58vh, 30rem);
+  height:min(46vw, 58vh, 30rem);
+  max-width:50vw; max-height:62vh;
+}
+body[data-atm="zulrah"] .card{
+  border-color: rgba(90,180,100,.26);
+  box-shadow: 0 10px 36px rgba(0,20,10,.42), inset 0 1px 0 rgba(180,220,140,.05);
+}
+body[data-atm="zulrah"] .bosses button.on,
+body[data-atm="zulrah"] .regions button.on,
+body[data-atm="zulrah"] .who button.on{
+  border-color:#7ec87a;
+  background:linear-gradient(90deg, rgba(60,140,70,.18), rgba(16,28,18,.92));
+  box-shadow: 0 0 0 1px rgba(60,140,70,.1), 0 0 16px rgba(40,100,50,.14);
+}
+body[data-atm="zulrah"] .brand b{ text-shadow: 0 0 18px rgba(80,180,90,.3) }
+body[data-atm="zulrah"] .brand{ color:#9ab090 }
+body[data-atm="zulrah"] .update{
+  background:linear-gradient(180deg, #243a2c, #1a2a20);
+  border-color:rgba(90,180,100,.26);
 }
 @keyframes atm-drift{
   0%,100%{ transform: translateY(0) rotate(-2deg) scale(var(--atm-scale, 1)) }
@@ -313,12 +424,30 @@ h1{ letter-spacing:-.02em }
     max-width:36vw; max-height:24vh; opacity:.6;
   }
   .atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{ left:0; top:6%; }
-  .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{ left:1%; bottom:8%; }
+  .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{ left:0; top:42%; bottom:auto; }
   .atmosphere .atm-dt-boss[data-slug="the-leviathan"]{ right:0; top:4%; }
-  .atmosphere .atm-dt-boss[data-slug="vardorvis"]{ right:1%; bottom:4%; }
+  .atmosphere .atm-dt-boss[data-slug="vardorvis"]{ right:0; top:46%; bottom:auto; }
   .atmosphere .atm-cg-title{
-    top:36%;
+    top:10%;
     font-size: clamp(1.8rem, 11vw, 3.2rem);
+  }
+  .atmosphere .atm-zulrah-title,
+  .atmosphere .atm-title-plate{
+    top:10%;
+    width:min(94vw, 28rem);
+    max-height:22vh;
+  }
+  .atmosphere .atm-zulrah-form[data-form="tanzanite"]{
+    left:0; top:12%;
+    width:min(28vw, 18vh, 9rem); height:min(28vw, 18vh, 9rem); opacity:.7;
+  }
+  .atmosphere .atm-zulrah-form[data-form="magma"]{
+    left:1%; top:40%;
+    width:min(26vw, 16vh, 8.5rem); height:min(26vw, 16vh, 8.5rem); opacity:.68;
+  }
+  body[data-atm="zulrah"] .atmosphere .atm-hero{
+    width:min(72vw, 48vh, 22rem); height:min(72vw, 48vh, 22rem);
+    max-width:78vw; max-height:52vh; right:-6%; top:4%; opacity:.62;
   }
   body[data-atm="cg"] .atmosphere .atm-cg-wash{ opacity:.45 }
   .atmosphere .atm-yama-judge{

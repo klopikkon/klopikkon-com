@@ -543,9 +543,11 @@ function renderMain() {
   const member = BOARD.members.find((m) => m.id === memberId) || BOARD.members[0];
   const kc = kcFor(member, boss);
   const counts = (BOARD.clog[member.id] && BOARD.clog[member.id][boss.slug]) || null;
-  main.appendChild(el("div", "label", boss.region));
-  const title = el("h1", "", boss.name);
-  main.appendChild(title);
+  if (!hasAtmTitlePlate(boss.slug)) {
+    main.appendChild(el("div", "label", boss.region));
+    const title = el("h1", "", boss.name);
+    main.appendChild(title);
+  }
   if (boss.note) main.appendChild(el("p", "note", boss.note));
 
   const kpis = el("div", "kpis");
@@ -888,10 +890,20 @@ function isCgAtmosphere(slug) {
 function isYamaAtmosphere(slug) {
   return slug === "yama";
 }
+function isZulrahAtmosphere(slug) {
+  return slug === "zulrah";
+}
+function hasAtmTitlePlate(slug) {
+  return isCgAtmosphere(slug) || isZulrahAtmosphere(slug);
+}
 const ATM_YAMA_EXTRA = [
   { slug: "judge-of-yama", cls: "atm-yama-judge" },
   { slug: "glyph-fire", cls: "atm-yama-glyph atm-yama-glyph-fire" },
   { slug: "glyph-shadow", cls: "atm-yama-glyph atm-yama-glyph-shadow" }
+];
+const ATM_ZULRAH_FORMS = [
+  { form: "tanzanite", file: "zulrah-tanzanite.webp" },
+  { form: "magma", file: "zulrah-magma.webp" }
 ];
 function ensureAtmosphere() {
   if (document.getElementById("atmosphere")) return;
@@ -929,6 +941,26 @@ function ensureAtmosphere() {
     yama.appendChild(img);
   });
   root.appendChild(yama);
+  const zulrah = document.createElement("div");
+  zulrah.className = "atm-zulrah";
+  zulrah.id = "atm-zulrah";
+  const zulrahTitle = document.createElement("img");
+  zulrahTitle.className = "atm-zulrah-title atm-title-plate";
+  zulrahTitle.id = "atm-zulrah-title";
+  zulrahTitle.alt = "The money Snake";
+  zulrahTitle.src = depthPrefix() + "assets/themes/money-snake.webp";
+  zulrahTitle.onerror = function () { zulrahTitle.remove(); };
+  zulrah.appendChild(zulrahTitle);
+  ATM_ZULRAH_FORMS.forEach(function (item) {
+    const img = document.createElement("img");
+    img.className = "atm-zulrah-form";
+    img.alt = "";
+    img.dataset.form = item.form;
+    img.src = depthPrefix() + "assets/bosses/" + item.file;
+    img.onerror = function () { img.remove(); };
+    zulrah.appendChild(img);
+  });
+  root.appendChild(zulrah);
   const dt = document.createElement("div");
   dt.className = "atm-dt";
   dt.id = "atm-dt";
@@ -970,6 +1002,8 @@ function setAtmCredit(mode) {
     credit.innerHTML = 'Corrupted Gauntlet backdrop: generated art (Grok Imagine). Boss sprites from the <a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA). Fan utility — Jagex trademarks belong to Jagex Ltd.';
   } else if (mode === "yama") {
     credit.innerHTML = 'Yama &amp; Judge of Yama from the <a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA). Floor glyphs styled after Glyph of Fire / Glyph of Shadow. Fan utility — Jagex trademarks belong to Jagex Ltd.';
+  } else if (mode === "zulrah") {
+    credit.innerHTML = 'Zulrah forms from the <a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA). Title plate: The money Snake (site theme art). Fan utility — Jagex trademarks belong to Jagex Ltd.';
   } else {
     credit.innerHTML = 'Boss art from the <a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA). Fan utility — Jagex trademarks belong to Jagex Ltd.';
   }
@@ -981,8 +1015,10 @@ function updateAtmosphere() {
   const hero = document.getElementById("atm-hero");
   const dt = document.getElementById("atm-dt");
   const yama = document.getElementById("atm-yama");
+  const zulrah = document.getElementById("atm-zulrah");
   if (!hero) return;
   if (yama) yama.classList.remove("on");
+  if (zulrah) zulrah.classList.remove("on");
   if (isCgAtmosphere(slug)) {
     document.body.dataset.atm = "cg";
     hero.removeAttribute("src");
@@ -997,6 +1033,34 @@ function updateAtmosphere() {
     hero.style.opacity = "0";
     if (dt) dt.classList.add("on");
     setAtmCredit("default");
+    return;
+  }
+  if (isZulrahAtmosphere(slug)) {
+    document.body.dataset.atm = "zulrah";
+    if (dt) dt.classList.remove("on");
+    if (zulrah) zulrah.classList.add("on");
+    setAtmCredit("zulrah");
+    const next = depthPrefix() + "assets/bosses/zulrah-serpentine.webp";
+    if (hero.getAttribute("src") === next) {
+      hero.style.opacity = "";
+      return;
+    }
+    hero.style.opacity = "0";
+    const probe = new Image();
+    probe.onload = function () {
+      hero.dataset.slug = "zulrah";
+      hero.style.setProperty("--atm-scale", String(ATM_SCALE.zulrah || 1));
+      hero.src = next;
+      hero.style.opacity = "";
+    };
+    probe.onerror = function () {
+      const fallback = depthPrefix() + "assets/bosses/zulrah.webp";
+      hero.dataset.slug = "zulrah";
+      hero.style.setProperty("--atm-scale", String(ATM_SCALE.zulrah || 1));
+      hero.src = fallback;
+      hero.style.opacity = "";
+    };
+    probe.src = next;
     return;
   }
   if (isYamaAtmosphere(slug)) {
