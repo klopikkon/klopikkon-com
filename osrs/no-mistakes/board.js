@@ -535,6 +535,25 @@ function meterRow(label, sub, got, expected, animate) {
   return { row, delta, expected, got, tone: verdict.tone, word: verdict.word };
 }
 
+
+function kcHeadingBit(member, boss, table) {
+  // Fold auto-updating KC into Rare drop table (or DT part-table) subheadings.
+  if (boss.parts && table) {
+    const part = boss.parts.find(function (p) { return p.id === table.id; });
+    if (part) {
+      const value = partKc(member, boss, part.id);
+      return value ? " · " + num(value) + " KC" : "";
+    }
+    return "";
+  }
+  if (boss.delves) return "";
+  // Only the Rare drop table (or Collection log when table is null) — not tertiary/mutagen.
+  if (table && table.id !== "rare") return "";
+  const kc = kcFor(member, boss);
+  if (!kc.kc) return "";
+  return " · " + num(kc.kc) + " KC";
+}
+
 function renderMain() {
   if (isNext()) return renderNext();
   const boss = currentBoss();
@@ -550,15 +569,10 @@ function renderMain() {
   }
   if (boss.note) main.appendChild(el("p", "note", boss.note));
 
-  const kpis = el("div", "kpis");
-  if (boss.parts) {
-    boss.parts.forEach(function (part) {
-      const box = el("div", "kpi");
-      const value = partKc(member, boss, part.id);
-      box.append(el("span", "label", part.name), el("b", "", value ? num(value) : "–"));
-      kpis.append(box);
-    });
-  } else if (boss.delves) {
+  // KC lives in the Rare drop table (or part-table) heading — skip the tall KPI strip
+  // except for delve bosses (deep delves vs level clears) which need both numbers.
+  if (boss.delves) {
+    const kpis = el("div", "kpis");
     const deep = womKc(member.id, boss.wom);
     const deepBox = el("div", "kpi");
     deepBox.append(el("span", "label", "Deep delves"), el("b", "", deep ? num(deep) : "–"), el("span", "sub", "hiscores, not the rolls"));
@@ -566,19 +580,12 @@ function renderMain() {
     const clears = delveTotal(member.id);
     clearBox.append(el("span", "label", "Level clears"), el("b", "", clears ? num(clears) : "–"));
     kpis.append(deepBox, clearBox);
-  } else {
-  const kcBox = el("div", "kpi");
-  kcBox.append(el("span", "label", kc.source), el("b", "", kc.kc ? num(kc.kc) : "–"));
-  const updated = liveUpdated[member.id] || (BOARD.wom[member.id] && BOARD.wom[member.id].updated);
-  if (kc.source === "hiscores" && updated) kcBox.append(el("span", "sub", "hiscores " + String(updated).slice(0, 10)));
-  const womBox = el("div", "kpi");
-  womBox.append(el("span", "label", "Hiscores"), el("b", "", num(womKc(member.id, boss.wom))));
-  kpis.append(kcBox);
-  if (kc.source === "loot tracker" && womKc(member.id, boss.wom) > 0) kpis.append(womBox);
+    main.appendChild(kpis);
   }
-  main.appendChild(kpis);
 
   if (!counts) {
+    const bareKc = kcHeadingBit(member, boss, null);
+    if (bareKc) main.appendChild(el("div", "label", "Kill count" + bareKc));
     main.appendChild(el("p", "note", boss.kind === "monster"
       ? member.rsn + " has no collection log count for this monster yet. It is not on the hiscores, so type a loot-tracker KC."
       : member.rsn + " has no DropTracker collection log yet, so luck is not scored. Kill count still comes from Wise Old Man."));
@@ -595,7 +602,7 @@ function renderMain() {
   const scored = boss.uniques.some(function (item) { return item.rate != null; });
   if (!scored) {
     main.appendChild(el("p", "note", "No flat unique rate — showing collection log counts with KC. Luck meters stay off."));
-    const heading = el("div", "label", "Collection log");
+    const heading = el("div", "label", "Collection log" + kcHeadingBit(member, boss, null));
     heading.style.marginTop = "1.15rem";
     main.appendChild(heading);
     const list = el("div", "clog-list");
@@ -626,7 +633,7 @@ function renderMain() {
       sumExpected += expected;
       rows.push(meterRow(item.name, rateText(member, boss, item, expected), got, expected, animate));
     });
-    const heading = el("div", "label", table.label);
+    const heading = el("div", "label", table.label + kcHeadingBit(member, boss, table));
     heading.style.marginTop = "1.15rem";
     const head = el("div", "head");
     head.append(el("span", "", "Expected"), el("span", "", "Received"));
@@ -920,12 +927,12 @@ const ATM_SCALE = {
 };
 /** Atmosphere theme manifest — titles + optional wash/title plate files under assets/themes/. */
 const ATM_THEMES = {
-  "zulrah": { title: "The money Snake", titleFile: "money-snake.webp", credit: "imagine" },
-  "the-corrupted-gauntlet": { title: "The red prison", titleFile: "red-prison-title.webp", washFile: "red-prison.webp", credit: "imagine" },
-  "alchemical-hydra": { title: "The poison clock", titleFile: "alchemical-hydra-title.webp", credit: "imagine" },
-  "cerberus": { title: "Hell's lobby", titleFile: "cerberus-title.webp", credit: "imagine" },
-  "vorkath": { title: "The blue wall", titleFile: "vorkath-title.webp", credit: "imagine" },
-  "nightmare": { title: "The dream that kills", titleFile: "nightmare-title.webp", credit: "imagine" },
+  "zulrah": { title: "The money Snake", washFile: "zulrah-scene.webp", credit: "imagine" },
+  "the-corrupted-gauntlet": { title: "The red prison", washFile: "cg-red-prison-scene.webp", credit: "imagine" },
+  "alchemical-hydra": { title: "The poison clock", washFile: "alchemical-hydra-scene.webp", credit: "imagine" },
+  "cerberus": { title: "Hell's lobby", washFile: "cerberus-scene.webp", credit: "imagine" },
+  "vorkath": { title: "The blue wall", washFile: "vorkath-scene.webp", credit: "imagine" },
+  "nightmare": { title: "The dream that kills", washFile: "nightmare-scene.webp", credit: "imagine" },
   "phantom-muspah": { title: "Ancient rupture", titleFile: "phantom-muspah-title.webp", credit: "imagine" },
   "araxxor": { title: "Noxious", titleFile: "araxxor-title.webp", credit: "imagine" },
   "nex": { title: "Frozen throne", titleFile: "nex-title.webp", credit: "imagine" },
@@ -981,7 +988,13 @@ function isZulrahAtmosphere(slug) {
   return slug === "zulrah";
 }
 function hasAtmTitlePlate(slug) {
-  return !!themeTitleFile(slug);
+  // washFile with baked title OR floating titleFile both supply the heading
+  return !!(themeTitleFile(slug) || themeWashFile(slug));
+}
+function hasAtmIntegratedWash(slug) {
+  // Integrated Imagine scene+title — no separate floating title plate
+  const t = themeFor(slug);
+  return !!(t && t.washFile && !t.titleFile);
 }
 const ATM_YAMA_EXTRA = [
   { slug: "judge-of-yama", cls: "atm-yama-judge" },
@@ -1002,16 +1015,10 @@ function ensureAtmosphere() {
   wash.className = "atm-cg-wash";
   wash.id = "atm-cg-wash";
   wash.alt = "";
-  wash.src = depthPrefix() + "assets/themes/red-prison.webp";
+  wash.src = depthPrefix() + "assets/themes/cg-red-prison-scene.webp";
   wash.onerror = function () { wash.remove(); };
   root.appendChild(wash);
-  const title = document.createElement("img");
-  title.className = "atm-cg-title atm-title-plate";
-  title.id = "atm-cg-title";
-  title.alt = "The red prison";
-  title.src = depthPrefix() + "assets/themes/red-prison-title.webp";
-  title.onerror = function () { title.remove(); };
-  root.appendChild(title);
+  // Integrated CG wash has "The red prison" baked in — no floating atm-cg-title plate.
   const themeWash = document.createElement("img");
   themeWash.className = "atm-theme-wash";
   themeWash.id = "atm-theme-wash";
@@ -1045,13 +1052,7 @@ function ensureAtmosphere() {
   const zulrah = document.createElement("div");
   zulrah.className = "atm-zulrah";
   zulrah.id = "atm-zulrah";
-  const zulrahTitle = document.createElement("img");
-  zulrahTitle.className = "atm-zulrah-title atm-title-plate";
-  zulrahTitle.id = "atm-zulrah-title";
-  zulrahTitle.alt = "The money Snake";
-  zulrahTitle.src = depthPrefix() + "assets/themes/money-snake.webp";
-  zulrahTitle.onerror = function () { zulrahTitle.remove(); };
-  zulrah.appendChild(zulrahTitle);
+  // Integrated zulrah-scene wash has "The money Snake" baked in — no floating title plate.
   ATM_ZULRAH_FORMS.forEach(function (item) {
     const img = document.createElement("img");
     img.className = "atm-zulrah-form";
@@ -1101,13 +1102,13 @@ function setAtmCredit(mode) {
   if (!credit) return;
   const wiki = '<a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA)';
   if (mode === "cg") {
-    credit.innerHTML = 'Corrupted Gauntlet wash + title plate: Grok Imagine. Boss sprites from the ' + wiki + '. Fan utility — Jagex trademarks belong to Jagex Ltd.';
+    credit.innerHTML = 'Corrupted Gauntlet scene + title (The red prison): Grok Imagine. Boss sprites from the ' + wiki + '. Fan utility — Jagex trademarks belong to Jagex Ltd.';
   } else if (mode === "yama") {
     credit.innerHTML = 'Yama &amp; Judge of Yama from the ' + wiki + '. Floor glyphs styled after Glyph of Fire / Glyph of Shadow. Fan utility — Jagex trademarks belong to Jagex Ltd.';
   } else if (mode === "zulrah") {
-    credit.innerHTML = 'Zulrah forms from the ' + wiki + '. Title plate: The money Snake (Grok Imagine). Fan utility — Jagex trademarks belong to Jagex Ltd.';
+    credit.innerHTML = 'Zulrah scene + title (The money Snake): Grok Imagine. Forms from the ' + wiki + '. Fan utility — Jagex trademarks belong to Jagex Ltd.';
   } else if (mode === "theme") {
-    credit.innerHTML = 'Title / wash plates: Grok Imagine. Boss art from the ' + wiki + '. Fan utility — Jagex trademarks belong to Jagex Ltd.';
+    credit.innerHTML = 'Integrated scene + title washes: Grok Imagine. Boss art from the ' + wiki + '. Fan utility — Jagex trademarks belong to Jagex Ltd.';
   } else {
     credit.innerHTML = 'Boss art from the ' + wiki + '. Fan utility — Jagex trademarks belong to Jagex Ltd.';
   }
@@ -1118,19 +1119,24 @@ function applyThemeAssets(slug) {
   const theme = themeFor(slug);
   const washFile = themeWashFile(slug);
   const titleFile = themeTitleFile(slug);
-  // CG / Zulrah keep dedicated nodes; generic theme nodes cover future plates.
+  const integrated = hasAtmIntegratedWash(slug);
+  // CG uses dedicated atm-cg-wash; Zulrah/others use atm-theme-wash for integrated scenes.
   if (wash) {
     if (washFile && !isCgAtmosphere(slug)) {
-      wash.alt = "";
+      wash.alt = (theme && theme.title) || "";
       wash.src = depthPrefix() + "assets/themes/" + washFile;
       wash.classList.add("on");
+      if (integrated) wash.classList.add("integrated");
+      else wash.classList.remove("integrated");
     } else {
       wash.removeAttribute("src");
       wash.classList.remove("on");
+      wash.classList.remove("integrated");
     }
   }
   if (title) {
-    if (titleFile && !isCgAtmosphere(slug) && !isZulrahAtmosphere(slug)) {
+    // Floating title plate only when titleFile is set (not wash-baked integrated scenes).
+    if (titleFile && !integrated && !isCgAtmosphere(slug) && !isZulrahAtmosphere(slug)) {
       title.alt = (theme && theme.title) || "";
       title.src = depthPrefix() + "assets/themes/" + titleFile;
       title.classList.add("on");
@@ -1138,6 +1144,12 @@ function applyThemeAssets(slug) {
       title.removeAttribute("src");
       title.classList.remove("on");
     }
+  }
+  // Sync CG dedicated wash src from theme when present.
+  const cgWash = document.getElementById("atm-cg-wash");
+  if (cgWash && isCgAtmosphere(slug) && washFile) {
+    cgWash.src = depthPrefix() + "assets/themes/" + washFile;
+    cgWash.classList.add("integrated");
   }
   return !!(titleFile || washFile);
 }
@@ -1226,10 +1238,10 @@ function updateAtmosphere() {
     probe.src = next;
     return;
   }
-  document.body.dataset.atm = themeTitleFile(slug) ? "theme" : "";
+  document.body.dataset.atm = hasAtmTitlePlate(slug) ? "theme" : "";
   document.body.dataset.theme = slug;
   if (dt) dt.classList.remove("on");
-  setAtmCredit(themeTitleFile(slug) ? "theme" : "default");
+  setAtmCredit(hasAtmTitlePlate(slug) ? "theme" : "default");
   if (ATM_BOSSES.indexOf(slug) === -1) {
     hero.removeAttribute("src");
     hero.style.opacity = "0";

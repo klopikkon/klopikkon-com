@@ -47,7 +47,7 @@ h1{font-size:1.55rem;margin:.15rem 0 .35rem}
 .meter{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.15rem .55rem;align-items:center;margin-top:.65rem}
 .name{font-weight:650;display:flex;flex-wrap:wrap;gap:.35rem;align-items:baseline}
 .sub{color:var(--muted);font-size:.8rem}
-.track{grid-column:1 / -1;position:relative;height:1.7rem;background:#100e0c;border:1px solid #3a3128;border-radius:.35rem;overflow:hidden}
+.track{grid-column:1 / -1;position:relative;height:1.7rem;background:rgba(10,12,14,.92);border:1px solid #3a3128;border-radius:.35rem;overflow:hidden}
 .fill{position:absolute;inset:0 auto 0 0;border-radius:.3rem}
 .fill.dry{background:linear-gradient(90deg,#7a1d1d,#d64545)}
 .fill.cursed{background:linear-gradient(90deg,#4a0d0d,#ff4d4d)}
@@ -133,11 +133,12 @@ body::before{
 .atmosphere .atm-float[data-slug="cerberus"]{ right:5%; bottom:4%; left:auto; top:auto; animation-duration:34s; animation-delay:-15s; opacity:.4 }
 .atmosphere .atm-cg-wash{
   position:absolute; inset:0; width:100%; height:100%;
-  object-fit:cover; object-position:center;
+  object-fit:cover; object-position:center top;
   opacity:0; transition: opacity .5s ease;
-  filter:saturate(1.15) contrast(1.08) brightness(.72);
-  mask-image: linear-gradient(180deg, #000 35%, transparent 95%);
-  -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 95%);
+  filter:saturate(1.15) contrast(1.08) brightness(.78);
+  /* TOP stays strong so baked heading stays readable; soft-fade under cards */
+  mask-image: linear-gradient(180deg, #000 0%, #000 42%, rgba(0,0,0,.55) 62%, transparent 96%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 42%, rgba(0,0,0,.55) 62%, transparent 96%);
 }
 .atmosphere .atm-cg-title,
 .atmosphere .atm-theme-title,
@@ -162,14 +163,22 @@ body::before{
 }
 .atmosphere .atm-theme-wash{
   position:absolute; inset:0; width:100%; height:100%;
-  object-fit:cover; object-position:center;
+  object-fit:cover; object-position:center top;
   opacity:0; transition: opacity .5s ease;
-  filter:saturate(1.1) contrast(1.06) brightness(.74);
-  mask-image: linear-gradient(180deg, #000 35%, transparent 95%);
-  -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 95%);
+  filter:saturate(1.1) contrast(1.06) brightness(.78);
+  /* TOP strong for baked Imagine headings; soft-fade under cards */
+  mask-image: linear-gradient(180deg, #000 0%, #000 42%, rgba(0,0,0,.55) 62%, transparent 96%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 42%, rgba(0,0,0,.55) 62%, transparent 96%);
   pointer-events:none;
 }
-.atmosphere .atm-theme-wash.on{ opacity:.5 }
+.atmosphere .atm-theme-wash.on{ opacity:.55 }
+.atmosphere .atm-theme-wash.on.integrated{ opacity:.6 }
+/* No floating title plate when wash has baked heading */
+body[data-atm="theme"] .atmosphere .atm-theme-title{ opacity:0 !important }
+body[data-atm="theme"] .atmosphere .atm-theme-wash.on.integrated ~ .atm-theme-title,
+body[data-atm="zulrah"] .atmosphere .atm-theme-title{
+  display:none !important;
+}
 .atmosphere .atm-theme-title{
   filter: drop-shadow(0 0 16px rgba(0,0,0,.45));
 }
@@ -217,8 +226,8 @@ body[data-atm="cg"]::before{
     radial-gradient(circle at 75% 65%, rgba(160,20,40,.07), transparent 34%);
   box-shadow: inset 0 0 120px rgba(80,0,10,.55);
 }
-body[data-atm="cg"] .atmosphere .atm-cg-wash{ opacity:.55 }
-body[data-atm="cg"] .atmosphere .atm-cg-title{ opacity:1 }
+body[data-atm="cg"] .atmosphere .atm-cg-wash{ opacity:.62 }
+body[data-atm="cg"] .atmosphere .atm-cg-title{ opacity:0 !important; display:none !important }
 body[data-atm="cg"] .atmosphere .atm-float{ opacity:.08; filter:grayscale(.6) brightness(.7) }
 body[data-atm="cg"] .atmosphere .atm-hero{ opacity:0 !important }
 body[data-atm="cg"] .atmosphere .atm-dt{ display:none !important }
@@ -357,7 +366,12 @@ body[data-atm="zulrah"] .card > h1{
 .atmosphere .atm-zulrah-title{
   filter: drop-shadow(0 0 18px rgba(40,120,60,.35));
 }
-body[data-atm="zulrah"] .atmosphere .atm-zulrah-title{ opacity:.92 }
+body[data-atm="zulrah"] .atmosphere .atm-zulrah-title{ opacity:0 !important; display:none !important }
+/* Integrated Zulrah scene wash (title baked in) */
+body[data-atm="zulrah"] .atmosphere .atm-theme-wash.on{
+  opacity:.58;
+  object-position: center top;
+}
 .atmosphere .atm-zulrah-form{
   position:absolute;
   object-fit:contain; object-position:center;
@@ -434,18 +448,20 @@ body[data-atm="zulrah"] .update{
 body[data-atm="cg"] .wrap,
 body[data-atm="zulrah"] .wrap,
 body[data-atm="theme"] .wrap{
-  padding-top: clamp(8rem, 26vh, 13rem);
+  /* Slightly taller band — baked Imagine titles sit high in the wash */
+  padding-top: clamp(8.5rem, 28vh, 14rem);
 }
 body[data-atm="dt"] .wrap{
   padding-top: clamp(6.5rem, 16vh, 9rem);
 }
 
 .card{
-  background:rgba(16,21,28,.97);
-  border:1px solid rgba(232,195,106,.18);
-  box-shadow: 0 10px 36px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  /* See-through enough for integrated Imagine washes; text/bars stay readable */
+  background:rgba(16,21,28,.78);
+  border:1px solid rgba(232,195,106,.22);
+  box-shadow: 0 10px 36px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 .brand b{
   text-shadow: 0 0 18px rgba(232,195,106,.25);
@@ -510,7 +526,7 @@ h1{ letter-spacing:-.02em }
   body[data-atm="cg"] .wrap,
   body[data-atm="zulrah"] .wrap,
   body[data-atm="theme"] .wrap{
-    padding-top: clamp(6.5rem, 22vh, 10rem);
+    padding-top: clamp(7rem, 24vh, 11rem);
   }
   body[data-atm="dt"] .wrap{
     padding-top: clamp(5.5rem, 12vh, 7rem);
