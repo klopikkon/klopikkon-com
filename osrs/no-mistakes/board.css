@@ -8,6 +8,26 @@ button,select,input{font:inherit;color:inherit}
 .brand{letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-size:.72rem;font-weight:700}
 .brand b{display:block;color:var(--ink);letter-spacing:0;text-transform:none;font-size:1.35rem;margin-top:.1rem}
 .actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:flex-end;max-width:100%}
+/* Update + status live in aside — never overlap centered Imagine title plates */
+aside.card > .actions,
+aside > .actions{
+  justify-content:flex-start;
+  align-items:stretch;
+  flex-direction:column;
+  margin:0 0 .75rem;
+  width:100%;
+  max-width:100%;
+}
+aside.card > .actions .update,
+aside > .actions .update{
+  width:100%;
+  text-align:center;
+}
+aside.card > .actions .note,
+aside > .actions .note{
+  font-size:.8rem;
+  line-height:1.35;
+}
 .update{background:#243041;border:1px solid var(--line);border-radius:.7rem;padding:.45rem .8rem;cursor:pointer;font-weight:650}
 .update:disabled{opacity:.55;cursor:wait}
 .layout{display:grid;gap:1rem;min-width:0}
