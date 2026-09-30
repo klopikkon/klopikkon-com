@@ -627,15 +627,30 @@ h1{ letter-spacing:-.02em }
     left:auto !important; right:auto !important; top:auto !important; bottom:auto !important;
     object-position:center bottom;
   }
+  /* Phone: 2×2 under the baked title (full-width card covers true bottom corners). */
   .atmosphere .atm-gwd-boss,
   .atmosphere .atm-gwd-minion{
-    width:min(34vw, 22vh, 10rem); height:min(34vw, 22vh, 10rem);
-    max-width:36vw; max-height:24vh; opacity:.6;
+    width:min(26vw, 14vh, 6.75rem); height:min(26vw, 14vh, 6.75rem);
+    max-width:28vw; max-height:16vh; opacity:.78;
   }
-  .atmosphere .atm-gwd-minion[data-slot="0"]{ left:1%; top:clamp(4rem, 9vh, 5.5rem); }
-  .atmosphere .atm-gwd-minion[data-slot="1"]{ right:1%; top:clamp(4rem, 9vh, 5.5rem); }
-  .atmosphere .atm-gwd-minion[data-slot="2"]{ left:1%; bottom:8%; }
-  .atmosphere .atm-gwd-boss{ right:2%; bottom:clamp(3rem, 8vh, 5rem); }
+  .atmosphere .atm-gwd-minion[data-slot="0"]{
+    left:1%; top:clamp(5.75rem, 13vh, 7.25rem); right:auto; bottom:auto;
+  }
+  .atmosphere .atm-gwd-minion[data-slot="1"]{
+    right:1%; top:clamp(5.75rem, 13vh, 7.25rem); left:auto; bottom:auto;
+  }
+  .atmosphere .atm-gwd-minion[data-slot="2"]{
+    left:1%; top:clamp(11rem, 26vh, 14.5rem); right:auto; bottom:auto;
+  }
+  .atmosphere .atm-gwd-boss{
+    right:1%; top:clamp(11rem, 26vh, 14.5rem); left:auto; bottom:auto;
+  }
+  body[data-atm="gwd"] .atmosphere .atm-theme-wash.on.integrated{
+    /* Keep baked faction title fully in the top of the phone frame */
+    object-fit:cover;
+    object-position:center top;
+    opacity:.62;
+  }
   .atmosphere .atm-cg-title,
   .atmosphere .atm-theme-title,
   .atmosphere .atm-zulrah-title,
@@ -656,7 +671,8 @@ h1{ letter-spacing:-.02em }
     padding-top: clamp(12rem, 32vh, 16rem);
   }
   body[data-atm="gwd"] .wrap{
-    padding-top: clamp(10rem, 30vh, 14rem);
+    /* Title + 2×2 faction sprites clear above full-width cards */
+    padding-top: clamp(16rem, 44vh, 22rem);
   }
   .atmosphere .atm-zulrah-form[data-form="tanzanite"]{
     left:0; top:12%;
