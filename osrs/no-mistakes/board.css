@@ -183,7 +183,7 @@ body[data-atm="zulrah"] .atmosphere .atm-theme-title{
   filter: drop-shadow(0 0 16px rgba(0,0,0,.45));
 }
 .atmosphere .atm-theme-title.on{ opacity:.92 }
-body[data-atm="theme"] .card > .label:first-of-type,
+body[data-atm="theme"] .card > .label:first-of-type:not(.table-heading),
 body[data-atm="theme"] .card > h1{
   position:absolute !important;
   width:1px !important; height:1px !important;
@@ -363,13 +363,13 @@ body[data-atm="yama"] .atmosphere .atm-theme-title{
 
 
 /* Hide in-card region label + h1 when atmosphere supplies the heading */
-body[data-atm="cg"] .card > .label:first-of-type,
+body[data-atm="cg"] .card > .label:first-of-type:not(.table-heading),
 body[data-atm="cg"] .card > h1,
-body[data-atm="zulrah"] .card > .label:first-of-type,
+body[data-atm="zulrah"] .card > .label:first-of-type:not(.table-heading),
 body[data-atm="zulrah"] .card > h1,
-body[data-atm="dt"] .card > .label:first-of-type,
+body[data-atm="dt"] .card > .label:first-of-type:not(.table-heading),
 body[data-atm="dt"] .card > h1,
-body[data-atm="yama"] .card > .label:first-of-type,
+body[data-atm="yama"] .card > .label:first-of-type:not(.table-heading),
 body[data-atm="yama"] .card > h1{
   position:absolute !important;
   width:1px !important; height:1px !important;
@@ -523,6 +523,12 @@ h1{ letter-spacing:-.02em }
   font-weight:700;
   letter-spacing:.04em;
   text-shadow: 0 1px 2px rgba(0,0,0,.55);
+}
+.table-heading{
+  display:flex;
+  align-items:baseline;
+  flex-wrap:wrap;
+  gap:.35rem;
 }
 .kpi{
   background:rgba(15,20,26,.92);
