@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "62";
+const ASSET_V = "63";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -952,6 +952,21 @@ const ATM_GWD = {
   "commander-zilyana": ["starlight","growler","bree"],
   "kril-tsutsaroth": ["tstanon-karlak","zakln-gritch","balfrug-kreeyath"]
 };
+const ATM_COX = ["tekton","vasa-nistirio","vespula","great-olm"];
+const ATM_TOB = ["the-maiden-of-sugadinti","pestilent-bloat","nylocas-vasilias","sotetseg"];
+const ATM_TOA = ["akkha","ba-ba","kephri","zebak"];
+const ATM_ARAXXOR = ["araxyte","mirrorback-araxyte","ruptura-araxyte","acidic-araxyte"];
+const ATM_COLOSSEUM = ["jaguar-warrior","javelin-colossus","serpent-shaman","manticore"];
+const ATM_RAID = {
+  "chambers-of-xeric": ATM_COX,
+  "chambers-of-xeric-cm": ATM_COX,
+  "theatre-of-blood": ATM_TOB,
+  "theatre-of-blood-hm": ATM_TOB,
+  "tombs-of-amascut": ATM_TOA,
+  "tombs-of-amascut-expert": ATM_TOA,
+  "araxxor": ATM_ARAXXOR,
+  "sol-heredit": ATM_COLOSSEUM
+};
 const ATM_BOSSES = ["zulrah","alchemical-hydra","phantom-muspah","vorkath","cerberus","kraken","nightmare","nex","yama","araxxor","abyssal-sire","general-graardor","corporeal-beast","kalphite-queen","tzkal-zuk","thermonuclear-smoke-devil","kreearra","commander-zilyana","kril-tsutsaroth","grotesque-guardians","sol-heredit","the-hueycoatl","doom-of-mokhaiotl"];
 const ATM_FLOAT = ["zulrah","vorkath","cerberus"];
 /* Fine-tune within the shared viewport box (1 = fill box). */
@@ -1042,6 +1057,12 @@ function isZulrahAtmosphere(slug) {
 function isGwdAtmosphere(slug) {
   return Object.prototype.hasOwnProperty.call(ATM_GWD, slug);
 }
+function isRaidAtmosphere(slug) {
+  return Object.prototype.hasOwnProperty.call(ATM_RAID, slug);
+}
+function isKqAtmosphere(slug) {
+  return slug === "kalphite-queen";
+}
 function hasAtmTitlePlate(slug) {
   // washFile with baked title OR floating titleFile both supply the heading
   return !!(themeTitleFile(slug) || themeWashFile(slug));
@@ -1059,6 +1080,10 @@ const ATM_YAMA_EXTRA = [
 const ATM_ZULRAH_FORMS = [
   { form: "tanzanite", file: "zulrah-tanzanite.webp" },
   { form: "magma", file: "zulrah-magma.webp" }
+];
+const ATM_KQ_FORMS = [
+  { form: "crawling", file: "kalphite-queen-crawling.webp" },
+  { form: "flying", file: "kalphite-queen-flying.webp" }
 ];
 function ensureAtmosphere() {
   if (document.getElementById("atmosphere")) return;
@@ -1118,6 +1143,19 @@ function ensureAtmosphere() {
     zulrah.appendChild(img);
   });
   root.appendChild(zulrah);
+  const kq = document.createElement("div");
+  kq.className = "atm-kq";
+  kq.id = "atm-kq";
+  ATM_KQ_FORMS.forEach(function (item) {
+    const img = document.createElement("img");
+    img.className = "atm-kq-form";
+    img.alt = "";
+    img.dataset.form = item.form;
+    img.src = depthPrefix() + "assets/bosses/" + item.file;
+    img.onerror = function () { img.remove(); };
+    kq.appendChild(img);
+  });
+  root.appendChild(kq);
   const dt = document.createElement("div");
   dt.className = "atm-dt";
   dt.id = "atm-dt";
@@ -1151,6 +1189,18 @@ function ensureAtmosphere() {
     gwd.appendChild(img);
   }
   root.appendChild(gwd);
+  const raid = document.createElement("div");
+  raid.className = "atm-raid";
+  raid.id = "atm-raid";
+  for (let slot = 0; slot < 4; slot++) {
+    const img = document.createElement("img");
+    img.className = "atm-raid-boss";
+    img.alt = "";
+    img.dataset.slot = String(slot);
+    img.onerror = function () { img.remove(); };
+    raid.appendChild(img);
+  }
+  root.appendChild(raid);
   ATM_FLOAT.forEach(function (slug) {
     const img = document.createElement("img");
     img.className = "atm-float";
@@ -1236,12 +1286,16 @@ function updateAtmosphere() {
   const hero = document.getElementById("atm-hero");
   const dt = document.getElementById("atm-dt");
   const gwd = document.getElementById("atm-gwd");
+  const raid = document.getElementById("atm-raid");
   const yama = document.getElementById("atm-yama");
   const zulrah = document.getElementById("atm-zulrah");
+  const kq = document.getElementById("atm-kq");
   if (!hero) return;
   if (yama) yama.classList.remove("on");
   if (zulrah) zulrah.classList.remove("on");
+  if (kq) kq.classList.remove("on");
   if (gwd) gwd.classList.remove("on");
+  if (raid) raid.classList.remove("on");
   applyThemeAssets(slug);
   if (isCgAtmosphere(slug)) {
     document.body.dataset.atm = "cg";
@@ -1251,6 +1305,8 @@ function updateAtmosphere() {
     if (dt) dt.classList.remove("on");
     if (gwd) gwd.classList.remove("on");
     setAtmCredit("cg");
+    if (raid) raid.classList.remove("on");
+    if (kq) kq.classList.remove("on");
     return;
   }
   if (isDtAtmosphere(slug)) {
@@ -1260,6 +1316,8 @@ function updateAtmosphere() {
     hero.style.opacity = "0";
     if (dt) dt.classList.add("on");
     if (gwd) gwd.classList.remove("on");
+    if (raid) raid.classList.remove("on");
+    if (kq) kq.classList.remove("on");
     setAtmCredit(hasAtmIntegratedWash(slug) || hasAtmIntegratedWash("desert-treasure-ii") ? "theme" : "default");
     return;
   }
@@ -1268,14 +1326,11 @@ function updateAtmosphere() {
     document.body.dataset.theme = "zulrah";
     if (dt) dt.classList.remove("on");
     if (gwd) gwd.classList.remove("on");
+    if (raid) raid.classList.remove("on");
+    if (kq) kq.classList.remove("on");
     if (zulrah) zulrah.classList.add("on");
     setAtmCredit("zulrah");
-    // Integrated Zulrah scene already contains the boss and baked title; never stack hero art on it.
-    if (hasAtmIntegratedWash(slug)) {
-      hero.removeAttribute("src");
-      hero.style.opacity = "0";
-      return;
-    }
+    // Main serpentine on RIGHT (hero); tanzanite+magma LEFT via atm-zulrah-form. Keep money-snake wash.
     const next = depthPrefix() + "assets/bosses/zulrah-serpentine.webp";
     if (hero.getAttribute("src") === next) {
       hero.style.opacity = "";
@@ -1304,14 +1359,11 @@ function updateAtmosphere() {
     document.body.dataset.theme = "yama";
     if (dt) dt.classList.remove("on");
     if (gwd) gwd.classList.remove("on");
+    if (raid) raid.classList.remove("on");
+    if (kq) kq.classList.remove("on");
     if (yama) yama.classList.add("on");
     setAtmCredit("yama");
-    // Integrated Yama scene already contains the boss and baked title; never stack hero art on it.
-    if (hasAtmIntegratedWash(slug)) {
-      hero.removeAttribute("src");
-      hero.style.opacity = "0";
-      return;
-    }
+    // Full-body Yama on the RIGHT (hero); Judge left + glyphs bottom stay via atm-yama.
     const next = depthPrefix() + "assets/bosses/yama.webp";
     if (hero.getAttribute("src") === next) {
       hero.style.opacity = "";
@@ -1338,6 +1390,8 @@ function updateAtmosphere() {
     if (dt) dt.classList.remove("on");
     if (yama) yama.classList.remove("on");
     if (zulrah) zulrah.classList.remove("on");
+    if (raid) raid.classList.remove("on");
+    if (kq) kq.classList.remove("on");
     if (gwd) {
       gwd.classList.add("on");
       const bossImg = gwd.querySelector(".atm-gwd-boss");
@@ -1364,10 +1418,55 @@ function updateAtmosphere() {
     setAtmCredit(hasAtmIntegratedWash(slug) ? "theme" : "default");
     return;
   }
+  if (isKqAtmosphere(slug)) {
+    document.body.dataset.atm = "kq";
+    document.body.dataset.theme = "kalphite-queen";
+    if (dt) dt.classList.remove("on");
+    if (gwd) gwd.classList.remove("on");
+    if (raid) raid.classList.remove("on");
+    if (yama) yama.classList.remove("on");
+    if (zulrah) zulrah.classList.remove("on");
+    if (kq) kq.classList.add("on");
+    hero.removeAttribute("src");
+    hero.style.opacity = "0";
+    setAtmCredit(hasAtmIntegratedWash(slug) ? "theme" : "default");
+    return;
+  }
+  if (isRaidAtmosphere(slug)) {
+    document.body.dataset.atm = "raid";
+    document.body.dataset.theme = slug;
+    if (dt) dt.classList.remove("on");
+    if (gwd) gwd.classList.remove("on");
+    if (yama) yama.classList.remove("on");
+    if (zulrah) zulrah.classList.remove("on");
+    if (kq) kq.classList.remove("on");
+    if (raid) {
+      raid.classList.add("on");
+      const bosses = ATM_RAID[slug] || [];
+      const prefix = depthPrefix() + "assets/bosses/";
+      raid.querySelectorAll(".atm-raid-boss").forEach(function (img) {
+        const slot = Number(img.dataset.slot);
+        const bSlug = bosses[slot];
+        if (bSlug) {
+          img.dataset.slug = bSlug;
+          img.src = prefix + bSlug + ".webp";
+        } else {
+          img.removeAttribute("src");
+          img.removeAttribute("data-slug");
+        }
+      });
+    }
+    hero.removeAttribute("src");
+    hero.style.opacity = "0";
+    setAtmCredit(hasAtmIntegratedWash(slug) ? "theme" : "default");
+    return;
+  }
   document.body.dataset.atm = hasAtmTitlePlate(slug) ? "theme" : "";
   document.body.dataset.theme = slug;
   if (dt) dt.classList.remove("on");
   if (gwd) gwd.classList.remove("on");
+  if (raid) raid.classList.remove("on");
+  if (kq) kq.classList.remove("on");
   setAtmCredit(hasAtmTitlePlate(slug) ? "theme" : "default");
   if (ATM_BOSSES.indexOf(slug) === -1) {
     hero.removeAttribute("src");
