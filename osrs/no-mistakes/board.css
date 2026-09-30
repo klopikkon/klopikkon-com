@@ -207,6 +207,52 @@ body[data-atm="cg"] .update{
 }
 body[data-atm="dt"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="dt"] .atmosphere .atm-hero{ opacity:0 !important }
+.atmosphere .atm-yama{
+  display:none;
+  position:absolute; inset:0;
+  pointer-events:none;
+}
+.atmosphere .atm-yama.on{ display:block }
+.atmosphere .atm-yama-judge{
+  position:absolute; left:1%; top:8%;
+  width:min(24vw, 32vh, 15rem);
+  height:min(30vw, 40vh, 18rem);
+  max-width:28vw; max-height:44vh;
+  object-fit:contain; object-position:center bottom;
+  opacity:.7;
+  filter:saturate(1.1) contrast(1.12) brightness(1.08);
+  mask-image: radial-gradient(circle at 50% 40%, #000 45%, transparent 82%);
+  -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 45%, transparent 82%);
+  animation: atm-drift 34s ease-in-out infinite;
+}
+.atmosphere .atm-yama-glyph{
+  position:absolute;
+  width:min(14vw, 16vh, 9rem);
+  height:min(14vw, 16vh, 9rem);
+  object-fit:contain;
+  opacity:.55;
+  filter:drop-shadow(0 0 18px rgba(0,0,0,.35));
+  animation: atm-drift 40s ease-in-out infinite;
+}
+.atmosphere .atm-yama-glyph-fire{
+  left:4%; bottom:10%; right:auto; top:auto;
+  animation-delay:-8s;
+  filter:drop-shadow(0 0 16px rgba(220,80,20,.35));
+}
+.atmosphere .atm-yama-glyph-shadow{
+  right:8%; bottom:16%; left:auto; top:auto;
+  animation-delay:-18s;
+  filter:drop-shadow(0 0 16px rgba(90,40,160,.35));
+}
+body[data-atm="yama"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
+body[data-atm="yama"] .atmosphere .atm-dt{ display:none !important }
+body[data-atm="yama"] .atmosphere .atm-hero{
+  opacity:.72;
+  right:0; top:4%;
+  width:min(46vw, 58vh, 30rem);
+  height:min(46vw, 58vh, 30rem);
+  max-width:50vw; max-height:62vh;
+}
 @keyframes atm-drift{
   0%,100%{ transform: translateY(0) rotate(-2deg) scale(var(--atm-scale, 1)) }
   50%{ transform: translateY(-12px) rotate(3deg) scale(var(--atm-scale, 1)) }
@@ -275,4 +321,15 @@ h1{ letter-spacing:-.02em }
     font-size: clamp(1.8rem, 11vw, 3.2rem);
   }
   body[data-atm="cg"] .atmosphere .atm-cg-wash{ opacity:.45 }
+  .atmosphere .atm-yama-judge{
+    width:min(36vw, 28vh, 11rem); height:min(44vw, 34vh, 13rem);
+    max-width:40vw; max-height:38vh; left:0; top:4%; opacity:.6;
+  }
+  .atmosphere .atm-yama-glyph{
+    width:min(22vw, 14vh, 7rem); height:min(22vw, 14vh, 7rem); opacity:.45;
+  }
+  body[data-atm="yama"] .atmosphere .atm-hero{
+    width:min(72vw, 48vh, 22rem); height:min(72vw, 48vh, 22rem);
+    max-width:78vw; max-height:52vh; right:-6%; top:2%; opacity:.6;
+  }
 }
