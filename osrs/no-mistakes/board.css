@@ -265,10 +265,10 @@ body[data-atm="cg"] .update{
 .atmosphere .atm-dt.on{ display:block }
 .atmosphere .atm-dt-boss{
   position:absolute;
-  /* ~70–80px at 1280 — stays in page-edge gutter beside sidebar/card */
-  width:min(5.75vw, 10vh, 4.75rem);
-  height:min(5.75vw, 10vh, 4.75rem);
-  max-width:5rem; max-height:5rem;
+  /* Enlarged set (~120px at 1280); square box + contain = natural aspect */
+  width:min(8.75vw, 15vh, 7.5rem);
+  height:min(8.75vw, 15vh, 7.5rem);
+  max-width:7.75rem; max-height:7.75rem;
   object-fit:contain;
   object-position:center bottom;
   opacity:.9;
@@ -283,29 +283,29 @@ body[data-atm="cg"] .update{
 /* LEFT: Duke top, Whisperer mid — clear of sidebar + Four awakenings */
 .atmosphere .atm-dt-boss[data-slug="duke-sucellus"],
 .atmosphere .atm-dt-boss[data-corner="left-top"]{
-  left:0.35%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+  left:0.15%; top:clamp(5.75rem, 12.5vh, 8.25rem); right:auto; bottom:auto;
   object-position:center;
 }
 .atmosphere .atm-dt-boss[data-slug="the-whisperer"],
 .atmosphere .atm-dt-boss[data-corner="left-mid"]{
-  left:0.35%; top:44%; right:auto; bottom:auto;
-  width:min(5.25vw, 9vh, 4.35rem);
-  height:min(5.25vw, 9vh, 4.35rem);
-  max-width:4.5rem; max-height:4.5rem;
+  left:0.15%; top:46%; right:auto; bottom:auto;
+  width:min(8.25vw, 14vh, 7rem);
+  height:min(8.25vw, 14vh, 7rem);
+  max-width:7.25rem; max-height:7.25rem;
   object-position:center bottom;
 }
 /* RIGHT: Leviathan top, Vardorvis mid — clear of drop card */
 .atmosphere .atm-dt-boss[data-slug="the-leviathan"],
 .atmosphere .atm-dt-boss[data-corner="right-top"]{
-  right:0.35%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
+  right:0.15%; top:clamp(5.75rem, 12.5vh, 8.25rem); left:auto; bottom:auto;
   object-position:center;
 }
 .atmosphere .atm-dt-boss[data-slug="vardorvis"],
 .atmosphere .atm-dt-boss[data-corner="right-mid"]{
-  right:0.35%; top:48%; left:auto; bottom:auto;
-  width:min(5.25vw, 9vh, 4.35rem);
-  height:min(5.25vw, 9vh, 4.35rem);
-  max-width:4.5rem; max-height:4.5rem;
+  right:0.15%; top:50%; left:auto; bottom:auto;
+  width:min(8.25vw, 14vh, 7rem);
+  height:min(8.25vw, 14vh, 7rem);
+  max-width:7.25rem; max-height:7.25rem;
   object-position:center bottom;
 }
 /* Hide colliding brand on DT (helps Four awakenings title band). */
@@ -445,21 +445,26 @@ body[data-atm="raid"] .wrap{
 .atmosphere .atm-kq.on{ display:block }
 .atmosphere .atm-kq-form{
   position:absolute;
-  width:min(28vw, 36vh, 17rem);
-  height:min(28vw, 36vh, 17rem);
-  max-width:30vw; max-height:40vh;
+  /* DT gutter lesson: fit ~(100vw-1020px)/2 at ~1280 — clear of sidebar/card */
+  width:min(5.75vw, 10vh, 4.75rem);
+  height:min(5.75vw, 10vh, 4.75rem);
+  max-width:5rem; max-height:5rem;
   object-fit:contain; object-position:center bottom;
-  opacity:.78;
-  filter:saturate(1.12) contrast(1.12) brightness(1.08);
-  mask-image: radial-gradient(circle at 50% 45%, #000 50%, transparent 86%);
-  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 50%, transparent 86%);
+  opacity:.88;
+  filter:saturate(1.15) contrast(1.18) brightness(1.2) drop-shadow(0 0 14px rgba(0,0,0,.85));
+  mask-image:none;
+  -webkit-mask-image:none;
   animation:none !important;
 }
 .atmosphere .atm-kq-form[data-form="crawling"]{
+  /* LEFT gutter — smaller + top-based like DT; clear of sidebar */
   left:0.35%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+  object-position:center;
 }
 .atmosphere .atm-kq-form[data-form="flying"]{
+  /* RIGHT gutter — match crawler size so both stay in gutters */
   right:0.35%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
+  object-position:center;
 }
 /* Hide colliding brand on KQ (crawler sits in brand band). */
 body[data-atm="kq"] .brand{ display:none !important }
@@ -484,6 +489,8 @@ body[data-atm="kq"] .card > h1{
   white-space:nowrap !important; border:0 !important;
 }
 body[data-atm="kq"] .wrap{
+  /* Narrow wrap widens side gutters so crawler/flyer clear sidebar/card at ~1280. */
+  max-width:980px;
   padding-top: clamp(12rem, 30vh, 17rem);
 }
 
@@ -538,13 +545,18 @@ body[data-atm="yama"] .atmosphere .atm-gwd{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-raid{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-kq{ display:none !important }
 body[data-atm="yama"] .atmosphere .atm-hero{
-  /* Full-body Yama on the RIGHT — clear of title band, Judge, bottom glyphs */
-  opacity:.82 !important;
-  right:1%; left:auto; top:clamp(5.5rem, 12vh, 8rem); bottom:auto;
-  width:min(34vw, 48vh, 22rem);
-  height:min(40vw, 56vh, 26rem);
-  max-width:38vw; max-height:58vh;
-  object-position:center bottom;
+  /* Full-body Yama RIGHT — clear of drop card; natural aspect via contain */
+  opacity:.9 !important;
+  right:0.15%; left:auto; top:clamp(5.75rem, 12.5vh, 8.25rem); bottom:auto;
+  width:min(11vw, 20vh, 9.5rem);
+  height:min(11vw, 20vh, 9.5rem);
+  max-width:10rem; max-height:10rem;
+  object-fit:contain;
+  object-position:center;
+  mask-image:none;
+  -webkit-mask-image:none;
+  animation:none !important;
+  transform:none;
   z-index:1;
 }
 /* Integrated wash under DT four-boss band / Yama glyphs (title baked in) */
@@ -607,22 +619,28 @@ body[data-atm="zulrah"] .atmosphere .atm-theme-wash.on{
   transform-origin:center center;
 }
 .atmosphere .atm-zulrah-form[data-form="tanzanite"]{
-  /* LEFT top — gutter-sized; clear of sidebar + title band */
-  left:0.35%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
-  width:min(6.5vw, 12vh, 5.5rem);
-  height:min(6.5vw, 12vh, 5.5rem);
-  max-width:5.75rem; max-height:5.75rem;
-  opacity:.86;
+  /* LEFT top — enlarged set scale; square+contain = natural aspect; clear sidebar */
+  left:0.15%; top:clamp(5.75rem, 12.5vh, 8.25rem); right:auto; bottom:auto;
+  width:min(10vw, 18vh, 8.5rem);
+  height:min(10vw, 18vh, 8.5rem);
+  max-width:8.75rem; max-height:8.75rem;
+  opacity:.88;
   animation:none !important;
+  object-fit:contain;
+  mask-image:none;
+  -webkit-mask-image:none;
 }
 .atmosphere .atm-zulrah-form[data-form="magma"]{
-  /* LEFT mid — top:% (not bottom:) with vertical gap below tanzanite; full in gutter */
-  left:0.35%; top:48%; right:auto; bottom:auto;
-  width:min(6.25vw, 11vh, 5.25rem);
-  height:min(6.25vw, 11vh, 5.25rem);
-  max-width:5.5rem; max-height:5.5rem;
-  opacity:.84;
+  /* LEFT mid — same set scale as tanzanite; vertical gap; clear sidebar/card */
+  left:0.15%; top:50%; right:auto; bottom:auto;
+  width:min(10vw, 18vh, 8.5rem);
+  height:min(10vw, 18vh, 8.5rem);
+  max-width:8.75rem; max-height:8.75rem;
+  opacity:.86;
   animation:none !important;
+  object-fit:contain;
+  mask-image:none;
+  -webkit-mask-image:none;
 }
 body[data-atm="zulrah"]{
   background:
@@ -644,13 +662,18 @@ body[data-atm="zulrah"] .atmosphere .atm-gwd{ display:none !important }
 body[data-atm="zulrah"] .atmosphere .atm-raid{ display:none !important }
 body[data-atm="zulrah"] .atmosphere .atm-kq{ display:none !important }
 body[data-atm="zulrah"] .atmosphere .atm-hero{
-  /* Main serpentine form on the RIGHT */
-  opacity:.84 !important;
-  right:1%; left:auto; top:clamp(5.5rem, 12vh, 8rem); bottom:auto;
-  width:min(38vw, 50vh, 24rem);
-  height:min(38vw, 50vh, 24rem);
-  max-width:42vw; max-height:54vh;
-  object-position:center bottom;
+  /* Main serpentine RIGHT hero — largest of the three; clear of drop card; natural aspect */
+  opacity:.9 !important;
+  right:0.15%; left:auto; top:clamp(5.75rem, 12.5vh, 8.25rem); bottom:auto;
+  width:min(12vw, 22vh, 10.5rem);
+  height:min(12vw, 22vh, 10.5rem);
+  max-width:11rem; max-height:11rem;
+  object-fit:contain;
+  object-position:center;
+  mask-image:none;
+  -webkit-mask-image:none;
+  animation:none !important;
+  transform:none;
 }
 body[data-atm="zulrah"] .card{
   border-color: rgba(90,180,100,.26);
@@ -686,14 +709,13 @@ body[data-atm="theme"] .wrap{
 }
 body[data-atm="zulrah"] .wrap,
 body[data-atm="yama"] .wrap{
-  /* Tall title band + slightly narrower wrap for left-column gutters at ~1280. */
-  max-width:1020px;
+  /* Tall title band; wrap 980 widens gutters for larger Zulrah trio / Yama hero. */
+  max-width:980px;
   padding-top: clamp(12rem, 36vh, 18rem);
 }
 body[data-atm="dt"] .wrap{
-  /* Corners sit in atmosphere; title band only — closer to other theme pads.
-     Slightly narrower wrap widens side gutters so mid sprites clear cards at ~1280. */
-  max-width:1020px;
+  /* Narrower wrap (~980) widens gutters so enlarged DT corners clear cards at ~1280. */
+  max-width:980px;
   padding-top: clamp(12rem, 30vh, 17rem);
 }
 body[data-atm="gwd"] .wrap{
