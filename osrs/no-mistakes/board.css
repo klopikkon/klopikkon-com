@@ -360,38 +360,54 @@ body[data-atm="gwd"] .atmosphere .atm-yama{ display:none !important }
 body[data-atm="gwd"] .atmosphere .atm-raid{ display:none !important }
 body[data-atm="gwd"] .atmosphere .atm-kq{ display:none !important }
 
-/* Raid / Araxxor / Colosseum corners — 4 peer sprites, clear of baked title */
+/* Raid / Araxxor / Colosseum corners — DT gutter lesson: fit ~(100vw-1020px)/2
+   at ~1280 (~130px). Mid pair uses top:% (not bottom:) so sprites clear glass
+   cards. Never inset:auto after left/top. */
 .atmosphere .atm-raid{
   display:none;
   position:absolute; inset:0;
   pointer-events:none;
-  z-index:1;
+  z-index:2;
 }
 .atmosphere .atm-raid.on{ display:block }
 .atmosphere .atm-raid-boss{
   position:absolute;
-  width:min(20vw, 26vh, 12.5rem);
-  height:min(20vw, 26vh, 12.5rem);
-  max-width:22vw; max-height:28vh;
+  /* ~70–80px at 1280 — stays in page-edge gutter beside sidebar/card */
+  width:min(5.75vw, 10vh, 4.75rem);
+  height:min(5.75vw, 10vh, 4.75rem);
+  max-width:5rem; max-height:5rem;
   object-fit:contain; object-position:center bottom;
-  opacity:.74;
-  filter:saturate(1.12) contrast(1.15) brightness(1.1);
+  opacity:.88;
+  filter:saturate(1.15) contrast(1.18) brightness(1.2) drop-shadow(0 0 14px rgba(0,0,0,.85));
   animation:none !important;
   transform:none;
-  mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
-  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
+  transform-origin:center bottom;
+  mask-image:none;
+  -webkit-mask-image:none;
 }
+/* TOP pair */
 .atmosphere .atm-raid-boss[data-slot="0"]{
-  left:1%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+  left:0.35%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+  object-position:center;
 }
 .atmosphere .atm-raid-boss[data-slot="1"]{
-  right:2%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
+  right:0.35%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
+  object-position:center;
 }
+/* LOWER pair — top:% mid gutters (not bottom:) so they clear sidebar + drop card */
 .atmosphere .atm-raid-boss[data-slot="2"]{
-  left:2%; bottom:clamp(4rem, 10vh, 7rem); right:auto; top:auto;
+  left:0.35%; top:44%; right:auto; bottom:auto;
+  width:min(5.25vw, 9vh, 4.35rem);
+  height:min(5.25vw, 9vh, 4.35rem);
+  max-width:4.5rem; max-height:4.5rem;
+  object-position:center bottom;
 }
 .atmosphere .atm-raid-boss[data-slot="3"]{
-  right:2%; bottom:clamp(4rem, 10vh, 7rem); left:auto; top:auto;
+  right:0.35%; top:48%; left:auto; bottom:auto;
+  width:min(5.25vw, 9vh, 4.35rem);
+  height:min(5.25vw, 9vh, 4.35rem);
+  max-width:4.5rem; max-height:4.5rem;
+  object-position:center bottom;
 }
 body[data-atm="raid"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="raid"] .atmosphere .atm-hero{ opacity:0 !important }
@@ -414,6 +430,8 @@ body[data-atm="raid"] .card > h1{
   white-space:nowrap !important; border:0 !important;
 }
 body[data-atm="raid"] .wrap{
+  /* Narrow wrap widens side gutters so mid sprites clear cards at ~1280. */
+  max-width:1020px;
   padding-top: clamp(12rem, 30vh, 17rem);
 }
 
@@ -438,11 +456,13 @@ body[data-atm="raid"] .wrap{
   animation:none !important;
 }
 .atmosphere .atm-kq-form[data-form="crawling"]{
-  left:1%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+  left:0.35%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
 }
 .atmosphere .atm-kq-form[data-form="flying"]{
-  right:2%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
+  right:0.35%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
 }
+/* Hide colliding brand on KQ (crawler sits in brand band). */
+body[data-atm="kq"] .brand{ display:none !important }
 body[data-atm="kq"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="kq"] .atmosphere .atm-hero{ opacity:0 !important }
 body[data-atm="kq"] .atmosphere .atm-dt{ display:none !important }
@@ -475,48 +495,41 @@ body[data-atm="kq"] .wrap{
 }
 .atmosphere .atm-yama.on{ display:block }
 .atmosphere .atm-yama-judge{
-  /* Left column — same horizontal center as fire glyph below */
-  position:absolute; left:2%; top:clamp(5.5rem, 12vh, 8rem);
-  width:min(22vw, 30vh, 13.5rem);
-  height:min(28vw, 38vh, 17rem);
-  max-width:26vw; max-height:42vh;
+  /* Left column gutter — clear of sidebar; glyphs stack below on same left edge */
+  position:absolute; left:0.35%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+  width:min(7.5vw, 14vh, 6.5rem);
+  height:min(9.5vw, 18vh, 8rem);
+  max-width:6.75rem; max-height:8.25rem;
   object-fit:contain; object-position:center bottom;
-  opacity:.72;
-  filter:saturate(1.1) contrast(1.12) brightness(1.08);
-  mask-image: radial-gradient(circle at 50% 40%, #000 45%, transparent 82%);
-  -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 45%, transparent 82%);
-  animation: atm-drift 34s ease-in-out infinite;
+  opacity:.82;
+  filter:saturate(1.12) contrast(1.15) brightness(1.12) drop-shadow(0 0 14px rgba(0,0,0,.85));
+  mask-image:none;
+  -webkit-mask-image:none;
+  animation: none !important;
   z-index: 0;
 }
 .atmosphere .atm-yama-glyph{
-  /* Shared bottom baseline; fire sits under Judge, shadow under Yama hero */
+  /* Left column under Judge — top:% mid (not bottom:) clears glass cards */
   position:absolute;
-  width:min(11vw, 13vh, 7rem);
-  height:min(11vw, 13vh, 7rem);
-  max-width:7rem; max-height:7rem;
+  left:0.35% !important; right:auto !important;
+  width:min(5.25vw, 9vh, 4.35rem);
+  height:min(5.25vw, 9vh, 4.35rem);
+  max-width:4.5rem; max-height:4.5rem;
   object-fit:contain; object-position:center bottom;
-  opacity:.62;
-  filter:drop-shadow(0 0 18px rgba(0,0,0,.35));
-  bottom: clamp(3.5rem, 9vh, 6rem) !important;
-  top: auto !important;
+  opacity:.78;
+  filter:drop-shadow(0 0 14px rgba(0,0,0,.55));
+  bottom: auto !important;
   animation: none !important;
   transform: none !important;
   z-index: 1;
 }
 .atmosphere .atm-yama-glyph-fire{
-  /* Center under Judge (Judge left:2% + ~11vw half ≈ glyph left ~2% with smaller box) */
-  left:2% !important; right:auto !important;
-  width:min(14vw, 16vh, 8.5rem) !important;
-  height:min(14vw, 16vh, 8.5rem) !important;
-  max-width:8.5rem !important; max-height:8.5rem !important;
-  filter:drop-shadow(0 0 16px rgba(220,80,20,.35));
+  top:40% !important;
+  filter:drop-shadow(0 0 14px rgba(220,80,20,.4));
 }
 .atmosphere .atm-yama-glyph-shadow{
-  right:2% !important; left:auto !important;
-  width:min(14vw, 16vh, 8.5rem) !important;
-  height:min(14vw, 16vh, 8.5rem) !important;
-  max-width:8.5rem !important; max-height:8.5rem !important;
-  filter:drop-shadow(0 0 16px rgba(90,40,160,.35));
+  top:56% !important;
+  filter:drop-shadow(0 0 14px rgba(90,40,160,.4));
 }
 body[data-atm="yama"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="yama"] .atmosphere .atm-dt{ display:none !important }
@@ -594,18 +607,22 @@ body[data-atm="zulrah"] .atmosphere .atm-theme-wash.on{
   transform-origin:center center;
 }
 .atmosphere .atm-zulrah-form[data-form="tanzanite"]{
-  left:1%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
-  width:min(18vw, 24vh, 12rem);
-  height:min(18vw, 24vh, 12rem);
-  opacity:.78;
-  animation-duration:34s; animation-delay:-5s;
+  /* LEFT top — gutter-sized; clear of sidebar + title band */
+  left:0.35%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+  width:min(6.5vw, 12vh, 5.5rem);
+  height:min(6.5vw, 12vh, 5.5rem);
+  max-width:5.75rem; max-height:5.75rem;
+  opacity:.86;
+  animation:none !important;
 }
 .atmosphere .atm-zulrah-form[data-form="magma"]{
-  left:2%; top:auto; right:auto; bottom:clamp(4rem, 12vh, 8rem);
-  width:min(17vw, 22vh, 11rem);
-  height:min(17vw, 22vh, 11rem);
-  opacity:.76;
-  animation-duration:36s; animation-delay:-12s;
+  /* LEFT mid — top:% (not bottom:) with vertical gap below tanzanite; full in gutter */
+  left:0.35%; top:48%; right:auto; bottom:auto;
+  width:min(6.25vw, 11vh, 5.25rem);
+  height:min(6.25vw, 11vh, 5.25rem);
+  max-width:5.5rem; max-height:5.5rem;
+  opacity:.84;
+  animation:none !important;
 }
 body[data-atm="zulrah"]{
   background:
@@ -663,10 +680,14 @@ body[data-atm="zulrah"] .update{
 
 /* Reserve top band so FULL baked Imagine titles + DT boss row sit ABOVE cards */
 body[data-atm="cg"] .wrap,
-body[data-atm="zulrah"] .wrap,
-body[data-atm="yama"] .wrap,
 body[data-atm="theme"] .wrap{
   /* Tall band — two-line baked titles clear main cards AND aside chrome */
+  padding-top: clamp(12rem, 36vh, 18rem);
+}
+body[data-atm="zulrah"] .wrap,
+body[data-atm="yama"] .wrap{
+  /* Tall title band + slightly narrower wrap for left-column gutters at ~1280. */
+  max-width:1020px;
   padding-top: clamp(12rem, 36vh, 18rem);
 }
 body[data-atm="dt"] .wrap{
@@ -843,6 +864,23 @@ h1{ letter-spacing:-.02em }
     /* Title + lowered 2×2 clear above cards (row2+sprite ≈20rem on short phones). */
     padding-top: clamp(22rem, 56vh, 30rem);
   }
+  /* Phone OK to fail for raid corners — keep absolute slots, smaller sprites. */
+  .atmosphere .atm-raid-boss{
+    width:min(18vw, 12vh, 5.5rem); height:min(18vw, 12vh, 5.5rem);
+    max-width:5.75rem; max-height:5.75rem; opacity:.82;
+  }
+  .atmosphere .atm-raid-boss[data-slot="0"]{
+    left:0.35%; top:clamp(4.5rem, 10vh, 6.5rem); right:auto; bottom:auto;
+  }
+  .atmosphere .atm-raid-boss[data-slot="1"]{
+    right:0.35%; top:clamp(4.5rem, 10vh, 6.5rem); left:auto; bottom:auto;
+  }
+  .atmosphere .atm-raid-boss[data-slot="2"]{
+    left:0.35%; top:44%; right:auto; bottom:auto;
+  }
+  .atmosphere .atm-raid-boss[data-slot="3"]{
+    right:0.35%; top:48%; left:auto; bottom:auto;
+  }
   .atmosphere .atm-zulrah-form[data-form="tanzanite"]{
     left:0; top:12%;
     width:min(28vw, 18vh, 9rem); height:min(28vw, 18vh, 9rem); opacity:.7;
@@ -857,18 +895,20 @@ h1{ letter-spacing:-.02em }
   }
   body[data-atm="cg"] .atmosphere .atm-cg-wash{ opacity:.45 }
   .atmosphere .atm-yama-judge{
-    width:min(36vw, 28vh, 11rem); height:min(44vw, 34vh, 13rem);
-    max-width:40vw; max-height:38vh; left:0; top:4%; opacity:.6;
+    width:min(22vw, 14vh, 6.5rem); height:min(28vw, 18vh, 8rem);
+    max-width:7rem; max-height:8.5rem; left:0.35%; top:4%; right:auto; bottom:auto; opacity:.7;
   }
   .atmosphere .atm-yama-glyph{
-    width:min(18vw, 11vh, 5.5rem); height:min(18vw, 11vh, 5.5rem);
-    max-width:5.5rem; max-height:5.5rem;
+    left:0.35% !important; right:auto !important;
+    width:min(16vw, 10vh, 5rem); height:min(16vw, 10vh, 5rem);
+    max-width:5rem; max-height:5rem;
     opacity:.55;
-    bottom:10% !important;
-    top:auto !important;
+    bottom:auto !important;
     animation:none !important;
     transform:none !important;
   }
+  .atmosphere .atm-yama-glyph-fire{ top:36% !important; }
+  .atmosphere .atm-yama-glyph-shadow{ top:52% !important; }
   body[data-atm="yama"] .atmosphere .atm-hero{
     width:min(64vw, 42vh, 18rem); height:min(64vw, 42vh, 18rem);
     max-width:70vw; max-height:46vh; right:-6%; top:2%; opacity:.6;

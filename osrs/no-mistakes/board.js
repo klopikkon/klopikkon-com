@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "64";
+const ASSET_V = "65";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
