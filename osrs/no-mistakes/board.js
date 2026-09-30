@@ -882,12 +882,27 @@ const ATM_SCALE = {
 function isDtAtmosphere(slug) {
   return slug === "desert-treasure-ii" || ATM_DT.indexOf(slug) !== -1;
 }
+function isCgAtmosphere(slug) {
+  return slug === "the-corrupted-gauntlet";
+}
 function ensureAtmosphere() {
   if (document.getElementById("atmosphere")) return;
   const root = document.createElement("div");
   root.id = "atmosphere";
   root.className = "atmosphere";
   root.setAttribute("aria-hidden", "true");
+  const wash = document.createElement("img");
+  wash.className = "atm-cg-wash";
+  wash.id = "atm-cg-wash";
+  wash.alt = "";
+  wash.src = depthPrefix() + "assets/themes/red-prison.webp";
+  wash.onerror = function () { wash.remove(); };
+  root.appendChild(wash);
+  const title = document.createElement("div");
+  title.className = "atm-cg-title";
+  title.id = "atm-cg-title";
+  title.textContent = "The red prison";
+  root.appendChild(title);
   const hero = document.createElement("img");
   hero.className = "atm-hero";
   hero.id = "atm-hero";
@@ -921,9 +936,19 @@ function ensureAtmosphere() {
   if (!document.querySelector(".atm-credit")) {
     const credit = document.createElement("p");
     credit.className = "atm-credit";
+    credit.id = "atm-credit";
     credit.innerHTML = 'Boss art from the <a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA). Fan utility — Jagex trademarks belong to Jagex Ltd.';
     const wrap = document.querySelector(".wrap");
     if (wrap) wrap.appendChild(credit);
+  }
+}
+function setAtmCredit(mode) {
+  const credit = document.getElementById("atm-credit") || document.querySelector(".atm-credit");
+  if (!credit) return;
+  if (mode === "cg") {
+    credit.innerHTML = 'Corrupted Gauntlet backdrop: generated art (Grok Imagine). Boss sprites from the <a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA). Fan utility — Jagex trademarks belong to Jagex Ltd.';
+  } else {
+    credit.innerHTML = 'Boss art from the <a href="https://oldschool.runescape.wiki/" rel="noopener noreferrer" target="_blank">Old School RuneScape Wiki</a> (CC BY-NC-SA). Fan utility — Jagex trademarks belong to Jagex Ltd.';
   }
 }
 function updateAtmosphere() {
@@ -933,15 +958,25 @@ function updateAtmosphere() {
   const hero = document.getElementById("atm-hero");
   const dt = document.getElementById("atm-dt");
   if (!hero) return;
+  if (isCgAtmosphere(slug)) {
+    document.body.dataset.atm = "cg";
+    hero.removeAttribute("src");
+    hero.style.opacity = "0";
+    if (dt) dt.classList.remove("on");
+    setAtmCredit("cg");
+    return;
+  }
   if (isDtAtmosphere(slug)) {
     document.body.dataset.atm = "dt";
     hero.removeAttribute("src");
     hero.style.opacity = "0";
     if (dt) dt.classList.add("on");
+    setAtmCredit("default");
     return;
   }
   document.body.dataset.atm = "";
   if (dt) dt.classList.remove("on");
+  setAtmCredit("default");
   if (ATM_BOSSES.indexOf(slug) === -1) {
     hero.removeAttribute("src");
     hero.style.opacity = "0";

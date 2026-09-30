@@ -107,10 +107,71 @@ body::before{
   /* fallback park off-pile if a float lacks nth rules */
   left: auto; right: 2%; top: auto; bottom: 40%;
 }
-/* children: 1=hero, 2=atm-dt, 3–5=floats (no kraken). Size from .atm-float. */
-.atmosphere .atm-float:nth-child(3){ left:2%; top:12%; right:auto; bottom:auto; animation-duration:32s; animation-delay:-4s; opacity:.4 } /* zulrah */
-.atmosphere .atm-float:nth-child(4){ left:3%; bottom:14%; right:auto; top:auto; animation-duration:36s; animation-delay:-11s; opacity:.38 } /* vorkath */
-.atmosphere .atm-float:nth-child(5){ right:5%; bottom:4%; left:auto; top:auto; animation-duration:34s; animation-delay:-15s; opacity:.4 } /* cerberus — clear bottom-right */
+/* float positions by slug (stable if atmosphere children change). */
+.atmosphere .atm-float[data-slug="zulrah"]{ left:2%; top:12%; right:auto; bottom:auto; animation-duration:32s; animation-delay:-4s; opacity:.4 }
+.atmosphere .atm-float[data-slug="vorkath"]{ left:3%; bottom:14%; right:auto; top:auto; animation-duration:36s; animation-delay:-11s; opacity:.38 }
+.atmosphere .atm-float[data-slug="cerberus"]{ right:5%; bottom:4%; left:auto; top:auto; animation-duration:34s; animation-delay:-15s; opacity:.4 }
+.atmosphere .atm-cg-wash{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:center;
+  opacity:0; transition: opacity .5s ease;
+  filter:saturate(1.15) contrast(1.08) brightness(.72);
+  mask-image: linear-gradient(180deg, #000 35%, transparent 95%);
+  -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 95%);
+}
+.atmosphere .atm-cg-title{
+  position:absolute; left:50%; top:42%;
+  transform: translate(-50%, -50%);
+  width:min(96vw, 42rem);
+  text-align:center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.4rem, 9vw, 5.6rem);
+  font-weight:700;
+  letter-spacing:.04em;
+  line-height:1.05;
+  color: rgba(255, 70, 70, .18);
+  text-shadow: 0 0 40px rgba(180,20,30,.25), 0 2px 0 rgba(0,0,0,.4);
+  text-transform: none;
+  opacity:0;
+  transition: opacity .5s ease;
+  pointer-events:none;
+  user-select:none;
+}
+body[data-atm="cg"]{
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(120,20,30,.45), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 100% 100%, rgba(80,10,20,.5), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 0% 80%, rgba(60,0,10,.4), transparent 45%),
+    linear-gradient(180deg, #140608 0%, #1a080c 40%, #0e0508 100%) !important;
+}
+body[data-atm="cg"]::before{
+  background:
+    radial-gradient(circle at 30% 40%, rgba(220,40,50,.08), transparent 32%),
+    radial-gradient(circle at 75% 65%, rgba(160,20,40,.07), transparent 34%);
+  box-shadow: inset 0 0 120px rgba(80,0,10,.55);
+}
+body[data-atm="cg"] .atmosphere .atm-cg-wash{ opacity:.55 }
+body[data-atm="cg"] .atmosphere .atm-cg-title{ opacity:1 }
+body[data-atm="cg"] .atmosphere .atm-float{ opacity:.08; filter:grayscale(.6) brightness(.7) }
+body[data-atm="cg"] .atmosphere .atm-hero{ opacity:0 !important }
+body[data-atm="cg"] .atmosphere .atm-dt{ display:none !important }
+body[data-atm="cg"] .card{
+  border-color: rgba(220,70,80,.28);
+  box-shadow: 0 10px 36px rgba(40,0,8,.45), inset 0 1px 0 rgba(255,120,120,.06);
+}
+body[data-atm="cg"] .bosses button.on,
+body[data-atm="cg"] .regions button.on,
+body[data-atm="cg"] .who button.on{
+  border-color:#e07070;
+  background:linear-gradient(90deg, rgba(220,60,70,.18), rgba(40,12,16,.92));
+  box-shadow: 0 0 0 1px rgba(220,60,70,.1), 0 0 16px rgba(160,20,30,.15);
+}
+body[data-atm="cg"] .brand b{ text-shadow: 0 0 18px rgba(220,60,70,.35) }
+body[data-atm="cg"] .brand{ color:#c09090 }
+body[data-atm="cg"] .update{
+  background:linear-gradient(180deg, #3a2028, #2a141a);
+  border-color:rgba(220,70,80,.28);
+}
 .atmosphere .atm-dt{
   position:absolute; right:1%; top:8%;
   display:none;
@@ -193,4 +254,9 @@ h1{ letter-spacing:-.02em }
     width:min(78vw, 48vh, 24rem); height:min(78vw, 48vh, 24rem);
     max-width:82vw; max-height:52vh; right:-4%; top:2%; opacity:.55; gap:.35rem;
   }
+  .atmosphere .atm-cg-title{
+    top:36%;
+    font-size: clamp(1.8rem, 11vw, 3.2rem);
+  }
+  body[data-atm="cg"] .atmosphere .atm-cg-wash{ opacity:.45 }
 }
