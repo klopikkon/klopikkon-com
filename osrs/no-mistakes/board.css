@@ -279,7 +279,12 @@ body[data-atm="cg"] .update{
 }
 /* Keep each DT boss in a page corner, clear of the centered baked title. */
 .atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{
-  left:1%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+  /* Fit in the left pad ABOVE brand "No mistakes" (wrap pad-top ~12–17rem). */
+  left:0.5%; top:clamp(1.1rem, 2.2vh, 1.75rem); right:auto; bottom:auto;
+  width:min(14vw, 16vh, 8.5rem);
+  height:min(14vw, 16vh, 8.5rem);
+  max-width:16vw; max-height:18vh;
+  object-position:center top;
 }
 .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{
   right:2%; top:8%; left:auto; bottom:auto; animation-duration:36s; animation-delay:-10s;
@@ -607,7 +612,12 @@ h1{ letter-spacing:-.02em }
     width:min(34vw, 22vh, 10rem); height:min(34vw, 22vh, 10rem);
     max-width:36vw; max-height:24vh; opacity:.6;
   }
-  .atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{ left:1%; top:clamp(4rem, 9vh, 5.5rem); }
+  .atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{
+    left:0.5%; top:clamp(1rem, 2vh, 1.5rem);
+    width:min(22vw, 14vh, 6.5rem); height:min(22vw, 14vh, 6.5rem);
+    max-width:24vw; max-height:16vh;
+    object-position:center top;
+  }
   .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{ right:1%; top:6%; }
   .atmosphere .atm-dt-boss[data-slug="the-leviathan"]{ left:1%; bottom:8%; }
   .atmosphere .atm-dt-boss[data-slug="vardorvis"]{ right:2%; bottom:clamp(3rem, 8vh, 5rem); }
