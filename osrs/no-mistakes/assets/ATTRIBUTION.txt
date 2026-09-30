@@ -12,3 +12,14 @@ sergeant-strongstack, sergeant-steelwill, sergeant-grimspike, starlight, growler
 tstanon-karlak, zakln-gritch, balfrug-kreeyath):
 OSRS Wiki monster art (CC BY-NC-SA), used as atmosphere corner sprites on the four
 God Wars Dungeon boss pages.
+
+Raid room / Colosseum / Araxxor / KQ form sprites (tekton, vasa-nistirio, vespula,
+great-olm, the-maiden-of-sugadinti, pestilent-bloat, nylocas-vasilias, sotetseg,
+akkha, ba-ba, kephri, zebak, araxyte, mirrorback-araxyte, ruptura-araxyte,
+acidic-araxyte, jaguar-warrior, javelin-colossus, serpent-shaman, manticore,
+kalphite-queen-crawling, kalphite-queen-flying):
+OSRS Wiki monster art (CC BY-NC-SA), used as atmosphere corner / dual-form sprites
+on CoX, ToB, ToA, Araxxor, Sol Heredit, and Kalphite Queen pages.
+Nylocas Vasilias uses File:Nylocas Vasilias (melee).png; KQ flying uses
+File:Kalphite Queen 2nd form.png; Araxyte base uses File:Araxyte (NPC).png.
+Full-body Yama.webp refreshed from File:Yama.png (OSRS Wiki, CC BY-NC-SA).

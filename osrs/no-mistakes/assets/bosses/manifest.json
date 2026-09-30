@@ -75,7 +75,7 @@
     "file": "yama.webp",
     "source": "File:Yama.png",
     "wiki_url": "https://oldschool.runescape.wiki/images/Yama.png",
-    "bytes": 28194
+    "bytes": 59194
   },
   "araxxor": {
     "file": "araxxor.webp",
@@ -232,5 +232,137 @@
     "source": "File:Balfrug Kreeyath.png",
     "wiki_url": "https://oldschool.runescape.wiki/images/Balfrug_Kreeyath.png",
     "bytes": 19310
+  },
+  "tekton": {
+    "file": "tekton.webp",
+    "source": "File:Tekton.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Tekton.png",
+    "bytes": 15772
+  },
+  "vasa-nistirio": {
+    "file": "vasa-nistirio.webp",
+    "source": "File:Vasa Nistirio.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Vasa_Nistirio.png",
+    "bytes": 57100
+  },
+  "vespula": {
+    "file": "vespula.webp",
+    "source": "File:Vespula.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Vespula.png",
+    "bytes": 46798
+  },
+  "great-olm": {
+    "file": "great-olm.webp",
+    "source": "File:Great Olm.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Great_Olm.png",
+    "bytes": 28380
+  },
+  "the-maiden-of-sugadinti": {
+    "file": "the-maiden-of-sugadinti.webp",
+    "source": "File:The Maiden of Sugadinti.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/The_Maiden_of_Sugadinti.png",
+    "bytes": 22258
+  },
+  "pestilent-bloat": {
+    "file": "pestilent-bloat.webp",
+    "source": "File:Pestilent Bloat.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Pestilent_Bloat.png",
+    "bytes": 18022
+  },
+  "nylocas-vasilias": {
+    "file": "nylocas-vasilias.webp",
+    "source": "File:Nylocas Vasilias (melee).png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Nylocas_Vasilias_%28melee%29.png",
+    "bytes": 27404
+  },
+  "sotetseg": {
+    "file": "sotetseg.webp",
+    "source": "File:Sotetseg.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Sotetseg.png",
+    "bytes": 27964
+  },
+  "akkha": {
+    "file": "akkha.webp",
+    "source": "File:Akkha.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Akkha.png",
+    "bytes": 52746
+  },
+  "ba-ba": {
+    "file": "ba-ba.webp",
+    "source": "File:Ba-Ba.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Ba-Ba.png",
+    "bytes": 52860
+  },
+  "kephri": {
+    "file": "kephri.webp",
+    "source": "File:Kephri.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Kephri.png",
+    "bytes": 48480
+  },
+  "zebak": {
+    "file": "zebak.webp",
+    "source": "File:Zebak.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Zebak.png",
+    "bytes": 33236
+  },
+  "araxyte": {
+    "file": "araxyte.webp",
+    "source": "File:Araxyte (NPC).png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Araxyte_%28NPC%29.png",
+    "bytes": 29520
+  },
+  "mirrorback-araxyte": {
+    "file": "mirrorback-araxyte.webp",
+    "source": "File:Mirrorback Araxyte.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Mirrorback_Araxyte.png",
+    "bytes": 29662
+  },
+  "ruptura-araxyte": {
+    "file": "ruptura-araxyte.webp",
+    "source": "File:Ruptura Araxyte.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Ruptura_Araxyte.png",
+    "bytes": 36184
+  },
+  "acidic-araxyte": {
+    "file": "acidic-araxyte.webp",
+    "source": "File:Acidic Araxyte.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Acidic_Araxyte.png",
+    "bytes": 36358
+  },
+  "jaguar-warrior": {
+    "file": "jaguar-warrior.webp",
+    "source": "File:Jaguar warrior.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Jaguar_warrior.png",
+    "bytes": 43018
+  },
+  "javelin-colossus": {
+    "file": "javelin-colossus.webp",
+    "source": "File:Javelin Colossus.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Javelin_Colossus.png",
+    "bytes": 41860
+  },
+  "serpent-shaman": {
+    "file": "serpent-shaman.webp",
+    "source": "File:Serpent shaman.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Serpent_shaman.png",
+    "bytes": 47130
+  },
+  "manticore": {
+    "file": "manticore.webp",
+    "source": "File:Manticore.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Manticore.png",
+    "bytes": 42726
+  },
+  "kalphite-queen-crawling": {
+    "file": "kalphite-queen-crawling.webp",
+    "source": "File:Kalphite Queen.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Kalphite_Queen.png",
+    "bytes": 28594
+  },
+  "kalphite-queen-flying": {
+    "file": "kalphite-queen-flying.webp",
+    "source": "File:Kalphite Queen 2nd form.png",
+    "wiki_url": "https://oldschool.runescape.wiki/images/Kalphite_Queen_2nd_form.png",
+    "bytes": 37432
   }
 }
