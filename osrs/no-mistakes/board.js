@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "71";
+const ASSET_V = "72";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -955,7 +955,7 @@ const ATM_GWD = {
 };
 const ATM_COX = ["tekton","great-olm","vasa-nistirio","vespula"];
 const ATM_TOB = ["the-maiden-of-sugadinti","sotetseg","pestilent-bloat","nylocas-vasilias"];
-const ATM_TOA = ["akkha","ba-ba","kephri","zebak"];
+const ATM_TOA = ["akkha","the-wardens","kephri","zebak"];
 const ATM_ARAXXOR = ["mirrorback-araxyte","araxxor","ruptura-araxyte","acidic-araxyte"];
 const ATM_COLOSSEUM = ["serpent-shaman","sol-heredit","jaguar-warrior","manticore"];
 const ATM_RAID = {

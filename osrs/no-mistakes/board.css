@@ -329,35 +329,36 @@ body[data-atm="dt"] .atmosphere .atm-kq{ display:none !important }
 .atmosphere .atm-gwd-boss,
 .atmosphere .atm-gwd-minion{
   position:absolute;
-  /* Support size — almost boss; GWD-style fill */
-  width:min(20vw, 26vh, 13rem);
-  height:min(20vw, 26vh, 13rem);
-  max-width:22vw; max-height:28vh;
+  /* Nearly equal to TR; sized to fit ~(100vw-880px)/2 gutters at ~1280 */
+  width:min(11vw, 19vh, 9.5rem);
+  height:min(11vw, 19vh, 9.5rem);
+  max-width:9.75rem; max-height:9.75rem;
   object-fit:contain; object-position:center;
-  opacity:.74;
-  filter:saturate(1.12) contrast(1.15) brightness(1.1);
+  opacity:.82;
+  filter:saturate(1.12) contrast(1.15) brightness(1.12) drop-shadow(0 0 12px rgba(0,0,0,.75));
   animation: none !important;
   transform: none;
-  mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
-  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
+  mask-image: none;
+  -webkit-mask-image: none;
 }
-/* TL / BL / BR supports — boss owns TR */
+/* TL support — boss owns TR */
 .atmosphere .atm-gwd-minion[data-slot="0"]{
-  left:1%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
+  left:0.05%; top:clamp(5.5rem, 12vh, 8rem); right:auto; bottom:auto;
 }
+/* LOWER supports — top:% mid gutters (never bottom:) fully clear of sidebar/card */
 .atmosphere .atm-gwd-minion[data-slot="1"]{
-  left:2%; bottom:12%; right:auto; top:auto;
+  left:0.05%; top:44%; right:auto; bottom:auto;
 }
 .atmosphere .atm-gwd-minion[data-slot="2"]{
-  right:2%; bottom:clamp(4rem, 10vh, 7rem); left:auto; top:auto;
+  right:0.05%; top:48%; left:auto; bottom:auto;
 }
 .atmosphere .atm-gwd-boss{
-  /* Main god boss TOP-RIGHT — tiny bit larger than minions */
-  right:2%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
-  width:min(23vw, 29vh, 14.5rem);
-  height:min(23vw, 29vh, 14.5rem);
-  max-width:25vw; max-height:31vh;
-  opacity:.8;
+  /* Main god boss TOP-RIGHT — hair larger than minions */
+  right:0.05%; top:clamp(5.5rem, 12vh, 8rem); left:auto; bottom:auto;
+  width:min(12vw, 21vh, 10.25rem);
+  height:min(12vw, 21vh, 10.25rem);
+  max-width:10.5rem; max-height:10.5rem;
+  opacity:.88;
   object-position:center;
 }
 body[data-atm="gwd"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
@@ -736,9 +737,12 @@ body[data-atm="dt"] .wrap{
   padding-top: clamp(12rem, 30vh, 17rem);
 }
 body[data-atm="gwd"] .wrap{
-  /* Keep brand/cards below baked faction title + corner bodyguards. */
+  /* Narrow wrap (~880) widens gutters so nearly-equal GWD corners stay fully visible at ~1280. */
+  max-width:880px;
   padding-top: clamp(12rem, 30vh, 17rem);
 }
+/* Hide brand on GWD so TL minion owns the left gutter band. */
+body[data-atm="gwd"] .brand{ display:none !important }
 
 .card{
   /* Real glass — Imagine reads through the card body, not only edges */
