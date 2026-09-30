@@ -366,7 +366,70 @@ function renderNav() {
   });
 }
 
-function meterRow(label, sub, got, expected) {
+function medalFile(tone) {
+  if (tone === "cursed" || tone === "dry" || tone === "unlucky" || tone === "lucky" || tone === "spoon") return tone;
+  return "ok";
+}
+let audioCtx;
+function unlockAudio() {
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!Ctx) return;
+  if (!audioCtx) audioCtx = new Ctx();
+  if (audioCtx.state === "suspended") audioCtx.resume();
+}
+function medalSound(tone) {
+  unlockAudio();
+  if (!audioCtx || audioCtx.state !== "running") return;
+  const now = audioCtx.currentTime;
+  const notes = {
+    cursed: [98, 82],
+    dry: [146, 123],
+    unlucky: [196, 174],
+    ok: [262, 330],
+    lucky: [392, 494, 587],
+    spoon: [523, 659, 784, 1046],
+  }[tone] || [262];
+  notes.forEach(function (freq, i) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = tone === "spoon" || tone === "lucky" ? "triangle" : "sawtooth";
+    osc.frequency.value = freq;
+    const start = now + i * 0.045;
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(tone === "spoon" ? 0.11 : 0.05, start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.32);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(start);
+    osc.stop(start + 0.36);
+  });
+}
+let hydraIntroDone = false;
+function armHydraMeters(root) {
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fills = root.querySelectorAll(".fill.arm");
+  if (hydraIntroDone || reduce) {
+    fills.forEach(function (fill) {
+      fill.style.width = fill.dataset.width;
+      const medal = fill.closest(".meter") && fill.closest(".meter").querySelector(".medal");
+      if (medal) medal.classList.add("pop");
+    });
+    hydraIntroDone = true;
+    return;
+  }
+  hydraIntroDone = true;
+  fills.forEach(function (fill, index) {
+    const medal = fill.closest(".meter") && fill.closest(".meter").querySelector(".medal");
+    fill.addEventListener("transitionend", function (event) {
+      if (event.propertyName !== "width") return;
+      if (medal) medal.classList.add("pop");
+      medalSound(fill.dataset.tone || "ok");
+    });
+    window.setTimeout(function () {
+      fill.style.width = fill.dataset.width;
+    }, 160 + index * 130);
+  });
+}
+function meterRow(label, sub, got, expected, animate) {
   const delta = got - expected;
   const verdict = roast(got, expected, label);
   const width = Math.max(8, Math.min(100, Math.abs(delta) / Math.max(expected, 1) * 100));
@@ -374,11 +437,22 @@ function meterRow(label, sub, got, expected) {
   const copy = el("div");
   const name = el("div", "name");
   name.append(label, el("span", "tag " + verdict.tone, verdict.word));
+  if (animate) {
+    const medal = document.createElement("img");
+    medal.className = "medal";
+    medal.alt = "";
+    medal.src = depthPrefix() + "medals/" + medalFile(verdict.tone) + ".jpg";
+    name.appendChild(medal);
+  }
   copy.appendChild(name);
   if (sub) copy.appendChild(el("div", "sub", sub));
   const track = el("div", "track");
-  const fill = el("div", "fill " + verdict.tone);
-  fill.style.width = width + "%";
+  const fill = el("div", "fill " + verdict.tone + (animate ? " arm" : ""));
+  fill.style.width = animate ? "0%" : width + "%";
+  if (animate) {
+    fill.dataset.width = width + "%";
+    fill.dataset.tone = verdict.tone;
+  }
   const deltaEl = el("div", "delta", signed(delta));
   track.append(fill, deltaEl);
   row.append(copy, el("div", "got", String(got)), track);
@@ -440,6 +514,7 @@ function renderMain() {
       main.appendChild(el("p", "", (counts[item.id] || 0) + "  " + item.name));
     });
   } else if (boss.uniques.length) {
+  const animate = boss.slug === "alchemical-hydra";
   const tables = boss.tables || [
     { id: "rare", label: "Rare drop table" },
     { id: "mutagen", label: "Mutagens" },
@@ -456,7 +531,7 @@ function renderMain() {
       const expected = itemExpected(member, boss, item);
       sumGot += got;
       sumExpected += expected;
-      rows.push(meterRow(item.name, rateText(member, boss, item, expected), got, expected));
+      rows.push(meterRow(item.name, rateText(member, boss, item, expected), got, expected, animate));
     });
     const heading = el("div", "label", table.label);
     heading.style.marginTop = "1.15rem";
@@ -464,13 +539,14 @@ function renderMain() {
     head.append(el("span", "", "Expected"), el("span", "", "Received"));
     main.append(heading);
     if (items.length > 1) {
-      const any = meterRow("Any", "This table only", sumGot, sumExpected);
+      const any = meterRow("Any", "This table only", sumGot, sumExpected, animate);
       main.append(el("p", "tag " + any.tone, any.word), head, any.row);
     } else {
       main.append(head);
     }
     rows.forEach(function (entry) { main.appendChild(entry.row); });
   });
+  if (animate) armHydraMeters(main);
   } else {
     main.appendChild(el("p", "note", "No flat unique rate for this boss. KC only."));
   }
@@ -695,8 +771,12 @@ async function refreshAll() {
   renderMain();
 }
 
+window.addEventListener("pointerdown", unlockAudio);
 window.addEventListener("hashchange", render);
 window.addEventListener("popstate", render);
 render();
 refreshWom();
-refreshLogs().then(function () { if (!refreshing) renderMain(); });
+refreshLogs().then(function () {
+  const wait = document.querySelector(".fill.arm") ? 2800 : 0;
+  window.setTimeout(function () { if (!refreshing) renderMain(); }, wait);
+});
