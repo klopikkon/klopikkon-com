@@ -254,36 +254,42 @@ body[data-atm="cg"] .update{
 /* DT mode: four bosses as one horizontal centered row under baked "Four awakenings". */
 .atmosphere .atm-dt{
   display:none;
-  position:absolute; inset:0;
+  position:absolute;
+  left:0; right:0; top:0; bottom:auto;
   pointer-events:none;
 }
 .atmosphere .atm-dt.on{
+  /* Full-width flex strip — do NOT use inset:auto after left/top (it was resetting the row to the corner). */
   display:flex;
   justify-content:center;
   align-items:flex-end; /* shared baseline */
-  gap:clamp(.25rem, 1vw, .75rem);
-  top:clamp(7rem, 16vh, 11rem); /* under baked title band */
-  left:50%;
-  transform:translateX(-50%);
-  width:min(96vw, 58rem);
-  height:auto;
-  inset:auto;
-  z-index:1;
+  gap:clamp(.35rem, 1.2vw, 1rem);
+  top:clamp(5.75rem, 12vh, 8.5rem); /* under baked Four awakenings */
+  left:0;
+  right:0;
+  bottom:auto;
+  width:100%;
+  height:min(22vh, 12rem);
+  transform:none;
+  z-index:2;
+  box-sizing:border-box;
+  padding:0 clamp(.5rem, 2vw, 1.5rem);
 }
 .atmosphere .atm-dt-boss{
   position:relative;
   left:auto; right:auto; top:auto; bottom:auto;
-  width:min(18vw, 22vh, 11rem);
-  height:min(18vw, 22vh, 11rem);
-  max-width:none; max-height:none;
+  width:min(20vw, 20vh, 10.5rem);
+  height:min(20vw, 20vh, 10.5rem);
+  max-width:10.5rem; max-height:10.5rem;
   object-fit:contain;
   object-position:center bottom;
-  opacity:.72;
-  filter:saturate(1.12) contrast(1.15) brightness(1.1);
-  transform:none;
+  opacity:.88;
+  filter:saturate(1.12) contrast(1.12) brightness(1.12);
+  transform:none !important;
   transform-origin:center bottom;
-  mask-image:radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
-  -webkit-mask-image:radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
+  /* Soft edge only — keep full figure readable */
+  mask-image:radial-gradient(circle at 50% 50%, #000 62%, transparent 96%);
+  -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 62%, transparent 96%);
   animation:none !important;
   flex:0 0 auto;
 }
@@ -603,13 +609,15 @@ h1{ letter-spacing:-.02em }
     max-width:30vw; max-height:20vh;
   }
   .atmosphere .atm-dt.on{
-    top:clamp(5.5rem, 14vh, 8.5rem);
-    width:min(98vw, 36rem);
-    gap:clamp(.15rem, .8vw, .45rem);
+    top:clamp(4.75rem, 11vh, 7rem);
+    left:0; right:0; width:100%;
+    height:min(18vh, 9rem);
+    gap:clamp(.2rem, 1vw, .5rem);
+    transform:none;
   }
   .atmosphere .atm-dt-boss{
-    width:min(22vw, 16vh, 7.5rem); height:min(22vw, 16vh, 7.5rem);
-    max-width:none; max-height:none; opacity:.68;
+    width:min(22vw, 14vh, 6.75rem); height:min(22vw, 14vh, 6.75rem);
+    max-width:6.75rem; max-height:6.75rem; opacity:.85;
     left:auto; right:auto; top:auto; bottom:auto;
     object-position:center bottom;
   }
