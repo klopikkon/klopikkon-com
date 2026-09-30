@@ -1214,6 +1214,12 @@ function updateAtmosphere() {
     if (dt) dt.classList.remove("on");
     if (zulrah) zulrah.classList.add("on");
     setAtmCredit("zulrah");
+    // Integrated Zulrah scene already contains the boss and baked title; never stack hero art on it.
+    if (hasAtmIntegratedWash(slug)) {
+      hero.removeAttribute("src");
+      hero.style.opacity = "0";
+      return;
+    }
     const next = depthPrefix() + "assets/bosses/zulrah-serpentine.webp";
     if (hero.getAttribute("src") === next) {
       hero.style.opacity = "";
@@ -1243,6 +1249,12 @@ function updateAtmosphere() {
     if (dt) dt.classList.remove("on");
     if (yama) yama.classList.add("on");
     setAtmCredit("yama");
+    // Integrated Yama scene already contains the boss and baked title; never stack hero art on it.
+    if (hasAtmIntegratedWash(slug)) {
+      hero.removeAttribute("src");
+      hero.style.opacity = "0";
+      return;
+    }
     const next = depthPrefix() + "assets/bosses/yama.webp";
     if (hero.getAttribute("src") === next) {
       hero.style.opacity = "";
