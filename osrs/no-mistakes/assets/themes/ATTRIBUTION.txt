@@ -25,10 +25,17 @@ Integrated scene+title washes (one Imagine per boss — background AND heading b
 - general-graardor-scene.webp — Bandos warlord (general-graardor)
 - kreearra-scene.webp — Winged justice (kreearra)
 - commander-zilyana-scene.webp — Saradomin's light (commander-zilyana)
+- kril-tsutsaroth-scene.webp — Zamorak's spear (kril-tsutsaroth)
 - chambers-of-xeric-scene.webp — The chambers (chambers-of-xeric) (CLog list unchanged)
+- chambers-of-xeric-cm-scene.webp — Challenge mode (chambers-of-xeric-cm) (CLog list unchanged)
+- theatre-of-blood-scene.webp — The theatre (theatre-of-blood) (CLog list unchanged)
+- theatre-of-blood-hm-scene.webp — Hard mode theatre (theatre-of-blood-hm) (CLog list unchanged)
+- tombs-of-amascut-scene.webp — The tombs (tombs-of-amascut) (CLog list unchanged)
+- tombs-of-amascut-expert-scene.webp — Expert tombs (tombs-of-amascut-expert) (CLog list unchanged)
 - sol-heredit-scene.webp — Colosseum crown (sol-heredit)
 
 Legacy floating title plates may remain on disk but are unused when washFile is wired.
 
 Convention: <slug>-scene.webp (integrated) or <slug>-title.webp (floating plate). Aliases: money-snake.webp, red-prison*.webp, cg-red-prison-scene.webp.
+Titles from /workspace/imagine-plates/TITLES.json (exact casing).
 Fan site; Jagex trademarks belong to Jagex Ltd.
