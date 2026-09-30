@@ -172,28 +172,40 @@ body[data-atm="cg"] .update{
   background:linear-gradient(180deg, #3a2028, #2a141a);
   border-color:rgba(220,70,80,.28);
 }
+/* DT mode: four bosses as corner float-size art — left = Duke+Whisperer (replace Zulrah/Vorkath), right = Leviathan+Vard */
 .atmosphere .atm-dt{
-  position:absolute; right:1%; top:8%;
   display:none;
-  grid-template-columns:1fr 1fr;
-  grid-template-rows:1fr 1fr;
-  gap:clamp(.4rem, 1.2vw, 1rem);
-  width:min(48vw, 58vh, 30rem);
-  height:min(48vw, 58vh, 30rem);
-  max-width:52vw; max-height:62vh;
-  opacity:.7;
-  filter:saturate(1.1) contrast(1.15) brightness(1.1);
+  position:absolute; inset:0;
+  pointer-events:none;
 }
-.atmosphere .atm-dt.on{ display:grid }
+.atmosphere .atm-dt.on{ display:block }
 .atmosphere .atm-dt-boss{
-  width:100%; height:100%;
+  position:absolute;
+  width:min(22vw, 28vh, 14rem);
+  height:min(22vw, 28vh, 14rem);
+  max-width:24vw; max-height:30vh;
   object-fit:contain; object-position:center;
+  opacity:.72;
+  filter:saturate(1.12) contrast(1.15) brightness(1.1);
   transform: scale(var(--atm-scale, 1));
   transform-origin:center center;
   mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
   -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 52%, transparent 88%);
+  animation: atm-drift 30s ease-in-out infinite;
 }
-body[data-atm="dt"] .atmosphere .atm-float{ opacity:.12; filter:grayscale(.4) brightness(.85) }
+.atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{
+  left:1%; top:10%; right:auto; bottom:auto; animation-duration:32s; animation-delay:-3s;
+}
+.atmosphere .atm-dt-boss[data-slug="the-whisperer"]{
+  left:2%; bottom:12%; right:auto; top:auto; animation-duration:36s; animation-delay:-10s;
+}
+.atmosphere .atm-dt-boss[data-slug="the-leviathan"]{
+  right:2%; top:8%; left:auto; bottom:auto; animation-duration:34s; animation-delay:-6s;
+}
+.atmosphere .atm-dt-boss[data-slug="vardorvis"]{
+  right:3%; bottom:6%; left:auto; top:auto; animation-duration:38s; animation-delay:-14s;
+}
+body[data-atm="dt"] .atmosphere .atm-float{ opacity:0 !important; visibility:hidden }
 body[data-atm="dt"] .atmosphere .atm-hero{ opacity:0 !important }
 @keyframes atm-drift{
   0%,100%{ transform: translateY(0) rotate(-2deg) scale(var(--atm-scale, 1)) }
@@ -250,10 +262,14 @@ h1{ letter-spacing:-.02em }
     width:min(28vw, 18vh, 9rem); height:min(28vw, 18vh, 9rem);
     max-width:30vw; max-height:20vh;
   }
-  .atmosphere .atm-dt{
-    width:min(78vw, 48vh, 24rem); height:min(78vw, 48vh, 24rem);
-    max-width:82vw; max-height:52vh; right:-4%; top:2%; opacity:.55; gap:.35rem;
+  .atmosphere .atm-dt-boss{
+    width:min(34vw, 22vh, 10rem); height:min(34vw, 22vh, 10rem);
+    max-width:36vw; max-height:24vh; opacity:.6;
   }
+  .atmosphere .atm-dt-boss[data-slug="duke-sucellus"]{ left:0; top:6%; }
+  .atmosphere .atm-dt-boss[data-slug="the-whisperer"]{ left:1%; bottom:8%; }
+  .atmosphere .atm-dt-boss[data-slug="the-leviathan"]{ right:0; top:4%; }
+  .atmosphere .atm-dt-boss[data-slug="vardorvis"]{ right:1%; bottom:4%; }
   .atmosphere .atm-cg-title{
     top:36%;
     font-size: clamp(1.8rem, 11vw, 3.2rem);
