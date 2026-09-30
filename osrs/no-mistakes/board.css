@@ -107,11 +107,10 @@ body::before{
   /* fallback park off-pile if a float lacks nth rules */
   left: auto; right: 2%; top: auto; bottom: 40%;
 }
-/* nth-child 1 = hero; 2–5 = four floats only (no pile). Size from .atm-float. */
+/* nth-child 1 = hero; 2–4 = three floats (no kraken). Size from .atm-float. */
 .atmosphere .atm-float:nth-child(2){ left:2%; top:12%; right:auto; bottom:auto; animation-duration:32s; animation-delay:-4s; opacity:.4 } /* zulrah */
 .atmosphere .atm-float:nth-child(3){ left:3%; bottom:14%; right:auto; top:auto; animation-duration:36s; animation-delay:-11s; opacity:.38 } /* vorkath */
-.atmosphere .atm-float:nth-child(4){ right:4%; top:28%; left:auto; bottom:auto; animation-duration:30s; animation-delay:-7s; opacity:.36 } /* kraken */
-.atmosphere .atm-float:nth-child(5){ right:5%; bottom:4%; left:auto; top:auto; animation-duration:34s; animation-delay:-15s; opacity:.4 } /* cerberus — clear bottom-right */
+.atmosphere .atm-float:nth-child(4){ right:5%; bottom:4%; left:auto; top:auto; animation-duration:34s; animation-delay:-15s; opacity:.4 } /* cerberus — clear bottom-right */
 @keyframes atm-drift{
   0%,100%{ transform: translateY(0) rotate(-2deg) scale(var(--atm-scale, 1)) }
   50%{ transform: translateY(-12px) rotate(3deg) scale(var(--atm-scale, 1)) }
