@@ -144,10 +144,10 @@ body[data-atm="raid"] .atmosphere{
   /* fallback park off-pile if a float lacks nth rules */
   left: auto; right: 2%; top: auto; bottom: 40%;
 }
-/* float positions by slug (stable if atmosphere children change). */
-.atmosphere .atm-float[data-slug="zulrah"]{ left:2%; top:12%; right:auto; bottom:auto; animation-duration:32s; animation-delay:-4s; opacity:.4 }
-.atmosphere .atm-float[data-slug="vorkath"]{ left:3%; bottom:14%; right:auto; top:auto; animation-duration:36s; animation-delay:-11s; opacity:.38 }
-.atmosphere .atm-float[data-slug="cerberus"]{ right:5%; bottom:4%; left:auto; top:auto; animation-duration:34s; animation-delay:-15s; opacity:.4 }
+/* float positions by slot — the picture changes per boss, the corners do not. */
+.atmosphere .atm-float[data-slot="0"]{ left:2%; top:12%; right:auto; bottom:auto; animation-duration:32s; animation-delay:-4s; opacity:.72 }
+.atmosphere .atm-float[data-slot="1"]{ left:3%; bottom:14%; right:auto; top:auto; animation-duration:36s; animation-delay:-11s; opacity:.68 }
+.atmosphere .atm-float[data-slot="2"]{ right:5%; bottom:4%; left:auto; top:auto; animation-duration:34s; animation-delay:-15s; opacity:.72 }
 .atmosphere .atm-cg-wash{
   position:absolute; inset:0; width:100%; height:100%;
   object-fit:cover; object-position:center top;

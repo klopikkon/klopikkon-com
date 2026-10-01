@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "75";
+const ASSET_V = "76";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -1044,6 +1044,44 @@ const ATM_RAID = {
 };
 const ATM_BOSSES = ["zulrah","alchemical-hydra","phantom-muspah","vorkath","cerberus","kraken","nightmare","nex","yama","araxxor","abyssal-sire","general-graardor","corporeal-beast","kalphite-queen","tzkal-zuk","thermonuclear-smoke-devil","kreearra","commander-zilyana","kril-tsutsaroth","grotesque-guardians","sol-heredit","the-hueycoatl","doom-of-mokhaiotl"];
 const ATM_FLOAT = ["zulrah","vorkath","cerberus"];
+/* Side art for pages that used to reuse Zulrah, Vorkath and Cerberus.
+   Fight monsters and forms first, then the best drops. */
+const ATM_EXTRAS = {
+  "alchemical-hydra": ["alchemical-hydra-electric", "alchemical-hydra-fire", "alchemical-hydra-extinguished"],
+  "the-hueycoatl": ["hueycoatl-tail", "dragon-hunter-wand", "tome-of-earth"],
+  "cerberus": ["primordial-boots", "pegasian-boots", "eternal-boots"],
+  "doom-of-mokhaiotl": ["doom-of-mokhaiotl-burrowed", "avernic-treads", "eye-of-ayak"],
+  "phantom-muspah": ["phantom-muspah-melee", "phantom-muspah-shielded", "venator-shard"],
+  "vorkath": ["zombified-spawn", "vorkaths-head", "draconic-visage"],
+  "kraken": ["enormous-tentacle", "trident-of-the-seas", "kraken-tentacle"],
+  "nightmare": ["sleepwalker", "husk", "husk-ranged"],
+  "phosanis-nightmare": ["sleepwalker", "husk", "husk-ranged"],
+  "nex": ["fumus", "umbra", "cruor"],
+  "abyssal-sire": ["scion", "abyssal-spawn", "respiratory-system"],
+  "corporeal-beast": ["dark-energy-core", "spirit-shield", "elysian-sigil"],
+  "tzkal-zuk": ["jal-xil", "jal-zek", "tztok-jad"],
+  "thermonuclear-smoke-devil": ["occult-necklace", "dragon-chainbody", "pet-smoke-devil"],
+  "grotesque-guardians": ["dawn", "dusk", "granite-hammer"],
+  "vyrewatch-sentinel": ["blood-shard"],
+  "demonic-gorilla": ["zenyte-shard", "ballista-limbs"],
+  "lizardman-shaman": ["dragon-warhammer"],
+  "basilisk-knight": ["basilisk-jaw"],
+  "abyssal-demon": ["abyssal-whip"],
+  "dark-beast": ["dark-bow"],
+  "cave-horror": ["black-mask"],
+  "gargoyle": ["granite-maul"],
+  "kurask": ["leaf-bladed-sword", "leaf-bladed-battleaxe"],
+  "wyrm": ["dragon-sword", "dragon-harpoon"],
+  "drake": ["drakes-tooth", "drakes-claw"],
+  "rune-dragon": ["dragon-limbs"],
+  "skeletal-wyvern": ["granite-legs", "wyvern-visage"],
+  "spiritual-mage": ["dragon-boots"],
+  "tormented-demon": ["tormented-synapse", "burning-claws"],
+  "armoured-zombie": ["broken-zombie-axe"],
+  "sulphur-nagua": ["sulphur-blades"],
+  "frost-nagua": ["glacial-temotli"],
+  "warped-tortoise": ["warped-sceptre"]
+};
 /* Fine-tune within the shared viewport box (1 = fill box). */
 const ATM_SCALE = {
   zulrah: 1.05,
@@ -1276,14 +1314,12 @@ function ensureAtmosphere() {
     raid.appendChild(img);
   }
   root.appendChild(raid);
-  ATM_FLOAT.forEach(function (slug) {
+  ATM_FLOAT.forEach(function (slug, slot) {
     const img = document.createElement("img");
     img.className = "atm-float";
     img.alt = "";
-    img.dataset.slug = slug;
-    img.style.setProperty("--atm-scale", String(ATM_SCALE[slug] || 1));
-    img.src = depthPrefix() + "assets/bosses/" + slug + ".webp";
-    img.onerror = function () { img.remove(); };
+    img.dataset.slot = String(slot);
+    img.onerror = function () { img.removeAttribute("src"); img.style.visibility = "hidden"; };
     root.appendChild(img);
   });
   document.body.prepend(root);
@@ -1354,6 +1390,22 @@ function applyThemeAssets(slug) {
   }
   return !!(titleFile || washFile);
 }
+function applyFloats(slug) {
+  const hide = isCgAtmosphere(slug) || isDtAtmosphere(slug) || isZulrahAtmosphere(slug) || isYamaAtmosphere(slug) || isGwdAtmosphere(slug) || isKqAtmosphere(slug) || isRaidAtmosphere(slug);
+  const extras = hide ? [] : (ATM_EXTRAS[slug] || []);
+  document.querySelectorAll("#atmosphere .atm-float").forEach(function (img) {
+    const file = extras[Number(img.dataset.slot)];
+    if (!file) {
+      img.removeAttribute("src");
+      img.style.visibility = "hidden";
+      return;
+    }
+    const next = depthPrefix() + "assets/bosses/" + file + ".webp";
+    img.style.visibility = "";
+    img.dataset.slug = file;
+    if (img.getAttribute("src") !== next) img.src = next;
+  });
+}
 function updateAtmosphere() {
   ensureAtmosphere();
   const slug = slugFromHash();
@@ -1372,6 +1424,7 @@ function updateAtmosphere() {
   if (gwd) gwd.classList.remove("on");
   if (raid) raid.classList.remove("on");
   applyThemeAssets(slug);
+  applyFloats(slug);
   if (isCgAtmosphere(slug)) {
     document.body.dataset.atm = "cg";
     document.body.dataset.theme = "the-corrupted-gauntlet";
@@ -1543,12 +1596,13 @@ function updateAtmosphere() {
   if (raid) raid.classList.remove("on");
   if (kq) kq.classList.remove("on");
   setAtmCredit(hasAtmTitlePlate(slug) ? "theme" : "default");
-  if (ATM_BOSSES.indexOf(slug) === -1) {
+  const heroName = slug === "phosanis-nightmare" ? "nightmare" : slug;
+  if (ATM_BOSSES.indexOf(heroName) === -1) {
     hero.removeAttribute("src");
     hero.style.opacity = "0";
     return;
   }
-  const next = depthPrefix() + "assets/bosses/" + slug + ".webp";
+  const next = depthPrefix() + "assets/bosses/" + heroName + ".webp";
   if (hero.getAttribute("src") === next) {
     hero.style.opacity = "";
     return;
