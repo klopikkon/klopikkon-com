@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "77";
+const ASSET_V = "78";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -829,12 +829,134 @@ function renderMain() {
   }
 }
 
+const DROP_CLIPS = {
+  "alchemical-hydra": { file: "alchemical-hydra.mp4", caption: "Hydra's claw" },
+  cerberus: { file: "cerberus.mp4", caption: "Crystal boots" },
+  vorkath: { file: "vorkath.mp4", caption: "Vorkath's head" },
+  zulrah: { file: "zulrah.mp4", caption: "Blowpipe" },
+  "the-hueycoatl": { file: "the-hueycoatl.mp4", caption: "Dragon hunter wand" },
+  "doom-of-mokhaiotl": { file: "doom-of-mokhaiotl.mp4", caption: "Eye of ayak" },
+  araxxor: { file: "araxxor.mp4", caption: "Noxious fang" },
+  nex: { file: "nex.mp4", caption: "Ancient plate" },
+  "general-graardor": { file: "general-graardor.mp4", caption: "Bandos hilt" },
+  "theatre-of-blood": { file: "theatre-of-blood.mp4", caption: "Purple" },
+  "theatre-of-blood-hm": { file: "theatre-of-blood.mp4", caption: "Purple" },
+  "phantom-muspah": { file: "phantom-muspah.mp4", caption: "Venator shard" },
+  nightmare: { file: "nightmare.mp4", caption: "Inquisitor" },
+  "phosanis-nightmare": { file: "nightmare.mp4", caption: "Inquisitor" },
+  kraken: { file: "kraken.mp4", caption: "Trident" },
+  "corporeal-beast": { file: "corporeal-beast.mp4", caption: "Spirit shield" },
+  "tzkal-zuk": { file: "tzkal-zuk.mp4", caption: "Infernal cape" },
+  yama: { file: "yama.mp4", caption: "Soulflame horn" },
+  "chambers-of-xeric": { file: "chambers-of-xeric.mp4", caption: "Purple" },
+  "chambers-of-xeric-cm": { file: "chambers-of-xeric.mp4", caption: "Purple" },
+  "tombs-of-amascut": { file: "tombs-of-amascut.mp4", caption: "Purple" },
+  "tombs-of-amascut-expert": { file: "tombs-of-amascut.mp4", caption: "Purple" },
+  "kalphite-queen": { file: "kalphite-queen.mp4", caption: "Dragon pickaxe" }
+};
+const ATM_CYCLE = {
+  "alchemical-hydra": ["alchemical-hydra-alt.webp"],
+  cerberus: ["cerberus-alt.webp"],
+  zulrah: ["zulrah-alt.webp"],
+  vorkath: ["vorkath-alt.webp"],
+  "the-hueycoatl": ["the-hueycoatl-alt.webp"],
+  "doom-of-mokhaiotl": ["doom-of-mokhaiotl-alt.webp"],
+  araxxor: ["araxxor-alt.webp"],
+  nex: ["nex-alt.webp"],
+  "general-graardor": ["general-graardor-alt.webp"],
+  "theatre-of-blood": ["theatre-of-blood-alt.webp"],
+  nightmare: ["nightmare-alt.webp"],
+  kraken: ["kraken-alt.webp"],
+  "corporeal-beast": ["corporeal-beast-alt.webp"],
+  "tzkal-zuk": ["tzkal-zuk-alt.webp"],
+  yama: ["yama-alt.webp"],
+  "chambers-of-xeric": ["chambers-of-xeric-alt.webp"],
+  "tombs-of-amascut": ["tombs-of-amascut-alt.webp"],
+  "kalphite-queen": ["kalphite-queen-alt.webp"],
+  gargoyle: ["gargoyle-alt.webp"],
+  "demonic-gorilla": ["demonic-gorilla-alt.webp"],
+  "vyrewatch-sentinel": ["vyrewatch-sentinel-alt.webp"],
+  "abyssal-demon": ["abyssal-demon-alt.webp"],
+  "thermonuclear-smoke-devil": ["thermonuclear-smoke-devil-alt.webp"],
+  "the-corrupted-gauntlet": ["the-corrupted-gauntlet-alt.webp"],
+  "desert-treasure-ii": ["desert-treasure-ii-alt.webp"],
+  "sol-heredit": ["sol-heredit-alt.webp"],
+  "lizardman-shaman": ["lizardman-shaman-alt.webp"],
+  "basilisk-knight": ["basilisk-knight-alt.webp"],
+  "dark-beast": ["dark-beast-alt.webp"],
+  "cave-horror": ["cave-horror-alt.webp"],
+  kurask: ["kurask-alt.webp"],
+  wyrm: ["wyrm-alt.webp"],
+  drake: ["drake-alt.webp"],
+  "rune-dragon": ["rune-dragon-alt.webp"],
+  "skeletal-wyvern": ["skeletal-wyvern-alt.webp"],
+  "spiritual-mage": ["spiritual-mage-alt.webp"],
+  "tormented-demon": ["tormented-demon-alt.webp"],
+  "armoured-zombie": ["armoured-zombie-alt.webp"],
+  "sulphur-nagua": ["sulphur-nagua-alt.webp"],
+  "frost-nagua": ["frost-nagua-alt.webp"],
+  "warped-tortoise": ["warped-tortoise-alt.webp"]
+};
+function cycleKey(slug) {
+  if (isDtAtmosphere(slug)) return "desert-treasure-ii";
+  if (slug === "chambers-of-xeric-cm") return "chambers-of-xeric";
+  if (slug === "theatre-of-blood-hm") return "theatre-of-blood";
+  if (slug === "tombs-of-amascut-expert") return "tombs-of-amascut";
+  if (slug === "phosanis-nightmare") return "nightmare";
+  return slug;
+}
+let cycleTimer = 0;
+function stopCycle() {
+  if (cycleTimer) clearInterval(cycleTimer);
+  cycleTimer = 0;
+  const cycle = document.getElementById("atm-cycle");
+  if (cycle) cycle.classList.remove("on");
+}
+function startCycle(slug) {
+  stopCycle();
+  const cycle = document.getElementById("atm-cycle");
+  if (!cycle) return;
+  const extras = ATM_CYCLE[cycleKey(slug)] || [];
+  if (!extras.length) {
+    cycle.removeAttribute("src");
+    return;
+  }
+  const base = themeWashFile(cycleKey(slug));
+  let index = 0;
+  function show(i) {
+    cycle.src = depthPrefix() + "assets/themes/" + extras[i % extras.length];
+    cycle.classList.add("on");
+  }
+  if (!base) show(0);
+  if (!base && extras.length < 2) return;
+  cycleTimer = setInterval(function () {
+    if (!base) {
+      index = (index + 1) % extras.length;
+      show(index);
+      return;
+    }
+    if (cycle.classList.contains("on")) cycle.classList.remove("on");
+    else show(index++);
+  }, 8000);
+}
 let introToken = 0;
 let introRunning = false;
 let introSlug = "";
-function beginPageIntro() {
+function seenDrop(slug) {
+  try { return JSON.parse(sessionStorage.getItem("drop-seen") || "{}")[slug] === 1; }
+  catch (e) { return false; }
+}
+function markDrop(slug) {
+  try {
+    const all = JSON.parse(sessionStorage.getItem("drop-seen") || "{}");
+    all[slug] = 1;
+    sessionStorage.setItem("drop-seen", JSON.stringify(all));
+  } catch (e) {}
+}
+function beginPageIntro(slug) {
   const old = document.getElementById("drop-clip");
   if (old) old.remove();
+  startCycle(slug);
   const token = ++introToken;
   const reveal = function () {
     if (token !== introToken) return;
@@ -842,30 +964,29 @@ function beginPageIntro() {
     document.body.classList.remove("intro-hold");
     document.body.classList.add("intro-reveal");
     window.setTimeout(function () {
-      if (token !== introToken) return;
+      if (token !== introToken || slug !== "alchemical-hydra") return;
       const main = document.getElementById("main");
       if (main) armHydraMeters(main);
     }, 420);
   };
-  let seen = false;
-  try { seen = sessionStorage.getItem("hydra-drop-seen") === "1"; } catch (e) {}
-  if (seen) {
-    window.setTimeout(reveal, 1100);
+  const drop = DROP_CLIPS[slug];
+  if (!drop || seenDrop(slug)) {
+    window.setTimeout(reveal, 1000);
     return;
   }
-  try { sessionStorage.setItem("hydra-drop-seen", "1"); } catch (e) {}
+  markDrop(slug);
   const box = document.createElement("div");
   box.id = "drop-clip";
   box.className = "drop-clip";
   const video = document.createElement("video");
-  video.src = depthPrefix() + "assets/hydra-drop.mp4";
+  video.src = depthPrefix() + "assets/drops/" + drop.file;
   video.muted = true;
   video.playsInline = true;
   video.autoplay = true;
   video.setAttribute("muted", "");
   const cap = document.createElement("div");
   cap.className = "drop-cap";
-  cap.textContent = "Hydra's claw";
+  cap.textContent = drop.caption;
   const skip = document.createElement("button");
   skip.type = "button";
   skip.className = "update drop-skip";
@@ -903,28 +1024,27 @@ function render() {
   if (!isNext()) section = (currentBoss().kind === "monster") ? "monster" : "boss";
   const slug = isNext() ? "" : currentBoss().slug;
   const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (slug !== "alchemical-hydra") introSlug = "";
-  const wantIntro = slug === "alchemical-hydra" && introSlug !== slug && !reduce;
+  const wantIntro = !!slug && slug !== introSlug && !reduce;
+  if (!slug) introSlug = "";
   if (wantIntro) {
     introSlug = slug;
     introRunning = true;
+    stopCycle();
     document.body.classList.add("intro-hold");
     document.body.classList.remove("intro-reveal");
-  } else if (!introRunning) {
-    document.body.classList.remove("intro-hold", "intro-reveal");
-  }
-  updateAtmosphere();
-  renderNav();
-  renderMain();
-  document.title = isNext() ? "Next drops · No mistakes" : currentBoss().name + " · No mistakes";
-  if (wantIntro) beginPageIntro();
-  else if (slug !== "alchemical-hydra") {
+  } else if (!introRunning || !slug) {
     introToken++;
     introRunning = false;
     const old = document.getElementById("drop-clip");
     if (old) old.remove();
     document.body.classList.remove("intro-hold", "intro-reveal");
   }
+  updateAtmosphere();
+  renderNav();
+  renderMain();
+  document.title = isNext() ? "Next drops · No mistakes" : currentBoss().name + " · No mistakes";
+  if (wantIntro) beginPageIntro(slug);
+  else if (!introRunning) startCycle(slug);
 }
 
 let refreshing = false;
@@ -1307,6 +1427,12 @@ function ensureAtmosphere() {
   themeWash.alt = "";
   themeWash.onerror = function () { themeWash.removeAttribute("src"); themeWash.style.opacity = "0"; };
   root.appendChild(themeWash);
+  const cycle = document.createElement("img");
+  cycle.className = "atm-cycle";
+  cycle.id = "atm-cycle";
+  cycle.alt = "";
+  cycle.onerror = function () { cycle.classList.remove("on"); };
+  root.appendChild(cycle);
   const themeTitle = document.createElement("img");
   themeTitle.className = "atm-theme-title atm-title-plate";
   themeTitle.id = "atm-theme-title";

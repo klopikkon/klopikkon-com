@@ -198,6 +198,16 @@ body[data-atm="raid"] .atmosphere{
 }
 .atmosphere .atm-theme-wash.on{ opacity:.55 }
 .atmosphere .atm-theme-wash.on.integrated{ opacity:.6 }
+.atmosphere .atm-cycle{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:center top;
+  opacity:0; transition:opacity 1.6s ease;
+  filter:saturate(1.08) contrast(1.05) brightness(.72);
+  mask-image: linear-gradient(180deg, #000 0%, #000 42%, rgba(0,0,0,.55) 62%, transparent 96%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 42%, rgba(0,0,0,.55) 62%, transparent 96%);
+  pointer-events:none;
+}
+.atmosphere .atm-cycle.on{ opacity:.62 }
 /* No floating title plate when wash has baked heading */
 body[data-atm="theme"] .atmosphere .atm-theme-title{ opacity:0 !important }
 body[data-atm="theme"] .atmosphere .atm-theme-wash.on.integrated ~ .atm-theme-title,
