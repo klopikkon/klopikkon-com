@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "78";
+const ASSET_V = "79";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -852,7 +852,15 @@ const DROP_CLIPS = {
   "chambers-of-xeric-cm": { file: "chambers-of-xeric.mp4", caption: "Purple" },
   "tombs-of-amascut": { file: "tombs-of-amascut.mp4", caption: "Purple" },
   "tombs-of-amascut-expert": { file: "tombs-of-amascut.mp4", caption: "Purple" },
-  "kalphite-queen": { file: "kalphite-queen.mp4", caption: "Dragon pickaxe" }
+  "kalphite-queen": { file: "kalphite-queen.mp4", caption: "Dragon pickaxe" },
+  kreearra: { file: "kreearra.mp4", caption: "Armadyl hilt" },
+  "commander-zilyana": { file: "commander-zilyana.mp4", caption: "Saradomin hilt" },
+  "kril-tsutsaroth": { file: "kril-tsutsaroth.mp4", caption: "Zamorak hilt" },
+  "abyssal-sire": { file: "abyssal-sire.mp4", caption: "Unsired" },
+  "grotesque-guardians": { file: "grotesque-guardians.mp4", caption: "Granite hammer" },
+  "thermonuclear-smoke-devil": { file: "thermonuclear-smoke-devil.mp4", caption: "Occult necklace" },
+  "sol-heredit": { file: "sol-heredit.mp4", caption: "Sunfire fan" },
+  "desert-treasure-ii": { file: "desert-treasure-ii.mp4", caption: "Virtus" }
 };
 const ATM_CYCLE = {
   "alchemical-hydra": ["alchemical-hydra-alt.webp"],
@@ -873,29 +881,34 @@ const ATM_CYCLE = {
   "chambers-of-xeric": ["chambers-of-xeric-alt.webp"],
   "tombs-of-amascut": ["tombs-of-amascut-alt.webp"],
   "kalphite-queen": ["kalphite-queen-alt.webp"],
-  gargoyle: ["gargoyle-alt.webp"],
-  "demonic-gorilla": ["demonic-gorilla-alt.webp"],
-  "vyrewatch-sentinel": ["vyrewatch-sentinel-alt.webp"],
-  "abyssal-demon": ["abyssal-demon-alt.webp"],
+  kreearra: ["kreearra-alt.webp"],
+  "commander-zilyana": ["commander-zilyana-alt.webp"],
+  "kril-tsutsaroth": ["kril-tsutsaroth-alt.webp"],
+  "abyssal-sire": ["abyssal-sire-alt.webp"],
+  "phantom-muspah": ["phantom-muspah-alt.webp"],
+  gargoyle: ["gargoyle-alt.webp", "gargoyle-alt2.webp"],
+  "demonic-gorilla": ["demonic-gorilla-alt.webp", "demonic-gorilla-alt2.webp"],
+  "vyrewatch-sentinel": ["vyrewatch-sentinel-alt.webp", "vyrewatch-sentinel-alt2.webp"],
+  "abyssal-demon": ["abyssal-demon-alt.webp", "abyssal-demon-alt2.webp"],
   "thermonuclear-smoke-devil": ["thermonuclear-smoke-devil-alt.webp"],
   "the-corrupted-gauntlet": ["the-corrupted-gauntlet-alt.webp"],
   "desert-treasure-ii": ["desert-treasure-ii-alt.webp"],
   "sol-heredit": ["sol-heredit-alt.webp"],
-  "lizardman-shaman": ["lizardman-shaman-alt.webp"],
-  "basilisk-knight": ["basilisk-knight-alt.webp"],
-  "dark-beast": ["dark-beast-alt.webp"],
-  "cave-horror": ["cave-horror-alt.webp"],
-  kurask: ["kurask-alt.webp"],
-  wyrm: ["wyrm-alt.webp"],
-  drake: ["drake-alt.webp"],
-  "rune-dragon": ["rune-dragon-alt.webp"],
-  "skeletal-wyvern": ["skeletal-wyvern-alt.webp"],
-  "spiritual-mage": ["spiritual-mage-alt.webp"],
-  "tormented-demon": ["tormented-demon-alt.webp"],
-  "armoured-zombie": ["armoured-zombie-alt.webp"],
-  "sulphur-nagua": ["sulphur-nagua-alt.webp"],
-  "frost-nagua": ["frost-nagua-alt.webp"],
-  "warped-tortoise": ["warped-tortoise-alt.webp"]
+  "lizardman-shaman": ["lizardman-shaman-alt.webp", "lizardman-shaman-alt2.webp"],
+  "basilisk-knight": ["basilisk-knight-alt.webp", "basilisk-knight-alt2.webp"],
+  "dark-beast": ["dark-beast-alt.webp", "dark-beast-alt2.webp"],
+  "cave-horror": ["cave-horror-alt.webp", "cave-horror-alt2.webp"],
+  kurask: ["kurask-alt.webp", "kurask-alt2.webp"],
+  wyrm: ["wyrm-alt.webp", "wyrm-alt2.webp"],
+  drake: ["drake-alt.webp", "drake-alt2.webp"],
+  "rune-dragon": ["rune-dragon-alt.webp", "rune-dragon-alt2.webp"],
+  "skeletal-wyvern": ["skeletal-wyvern-alt.webp", "skeletal-wyvern-alt2.webp"],
+  "spiritual-mage": ["spiritual-mage-alt.webp", "spiritual-mage-alt2.webp"],
+  "tormented-demon": ["tormented-demon-alt.webp", "tormented-demon-alt2.webp"],
+  "armoured-zombie": ["armoured-zombie-alt.webp", "armoured-zombie-alt2.webp"],
+  "sulphur-nagua": ["sulphur-nagua-alt.webp", "sulphur-nagua-alt2.webp"],
+  "frost-nagua": ["frost-nagua-alt.webp", "frost-nagua-alt2.webp"],
+  "warped-tortoise": ["warped-tortoise-alt.webp", "warped-tortoise-alt2.webp"]
 };
 function cycleKey(slug) {
   if (isDtAtmosphere(slug)) return "desert-treasure-ii";
@@ -909,34 +922,47 @@ let cycleTimer = 0;
 function stopCycle() {
   if (cycleTimer) clearInterval(cycleTimer);
   cycleTimer = 0;
-  const cycle = document.getElementById("atm-cycle");
-  if (cycle) cycle.classList.remove("on");
+  ["atm-cycle", "atm-cycle-b"].forEach(function (id) {
+    const cycle = document.getElementById(id);
+    if (cycle) cycle.classList.remove("on");
+  });
 }
 function startCycle(slug) {
   stopCycle();
-  const cycle = document.getElementById("atm-cycle");
-  if (!cycle) return;
+  const a = document.getElementById("atm-cycle");
+  const b = document.getElementById("atm-cycle-b");
+  if (!a) return;
   const extras = ATM_CYCLE[cycleKey(slug)] || [];
   if (!extras.length) {
-    cycle.removeAttribute("src");
+    a.removeAttribute("src");
+    if (b) b.removeAttribute("src");
     return;
   }
+  const prefix = depthPrefix() + "assets/themes/";
   const base = themeWashFile(cycleKey(slug));
   let index = 0;
-  function show(i) {
-    cycle.src = depthPrefix() + "assets/themes/" + extras[i % extras.length];
-    cycle.classList.add("on");
-  }
-  if (!base) show(0);
-  if (!base && extras.length < 2) return;
-  cycleTimer = setInterval(function () {
-    if (!base) {
+  if (!base) {
+    a.src = prefix + extras[0];
+    a.classList.add("on");
+    if (!b || extras.length < 2) return;
+    let front = a;
+    cycleTimer = setInterval(function () {
       index = (index + 1) % extras.length;
-      show(index);
-      return;
+      const back = front === a ? b : a;
+      back.src = prefix + extras[index];
+      back.classList.add("on");
+      front.classList.remove("on");
+      front = back;
+    }, 8000);
+    return;
+  }
+  cycleTimer = setInterval(function () {
+    if (a.classList.contains("on")) a.classList.remove("on");
+    else {
+      a.src = prefix + extras[index % extras.length];
+      a.classList.add("on");
+      index++;
     }
-    if (cycle.classList.contains("on")) cycle.classList.remove("on");
-    else show(index++);
   }, 8000);
 }
 let introToken = 0;
@@ -1433,6 +1459,12 @@ function ensureAtmosphere() {
   cycle.alt = "";
   cycle.onerror = function () { cycle.classList.remove("on"); };
   root.appendChild(cycle);
+  const cycleB = document.createElement("img");
+  cycleB.className = "atm-cycle";
+  cycleB.id = "atm-cycle-b";
+  cycleB.alt = "";
+  cycleB.onerror = function () { cycleB.classList.remove("on"); };
+  root.appendChild(cycleB);
   const themeTitle = document.createElement("img");
   themeTitle.className = "atm-theme-title atm-title-plate";
   themeTitle.id = "atm-theme-title";
