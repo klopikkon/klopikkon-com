@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "73";
+const ASSET_V = "74";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -240,6 +240,7 @@ function nextDrops(member) {
   BOARD.bosses.forEach(function (boss) {
     const cycleId = nextCycleId(member, boss);
     boss.uniques.forEach(function (item) {
+      if (isShroud(item) || isCosmetic(item)) return;
       const got = gotCount(member, boss, item);
       if (got == null) return;
       const cyclePiece = item.cycle != null;
@@ -571,6 +572,18 @@ function kcHeadingBit(member, boss, table, opts) {
   return " · " + num(kc.kc) + " KC";
 }
 
+function isShroud(item) {
+  return /shroud/i.test(item.name || "");
+}
+function isCosmetic(item) {
+  return /metamorphic dust|sanguine dust|colour kit|ornament kit|cursed phalanx|ancient remnant/i.test(item.name || "");
+}
+function showUnique(item, counts) {
+  if (isShroud(item)) return false;
+  if (isCosmetic(item)) return (counts[item.id] || 0) > 0;
+  return true;
+}
+
 function renderMain() {
   if (isNext()) return renderNext();
   const boss = currentBoss();
@@ -613,6 +626,7 @@ function renderMain() {
       ? "Not on the hiscores. Type the loot-tracker KC and the luck bars will use it. Collection log counts are filled in."
       : "Collection log is in, but there is no kill count yet, so expected drops stay blank."));
     boss.uniques.forEach(function (item) {
+      if (!showUnique(item, counts)) return;
       main.appendChild(el("p", "", (counts[item.id] || 0) + "  " + item.name));
     });
   } else if (boss.uniques.length) {
@@ -624,6 +638,7 @@ function renderMain() {
     main.appendChild(heading);
     const list = el("div", "clog-list");
     boss.uniques.forEach(function (item) {
+      if (!showUnique(item, counts)) return;
       const got = counts[item.id] || 0;
       const row = el("div", "clog-row" + (got ? " got" : ""));
       row.append(el("span", "clog-qty", String(got)), el("span", "clog-name", item.name));
@@ -639,7 +654,9 @@ function renderMain() {
   ];
   let firstVisibleTable = true;
   tables.forEach(function (table) {
-    const items = boss.uniques.filter(function (item) { return (item.table || "rare") === table.id; });
+    const items = boss.uniques.filter(function (item) {
+      return (item.table || "rare") === table.id && showUnique(item, counts);
+    });
     if (!items.length) return;
     let sumGot = 0;
     let sumExpected = 0;
