@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "79";
+const ASSET_V = "80";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -860,7 +860,26 @@ const DROP_CLIPS = {
   "grotesque-guardians": { file: "grotesque-guardians.mp4", caption: "Granite hammer" },
   "thermonuclear-smoke-devil": { file: "thermonuclear-smoke-devil.mp4", caption: "Occult necklace" },
   "sol-heredit": { file: "sol-heredit.mp4", caption: "Sunfire fan" },
-  "desert-treasure-ii": { file: "desert-treasure-ii.mp4", caption: "Virtus" }
+  "desert-treasure-ii": { file: "desert-treasure-ii.mp4", caption: "Virtus" },
+  "vyrewatch-sentinel": { file: "vyrewatch-sentinel.mp4", caption: "Blood shard" },
+  "demonic-gorilla": { file: "demonic-gorilla.mp4", caption: "Zenyte shard" },
+  "lizardman-shaman": { file: "lizardman-shaman.mp4", caption: "Dragon warhammer" },
+  "basilisk-knight": { file: "basilisk-knight.mp4", caption: "Basilisk jaw" },
+  "abyssal-demon": { file: "abyssal-demon.mp4", caption: "Abyssal whip" },
+  "dark-beast": { file: "dark-beast.mp4", caption: "Dark bow" },
+  "cave-horror": { file: "cave-horror.mp4", caption: "Black mask" },
+  gargoyle: { file: "gargoyle.mp4", caption: "Granite maul" },
+  kurask: { file: "kurask.mp4", caption: "Leaf-bladed sword" },
+  wyrm: { file: "wyrm.mp4", caption: "Dragon harpoon" },
+  drake: { file: "drake.mp4", caption: "Drake's claw" },
+  "rune-dragon": { file: "rune-dragon.mp4", caption: "Dragon limbs" },
+  "skeletal-wyvern": { file: "skeletal-wyvern.mp4", caption: "Wyvern visage" },
+  "spiritual-mage": { file: "spiritual-mage.mp4", caption: "Dragon boots" },
+  "tormented-demon": { file: "tormented-demon.mp4", caption: "Burning claws" },
+  "armoured-zombie": { file: "armoured-zombie.mp4", caption: "Zombie axe" },
+  "sulphur-nagua": { file: "sulphur-nagua.mp4", caption: "Sulphur blades" },
+  "frost-nagua": { file: "frost-nagua.mp4", caption: "Glacial temotli" },
+  "warped-tortoise": { file: "warped-tortoise.mp4", caption: "Warped sceptre" }
 };
 const ATM_CYCLE = {
   "alchemical-hydra": ["alchemical-hydra-alt.webp"],
@@ -886,6 +905,7 @@ const ATM_CYCLE = {
   "kril-tsutsaroth": ["kril-tsutsaroth-alt.webp"],
   "abyssal-sire": ["abyssal-sire-alt.webp"],
   "phantom-muspah": ["phantom-muspah-alt.webp"],
+  "grotesque-guardians": ["grotesque-guardians-alt.webp"],
   gargoyle: ["gargoyle-alt.webp", "gargoyle-alt2.webp"],
   "demonic-gorilla": ["demonic-gorilla-alt.webp", "demonic-gorilla-alt2.webp"],
   "vyrewatch-sentinel": ["vyrewatch-sentinel-alt.webp", "vyrewatch-sentinel-alt2.webp"],
