@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "74";
+const ASSET_V = "75";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -300,6 +300,49 @@ function el(tag, className, text) {
   return node;
 }
 
+function rareTableItem(item) {
+  if ((item.table || "rare") === "tertiary") return false;
+  if (item.rate == null && !item.sources && !item.delveRates) return false;
+  return true;
+}
+function rareLuck(member, boss) {
+  const counts = BOARD.clog[member.id] && BOARD.clog[member.id][boss.slug];
+  if (!counts) return null;
+  let got = 0;
+  let expected = 0;
+  let scored = 0;
+  boss.uniques.forEach(function (item) {
+    if (!rareTableItem(item) || counts[item.id] == null) return;
+    const exp = itemExpected(member, boss, item);
+    if (!isFinite(exp)) return;
+    got += counts[item.id] || 0;
+    expected += exp;
+    scored++;
+  });
+  if (!scored || expected < 1 && got <= 0) return null;
+  return got / Math.max(expected, 0.0001);
+}
+let luckRank = {};
+function rebuildLuckRank() {
+  const member = BOARD.members.find(function (m) { return m.id === memberId; }) || BOARD.members[0];
+  luckRank = {};
+  BOARD.bosses.forEach(function (boss, index) {
+    const ratio = rareLuck(member, boss);
+    luckRank[boss.slug] = { ratio: ratio, index: index };
+  });
+}
+function byRareLuck(a, b) {
+  const ra = luckRank[a.slug] || { ratio: null, index: 0 };
+  const rb = luckRank[b.slug] || { ratio: null, index: 0 };
+  if (ra.ratio != null && rb.ratio != null && ra.ratio !== rb.ratio) return rb.ratio - ra.ratio;
+  if (ra.ratio != null) return -1;
+  if (rb.ratio != null) return 1;
+  return ra.index - rb.index;
+}
+function luckiestFirst(bosses) {
+  return bosses.slice().sort(byRareLuck);
+}
+
 function renderNav() {
   const regionBox = document.getElementById("regions");
   const list = document.getElementById("bosses");
@@ -328,7 +371,7 @@ function renderNav() {
       if (m.id === memberId) option.selected = true;
       playerPick.appendChild(option);
     });
-    playerPick.onchange = function () { memberId = playerPick.value; renderMain(); };
+    playerPick.onchange = function () { memberId = playerPick.value; render(); };
     who.appendChild(playerPick);
   }
   if (kinds) {
@@ -339,7 +382,9 @@ function renderNav() {
       button.onclick = function () {
         section = pair[0];
         region = "All";
-        const first = BOARD.bosses.find(function (b) { return (b.kind || "boss") === section; });
+        const group = BOARD.bosses.filter(function (b) { return (b.kind || "boss") === section; });
+        const firstRegion = group[0] && group[0].region;
+        const first = luckiestFirst(group.filter(function (b) { return b.region === firstRegion; }))[0];
         if (first) goBoss(first.slug);
         else renderNav();
       };
@@ -352,6 +397,7 @@ function renderNav() {
   }
   const label = aside && aside.querySelector(".label");
   if (label) label.textContent = section === "monster" ? "Monsters" : "Bosses";
+  rebuildLuckRank();
   regionBox.innerHTML = "";
   list.innerHTML = "";
   if (pick) pick.innerHTML = "";
@@ -370,16 +416,25 @@ function renderNav() {
   regionPick.onchange = function () {
     const name = regionPick.value;
     region = name;
-    const first = pool.find(function (b) { return name === "All" || b.region === name; });
+    const shown = name === "All" ? pool : pool.filter(function (b) { return b.region === name; });
+    const firstRegion = shown[0] && shown[0].region;
+    const first = luckiestFirst(shown.filter(function (b) { return b.region === firstRegion; }))[0];
     if (first) goBoss(first.slug);
     else renderNav();
   };
   regionBox.appendChild(regionPick);
-  pool.filter((b) => region === "All" || b.region === region).forEach((boss) => {
-    const button = el("button", boss.slug === active ? "on" : "", boss.name);
-    button.type = "button";
-    button.onclick = () => { goBoss(boss.slug); };
-    list.appendChild(button);
+  const shown = region === "All" ? pool : pool.filter(function (b) { return b.region === region; });
+  const regionsInOrder = [];
+  shown.forEach(function (b) {
+    if (regionsInOrder.indexOf(b.region) === -1) regionsInOrder.push(b.region);
+  });
+  regionsInOrder.forEach(function (name) {
+    luckiestFirst(shown.filter(function (b) { return b.region === name; })).forEach(function (boss) {
+      const button = el("button", boss.slug === active ? "on" : "", boss.name);
+      button.type = "button";
+      button.onclick = function () { goBoss(boss.slug); };
+      list.appendChild(button);
+    });
   });
 }
 
@@ -911,6 +966,7 @@ async function refreshWom() {
     if (!refreshing) status.textContent = "Hiscores did not answer. Saved kill counts still work.";
   }
   if (!refreshing && !document.querySelector(".fill.arm")) renderMain();
+  if (!refreshing) renderNav();
 }
 async function refreshAll() {
   if (refreshing) return;
@@ -951,6 +1007,7 @@ async function refreshAll() {
     : "Hiscores checked for all 5.") + clogNote;
   if (button) { button.disabled = false; button.textContent = "Update"; }
   refreshing = false;
+  renderNav();
   renderMain();
 }
 
@@ -1518,5 +1575,6 @@ render();
 refreshWom();
 refreshLogs().then(function () {
   if (document.querySelector(".fill.arm")) return;
+  if (!refreshing) renderNav();
   if (!refreshing) renderMain();
 });
