@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "76";
+const ASSET_V = "77";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -746,7 +746,7 @@ function renderMain() {
     }
     rows.forEach(function (entry) { main.appendChild(entry.row); });
   });
-  if (animate) armHydraMeters(main);
+  if (animate && !introRunning) armHydraMeters(main);
   if (animate) {
     const hear = el("button", "update", "Hear the calls");
     hear.type = "button";
@@ -829,13 +829,102 @@ function renderMain() {
   }
 }
 
+let introToken = 0;
+let introRunning = false;
+let introSlug = "";
+function beginPageIntro() {
+  const old = document.getElementById("drop-clip");
+  if (old) old.remove();
+  const token = ++introToken;
+  const reveal = function () {
+    if (token !== introToken) return;
+    introRunning = false;
+    document.body.classList.remove("intro-hold");
+    document.body.classList.add("intro-reveal");
+    window.setTimeout(function () {
+      if (token !== introToken) return;
+      const main = document.getElementById("main");
+      if (main) armHydraMeters(main);
+    }, 420);
+  };
+  let seen = false;
+  try { seen = sessionStorage.getItem("hydra-drop-seen") === "1"; } catch (e) {}
+  if (seen) {
+    window.setTimeout(reveal, 1100);
+    return;
+  }
+  try { sessionStorage.setItem("hydra-drop-seen", "1"); } catch (e) {}
+  const box = document.createElement("div");
+  box.id = "drop-clip";
+  box.className = "drop-clip";
+  const video = document.createElement("video");
+  video.src = depthPrefix() + "assets/hydra-drop.mp4";
+  video.muted = true;
+  video.playsInline = true;
+  video.autoplay = true;
+  video.setAttribute("muted", "");
+  const cap = document.createElement("div");
+  cap.className = "drop-cap";
+  cap.textContent = "Hydra's claw";
+  const skip = document.createElement("button");
+  skip.type = "button";
+  skip.className = "update drop-skip";
+  skip.textContent = "Skip";
+  let closed = false;
+  function closeClip() {
+    if (closed || token !== introToken) return;
+    closed = true;
+    box.classList.add("out");
+    window.setTimeout(function () {
+      if (box.parentNode) box.remove();
+      reveal();
+    }, 520);
+  }
+  skip.onclick = closeClip;
+  video.onended = closeClip;
+  video.onerror = function () {
+    closed = true;
+    if (box.parentNode) box.remove();
+    reveal();
+  };
+  box.append(video, cap, skip);
+  document.body.appendChild(box);
+  const pending = video.play();
+  if (pending && pending.catch) pending.catch(function () {
+    if (closed || token !== introToken) return;
+    closed = true;
+    if (box.parentNode) box.remove();
+    reveal();
+  });
+  window.setTimeout(closeClip, 9000);
+}
 function render() {
   ensureUpdateButton();
   if (!isNext()) section = (currentBoss().kind === "monster") ? "monster" : "boss";
+  const slug = isNext() ? "" : currentBoss().slug;
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (slug !== "alchemical-hydra") introSlug = "";
+  const wantIntro = slug === "alchemical-hydra" && introSlug !== slug && !reduce;
+  if (wantIntro) {
+    introSlug = slug;
+    introRunning = true;
+    document.body.classList.add("intro-hold");
+    document.body.classList.remove("intro-reveal");
+  } else if (!introRunning) {
+    document.body.classList.remove("intro-hold", "intro-reveal");
+  }
   updateAtmosphere();
   renderNav();
   renderMain();
   document.title = isNext() ? "Next drops · No mistakes" : currentBoss().name + " · No mistakes";
+  if (wantIntro) beginPageIntro();
+  else if (slug !== "alchemical-hydra") {
+    introToken++;
+    introRunning = false;
+    const old = document.getElementById("drop-clip");
+    if (old) old.remove();
+    document.body.classList.remove("intro-hold", "intro-reveal");
+  }
 }
 
 let refreshing = false;
