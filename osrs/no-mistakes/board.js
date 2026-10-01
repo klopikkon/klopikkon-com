@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "80";
+const ASSET_V = "81";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -881,6 +881,55 @@ const DROP_CLIPS = {
   "frost-nagua": { file: "frost-nagua.mp4", caption: "Glacial temotli" },
   "warped-tortoise": { file: "warped-tortoise.mp4", caption: "Warped sceptre" }
 };
+const DROP_EXTRA = {
+  "alchemical-hydra": [
+    { file: "alchemical-hydra-heart.mp4", caption: "Hydra's heart" },
+    { file: "alchemical-hydra-leather.mp4", caption: "Hydra leather" }
+  ],
+  cerberus: [{ file: "cerberus-primordial.mp4", caption: "Primordial crystal" }],
+  vorkath: [{ file: "vorkath-visage.mp4", caption: "Draconic visage" }],
+  zulrah: [{ file: "zulrah-fang.mp4", caption: "Magic fang" }],
+  "the-hueycoatl": [{ file: "the-hueycoatl-tome.mp4", caption: "Tome of earth" }],
+  "doom-of-mokhaiotl": [{ file: "doom-of-mokhaiotl-treads.mp4", caption: "Avernic treads" }],
+  araxxor: [{ file: "araxxor-head.mp4", caption: "Araxyte head" }],
+  nex: [{ file: "nex-torva.mp4", caption: "Torva platebody" }],
+  "general-graardor": [{ file: "general-graardor-tassets.mp4", caption: "Bandos tassets" }],
+  "phantom-muspah": [{ file: "phantom-muspah-icon.mp4", caption: "Ancient icon" }],
+  nightmare: [{ file: "nightmare-mace.mp4", caption: "Inquisitor's mace" }],
+  kraken: [{ file: "kraken-tentacle.mp4", caption: "Kraken tentacle" }],
+  "corporeal-beast": [{ file: "corporeal-beast-elysian.mp4", caption: "Elysian sigil" }],
+  yama: [{ file: "yama-oathplate.mp4", caption: "Oathplate" }],
+  "chambers-of-xeric": [{ file: "chambers-of-xeric-claws.mp4", caption: "Dragon claws" }],
+  "theatre-of-blood": [{ file: "theatre-of-blood-rapier.mp4", caption: "Ghrazi rapier" }],
+  "tombs-of-amascut": [{ file: "tombs-of-amascut-shadow.mp4", caption: "Tumeken's shadow" }],
+  "kalphite-queen": [],
+  kreearra: [{ file: "kreearra-chest.mp4", caption: "Armadyl chestplate" }],
+  "commander-zilyana": [{ file: "commander-zilyana-acb.mp4", caption: "Armadyl crossbow" }],
+  "kril-tsutsaroth": [{ file: "kril-tsutsaroth-sotd.mp4", caption: "Staff of the dead" }],
+  "sol-heredit": [{ file: "sol-heredit-quiver.mp4", caption: "Dizana's quiver" }],
+  "desert-treasure-ii": [{ file: "desert-treasure-ii-axe.mp4", caption: "Executioner's axe" }],
+  "the-corrupted-gauntlet": [{ file: "the-corrupted-gauntlet.mp4", caption: "Enhanced weapon seed" }]
+};
+function dropKey(slug) {
+  if (slug === "theatre-of-blood-hm") return "theatre-of-blood";
+  if (slug === "chambers-of-xeric-cm") return "chambers-of-xeric";
+  if (slug === "tombs-of-amascut-expert") return "tombs-of-amascut";
+  if (slug === "phosanis-nightmare") return "nightmare";
+  if (typeof isDtAtmosphere === "function" && isDtAtmosphere(slug)) return "desert-treasure-ii";
+  return slug;
+}
+let lastDropFile = "";
+function pickDrop(slug) {
+  const key = dropKey(slug);
+  const base = DROP_CLIPS[key];
+  const extra = DROP_EXTRA[key] || [];
+  const clips = (base ? [base] : []).concat(extra);
+  if (!clips.length) return null;
+  let index = Math.floor(Math.random() * clips.length);
+  if (clips.length > 1 && clips[index].file === lastDropFile) index = (index + 1) % clips.length;
+  lastDropFile = clips[index].file;
+  return clips[index];
+}
 const ATM_CYCLE = {
   "alchemical-hydra": ["alchemical-hydra-alt.webp"],
   cerberus: ["cerberus-alt.webp"],
@@ -1015,12 +1064,11 @@ function beginPageIntro(slug) {
       if (main) armHydraMeters(main);
     }, 420);
   };
-  const drop = DROP_CLIPS[slug];
-  if (!drop || seenDrop(slug)) {
+  const drop = pickDrop(slug);
+  if (!drop) {
     window.setTimeout(reveal, 1000);
     return;
   }
-  markDrop(slug);
   const box = document.createElement("div");
   box.id = "drop-clip";
   box.className = "drop-clip";
