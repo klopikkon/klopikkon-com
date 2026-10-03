@@ -1,5 +1,5 @@
 /* Cache-bust board.css even if a stale HTML shell omitted ?v= */
-const ASSET_V = "81";
+const ASSET_V = "82";
 (function bumpBoardCss() {
   try {
     const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -533,6 +533,21 @@ function runHydraSequence(fills) {
     }, 50);
   }
   step(0);
+}
+function paintLive() {
+  if (refreshing) return;
+  const hydraLive = !isNext() && currentBoss().slug === "alchemical-hydra";
+  const armed = hydraLive && !!document.querySelector("#main .fill.arm");
+  if (armed) {
+    hydraRun++;
+    hideRarePopup();
+  }
+  renderNav();
+  renderMain();
+  if (armed && !introRunning) {
+    const main = document.getElementById("main");
+    if (main) armHydraMeters(main);
+  }
 }
 function replayHydra() {
   soundOn = true;
@@ -1268,8 +1283,7 @@ async function refreshWom() {
   } catch (e) {
     if (!refreshing) status.textContent = "Hiscores did not answer. Saved kill counts still work.";
   }
-  if (!refreshing && !document.querySelector(".fill.arm")) renderMain();
-  if (!refreshing) renderNav();
+  paintLive();
 }
 async function refreshAll() {
   if (refreshing) return;
@@ -1943,7 +1957,5 @@ window.addEventListener("popstate", render);
 render();
 refreshWom();
 refreshLogs().then(function () {
-  if (document.querySelector(".fill.arm")) return;
-  if (!refreshing) renderNav();
-  if (!refreshing) renderMain();
+  paintLive();
 });
