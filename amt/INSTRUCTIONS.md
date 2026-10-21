@@ -36,6 +36,7 @@ If Broadpharm, JenKem, Creative PEGWorks, Avanti, Cayman, TCI, Sigma, Lumiprobe,
 - Green / `row-win` / `rank-win` — AMT cheapest published list on a matched pack.
 - Red / `row-lose` / `rank-lose` — a competitor prints a lower list.
 - Amber / `row-split` / `rank-split` — pack-size split, analogue-only peer, or CAS still unchecked.
+- From Borons-05 onward, do not recolour older rows: if the peer list is in a different currency from AMT and the raw numbers are within 25% of each other, the call is amber `currency split, within 25%`, not green, red, or a raw-number tie. Within 25% means the higher raw number is at most 25% above the lower one (`(max−min)/min ≤ 0.25`). A larger gap stays green or red. Same-currency comparisons are unchanged.
 
 ## Sources to re-read, not guess
 
