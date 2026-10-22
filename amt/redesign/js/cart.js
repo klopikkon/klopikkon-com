@@ -96,7 +96,67 @@ export function linePrice(line, catalog) {
   return pack?.label || "";
 }
 
-export function buildMailto({ email, cart, fields, catalog }) {
+/** A published currency amount, or null for Quote and anything unparsed. */
+export function parsePublishedPrice(label) {
+  const text = String(label || "").trim().replace(/,/g, "");
+  if (!text || /^quote$/i.test(text)) return null;
+  const match = text.match(/^(USD|US\$|A\$|AU\$|\$|€|£)\s*(\d+(?:\.\d+)?)$/i);
+  if (!match) return null;
+  const amount = Number(match[2]);
+  if (!Number.isFinite(amount) || amount <= 0) return null;
+  const token = match[1];
+  const symbol = /^usd$/i.test(token) ? "USD " : token;
+  return { amount, symbol };
+}
+
+export function formatMoney(amount, symbol) {
+  const rounded = (Math.round(Number(amount) * 100) / 100).toFixed(2);
+  return symbol === "USD " ? `USD ${rounded}` : `${symbol}${rounded}`;
+}
+
+export const INDICATIVE_LABEL = "Indicative total, ex GST";
+
+/**
+ * Line totals only for packs with a published price.
+ * Quote lines stay in the list and are left out of the total.
+ */
+export function quoteSummary(cart, catalog) {
+  const lines = normaliseCart(cart).lines.map((line) => {
+    const priceLabel = linePrice(line, catalog);
+    const parsed = parsePublishedPrice(priceLabel);
+    return {
+      name: lineLabel(line, catalog),
+      sku: line.sku,
+      pack: line.pack,
+      qty: line.qty,
+      priceLabel,
+      symbol: parsed ? parsed.symbol : null,
+      lineTotal: parsed ? parsed.amount * line.qty : null,
+    };
+  });
+  const priced = lines.filter((line) => line.lineTotal != null);
+  const symbols = [...new Set(priced.map((line) => line.symbol))];
+  const singleCurrency = symbols.length === 1;
+  const total = priced.length && singleCurrency ? priced.reduce((sum, line) => sum + line.lineTotal, 0) : null;
+  const quoteCount = lines.length - priced.length;
+  let note = "";
+  if (lines.length && !priced.length) {
+    note = "Every line is Quote, so there is no indicative total.";
+  } else if (priced.length && !singleCurrency) {
+    note = "Published prices use more than one currency, so they are not added together.";
+  } else if (quoteCount) {
+    note = "Quote lines are not included.";
+  }
+  return {
+    lines,
+    total,
+    totalLabel: total == null ? null : formatMoney(total, symbols[0]),
+    quoteCount,
+    note,
+  };
+}
+
+export function requestText({ cart, fields, catalog }) {
   const lines = normaliseCart(cart).lines;
   const chunks = ["Quote request", ""];
   const name = String(fields?.name || "").trim();
@@ -117,11 +177,53 @@ export function buildMailto({ email, cart, fields, catalog }) {
       chunks.push(`${index + 1}. ${label} | ${line.sku || "SKU not published"} | ${line.pack}${priceBit} | qty ${line.qty}`);
     });
   }
+  const summary = quoteSummary(cart, catalog);
+  if (summary.totalLabel) {
+    chunks.push("");
+    chunks.push(`${INDICATIVE_LABEL}: ${summary.totalLabel}`);
+    if (summary.quoteCount) chunks.push("Quote lines are not included.");
+  } else if (summary.lines.length && summary.quoteCount === summary.lines.length) {
+    chunks.push("");
+    chunks.push("Every line is Quote, so there is no indicative total.");
+  } else if (summary.note) {
+    chunks.push("");
+    chunks.push(summary.note);
+  }
   chunks.push("");
   chunks.push("Composed in the browser from the AMT concept redesign. Nothing was sent until this email is sent from the mail app.");
+  return chunks.join("\n");
+}
+
+export function buildMailto({ email, cart, fields, catalog }) {
   const subject = "AMT quote request";
-  const body = chunks.join("\n");
+  const body = requestText({ cart, fields, catalog });
   return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function csvCell(value) {
+  const text = String(value ?? "");
+  if (/[",\r\n]/.test(text)) return `"${text.replaceAll('"', '""')}"`;
+  return text;
+}
+
+/** Client-side CSV. Quote line totals are blank. Nothing is uploaded. */
+export function buildQuoteCsv(cart, catalog) {
+  const summary = quoteSummary(cart, catalog);
+  const rows = [["name", "sku", "pack", "published price", "qty", "line total"]];
+  for (const line of summary.lines) {
+    rows.push([
+      line.name,
+      line.sku || "",
+      line.pack,
+      line.priceLabel || "",
+      String(line.qty),
+      line.lineTotal == null ? "" : formatMoney(line.lineTotal, line.symbol),
+    ]);
+  }
+  if (summary.totalLabel) {
+    rows.push([INDICATIVE_LABEL, "", "", "", "", summary.totalLabel]);
+  }
+  return `${rows.map((row) => row.map(csvCell).join(",")).join("\r\n")}\r\n`;
 }
 
 const isBrowser = typeof document !== "undefined" && typeof window !== "undefined";
@@ -264,7 +366,36 @@ function renderQuotePage() {
     item.append(title, meta, qtyLabel, remove);
     list.append(item);
   }
-  updateMailto(page, catalog);
+  renderSummary(page, catalog);
+  updateActions(page, catalog);
+}
+
+function renderSummary(page, catalog) {
+  const box = page.querySelector("[data-quote-summary]");
+  if (!box) return;
+  const summary = quoteSummary(readCart(), catalog);
+  box.hidden = summary.lines.length === 0;
+  const list = box.querySelector("[data-quote-summary-lines]");
+  if (list) {
+    list.replaceChildren();
+    for (const line of summary.lines) {
+      const item = document.createElement("li");
+      item.className = "quote-summary-line";
+      const name = document.createElement("span");
+      name.textContent = `${line.name} · ${line.pack} · qty ${line.qty}`;
+      const amount = document.createElement("span");
+      amount.className = "quote-summary-amount";
+      amount.textContent = line.lineTotal == null ? "Quote, not included" : formatMoney(line.lineTotal, line.symbol);
+      item.append(name, amount);
+      list.append(item);
+    }
+  }
+  const total = box.querySelector("[data-quote-total]");
+  if (total) {
+    total.textContent = summary.totalLabel ? `${INDICATIVE_LABEL} ${summary.totalLabel}` : "";
+  }
+  const note = box.querySelector("[data-quote-summary-note]");
+  if (note) note.textContent = summary.note;
 }
 
 function fieldValues(page) {
@@ -287,6 +418,60 @@ function updateMailto(page, catalog) {
   const disabled = cart.lines.length === 0;
   link.setAttribute("aria-disabled", disabled ? "true" : "false");
   link.tabIndex = disabled ? -1 : 0;
+}
+
+function updateActions(page, catalog) {
+  updateMailto(page, catalog);
+  const disabled = readCart().lines.length === 0;
+  for (const button of page.querySelectorAll("[data-quote-copy], [data-quote-csv]")) {
+    button.disabled = disabled;
+  }
+}
+
+async function copyRequest(page) {
+  if (readCart().lines.length === 0) return;
+  const text = requestText({
+    cart: readCart(),
+    fields: fieldValues(page),
+    catalog: readCatalog(document),
+  });
+  const button = page.querySelector("[data-quote-copy]");
+  const original = button?.textContent || "Copy request";
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = text;
+    document.body.append(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+  }
+  const status = page.querySelector("[data-quote-status]");
+  if (status) status.textContent = "Request copied.";
+  if (button) {
+    button.textContent = "Copied";
+    window.setTimeout(() => {
+      button.textContent = original;
+    }, 1500);
+  }
+}
+
+function downloadCsv(page) {
+  if (readCart().lines.length === 0) return;
+  const csv = buildQuoteCsv(readCart(), readCatalog(document));
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const href = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = href;
+  link.download = "amt-quote.csv";
+  link.hidden = true;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(href);
+  const status = page.querySelector("[data-quote-status]");
+  if (status) status.textContent = "CSV downloaded.";
 }
 
 function onAdd(event) {
@@ -401,9 +586,15 @@ function init() {
   const page = document.querySelector("[data-quote-page]");
   if (page) {
     const form = page.querySelector("[data-quote-details]");
-    form?.addEventListener("input", () => updateMailto(page));
+    form?.addEventListener("input", () => updateActions(page));
     page.querySelector("[data-quote-mailto]")?.addEventListener("click", (event) => {
       if (readCart().lines.length === 0) event.preventDefault();
+    });
+    page.querySelector("[data-quote-copy]")?.addEventListener("click", () => {
+      copyRequest(page);
+    });
+    page.querySelector("[data-quote-csv]")?.addEventListener("click", () => {
+      downloadCsv(page);
     });
     renderQuotePage();
   }

@@ -74,6 +74,66 @@
   justify-self: start;
 }
 
+.quote-summary {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.quote-summary h2 {
+  margin: 0 0 var(--space-2);
+  font-size: 1.15rem;
+}
+
+.quote-summary-lines {
+  list-style: none;
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.quote-summary-lines:empty {
+  display: none;
+}
+
+.quote-summary-line {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+
+.quote-summary-amount {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.quote-summary-total {
+  margin: 0;
+  font-weight: 700;
+}
+
+.quote-summary-note {
+  margin: var(--space-2) 0 0;
+  color: var(--muted);
+}
+
+.quote-summary-note:empty,
+.quote-summary-total:empty {
+  display: none;
+}
+
+.quote-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.quote-actions .btn[disabled],
 a.mailto[aria-disabled="true"] {
   opacity: 0.45;
   pointer-events: none;
