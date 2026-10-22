@@ -21,7 +21,13 @@
       "packs",
       "structureImage",
       "documents",
-      "source"
+      "source",
+      "formulaExternal",
+      "mwExternal",
+      "structureImageExternal",
+      "externalSource",
+      "mwNominal",
+      "mwNominalSource"
     ],
     "properties": {
       "id": {
@@ -47,8 +53,39 @@
       },
       "subfamily": { "type": ["string", "null"] },
       "cas": { "type": ["string", "null"] },
-      "formula": { "type": ["string", "null"] },
-      "mw": { "type": ["number", "null"] },
+      "formula": {
+        "type": ["string", "null"],
+        "description": "AMT-published formula only. Null when the catalogue has no formula column."
+      },
+      "mw": {
+        "type": ["number", "null"],
+        "description": "AMT-published molecular weight only. Null when the catalogue has no MW column."
+      },
+      "formulaExternal": { "type": ["string", "null"] },
+      "mwExternal": { "type": ["number", "null"] },
+      "structureImageExternal": { "type": ["string", "null"] },
+      "externalSource": {
+        "anyOf": [
+          { "type": "null" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "cid", "url"],
+            "properties": {
+              "name": { "const": "PubChem" },
+              "cid": { "type": "integer", "minimum": 1 },
+              "url": { "type": "string" }
+            }
+          }
+        ]
+      },
+      "mwNominal": {
+        "type": ["number", "null"],
+        "description": "Nominal PEG mass read from the printed name, such as PEG2000. Not an AMT measurement and not a PubChem value."
+      },
+      "mwNominalSource": {
+        "anyOf": [{ "type": "null" }, { "const": "name" }]
+      },
       "purity": {
         "type": ["string", "null"],
         "description": "Exactly as published, including spacing. Null when the row prints no purity, or when two listings of the same SKU disagree (see listings[].purity)."

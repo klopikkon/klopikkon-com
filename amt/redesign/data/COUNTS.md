@@ -80,6 +80,20 @@ Cross-source pack differences: 4. See `data/discrepancies.json`.
 - `synonyms` is an empty array. Parentheticals such as `(Exoria)` and `(PEG2000)` stay inside `name`.
 - Unpublished prices use `price` null and `priceText` `"quote"`. `priceRaw` keeps the printed token (`POA`, `Price on application`, or a masked `########`).
 
+## External reference data
+
+`formula` and `mw` are only what AMT published, and both stay null because the catalogues have no such columns. `structureImage` stays the AMT file when one was published. PubChem formula, molecular weight and the 2D depiction are `formulaExternal`, `mwExternal` and `structureImageExternal`, with `externalSource` `{name: PubChem, cid, url}`. A CAS is accepted only when PubChem returns exactly one CID. `mwNominal` is a nominal PEG mass read from the printed name (PEG2000 or PEG(400)); a short token such as PEG3 is an oligomer length and is not used.
+
+| Family | Products | Single CAS | One CID | Formula and MW | Structure image | Nominal PEG mass |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| lipids | 36 | 33 | 6 | 6 | 6 | 2 |
+| peg | 212 | 205 | 108 | 108 | 108 | 2 |
+| fluorophores | 40 | 40 | 24 | 24 | 24 | 0 |
+| organoborons | 1046 | 1044 | 530 | 530 | 530 | 0 |
+| other | 13 | 7 | 4 | 4 | 4 | 0 |
+| total | 1347 | 1329 | 672 | 672 | 672 | 4 |
+
+
 ## Not extracted
 
 - Older PDFs in the WordPress media library (2020–2025 catalogues and earlier new-product flyers) are not linked from the live pages. They are listed in `data/sources.json` and were not parsed, so superseded prices are not mixed into `products.json`.
@@ -115,6 +129,58 @@ Cross-source pack differences: 4. See `data/discrepancies.json`.
   "identicalRowsCollapsed": 3,
   "skusWithMultipleListings": 4,
   "parseAnomalies": 0,
-  "discrepancies": 21
+  "discrepancies": 21,
+  "pubchem": {
+    "byFamily": {
+      "lipids": {
+        "products": 36,
+        "singleCas": 33,
+        "oneCid": 6,
+        "formulaAndMw": 6,
+        "structureImage": 6,
+        "mwNominal": 2
+      },
+      "peg": {
+        "products": 212,
+        "singleCas": 205,
+        "oneCid": 108,
+        "formulaAndMw": 108,
+        "structureImage": 108,
+        "mwNominal": 2
+      },
+      "fluorophores": {
+        "products": 40,
+        "singleCas": 40,
+        "oneCid": 24,
+        "formulaAndMw": 24,
+        "structureImage": 24,
+        "mwNominal": 0
+      },
+      "organoborons": {
+        "products": 1046,
+        "singleCas": 1044,
+        "oneCid": 530,
+        "formulaAndMw": 530,
+        "structureImage": 530,
+        "mwNominal": 0
+      },
+      "other": {
+        "products": 13,
+        "singleCas": 7,
+        "oneCid": 4,
+        "formulaAndMw": 4,
+        "structureImage": 4,
+        "mwNominal": 0
+      },
+      "total": {
+        "products": 1347,
+        "singleCas": 1329,
+        "oneCid": 672,
+        "formulaAndMw": 672,
+        "structureImage": 672,
+        "mwNominal": 4
+      }
+    }
+  }
 }
 -->

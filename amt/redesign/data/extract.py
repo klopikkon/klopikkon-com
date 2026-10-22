@@ -1234,6 +1234,47 @@ def source_counts(products):
     return dict(counts)
 
 
+def pubchem_lines(stats):
+    lines = [
+        "## External reference data",
+        "",
+        "`formula` and `mw` are only what AMT published, and both stay null because the catalogues have no such columns. `structureImage` stays the AMT file when one was published. PubChem formula, molecular weight and the 2D depiction are `formulaExternal`, `mwExternal` and `structureImageExternal`, with `externalSource` `{name: PubChem, cid, url}`. A CAS is accepted only when PubChem returns exactly one CID. `mwNominal` is a nominal PEG mass read from the printed name (PEG2000 or PEG(400)); a short token such as PEG3 is an oligomer length and is not used.",
+        "",
+        "| Family | Products | Single CAS | One CID | Formula and MW | Structure image | Nominal PEG mass |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for family in ["lipids", "peg", "fluorophores", "organoborons", "other", "total"]:
+        row = stats["byFamily"][family]
+        lines.append(
+            f"| {family} | {row['products']} | {row['singleCas']} | {row['oneCid']} | {row['formulaAndMw']} | {row['structureImage']} | {row['mwNominal']} |"
+        )
+    lines.append("")
+    return lines
+
+
+def carry_external(products):
+    """Keep PubChem and nominal-mass fields when the catalogue extract is re-run."""
+    path = ROOT / "data" / "products.json"
+    if not path.exists():
+        return
+    previous = {row["sku"]: row for row in json.loads(path.read_text())}
+    keys = (
+        "formulaExternal",
+        "mwExternal",
+        "structureImageExternal",
+        "externalSource",
+        "mwNominal",
+        "mwNominalSource",
+    )
+    for product in products:
+        old = previous.get(product["sku"])
+        if not old:
+            continue
+        for key in keys:
+            if key in old:
+                product[key] = old[key]
+
+
 def write_counts(products, row_counts, collapse_notes, discrepancies, anomalies, flyer_only):
     by_family = family_counts(products)
     by_source = source_counts(products)
@@ -1248,6 +1289,11 @@ def write_counts(products, row_counts, collapse_notes, discrepancies, anomalies,
         "parseAnomalies": len(anomalies),
         "discrepancies": len(discrepancies),
     }
+    counts_path = ROOT / "data" / "counts.json"
+    if counts_path.exists():
+        previous_counts = json.loads(counts_path.read_text())
+        if "pubchem" in previous_counts:
+            payload["pubchem"] = previous_counts["pubchem"]
     (ROOT / "data" / "counts.json").write_text(json.dumps(payload, indent=2) + "\n")
     lines = []
     lines.append("# Catalogue counts")
@@ -1347,6 +1393,8 @@ def write_counts(products, row_counts, collapse_notes, discrepancies, anomalies,
     lines.append("- `synonyms` is an empty array. Parentheticals such as `(Exoria)` and `(PEG2000)` stay inside `name`.")
     lines.append("- Unpublished prices use `price` null and `priceText` `\"quote\"`. `priceRaw` keeps the printed token (`POA`, `Price on application`, or a masked `########`).")
     lines.append("")
+    if payload.get("pubchem"):
+        lines.extend(pubchem_lines(payload["pubchem"]))
     lines.append("## Not extracted")
     lines.append("")
     lines.append("- Older PDFs in the WordPress media library (2020–2025 catalogues and earlier new-product flyers) are not linked from the live pages. They are listed in `data/sources.json` and were not parsed, so superseded prices are not mixed into `products.json`.")
@@ -1396,10 +1444,15 @@ def main():
     flyer_skus = {r["sku"] for r in flyer}
     catalogue_skus = {r["sku"] for r in all_rows}
     flyer_only = sorted(flyer_skus - catalogue_skus)
-    # drop helper-only large fields? keep listings
+    carry_external(products)
+    prior_manifest = []
+    manifest_path = ASSETS / "manifest.json"
+    if manifest_path.exists():
+        prior_manifest = [row for row in json.loads(manifest_path.read_text()) if row.get("kind") == "structure-external"]
     (ROOT / "data" / "products.json").write_text(json.dumps(products, indent=2, ensure_ascii=False) + "\n")
     (ROOT / "data" / "discrepancies.json").write_text(json.dumps(discrepancies, indent=2, ensure_ascii=False) + "\n")
     (ROOT / "data" / "anomalies.json").write_text(json.dumps(all_anomalies, indent=2, ensure_ascii=False) + "\n")
+    manifest.extend(prior_manifest)
     (ASSETS / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     site = build_site(len(homepage))
     site["logos"] = [m for m in manifest if m.get("kind") in {"logo", "favicon", "apple-touch", "partner-logo", "icon"}]

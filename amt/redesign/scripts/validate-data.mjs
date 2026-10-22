@@ -4,7 +4,7 @@
  * Zero dependencies. Run: node amt/redesign/scripts/validate-data.mjs
  */
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -112,6 +112,58 @@ for (const product of products) {
       else if (documents[key] !== null && typeof documents[key] !== "string") {
         fail(`${label}: documents.${key} must be a string or null`);
       }
+    }
+  }
+
+  const pegNominal = /(?:^|[^A-Za-z0-9])m?PEG\s*(?:\(\s*(\d{3,})\s*\)|[\s-]?(\d{3,}))(?!\d)/gi;
+  if (!Object.prototype.hasOwnProperty.call(product, "formulaExternal")) fail(`${label}: missing formulaExternal`);
+  if (!Object.prototype.hasOwnProperty.call(product, "mwExternal")) fail(`${label}: missing mwExternal`);
+  if (!Object.prototype.hasOwnProperty.call(product, "structureImageExternal")) fail(`${label}: missing structureImageExternal`);
+  if (!Object.prototype.hasOwnProperty.call(product, "externalSource")) fail(`${label}: missing externalSource`);
+  if (!Object.prototype.hasOwnProperty.call(product, "mwNominal")) fail(`${label}: missing mwNominal`);
+  if (!Object.prototype.hasOwnProperty.call(product, "mwNominalSource")) fail(`${label}: missing mwNominalSource`);
+
+  const external = product.externalSource;
+  if (external == null) {
+    if (product.formulaExternal != null || product.mwExternal != null || product.structureImageExternal != null) {
+      fail(`${label}: external fields are set without externalSource`);
+    }
+  } else {
+    if (external.name !== "PubChem" || !Number.isInteger(external.cid) || external.cid < 1) {
+      fail(`${label}: externalSource must be PubChem with an integer cid`);
+    }
+    if (external.url !== `https://pubchem.ncbi.nlm.nih.gov/compound/${external.cid}`) {
+      fail(`${label}: externalSource.url does not match the CID`);
+    }
+    if (typeof product.formulaExternal !== "string" || product.formulaExternal.length === 0) {
+      fail(`${label}: formulaExternal must be a non-empty string when PubChem matched`);
+    }
+    if (typeof product.mwExternal !== "number" || product.mwExternal <= 0) {
+      fail(`${label}: mwExternal must be a positive number when PubChem matched`);
+    }
+    if (product.structureImageExternal != null) {
+      const expected = `assets/structures/pubchem/${external.cid}.png`;
+      if (product.structureImageExternal !== expected) {
+        fail(`${label}: structureImageExternal must be ${expected}`);
+      } else if (!existsSync(join(root, product.structureImageExternal))) {
+        fail(`${label}: structure image file is missing`);
+      }
+    }
+  }
+
+  if (product.mwNominal == null) {
+    if (product.mwNominalSource != null) fail(`${label}: mwNominalSource set without mwNominal`);
+  } else {
+    if (typeof product.mwNominal !== "number" || product.mwNominal < 200) {
+      fail(`${label}: mwNominal must be a number of at least 200`);
+    }
+    if (product.mwNominalSource !== "name") fail(`${label}: mwNominalSource must be "name"`);
+    const found = new Set();
+    for (const match of String(product.name || "").matchAll(pegNominal)) {
+      found.add(Number(match[1] || match[2]));
+    }
+    if (found.size !== 1 || !found.has(product.mwNominal)) {
+      fail(`${label}: mwNominal ${product.mwNominal} is not the single PEG mass in the name`);
     }
   }
 

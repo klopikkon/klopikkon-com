@@ -106,7 +106,9 @@ Check the data with:
 node amt/redesign/scripts/validate-data.mjs
 ```
 
-`data/extract.py` rebuilds the JSON from a local crawl cache. It is not part of the site build.
+`data/extract.py` rebuilds the JSON from a local crawl cache. It is not part of the site build. A re-run keeps `formulaExternal`, `mwExternal`, `structureImageExternal`, `externalSource`, `mwNominal` and `mwNominalSource`.
+
+PubChem values are never copied into `formula`, `mw` or `structureImage`. `data/enrich_pubchem.py` looks up a single CAS at PubChem PUG REST and keeps the result only when that CAS maps to exactly one CID. Cached responses live in `data/raw/pubchem/`. The 2D PNG is also under `assets/structures/pubchem/`. `mwNominal` is only a number printed in the name as a PEG mass (`PEG2000`, `PEG(400)`). `PEG3` is an oligomer length and is not a nominal mass.
 
 ## How a SKU was chosen
 

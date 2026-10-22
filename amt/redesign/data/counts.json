@@ -25,5 +25,57 @@
   "identicalRowsCollapsed": 3,
   "skusWithMultipleListings": 4,
   "parseAnomalies": 0,
-  "discrepancies": 21
+  "discrepancies": 21,
+  "pubchem": {
+    "byFamily": {
+      "lipids": {
+        "products": 36,
+        "singleCas": 33,
+        "oneCid": 6,
+        "formulaAndMw": 6,
+        "structureImage": 6,
+        "mwNominal": 2
+      },
+      "peg": {
+        "products": 212,
+        "singleCas": 205,
+        "oneCid": 108,
+        "formulaAndMw": 108,
+        "structureImage": 108,
+        "mwNominal": 2
+      },
+      "fluorophores": {
+        "products": 40,
+        "singleCas": 40,
+        "oneCid": 24,
+        "formulaAndMw": 24,
+        "structureImage": 24,
+        "mwNominal": 0
+      },
+      "organoborons": {
+        "products": 1046,
+        "singleCas": 1044,
+        "oneCid": 530,
+        "formulaAndMw": 530,
+        "structureImage": 530,
+        "mwNominal": 0
+      },
+      "other": {
+        "products": 13,
+        "singleCas": 7,
+        "oneCid": 4,
+        "formulaAndMw": 4,
+        "structureImage": 4,
+        "mwNominal": 0
+      },
+      "total": {
+        "products": 1347,
+        "singleCas": 1329,
+        "oneCid": 672,
+        "formulaAndMw": 672,
+        "structureImage": 672,
+        "mwNominal": 4
+      }
+    }
+  }
 }
