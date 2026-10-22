@@ -1,0 +1,176 @@
+/* Direction C — warm editorial. Large serif, AMT's published images as plates. */
+
+body { font-size: 1.0625rem; }
+
+.site-header { background: var(--bg-subtle); }
+
+.utility, .brand-row, .site-nav, .spread, .section, .site-footer .wrap {
+  width: min(100% - 2rem, var(--page));
+  margin-inline: auto;
+}
+
+.utility {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding-top: 0.8rem;
+  font-size: var(--step--1);
+}
+
+.brand-row {
+  display: grid;
+  gap: 0.8rem;
+  padding: 0.4rem 0 0.8rem;
+}
+
+.brand {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.brand img { width: 5.5rem; height: auto; }
+
+.nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0.35rem 0 0.9rem;
+}
+
+.nav-list a {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.nav-list a[aria-current="page"] { text-decoration: underline; text-underline-offset: 0.2em; }
+
+.spread { padding: 1.5rem 0 0.5rem; }
+
+.eyebrow, .direction {
+  margin: 0;
+  font-size: var(--step--1);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--copper);
+}
+
+h1 {
+  margin: 0.2rem 0 0.7rem;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: var(--step-4);
+  letter-spacing: -0.03em;
+  line-height: 0.94;
+  max-width: 11ch;
+}
+
+.deck-lede {
+  margin: 0 0 1.25rem;
+  max-width: 28ch;
+  font-family: var(--display);
+  font-size: clamp(1.35rem, 1.1rem + 1vw, 1.85rem);
+  line-height: 1.25;
+}
+
+.plates {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.plates figure {
+  margin: 0;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 0.8rem;
+}
+
+.plates img { width: min(100%, 34rem); background: #fff; }
+
+.plates figcaption {
+  margin-top: 0.45rem;
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+
+.section { padding: 2rem 0 0; }
+
+.section p, .prose p { max-width: var(--measure); }
+
+h2 {
+  margin: 0 0 0.7rem;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: var(--step-3);
+  letter-spacing: -0.02em;
+}
+
+.pull {
+  margin: 1rem 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--display);
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+  line-height: 1.25;
+  max-width: 22ch;
+}
+
+.story, .news article { padding: 0.85rem 0; }
+
+.story h3, .news h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.45rem;
+}
+
+.fine { color: var(--muted); }
+
+.partner-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.8rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.partner-row a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-height: var(--tap);
+  color: inherit;
+  background: var(--surface);
+  padding: 0.6rem;
+  text-decoration: none;
+}
+
+.partner-row img { width: 5.5rem; height: auto; background: #fff; }
+
+.catalogue th:first-child { font-family: var(--display); font-size: 1.05rem; font-weight: 500; }
+
+.lead-plates { margin: 0 0 1.5rem; }
+
+@media (min-width: 52rem) {
+  .brand-row { grid-template-columns: minmax(0, 20rem) minmax(12rem, 1fr) auto; align-items: end; }
+  .plates { grid-template-columns: 1.1fr 0.9fr; }
+  .plates figure:first-child { grid-row: span 2; }
+  .spread { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); column-gap: 2rem; align-items: end; }
+  .spread .eyebrow, .spread h1, .spread .deck-lede { grid-column: 1; }
+  .spread .plates { grid-column: 2; grid-row: 1 / span 4; }
+}

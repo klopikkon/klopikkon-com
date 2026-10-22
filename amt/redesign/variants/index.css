@@ -1,0 +1,128 @@
+/* Chooser. Colour, type, and radius come from tokens.css via data-look. */
+
+body { font-family: var(--font-sans); }
+
+.mast, .chooser, .site-footer .wrap {
+  width: min(100% - 2rem, 68rem);
+  margin-inline: auto;
+}
+
+.mast { padding: 1.25rem 0 0.5rem; }
+
+.brand-row, .utility {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+h1 {
+  margin: 0.6rem 0 0.4rem;
+  font-family: var(--display);
+  font-size: var(--step-4);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  max-width: 14ch;
+}
+
+.lede { max-width: 46ch; font-size: var(--step-1); }
+
+.look-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.look-switch button {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  min-height: var(--tap);
+  padding: 0.4rem 0.85rem;
+  font: inherit;
+  font-family: var(--display);
+  cursor: pointer;
+}
+
+.look-switch button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+
+.specimen {
+  margin: 0.5rem 0 1.5rem;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.specimen-title {
+  margin: 0.2rem 0;
+  font-family: var(--display);
+  font-size: var(--step-3);
+  letter-spacing: -0.03em;
+}
+
+.eyebrow {
+  margin: 0;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: var(--step--1);
+  color: var(--copper);
+  font-family: var(--font-mono);
+}
+
+.swatches { display: flex; gap: 0.4rem; margin: 0.8rem 0; }
+
+.swatches span {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--line);
+}
+
+.directions { display: grid; gap: 1.25rem; }
+
+.direction {
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.direction h2 {
+  margin: 0 0 0.35rem;
+  font-family: var(--display);
+  font-size: var(--step-3);
+  font-weight: 500;
+}
+
+.shots {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.8rem 0;
+}
+
+.shots figure { margin: 0; }
+
+.shots img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.shots figcaption { font-size: var(--step--1); color: var(--muted); }
+
+.links { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+
+.links a { display: inline-flex; align-items: center; min-height: var(--tap); }
+
+@media (min-width: 52rem) {
+  .shots { grid-template-columns: 1.4fr 0.7fr; align-items: start; }
+  .directions { grid-template-columns: 1fr; }
+}
