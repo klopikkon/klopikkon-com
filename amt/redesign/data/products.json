@@ -2872,7 +2872,7 @@
         "page": 15,
         "alsoPages": [],
         "listNo": 192,
-        "name": "1-Octylnonyl 8-[(2-hydroxyethyl)[6-oxo-6-(undecyloxy)hexyl]amino]octanoate",
+        "name": "1-Octylnonyl 8-[(2-hydroxyethyl)[6-oxo-6-(undecyloxy)hexyl]amino]octanoate SM-102",
         "cas": "2089251-47-6",
         "purity": null,
         "packs": [
@@ -22171,7 +22171,10 @@
     "classDerived": {
       "derivedFrom": "name",
       "rules": "data/class-rules.json",
-      "dyeCore": "BODIPY"
+      "dyeCore": "BODIPY",
+      "reactiveGroups": [
+        "DBCO"
+      ]
     },
     "classDerivedSource": "name"
   },
@@ -22516,7 +22519,10 @@
     "classDerived": {
       "derivedFrom": "name",
       "rules": "data/class-rules.json",
-      "dyeCore": "BODIPY"
+      "dyeCore": "BODIPY",
+      "reactiveGroups": [
+        "NHS"
+      ]
     },
     "classDerivedSource": "name"
   },
@@ -27738,7 +27744,7 @@
     "synonyms": [],
     "family": "organoborons",
     "subfamily": "AMT Organoboron Catalogue List",
-    "cas": null,
+    "cas": "883738-27-0",
     "formula": null,
     "mw": null,
     "purity": null,
@@ -27777,7 +27783,7 @@
         "alsoPages": [],
         "listNo": null,
         "name": "3-((4-Methylpiperazin-1-yl)methyl)phenylboronic acid pinacol ester",
-        "cas": null,
+        "cas": "883738-27-0",
         "purity": null,
         "packs": [
           {
@@ -27800,10 +27806,14 @@
     ],
     "mwNominal": null,
     "mwNominalSource": null,
-    "formulaExternal": null,
-    "mwExternal": null,
-    "structureImageExternal": null,
-    "externalSource": null,
+    "formulaExternal": "C18H29BN2O2",
+    "mwExternal": 316.2,
+    "structureImageExternal": "assets/structures/pubchem/46739725.svg",
+    "externalSource": {
+      "name": "PubChem",
+      "cid": 46739725,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/46739725"
+    },
     "subfamilySource": {
       "heading": "AMT Organoboron Catalogue List",
       "url": "https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf",
@@ -56233,7 +56243,7 @@
         "price": null,
         "currency": "USD",
         "priceText": "quote",
-        "priceRaw": "quote"
+        "priceRaw": "########"
       }
     ],
     "structureImage": null,
@@ -56270,7 +56280,7 @@
             "price": null,
             "currency": "USD",
             "priceText": "quote",
-            "priceRaw": "quote"
+            "priceRaw": "########"
           }
         ],
         "note": null
@@ -56319,7 +56329,7 @@
         "price": null,
         "currency": "USD",
         "priceText": "quote",
-        "priceRaw": "quote"
+        "priceRaw": "########"
       }
     ],
     "structureImage": null,
@@ -56356,7 +56366,7 @@
             "price": null,
             "currency": "USD",
             "priceText": "quote",
-            "priceRaw": "quote"
+            "priceRaw": "########"
           }
         ],
         "note": null
@@ -60521,7 +60531,10 @@
     "classDerived": {
       "derivedFrom": "name",
       "rules": "data/class-rules.json",
-      "boronClass": "pinacol ester"
+      "boronClass": "pinacol ester",
+      "reactiveGroups": [
+        "NHS"
+      ]
     },
     "classDerivedSource": "name"
   },
@@ -74019,7 +74032,10 @@
     "classDerived": {
       "derivedFrom": "name",
       "rules": "data/class-rules.json",
-      "boronClass": "pinacol ester"
+      "boronClass": "pinacol ester",
+      "reactiveGroups": [
+        "maleimide"
+      ]
     },
     "classDerivedSource": "name"
   },
@@ -78669,7 +78685,10 @@
     "classDerived": {
       "derivedFrom": "name",
       "rules": "data/class-rules.json",
-      "boronClass": "pinacol ester"
+      "boronClass": "pinacol ester",
+      "reactiveGroups": [
+        "maleimide"
+      ]
     },
     "classDerivedSource": "name"
   },

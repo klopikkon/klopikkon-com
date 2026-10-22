@@ -54,10 +54,10 @@
       },
       "organoborons": {
         "products": 1046,
-        "singleCas": 1044,
-        "oneCid": 530,
-        "formulaAndMw": 530,
-        "structureImage": 530,
+        "singleCas": 1045,
+        "oneCid": 531,
+        "formulaAndMw": 531,
+        "structureImage": 531,
         "mwNominal": 0
       },
       "other": {
@@ -70,10 +70,10 @@
       },
       "total": {
         "products": 1347,
-        "singleCas": 1329,
-        "oneCid": 672,
-        "formulaAndMw": 672,
-        "structureImage": 672,
+        "singleCas": 1330,
+        "oneCid": 673,
+        "formulaAndMw": 673,
+        "structureImage": 673,
         "mwNominal": 4
       }
     }
@@ -90,12 +90,17 @@
   "classDerived": {
     "derivedFrom": "name",
     "rules": "data/class-rules.json",
-    "note": "Not an AMT heading. Counted from the printed name with data/class-rules.json. Null means no rule matched. PEG reactive-group counts are products that include that group, so one heterobifunctional product is counted under each group it names.",
+    "note": "Not an AMT heading. Counted from the printed name with data/class-rules.json. Null means no rule matched. Reactive-group counts are products whose name includes that group, so one product can be counted under more than one group. NHS, maleimide and DBCO are counted in every family. ADIBO is counted as DBCO.",
     "byFamily": {
       "lipids": {
         "products": 36,
         "matched": 0,
-        "null": 36
+        "null": 36,
+        "reactiveGroups": {
+          "NHS": 0,
+          "maleimide": 0,
+          "DBCO": 0
+        }
       },
       "peg": {
         "products": 212,
@@ -121,9 +126,17 @@
         "null": 34,
         "dyeCore": {
           "Cy3": 0,
+          "Cy5.5": 0,
           "Cy5": 0,
+          "Cy7": 0,
+          "cyanine": 0,
           "FITC": 0,
           "BODIPY": 6
+        },
+        "reactiveGroups": {
+          "NHS": 1,
+          "maleimide": 0,
+          "DBCO": 1
         }
       },
       "organoborons": {
@@ -135,12 +148,22 @@
           "trifluoroborate": 123,
           "pinacol ester": 648,
           "boronic acid": 135
+        },
+        "reactiveGroups": {
+          "NHS": 1,
+          "maleimide": 2,
+          "DBCO": 0
         }
       },
       "other": {
         "products": 13,
         "matched": 0,
-        "null": 13
+        "null": 13,
+        "reactiveGroups": {
+          "NHS": 0,
+          "maleimide": 0,
+          "DBCO": 0
+        }
       },
       "total": {
         "products": 1347,

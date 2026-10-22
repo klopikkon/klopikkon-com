@@ -116,7 +116,12 @@
             "properties": {
               "derivedFrom": { "const": "name" },
               "rules": { "const": "data/class-rules.json" },
-              "boronClass": { "enum": ["boronic acid", "pinacol ester", "MIDA ester", "trifluoroborate"] }
+              "boronClass": { "enum": ["boronic acid", "pinacol ester", "MIDA ester", "trifluoroborate"] },
+              "reactiveGroups": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "enum": ["NHS", "maleimide", "DBCO"] }
+              }
             }
           },
           {
@@ -145,7 +150,26 @@
             "properties": {
               "derivedFrom": { "const": "name" },
               "rules": { "const": "data/class-rules.json" },
-              "dyeCore": { "enum": ["Cy3", "Cy5", "FITC", "BODIPY"] }
+              "dyeCore": { "enum": ["Cy3", "Cy5.5", "Cy5", "Cy7", "cyanine", "FITC", "BODIPY"] },
+              "reactiveGroups": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "enum": ["NHS", "maleimide", "DBCO"] }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["derivedFrom", "rules", "reactiveGroups"],
+            "properties": {
+              "derivedFrom": { "const": "name" },
+              "rules": { "const": "data/class-rules.json" },
+              "reactiveGroups": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "enum": ["NHS", "maleimide", "DBCO"] }
+              }
             }
           }
         ]
