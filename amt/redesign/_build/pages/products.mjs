@@ -18,7 +18,9 @@ import {
   loadIdentifierCache,
   loadRanking,
   matchProduct,
+  documentEntries,
   packLabel,
+  priceConflictView,
   pricePositionCopy,
   pubchemFields,
   publishedAmtTechnical,
@@ -251,19 +253,34 @@ function sourceLinks(product) {
   return links;
 }
 
-function documentLinks(product) {
-  const docs = product.documents || {};
-  const items = [
-    ["sds", "SDS"],
-    ["coa", "COA"],
-    ["datasheet", "Datasheet"],
-  ];
-  return items
-    .map(([key, label]) => {
-      const href = publishedText(docs[key]);
-      return href ? { href, label } : null;
-    })
-    .filter(Boolean);
+function renderDocuments(product, id) {
+  const docs = documentEntries(product);
+  if (!docs.length) return "";
+  return `<section class="documents" aria-labelledby="docs-${escapeHtml(id)}">
+        <h2 id="docs-${escapeHtml(id)}">Documents</h2>
+        <ul>${docs
+          .map(
+            (doc) =>
+              `<li><a href="${escapeHtml(doc.href)}" rel="noopener noreferrer">${escapeHtml(doc.label)}</a></li>`,
+          )
+          .join("")}</ul>
+      </section>`;
+}
+
+function renderPriceConflict(product) {
+  const view = priceConflictView(product);
+  if (!view) return "";
+  const list = (title, rows) => {
+    if (!rows.length) return "";
+    return `<div class="price-conflict-set"><h3>${escapeHtml(title)}</h3><ul>${rows
+      .map((row) => `<li><span class="price-conflict-size">${escapeHtml(row.size)}</span> <span class="price-conflict-price">${escapeHtml(row.price)}</span></li>`)
+      .join("")}</ul></div>`;
+  };
+  return `<aside class="price-conflict" role="note">
+    <p>${escapeHtml(view.note)}</p>
+    ${list("Catalogue", view.catalogue)}
+    ${list("Website", view.website)}
+  </aside>`;
 }
 
 function specRows(product) {
@@ -413,7 +430,7 @@ function renderPacks(product) {
       </label>`;
     })
     .join("");
-  return `${quoteNote}<form class="pack-form" data-quote-form data-id="${escapeHtml(product.id)}" data-sku="${escapeHtml(product.sku || "")}" data-name="${escapeHtml(product.name || "")}">
+  return `${quoteNote}${renderPriceConflict(product)}<form class="pack-form" data-quote-form data-id="${escapeHtml(product.id)}" data-sku="${escapeHtml(product.sku || "")}" data-name="${escapeHtml(product.name || "")}">
     <fieldset>
       <legend>Pack size</legend>
       <div class="pack-options">${options}</div>
@@ -442,13 +459,7 @@ function renderProduct(product, all, match, site, cache) {
         </svg>
         <figcaption>No structure image published by AMT</figcaption>
       </figure>`;
-  const docs = documentLinks(product);
-  const documents = docs.length
-    ? `<section class="documents" aria-labelledby="docs-${escapeHtml(id)}">
-        <h2 id="docs-${escapeHtml(id)}">Documents</h2>
-        <ul>${docs.map((doc) => `<li><a href="${escapeHtml(doc.href)}" rel="noopener noreferrer">${escapeHtml(doc.label)}</a></li>`).join("")}</ul>
-      </section>`
-    : "";
+  const documents = renderDocuments(product, id);
   const related = all
     .filter((item) => item.id !== product.id && publishedText(item.subfamily) && publishedText(item.subfamily) === sub)
     .slice(0, 6);

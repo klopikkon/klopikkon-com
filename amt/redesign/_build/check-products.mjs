@@ -8,7 +8,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, wri
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { compareRecord } from "./pages/family-compare.mjs";
-import { buildRankingIndex, formatPerMg, hasTechnicalTab, isQuotedPack, loadIdentifierCache, loadProducts, loadRanking, matchProduct, packMassMg, pricePerMg, pubchemFields, technicalIdentifiers } from "./product-support.mjs";
+import { buildRankingIndex, documentEntries, formatPerMg, hasTechnicalTab, isQuotedPack, loadIdentifierCache, loadProducts, loadRanking, matchProduct, packMassMg, PRICE_CONFLICT_NOTE, priceConflictView, pricePerMg, pubchemFields, technicalIdentifiers } from "./product-support.mjs";
 import { addLine, buildMailto, buildQuoteCsv, emptyCart, quoteSummary, requestText, totalQty } from "../js/cart.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -71,6 +71,21 @@ assert(pricePerMg({ size: "100mg", price: null, priceText: "Quote" }) === null, 
 assert(pricePerMg({ size: "pack", price: 10, priceText: "$10" }) === null, "non-mass pack has no per-mg price");
 assert(formatPerMg({ size: "500 mg", price: 310, priceText: "$310" }) === "$0.62/mg", "formatted per mg");
 assert(formatPerMg({ size: "1 g", price: 595, priceText: "$595.00" }) === "$0.595/mg", "keeps the third decimal");
+assert(documentEntries({ documents: [] }).length === 0, "an empty document list renders nothing");
+assert(documentEntries({ documents: { sds: null, coa: null, datasheet: null } }).length === 0, "null document fields render nothing");
+assert(
+  documentEntries({ documents: [{ type: "sds", url: "https://www.amtechpl.com/sds.pdf", source: "AMT" }] })[0].label === "SDS",
+  "an SDS URL is labelled SDS",
+);
+assert(documentEntries({ documents: [{ type: "sds", url: "javascript:alert(1)", source: "x" }] }).length === 0, "a script document URL is dropped");
+assert(priceConflictView({ packs: [{ size: "1g", priceText: "$10.00" }] }) === null, "no price-conflict note without the flag");
+const conflictView = priceConflictView({
+  priceConflict: true,
+  packs: [{ size: "1g", priceText: "$430.00" }],
+  homepagePacks: [{ size: "1 g", priceText: "$470" }],
+});
+assert(conflictView.note === PRICE_CONFLICT_NOTE, "price-conflict note uses the neutral wording");
+assert(conflictView.catalogue[0].price === "$430.00" && conflictView.website[0].price === "$470", "both published price sets are kept");
 assert(pubchemFields({ formula: "C2H6", formulaExternal: null }) === null, "AMT formula is not a PubChem field");
 const pubchem = pubchemFields({
   formula: null,
@@ -299,8 +314,37 @@ for (const [id, html] of pages) {
   if (product.purity) assert(html.includes(product.purity), `${id} purity was rewritten`);
   if (!product.storage) assert(!html.includes(">Storage<"), `${id} shows unpublished storage`);
   if (!product.appearance) assert(!html.includes(">Appearance<"), `${id} shows unpublished appearance`);
-  if (!product.documents?.sds && !product.documents?.coa && !product.documents?.datasheet) {
+  const docs = documentEntries(product);
+  if (docs.length) {
+    assert(html.includes('class="documents"'), `${id} missing published documents`);
+    for (const doc of docs) {
+      assert(html.includes(`href="${doc.href}"`), `${id} missing ${doc.label} link`);
+      assert(html.includes(`>${doc.label}<`), `${id} ${doc.label} link is unlabelled`);
+    }
+  } else {
     assert(!html.includes('class="documents"'), `${id} shows documents AMT did not publish`);
+  }
+  const conflict = priceConflictView(product);
+  if (conflict) {
+    assert(html.includes(PRICE_CONFLICT_NOTE.replaceAll("'", "&#39;")), `${id} missing the price-conflict note`);
+    assert(html.includes(">Catalogue<") && html.includes(">Website<"), `${id} price lists are not labelled by source`);
+    for (const row of [...conflict.catalogue, ...conflict.website]) {
+      assert(html.includes(row.price), `${id} missing published price ${row.price}`);
+    }
+    const dataBlock = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+    if (dataBlock) {
+      const data = JSON.parse(dataBlock[1]);
+      const offers = data.offers ? (Array.isArray(data.offers) ? data.offers : [data.offers]) : [];
+      const offerPrices = new Set(offers.map((offer) => offer.price));
+      for (const row of conflict.website) {
+        const amount = Number(row.price.replace(/[^0-9.]/g, ""));
+        const alsoCatalogue = conflict.catalogue.some((item) => Number(item.price.replace(/[^0-9.]/g, "")) === amount);
+        if (Number.isFinite(amount) && !alsoCatalogue) assert(!offerPrices.has(amount), `${id} JSON-LD includes a website price`);
+      }
+    }
+  } else {
+    assert(!html.includes(PRICE_CONFLICT_NOTE.replaceAll("'", "&#39;")), `${id} shows a price-conflict note without the flag`);
+    assert(!html.includes("price-conflict"), `${id} shows a price-conflict block without the flag`);
   }
   if (product.structureImage) assert(html.includes(product.structureImage), `${id} missing published structure image`);
   else assert(html.includes("No structure image published by AMT"), `${id} missing structure placeholder`);
