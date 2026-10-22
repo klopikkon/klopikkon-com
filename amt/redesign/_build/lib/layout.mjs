@@ -21,7 +21,9 @@ function itemHref(item) {
 function itemCurrent(item, current) {
   if (item.href || item.path == null) return false;
   if (String(item.path).includes("#")) return false;
-  return normalizePath(item.path) === current;
+  const itemPath = normalizePath(item.path);
+  if (itemPath === "/") return current === "/";
+  return current === itemPath || current.startsWith(itemPath);
 }
 
 function navItems(items, current) {

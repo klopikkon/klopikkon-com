@@ -866,6 +866,61 @@ textarea {
   margin-top: 0;
 }
 
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.pager ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pager li {
+  margin: 0;
+}
+
+.pager a,
+.pager [aria-current="page"],
+.pager [aria-disabled="true"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap);
+  min-height: var(--tap);
+  padding: 0 0.65rem;
+  border: 1px solid var(--control);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pager [aria-current="page"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.pager [aria-disabled="true"] {
+  color: var(--faint);
+}
+
+.pager-gap {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--muted);
+}
+
 @media (min-width: 40rem) {
   .card-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
