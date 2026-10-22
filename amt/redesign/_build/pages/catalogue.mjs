@@ -56,6 +56,7 @@ function cardHtml(product) {
   const note = product.catalogueNote ? `<p class="hint">${esc(product.catalogueNote)}</p>` : "";
   return `<li class="card product-card" id="${esc(product.id)}">
     <div>
+      ${structureFigure(product)}
       <p class="kicker"${source ? ` title="${esc(source)}"` : ""}>${esc(familyLabel(product.family))}</p>
       <h2><a class="cat-name" href="${esc(href)}">${esc(productTitle(product))}</a></h2>
       <p class="sku">${esc(product.sku)}</p>
@@ -98,6 +99,12 @@ function shell(ctx, { title, description, pagePath, body }) {
     head: `<link rel="stylesheet" href="${esc(url("css/catalogue.css"))}">`,
     body: `${body}\n<script type="module" src="${esc(url("js/search.js"))}"></script>`,
   });
+}
+
+function structureFigure(product) {
+  if (product.structureImage || !product.structureImageExternal) return "";
+  const title = productTitle(product);
+  return `<figure class="cat-structure"><img src="${esc(url(product.structureImageExternal))}" alt="PubChem structure of ${esc(title)}" width="72" height="56" loading="lazy" decoding="async"><figcaption>PubChem</figcaption></figure>`;
 }
 
 async function emit(ctx, rel, html) {
@@ -143,7 +150,7 @@ export async function build(ctx = {}) {
     return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
   });
 
-  const hasMw = products.some((product) => typeof product.mw === "number");
+  const hasMw = products.some((product) => typeof product.mw === "number" || typeof product.mwExternal === "number");
   const bits = families.map((family) => `${byFamily.get(family).length.toLocaleString("en-AU")} ${familyLabel(family)}`);
   const intro = `${products.length.toLocaleString("en-AU")} products from the AMT catalogue extract: ${bits.join(", ")}. A price that was not printed is a quote.`;
   const items = products.map(toCompact);
@@ -166,7 +173,7 @@ export async function build(ctx = {}) {
     { label: "Home", href: url("") },
     { label: "Catalogue" },
   ]);
-  const indexBody = `<div class="wrap catalogue" id="catalogue" data-catalogue-app data-index="${esc(url("catalogue/index.json"))}" data-has-mw="${hasMw ? "1" : "0"}" data-product-base="${esc(url("products/"))}">
+  const indexBody = `<div class="wrap catalogue" id="catalogue" data-catalogue-app data-index="${esc(url("catalogue/index.json"))}" data-has-mw="${hasMw ? "1" : "0"}" data-product-base="${esc(url("products/"))}" data-structure-base="${esc(url("assets/structures/pubchem/"))}">
   <header class="page-intro">
     ${crumbs}
     <h1>Catalogue</h1>
@@ -188,11 +195,13 @@ export async function build(ctx = {}) {
       </label>
       <button type="button" class="btn btn-secondary cat-filter-open" aria-expanded="false" aria-controls="cat-filters">Filters</button>
     </div>
-    <p id="cat-hint" class="hint">CAS works with or without hyphens. PEG3 is an oligomer length; PEG2000 and mPEG 2k are a nominal mass. Arrow keys move through results. <kbd>/</kbd> focuses search.</p>
+    <p id="cat-hint" class="hint">CAS works with or without hyphens. PEG3 is an oligomer length; PEG2000 and mPEG 2k are a nominal mass. <kbd>Ctrl</kbd>+<kbd>K</kbd> opens search on this page. <kbd>/</kbd> focuses this box.</p>
+    <div id="cat-did-you-mean" class="cat-did" hidden></div>
+    <ul id="cat-suggest" class="amt-suggest" role="listbox" hidden></ul>
     <div class="cat-layout">
       <aside id="cat-filters" class="cat-filters" aria-labelledby="cat-filter-title">
         <h2 id="cat-filter-title">Filters</h2>
-        <p class="hint">Family, CAS, pack size, purity, and price load when you search.</p>
+        <p class="hint">Family, type, CAS, molecular weight, pack size, purity, and price load when you search.</p>
       </aside>
       <div>
         <p id="cat-live" class="cat-live" aria-live="polite">${esc(products.length.toLocaleString("en-AU"))} products. Search, or browse by family.</p>
