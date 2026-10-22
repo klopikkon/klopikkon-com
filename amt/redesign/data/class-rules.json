@@ -2,7 +2,7 @@
   "derivedFrom": "name",
   "rules": "data/class-rules.json",
   "unknown": null,
-  "note": "Browsing classes read from the printed product name. Not an AMT heading, not a PubChem annotation, and not a family guess. A product with no matching rule has classDerived null. Rules apply only inside the family AMT already assigned.",
+  "note": "Browsing classes read from the printed product name. Not an AMT heading, not a PubChem annotation, and not a family guess. A product with no matching rule has classDerived null. Boron class, PEG architecture and dye core apply only inside the family AMT already assigned. NHS, maleimide and DBCO patterns also run on every family.",
   "families": {
     "organoborons": {
       "kind": "single",
@@ -39,13 +39,15 @@
       "reactiveGroups": [
         {
           "value": "NHS",
-          "pattern": "\\bNHS\\b|N-hydroxysuccinimide|succinimidyl",
-          "flags": "i"
+          "pattern": "\\bNHS\\b|N-hydroxysuccinimide|succinimidyl|2,5-dioxopyrrolidin-1-yl|(?<![A-Za-z])(?:SCM|SVA|SC|SS)(?![A-Za-z])",
+          "flags": "i",
+          "note": "NHS, succinimidyl, the IUPAC fragment 2,5-dioxopyrrolidin-1-yl, and the bounded linker abbreviations SC, SCM, SVA and SS (succinimidyl succinate). A SKU suffix is not read."
         },
         {
           "value": "maleimide",
-          "pattern": "maleimide",
-          "flags": "i"
+          "pattern": "maleimide|pyrrole-2,5-dione|(?<![A-Za-z])Mal(?![A-Za-z])",
+          "flags": "i",
+          "note": "maleimide, the bounded abbreviation Mal, or the IUPAC fragment pyrrole-2,5-dione. That fragment does not match a DPP pigment such as pyrrolo[3,4-c]pyrrole-1,4-dione."
         },
         {
           "value": "azide",
@@ -54,8 +56,9 @@
         },
         {
           "value": "DBCO",
-          "pattern": "\\bDBCO\\b|dibenzocyclooctyne",
-          "flags": "i"
+          "pattern": "\\bDBCO\\b|dibenzocyclooctyne|\\bADIBO\\b",
+          "flags": "i",
+          "note": "DBCO, dibenzocyclooctyne, or the printed abbreviation ADIBO (azadibenzocyclooctyne)."
         },
         {
           "value": "amine",
@@ -99,13 +102,29 @@
       "rules": [
         {
           "value": "Cy3",
-          "pattern": "(?<![A-Za-z0-9])Cy3(?![0-9])",
+          "pattern": "(?<![A-Za-z0-9])(?:sulfo[-\\s]?)?Cy3(?![0-9])",
+          "flags": "i"
+        },
+        {
+          "value": "Cy5.5",
+          "pattern": "(?<![A-Za-z0-9])(?:sulfo[-\\s]?)?Cy5\\.5(?![0-9])",
           "flags": "i"
         },
         {
           "value": "Cy5",
-          "pattern": "(?<![A-Za-z0-9])Cy5(?![0-9])",
+          "pattern": "(?<![A-Za-z0-9])(?:sulfo[-\\s]?)?Cy5(?![0-9.])",
           "flags": "i"
+        },
+        {
+          "value": "Cy7",
+          "pattern": "(?<![A-Za-z0-9])(?:sulfo[-\\s]?)?Cy7(?![0-9])",
+          "flags": "i"
+        },
+        {
+          "value": "cyanine",
+          "pattern": "cyanine",
+          "flags": "i",
+          "note": "A cyanine name that does not already state Cy3, Cy5, Cy5.5 or Cy7. sulfo-Cy is covered by those numbered rules, not by a bare sulfo prefix."
         },
         {
           "value": "FITC",

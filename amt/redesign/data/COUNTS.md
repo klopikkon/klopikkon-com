@@ -96,7 +96,7 @@ Each `subfamily` is the heading AMT prints above that product, copied verbatim. 
 
 ## Name-derived class
 
-`classDerived` is a browsing facet read from the printed product name with `data/class-rules.json`. It is not an AMT heading and it is not a PubChem field. `classDerivedSource` is `"name"` when a rule matches and null otherwise. Rules run only inside the family AMT already assigned, so lipids and `other` stay null. A PEG product can carry an architecture (`mPEG`, `heterobifunctional`, `multi-arm`) and the reactive groups the name states (`NHS`, `maleimide`, `azide`, `DBCO`, `amine`, `acid`). Unknowns are null.
+`classDerived` is a browsing facet read from the printed product name with `data/class-rules.json`. It is not an AMT heading and it is not a PubChem field. `classDerivedSource` is `"name"` when a rule matches and null otherwise. Boron class, PEG architecture and dye core run only inside the family AMT already assigned. NHS, maleimide and DBCO use the same name patterns on every family, including succinimidyl, SC, SCM, SVA, SS, 2,5-dioxopyrrolidin-1-yl, Mal, pyrrole-2,5-dione, dibenzocyclooctyne and ADIBO. A PEG product can also carry an architecture (`mPEG`, `heterobifunctional`, `multi-arm`) and azide, amine or acid. Dye cores include Cy3, Cy5, Cy5.5, Cy7, cyanine, sulfo-Cy, FITC and BODIPY. Unknowns are null.
 
 | Family | Products | Matched | Null |
 | --- | ---: | ---: | ---: |
@@ -135,12 +135,25 @@ PEG reactive groups. A product with two groups is counted under each.
 | amine | 74 |
 | acid | 5 |
 
+NHS, maleimide and DBCO on every family. The PEG row repeats the three cells above. ADIBO is counted as DBCO.
+
+| Family | NHS | maleimide | DBCO |
+| --- | ---: | ---: | ---: |
+| lipids | 0 | 0 | 0 |
+| peg | 0 | 0 | 0 |
+| fluorophores | 1 | 0 | 1 |
+| organoborons | 1 | 2 | 0 |
+| other | 0 | 0 | 0 |
+
 Fluorophore dye core:
 
 | Dye core | Products |
 | --- | ---: |
 | Cy3 | 0 |
+| Cy5.5 | 0 |
 | Cy5 | 0 |
+| Cy7 | 0 |
+| cyanine | 0 |
 | FITC | 0 |
 | BODIPY | 6 |
 
@@ -154,9 +167,9 @@ Fluorophore dye core:
 | lipids | 36 | 33 | 6 | 6 | 6 | 2 |
 | peg | 212 | 205 | 108 | 108 | 108 | 2 |
 | fluorophores | 40 | 40 | 24 | 24 | 24 | 0 |
-| organoborons | 1046 | 1044 | 530 | 530 | 530 | 0 |
+| organoborons | 1046 | 1045 | 531 | 531 | 531 | 0 |
 | other | 13 | 7 | 4 | 4 | 4 | 0 |
-| total | 1347 | 1329 | 672 | 672 | 672 | 4 |
+| total | 1347 | 1330 | 673 | 673 | 673 | 4 |
 
 
 ## Not extracted
@@ -223,10 +236,10 @@ Fluorophore dye core:
       },
       "organoborons": {
         "products": 1046,
-        "singleCas": 1044,
-        "oneCid": 530,
-        "formulaAndMw": 530,
-        "structureImage": 530,
+        "singleCas": 1045,
+        "oneCid": 531,
+        "formulaAndMw": 531,
+        "structureImage": 531,
         "mwNominal": 0
       },
       "other": {
@@ -239,10 +252,10 @@ Fluorophore dye core:
       },
       "total": {
         "products": 1347,
-        "singleCas": 1329,
-        "oneCid": 672,
-        "formulaAndMw": 672,
-        "structureImage": 672,
+        "singleCas": 1330,
+        "oneCid": 673,
+        "formulaAndMw": 673,
+        "structureImage": 673,
         "mwNominal": 4
       }
     }
@@ -259,12 +272,17 @@ Fluorophore dye core:
   "classDerived": {
     "derivedFrom": "name",
     "rules": "data/class-rules.json",
-    "note": "Not an AMT heading. Counted from the printed name with data/class-rules.json. Null means no rule matched. PEG reactive-group counts are products that include that group, so one heterobifunctional product is counted under each group it names.",
+    "note": "Not an AMT heading. Counted from the printed name with data/class-rules.json. Null means no rule matched. Reactive-group counts are products whose name includes that group, so one product can be counted under more than one group. NHS, maleimide and DBCO are counted in every family. ADIBO is counted as DBCO.",
     "byFamily": {
       "lipids": {
         "products": 36,
         "matched": 0,
-        "null": 36
+        "null": 36,
+        "reactiveGroups": {
+          "NHS": 0,
+          "maleimide": 0,
+          "DBCO": 0
+        }
       },
       "peg": {
         "products": 212,
@@ -290,9 +308,17 @@ Fluorophore dye core:
         "null": 34,
         "dyeCore": {
           "Cy3": 0,
+          "Cy5.5": 0,
           "Cy5": 0,
+          "Cy7": 0,
+          "cyanine": 0,
           "FITC": 0,
           "BODIPY": 6
+        },
+        "reactiveGroups": {
+          "NHS": 1,
+          "maleimide": 0,
+          "DBCO": 1
         }
       },
       "organoborons": {
@@ -304,12 +330,22 @@ Fluorophore dye core:
           "trifluoroborate": 123,
           "pinacol ester": 648,
           "boronic acid": 135
+        },
+        "reactiveGroups": {
+          "NHS": 1,
+          "maleimide": 2,
+          "DBCO": 0
         }
       },
       "other": {
         "products": 13,
         "matched": 0,
-        "null": 13
+        "null": 13,
+        "reactiveGroups": {
+          "NHS": 0,
+          "maleimide": 0,
+          "DBCO": 0
+        }
       },
       "total": {
         "products": 1347,

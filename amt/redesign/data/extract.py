@@ -1309,7 +1309,7 @@ def class_lines(block):
     lines = [
         "## Name-derived class",
         "",
-        "`classDerived` is a browsing facet read from the printed product name with `data/class-rules.json`. It is not an AMT heading and it is not a PubChem field. `classDerivedSource` is `\"name\"` when a rule matches and null otherwise. Rules run only inside the family AMT already assigned, so lipids and `other` stay null. A PEG product can carry an architecture (`mPEG`, `heterobifunctional`, `multi-arm`) and the reactive groups the name states (`NHS`, `maleimide`, `azide`, `DBCO`, `amine`, `acid`). Unknowns are null.",
+        "`classDerived` is a browsing facet read from the printed product name with `data/class-rules.json`. It is not an AMT heading and it is not a PubChem field. `classDerivedSource` is `\"name\"` when a rule matches and null otherwise. Boron class, PEG architecture and dye core run only inside the family AMT already assigned. NHS, maleimide and DBCO use the same name patterns on every family, including succinimidyl, SC, SCM, SVA, SS, 2,5-dioxopyrrolidin-1-yl, Mal, pyrrole-2,5-dione, dibenzocyclooctyne and ADIBO. A PEG product can also carry an architecture (`mPEG`, `heterobifunctional`, `multi-arm`) and azide, amine or acid. Dye cores include Cy3, Cy5, Cy5.5, Cy7, cyanine, sulfo-Cy, FITC and BODIPY. Unknowns are null.",
         "",
         "| Family | Products | Matched | Null |",
         "| --- | ---: | ---: | ---: |",
@@ -1326,6 +1326,16 @@ def class_lines(block):
     lines.extend(["", "PEG reactive groups. A product with two groups is counted under each.", "", "| Reactive group | Products |", "| --- | ---: |"])
     for label, count in block["byFamily"]["peg"]["reactiveGroups"].items():
         lines.append(f"| {label} | {count} |")
+    lines.extend([
+        "",
+        "NHS, maleimide and DBCO on every family. The PEG row repeats the three cells above. ADIBO is counted as DBCO.",
+        "",
+        "| Family | NHS | maleimide | DBCO |",
+        "| --- | ---: | ---: | ---: |",
+    ])
+    for family in ["lipids", "peg", "fluorophores", "organoborons", "other"]:
+        groups = block["byFamily"][family]["reactiveGroups"]
+        lines.append(f"| {family} | {groups['NHS']} | {groups['maleimide']} | {groups['DBCO']} |")
     lines.extend(["", "Fluorophore dye core:", "", "| Dye core | Products |", "| --- | ---: |"])
     for label, count in block["byFamily"]["fluorophores"]["dyeCore"].items():
         lines.append(f"| {label} | {count} |")

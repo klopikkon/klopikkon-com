@@ -2165,6 +2165,14 @@
     "sha256": "5f711051f7827dc99d8c3bf5d1287619052f23af95b451106009ef41e058e774"
   },
   {
+    "path": "assets/structures/pubchem/46739725.svg",
+    "sourceUrl": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/46739725/record/JSON?record_type=2d",
+    "kind": "structure-external",
+    "cid": 46739725,
+    "bytes": 1254,
+    "sha256": "4d5ea4513872bbb863fa05d211b987487e087306a1bf72e3959a72fe0f080cb1"
+  },
+  {
     "path": "assets/structures/pubchem/46739736.svg",
     "sourceUrl": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/46739736/record/JSON?record_type=2d",
     "kind": "structure-external",

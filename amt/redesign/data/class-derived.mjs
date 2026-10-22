@@ -38,15 +38,28 @@ function allMatches(name, rules) {
   return values;
 }
 
+const LINKER_VALUES = ["NHS", "maleimide", "DBCO"];
+
+function linkerRules(rules) {
+  const groups = rules.families?.peg?.reactiveGroups || [];
+  return groups.filter((rule) => LINKER_VALUES.includes(rule.value));
+}
+
 export function deriveClass(name, family, rules) {
   if (typeof name !== "string" || name.trim() === "") return null;
   const spec = rules.families?.[family];
-  if (!spec) return null;
   const base = { derivedFrom: "name", rules: rules.rules };
+  const linkers = allMatches(name, linkerRules(rules));
+  if (!spec) {
+    if (linkers.length === 0) return null;
+    return { ...base, reactiveGroups: linkers };
+  }
   if (spec.kind === "single") {
     const value = firstMatch(name, spec.rules);
-    if (!value) return null;
-    return { ...base, [spec.field]: value };
+    if (!value && linkers.length === 0) return null;
+    if (!value) return { ...base, reactiveGroups: linkers };
+    if (linkers.length === 0) return { ...base, [spec.field]: value };
+    return { ...base, [spec.field]: value, reactiveGroups: linkers };
   }
   if (spec.kind === "peg") {
     const reactiveGroups = allMatches(name, spec.reactiveGroups);
@@ -79,10 +92,14 @@ export function classCounts(products, rules) {
     const row = { products: 0, matched: 0, null: 0 };
     if (spec?.kind === "single") {
       row[spec.field] = Object.fromEntries(spec.rules.map((rule) => [rule.value, 0]));
+      row.reactiveGroups = Object.fromEntries(LINKER_VALUES.map((value) => [value, 0]));
     }
     if (spec?.kind === "peg") {
       row.architecture = Object.fromEntries(spec.architecture.map((rule) => [rule.value, 0]));
       row.reactiveGroups = Object.fromEntries(spec.reactiveGroups.map((rule) => [rule.value, 0]));
+    }
+    if (!spec) {
+      row.reactiveGroups = Object.fromEntries(LINKER_VALUES.map((value) => [value, 0]));
     }
     byFamily[family] = row;
   }
@@ -109,7 +126,7 @@ export function classCounts(products, rules) {
   return {
     derivedFrom: "name",
     rules: rules.rules,
-    note: "Not an AMT heading. Counted from the printed name with data/class-rules.json. Null means no rule matched. PEG reactive-group counts are products that include that group, so one heterobifunctional product is counted under each group it names.",
+    note: "Not an AMT heading. Counted from the printed name with data/class-rules.json. Null means no rule matched. Reactive-group counts are products whose name includes that group, so one product can be counted under more than one group. NHS, maleimide and DBCO are counted in every family. ADIBO is counted as DBCO.",
     byFamily: { ...byFamily, total },
   };
 }
@@ -120,7 +137,7 @@ export function classSection(block) {
   const lines = [
     "## Name-derived class",
     "",
-    "`classDerived` is a browsing facet read from the printed product name with `data/class-rules.json`. It is not an AMT heading and it is not a PubChem field. `classDerivedSource` is `\"name\"` when a rule matches and null otherwise. Rules run only inside the family AMT already assigned, so lipids and `other` stay null. A PEG product can carry an architecture (`mPEG`, `heterobifunctional`, `multi-arm`) and the reactive groups the name states (`NHS`, `maleimide`, `azide`, `DBCO`, `amine`, `acid`). Unknowns are null.",
+    "`classDerived` is a browsing facet read from the printed product name with `data/class-rules.json`. It is not an AMT heading and it is not a PubChem field. `classDerivedSource` is `\"name\"` when a rule matches and null otherwise. Boron class, PEG architecture and dye core run only inside the family AMT already assigned. NHS, maleimide and DBCO use the same name patterns on every family, including succinimidyl, SC, SCM, SVA, SS, 2,5-dioxopyrrolidin-1-yl, Mal, pyrrole-2,5-dione, dibenzocyclooctyne and ADIBO. A PEG product can also carry an architecture (`mPEG`, `heterobifunctional`, `multi-arm`) and azide, amine or acid. Dye cores include Cy3, Cy5, Cy5.5, Cy7, cyanine, sulfo-Cy, FITC and BODIPY. Unknowns are null.",
     "",
     "| Family | Products | Matched | Null |",
     "| --- | ---: | ---: | ---: |",
@@ -140,6 +157,17 @@ export function classSection(block) {
   lines.push("", "PEG reactive groups. A product with two groups is counted under each.", "", "| Reactive group | Products |", "| --- | ---: |");
   for (const [label, count] of Object.entries(block.byFamily.peg.reactiveGroups)) {
     lines.push(`| ${label} | ${count} |`);
+  }
+  lines.push(
+    "",
+    "NHS, maleimide and DBCO on every family. The PEG row repeats the three cells above. ADIBO is counted as DBCO.",
+    "",
+    "| Family | NHS | maleimide | DBCO |",
+    "| --- | ---: | ---: | ---: |",
+  );
+  for (const family of FAMILIES) {
+    const groups = block.byFamily[family].reactiveGroups;
+    lines.push(`| ${family} | ${groups.NHS} | ${groups.maleimide} | ${groups.DBCO} |`);
   }
   lines.push("", "Fluorophore dye core:", "", "| Dye core | Products |", "| --- | ---: |");
   for (const [label, count] of Object.entries(block.byFamily.fluorophores.dyeCore)) {
