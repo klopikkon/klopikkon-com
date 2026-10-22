@@ -610,6 +610,74 @@ export function hasTechnicalTab(product, cache = null) {
   return Boolean(amt || pubchem || ids.smiles || ids.inchiKey);
 }
 
+const DOCUMENT_LABELS = {
+  sds: "SDS",
+  coa: "COA",
+  datasheet: "Datasheet",
+  spec: "Spec sheet",
+  technical: "Technical document",
+};
+
+function safeHref(value) {
+  const href = publishedText(value);
+  if (!href || /[\u0000-\u001f]/.test(href) || /^\s*javascript:/i.test(href)) return null;
+  return href;
+}
+
+/**
+ * SDS, COA, and other AMT document links.
+ * Accepts the current `[{type, url, source}]` list and the older `{sds, coa, datasheet}` object.
+ * Empty and unpublished values produce no links.
+ */
+export function documentEntries(product) {
+  const docs = product?.documents;
+  const entries = [];
+  const push = (type, href, source) => {
+    const label = DOCUMENT_LABELS[String(type || "")];
+    const url = safeHref(href);
+    if (!label || !url) return;
+    entries.push({ type: String(type), label, href: url, source: publishedText(source) });
+  };
+  if (Array.isArray(docs)) {
+    for (const item of docs) {
+      if (!item || typeof item !== "object") continue;
+      push(item.type, item.url, item.source);
+    }
+    return entries;
+  }
+  if (docs && typeof docs === "object") {
+    for (const type of Object.keys(DOCUMENT_LABELS)) push(type, docs[type], null);
+  }
+  return entries;
+}
+
+export const PRICE_CONFLICT_NOTE =
+  "AMT's website and catalogue list different prices for this item, please confirm on quote";
+
+function publishedPackRows(packs) {
+  return (Array.isArray(packs) ? packs : [])
+    .map((pack) => {
+      const size = publishedText(pack?.size) || "Pack";
+      const price = publishedText(pack?.priceText);
+      if (!price) return null;
+      return { size, price: price.toLowerCase() === "quote" ? "Quote" : price };
+    })
+    .filter(Boolean);
+}
+
+/**
+ * Both published price lists when `priceConflict` is exactly true.
+ * Absent or any other value hides the note. Prices are not invented.
+ */
+export function priceConflictView(product) {
+  if (product?.priceConflict !== true) return null;
+  return {
+    note: PRICE_CONFLICT_NOTE,
+    catalogue: publishedPackRows(product.packs),
+    website: publishedPackRows(product.homepagePacks),
+  };
+}
+
 /** CID-keyed `{ smiles, inchiKey }` fetched from PubChem. Missing file yields {}. */
 export async function loadIdentifierCache(file) {
   try {
