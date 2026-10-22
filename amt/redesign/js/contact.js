@@ -1,6 +1,6 @@
 /**
  * Turns the contact form into a mailto to AMT's published sales address.
- * Without this module the form still uses a mailto action.
+ * The form has no mailto action: on an HTTPS page that action is mixed content.
  */
 const form = document.querySelector("[data-contact-form]");
 if (form) {

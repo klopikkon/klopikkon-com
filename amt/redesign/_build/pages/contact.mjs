@@ -41,7 +41,7 @@ export async function build({ site, renderPage, writeFile }) {
     <section class="card" aria-labelledby="contact-form-heading">
       <h2 id="contact-form-heading">Contact Form</h2>
       <p class="fine">Send opens an email to ${esc(contact.emailSales)}. Nothing is stored on this site.</p>
-      <form class="form" data-contact-form data-mailto="${esc(contact.emailSales)}" action="mailto:${esc(contact.emailSales)}" method="post" enctype="text/plain">
+      <form class="form" data-contact-form data-mailto="${esc(contact.emailSales)}">
         <div class="field">
           <label for="your-name">Your Name <span class="req">(required)</span></label>
           <input id="your-name" name="your-name" type="text" autocomplete="name" required maxlength="400">
