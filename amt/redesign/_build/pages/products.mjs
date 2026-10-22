@@ -175,10 +175,45 @@ function renderPosition(match) {
   const copy = pricePositionCopy(match.row);
   const position = { win: "green", lose: "red", split: "amber" }[copy.tone] || "amber";
   return `<aside class="price-position" data-tone="${escapeHtml(copy.tone)}" aria-label="Price position">
-    <p class="price-position-badge">${priceBadge(position)}</p>
+    <p class="price-position-badge" aria-hidden="true">${priceBadge(position)}</p>
     <p class="price-position-line">${escapeHtml(copy.line)}</p>
     <p class="price-position-link"><a href="${escapeHtml(match.row.href)}">Price breakdown</a></p>
   </aside>`;
+}
+
+function publishedCas(product) {
+  const cas = publishedText(product.cas);
+  if (cas && casNumbers(cas).length) return cas;
+  return "Not published";
+}
+
+function socialMeta(product, pagePath, site) {
+  const name = displayName(product);
+  const sku = product.sku || "Not published";
+  const cas = publishedCas(product);
+  const family = familyTitle(site, product.family || "other");
+  const image = absoluteUrl(`og/${safeId(product.id)}.png`);
+  const page = canonical(pagePath);
+  const description = `SKU ${sku}. CAS ${cas}. ${family}.`;
+  const alt = `${name}. SKU ${sku}. CAS ${cas}. ${family}.`;
+  const tag = (property, content) => `<meta property="${property}" content="${escapeHtml(content)}">`;
+  const nameTag = (key, content) => `<meta name="${key}" content="${escapeHtml(content)}">`;
+  return [
+    tag("og:type", "website"),
+    tag("og:site_name", "Advanced Molecular Technologies"),
+    tag("og:title", name),
+    tag("og:description", description),
+    tag("og:url", page),
+    tag("og:image", image),
+    tag("og:image:alt", alt),
+    tag("og:image:width", "1200"),
+    tag("og:image:height", "630"),
+    nameTag("twitter:card", "summary_large_image"),
+    nameTag("twitter:title", name),
+    nameTag("twitter:description", description),
+    nameTag("twitter:image", image),
+    nameTag("twitter:image:alt", alt),
+  ].join("\n");
 }
 
 function renderPackCompare(product) {
@@ -220,7 +255,7 @@ function renderPacks(product) {
       return `<label class="pack-option" for="${escapeHtml(id)}">
         <input type="radio" name="pack" id="${escapeHtml(id)}" value="${escapeHtml(size)}"${index === 0 ? " checked" : ""}>
         <span class="pack-size">${escapeHtml(size)}</span>
-        <span class="pack-price">${escapeHtml(packLabel(pack))}</span>
+        <span class="pack-price"${isQuotedPack(pack) ? ` aria-label="Quote, price not published"` : ""}>${isQuotedPack(pack) ? "Quote" : escapeHtml(packLabel(pack))}</span>
       </label>`;
     })
     .join("");
@@ -406,7 +441,7 @@ export async function build(ctx) {
       title: publishedText(product.name) ? `${product.name} · ${product.sku || "AMT"}` : displayName(product),
       description,
       path: pagePath,
-      head: `<link rel="stylesheet" href="${url("css/product.css")}">`,
+      head: `${socialMeta(product, pagePath, site)}\n<link rel="stylesheet" href="${url("css/product.css")}">`,
       body: renderProduct(product, products, match, site),
     });
     await write(`products/${id}/index.html`, html);

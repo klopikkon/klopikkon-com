@@ -192,6 +192,17 @@ assert(quoteHtml.includes("data-quote-csv"), "quote page can download a CSV");
 assert(quoteHtml.includes("ex GST"), "quote page labels the total ex GST");
 JSON.parse(quoteItems);
 
+const worker = readFileSync(path.join(redesign, "sw.js"), "utf8");
+const registration = readFileSync(path.join(redesign, "js/sw-register.js"), "utf8");
+assert(worker.includes('const CACHE = "amt-redesign-v1"'), "service worker cache is versioned");
+assert(worker.includes("mailto:"), "service worker mentions mailto");
+assert(worker.includes("function networkFirst"), "service worker uses network-first HTML");
+assert(worker.includes('"/amt/redesign/catalogue/"'), "service worker precaches the catalogue index");
+assert(worker.includes('url.protocol === "mailto:"'), "service worker does not cache mailto");
+assert(registration.includes('"/amt/redesign/sw.js"'), "register script points at the worker");
+assert(registration.includes('scope: SCOPE') || registration.includes('"/amt/redesign/"'), "register script sets the redesign scope");
+assert(!readFileSync(path.join(here, "lib/layout.mjs"), "utf8").includes("sw-register.js"), "layout.mjs is left for the shell agent");
+
 const report = readFileSync(path.join(redesign, "products/price-match.md"), "utf8");
 assert(report.includes("Match order"), "price-match.md documents the matcher");
 assert(report.includes("Matched:"), "price-match.md records the match rate");
@@ -209,6 +220,26 @@ for (const [id, html] of pages) {
   assert(html.includes('id="main"'), `${id} missing main`);
   assert(html.includes("/css/tokens.css"), `${id} missing tokens`);
   assert(html.includes("/css/product.css"), `${id} missing product.css`);
+  assert(html.includes('property="og:image"'), `${id} missing Open Graph image`);
+  assert(html.includes(`https://klopikkon.com/amt/redesign/og/${id}.png`), `${id} og image path`);
+  const ogFile = path.join(redesign, "og", `${id}.png`);
+  assert(existsSync(ogFile), `${id} missing preview image`);
+  if (existsSync(ogFile)) {
+    const header = readFileSync(ogFile).subarray(0, 24);
+    const width = header.readUInt32BE(16);
+    const height = header.readUInt32BE(20);
+    assert(width === 1200 && height === 630, `${id} preview is ${width}x${height}`);
+  }
+  assert(html.includes('name="twitter:card" content="summary_large_image"'), `${id} missing Twitter card`);
+  const ogDesc = html.match(/property="og:description" content="([^"]*)"/)?.[1] || "";
+  assert(ogDesc.length > 0 && !ogDesc.includes("$") && !/quote/i.test(ogDesc), `${id} preview text includes a price`);
+  assert(!html.includes(`og/${id}.png/`), `${id} og image has a trailing slash`);
+  if ((product.packs || []).some((pack) => isQuotedPack(pack))) {
+    assert(html.includes("price not published"), `${id} Quote price has no screen-reader explanation`);
+  }
+  if (html.includes("price-position-badge")) {
+    assert(html.includes('class="price-position-badge" aria-hidden="true"'), `${id} price badge is exposed without the plain-language line`);
+  }
   assert(!/\.(css|js|png|webp|svg)\//.test(html), `${id} has a trailing slash on a file URL`);
   assert(html.includes('data-generated="amt-product"'), `${id} missing generated marker`);
   assert(html.includes(`data-product-id="${id}"`), `${id} missing product id`);
