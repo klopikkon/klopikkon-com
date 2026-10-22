@@ -71,9 +71,16 @@
     <p class="lede">Items stay in this browser. Opening the email uses your mail app and addresses sales@amtechpl.com, the sales address published on the AMT contact page. Nothing is sent to a server, and there is no payment.</p>
     <p class="quote-empty" data-quote-empty>No items yet. <a href="/amt/redesign/catalogue/">Browse the catalogue</a>.</p>
     <ul class="quote-lines" data-quote-lines></ul>
+    <section class="quote-summary" data-quote-summary hidden aria-labelledby="quote-summary-heading">
+      <h2 id="quote-summary-heading">Summary</h2>
+      <p class="hint">A line total is shown only when that pack has a published price. Quote lines are excluded. The total is indicative and ex GST.</p>
+      <ul class="quote-summary-lines" data-quote-summary-lines></ul>
+      <p class="quote-summary-total" data-quote-total></p>
+      <p class="quote-summary-note" data-quote-summary-note></p>
+    </section>
     <form class="quote-details" data-quote-details>
       <h2>Message</h2>
-      <p class="hint">Name, organisation, and notes are optional. They are only copied into the email.</p>
+      <p class="hint">Name, organisation, and notes are optional. They are copied into the request. Nothing is sent until you send the email yourself.</p>
       <div class="field">
         <label for="quote-name">Name</label>
         <input id="quote-name" name="name" type="text" autocomplete="name">
@@ -86,7 +93,11 @@
         <label for="quote-notes">Notes</label>
         <textarea id="quote-notes" name="notes" rows="4"></textarea>
       </div>
-      <p><a class="btn btn-primary mailto" data-quote-mailto href="mailto:sales@amtechpl.com">Open email to AMT</a></p>
+      <div class="quote-actions">
+        <a class="btn btn-primary mailto" data-quote-mailto href="mailto:sales@amtechpl.com">Open email to AMT</a>
+        <button class="btn btn-secondary" type="button" data-quote-copy disabled>Copy request</button>
+        <button class="btn btn-secondary" type="button" data-quote-csv disabled>Download CSV</button>
+      </div>
       <p class="quote-status" data-quote-status role="status" aria-live="polite"></p>
     </form>
     <noscript><p>JavaScript is required to read the saved list and fill the email. The message is still only sent if you send it from your mail app.</p></noscript>
