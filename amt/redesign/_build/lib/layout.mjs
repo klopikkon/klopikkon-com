@@ -71,10 +71,13 @@ function header(current) {
       <span aria-hidden="true">·</span>
       <a href="mailto:${esc(contact.emailEnquiries)}">${esc(contact.emailEnquiries)}</a>
     </p>
-    <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme">
+    <div class="utility-actions">
+      <a class="quote-count" href="${url("quote/")}" data-quote-count>Quote (0)</a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme">
       <span class="when-light">Dark theme</span>
       <span class="when-dark">Light theme</span>
     </button>
+    </div>
   </div>
   <div class="wrap brand-bar">
     <a class="brand" href="${url("")}">
@@ -189,7 +192,8 @@ export function renderPage({ title, description, path, body, head = "" }) {
     ${body}
   </main>
   ${footer(current)}
-  <script type="module" src="${url("js/theme.js")}"></script>${serviceWorkerScript()}
+  <script type="module" src="${url("js/theme.js")}"></script>
+  <script type="module" src="${url("js/quote-count.js")}"></script>${serviceWorkerScript()}
 </body>
 </html>
 `;
