@@ -187,10 +187,17 @@ const expectedTypes = {
   BODIPY: 6,
   mPEG: 2,
   heterobifunctional: 17,
+  NHS: 2,
+  maleimide: 2,
+  DBCO: 1,
   azide: 65,
   amine: 74,
   acid: 5,
 };
+const pyrene = records.find((record) => record.sku === "AMTB1414-PY24");
+assert(pyrene?.types.includes("pinacol ester") && pyrene.types.includes("NHS") && pyrene.mwExternal === 375.2 && pyrene.formulaExternal === "C18H22BNO7", "a pinacol ester can also carry an NHS type and a PubChem weight");
+const gained = records.find((record) => record.sku === "AMTB037-M06");
+assert(gained?.mw == null && gained.mwExternal === 316.2 && gained.structureCid === 46739725, "AMTB037-M06 keeps the newly published PubChem weight and structure");
 const typeFacet = search("").facets.type;
 assert(typeFacet.length === Object.keys(expectedTypes).length, "type facet omits classes with no products");
 for (const [token, count] of typeFacet) {
