@@ -58,7 +58,7 @@
   </div>
   <div class="wrap brand-bar">
     <a class="brand" href="/amt/redesign/">
-      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" width="183" height="99" alt=""></span>
+      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" srcset="/amt/redesign/assets/amt-logo.png 183w, /amt/redesign/assets/amt-logo@2x.png 464w" sizes="(min-width: 56rem) 6.25rem, 5.5rem" width="183" height="99" alt=""></span>
       <span class="brand-name">Advanced Molecular Technologies</span>
     </a>
     <form class="search" role="search" action="/amt/redesign/catalogue/" method="get">
@@ -134,7 +134,13 @@
         <p class="source-line">Published source: <a href="https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf" rel="noopener noreferrer">Catalogue PDF</a> · <a href="https://www.amtechpl.com/" rel="noopener noreferrer">AMT page</a></p>
       </div>
     </div>
-    <section class="specs-section" aria-labelledby="specs-amtgc122-dd15">
+    <div class="detail-tabs" data-detail-tabs>
+    <div class="detail-tablist" role="tablist" aria-label="Product details">
+      <button type="button" role="tab" id="specs-tab-amtgc122-dd15" aria-controls="specs-panel-amtgc122-dd15" aria-selected="true">Specifications</button>
+      <button type="button" role="tab" id="tech-tab-amtgc122-dd15" aria-controls="tech-panel-amtgc122-dd15" aria-selected="false" tabindex="-1">Technical</button>
+    </div>
+    <div role="tabpanel" id="specs-panel-amtgc122-dd15" aria-labelledby="specs-tab-amtgc122-dd15">
+      <section class="specs-section" aria-labelledby="specs-amtgc122-dd15">
       <h2 id="specs-amtgc122-dd15">Specifications</h2>
       <div class="table-scroll">
       <table class="specs">
@@ -143,16 +149,33 @@
       </table>
       </div>
     </section>
-    <section class="pubchem" aria-labelledby="pubchem-amtgc122-dd15">
-    <h2 id="pubchem-amtgc122-dd15">From PubChem</h2>
-    <p class="fine">Not printed in the AMT catalogue.</p>
-    <div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody><tr><th scope="row">Formula</th><td>C22H16N2O6 <span class="pubchem-tag">from PubChem</span></td></tr><tr><th scope="row">Molecular weight</th><td>404.4 <span class="pubchem-tag">from PubChem</span></td></tr></tbody></table></div>
-    <figure class="structure pubchem-structure">
-        <img src="/amt/redesign/assets/structures/pubchem/85894496.svg" alt="Structure of 2,2&#39;-(1,4-Dioxo-3,6-diphenylpyrrolo[3,4-c]pyrrole-2,5(1H,4H)-diyl)diacetic acid from PubChem" width="480" height="360">
-        <figcaption>Structure from PubChem</figcaption>
-      </figure>
+    </div>
+    <div role="tabpanel" id="tech-panel-amtgc122-dd15" aria-labelledby="tech-tab-amtgc122-dd15">
+      <section class="technical" data-technical aria-labelledby="technical-amtgc122-dd15">
+    <h2 id="technical-amtgc122-dd15">Technical</h2>
     
+    <div class="technical-pubchem">
+        <h3>From PubChem</h3>
+        <p class="fine">Not printed in the AMT catalogue.</p>
+        <div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody><tr><th scope="row">Formula</th><td>C22H16N2O6 <span class="pubchem-tag">from PubChem</span></td></tr><tr><th scope="row">Molecular weight</th><td>404.4 <span class="pubchem-tag">from PubChem</span></td></tr></tbody></table></div>
+        <figure class="structure pubchem-structure">
+        <img src="/amt/redesign/assets/structures/pubchem/85894496.svg" alt="Structure of 2,2&#39;-(1,4-Dioxo-3,6-diphenylpyrrolo[3,4-c]pyrrole-2,5(1H,4H)-diyl)diacetic acid from PubChem" width="480" height="360">
+        <figcaption>Structure from PubChem, CID 85894496</figcaption>
+      </figure>
+        <div class="identifier">
+    <h3>SMILES <span class="pubchem-tag">from PubChem</span></h3>
+    <p class="identifier-value">C1=CC=C(C=C1)C2=C3C(=C(N(C3=O)CC(=O)O)C4=CC=CC=C4)C(=O)N2CC(=O)O</p>
+    <button type="button" class="btn btn-secondary copy-identifier" data-copy="C1=CC=C(C=C1)C2=C3C(=C(N(C3=O)CC(=O)O)C4=CC=CC=C4)C(=O)N2CC(=O)O" aria-label="Copy SMILES from PubChem">Copy SMILES</button>
+  </div><div class="identifier">
+    <h3>InChIKey <span class="pubchem-tag">from PubChem</span></h3>
+    <p class="identifier-value">KOWRWVZFXQEPIL-UHFFFAOYSA-N</p>
+    <button type="button" class="btn btn-secondary copy-identifier" data-copy="KOWRWVZFXQEPIL-UHFFFAOYSA-N" aria-label="Copy InChIKey from PubChem">Copy InChIKey</button>
+  </div>
+        <p><a href="https://pubchem.ncbi.nlm.nih.gov/compound/85894496" rel="noopener noreferrer">PubChem CID 85894496</a></p>
+      </div>
   </section>
+    </div>
+  </div>
     
     <section class="related" aria-labelledby="related-amtgc122-dd15">
         <h2 id="related-amtgc122-dd15">Related in Fluorophores and Dyes</h2>
@@ -196,5 +219,6 @@
   </div>
 </footer>
   <script type="module" src="/amt/redesign/js/theme.js"></script>
+  <script type="module" src="/amt/redesign/js/sw-register.js"></script>
 </body>
 </html>

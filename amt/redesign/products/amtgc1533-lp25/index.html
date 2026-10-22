@@ -58,7 +58,7 @@
   </div>
   <div class="wrap brand-bar">
     <a class="brand" href="/amt/redesign/">
-      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" width="183" height="99" alt=""></span>
+      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" srcset="/amt/redesign/assets/amt-logo.png 183w, /amt/redesign/assets/amt-logo@2x.png 464w" sizes="(min-width: 56rem) 6.25rem, 5.5rem" width="183" height="99" alt=""></span>
       <span class="brand-name">Advanced Molecular Technologies</span>
     </a>
     <form class="search" role="search" action="/amt/redesign/catalogue/" method="get">
@@ -135,7 +135,13 @@
         <p class="source-line">Published source: <a href="https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf" rel="noopener noreferrer">Catalogue PDF</a> · <a href="https://www.amtechpl.com/" rel="noopener noreferrer">AMT page</a></p>
       </div>
     </div>
-    <section class="specs-section" aria-labelledby="specs-amtgc1533-lp25">
+    <div class="detail-tabs" data-detail-tabs>
+    <div class="detail-tablist" role="tablist" aria-label="Product details">
+      <button type="button" role="tab" id="specs-tab-amtgc1533-lp25" aria-controls="specs-panel-amtgc1533-lp25" aria-selected="true">Specifications</button>
+      <button type="button" role="tab" id="tech-tab-amtgc1533-lp25" aria-controls="tech-panel-amtgc1533-lp25" aria-selected="false" tabindex="-1">Technical</button>
+    </div>
+    <div role="tabpanel" id="specs-panel-amtgc1533-lp25" aria-labelledby="specs-tab-amtgc1533-lp25">
+      <section class="specs-section" aria-labelledby="specs-amtgc1533-lp25">
       <h2 id="specs-amtgc1533-lp25">Specifications</h2>
       <div class="table-scroll">
       <table class="specs">
@@ -144,16 +150,40 @@
       </table>
       </div>
     </section>
-    <section class="pubchem" aria-labelledby="pubchem-amtgc1533-lp25">
-    <h2 id="pubchem-amtgc1533-lp25">From PubChem</h2>
-    <p class="fine">Not printed in the AMT catalogue.</p>
-    <div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody><tr><th scope="row">Formula</th><td>C44H87NO5 <span class="pubchem-tag">from PubChem</span></td></tr><tr><th scope="row">Molecular weight</th><td>710.2 <span class="pubchem-tag">from PubChem</span></td></tr></tbody></table></div>
-    <figure class="structure pubchem-structure">
-        <img src="/amt/redesign/assets/structures/pubchem/126697428.svg" alt="Structure of Lipid 5 from PubChem" width="480" height="360">
-        <figcaption>Structure from PubChem</figcaption>
+    </div>
+    <div role="tabpanel" id="tech-panel-amtgc1533-lp25" aria-labelledby="tech-tab-amtgc1533-lp25">
+      <section class="technical" data-technical aria-labelledby="technical-amtgc1533-lp25">
+    <h2 id="technical-amtgc1533-lp25">Technical</h2>
+    <div class="technical-amt">
+          <h3>Published by AMT</h3>
+          
+          <figure class="structure">
+        <img src="/amt/redesign/assets/structures/Lipid-5.png" alt="Structure of Lipid 5 published by Advanced Molecular Technologies" width="480" height="360">
+        <figcaption>Structure published by AMT</figcaption>
       </figure>
-    
+        </div>
+    <div class="technical-pubchem">
+        <h3>From PubChem</h3>
+        <p class="fine">Not printed in the AMT catalogue.</p>
+        <div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody><tr><th scope="row">Formula</th><td>C44H87NO5 <span class="pubchem-tag">from PubChem</span></td></tr><tr><th scope="row">Molecular weight</th><td>710.2 <span class="pubchem-tag">from PubChem</span></td></tr></tbody></table></div>
+        <figure class="structure pubchem-structure">
+        <img src="/amt/redesign/assets/structures/pubchem/126697428.svg" alt="Structure of Lipid 5 from PubChem" width="480" height="360">
+        <figcaption>Structure from PubChem, CID 126697428</figcaption>
+      </figure>
+        <div class="identifier">
+    <h3>SMILES <span class="pubchem-tag">from PubChem</span></h3>
+    <p class="identifier-value">CCCCCCCCCOC(=O)CCCCCCCN(CCCCCCCC(=O)OC(CCCCCCCC)CCCCCCCC)CCO</p>
+    <button type="button" class="btn btn-secondary copy-identifier" data-copy="CCCCCCCCCOC(=O)CCCCCCCN(CCCCCCCC(=O)OC(CCCCCCCC)CCCCCCCC)CCO" aria-label="Copy SMILES from PubChem">Copy SMILES</button>
+  </div><div class="identifier">
+    <h3>InChIKey <span class="pubchem-tag">from PubChem</span></h3>
+    <p class="identifier-value">ABCVHPIKBGRCJA-UHFFFAOYSA-N</p>
+    <button type="button" class="btn btn-secondary copy-identifier" data-copy="ABCVHPIKBGRCJA-UHFFFAOYSA-N" aria-label="Copy InChIKey from PubChem">Copy InChIKey</button>
+  </div>
+        <p><a href="https://pubchem.ncbi.nlm.nih.gov/compound/126697428" rel="noopener noreferrer">PubChem CID 126697428</a></p>
+      </div>
   </section>
+    </div>
+  </div>
     
     <section class="related" aria-labelledby="related-amtgc1533-lp25">
         <h2 id="related-amtgc1533-lp25">Related in Ionisable Lipid</h2>
@@ -197,5 +227,6 @@
   </div>
 </footer>
   <script type="module" src="/amt/redesign/js/theme.js"></script>
+  <script type="module" src="/amt/redesign/js/sw-register.js"></script>
 </body>
 </html>

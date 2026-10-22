@@ -58,7 +58,7 @@
   </div>
   <div class="wrap brand-bar">
     <a class="brand" href="/amt/redesign/">
-      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" width="183" height="99" alt=""></span>
+      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" srcset="/amt/redesign/assets/amt-logo.png 183w, /amt/redesign/assets/amt-logo@2x.png 464w" sizes="(min-width: 56rem) 6.25rem, 5.5rem" width="183" height="99" alt=""></span>
       <span class="brand-name">Advanced Molecular Technologies</span>
     </a>
     <form class="search" role="search" action="/amt/redesign/catalogue/" method="get">
@@ -134,7 +134,13 @@
         <p class="source-line">Published source: <a href="https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf" rel="noopener noreferrer">Catalogue PDF</a> · <a href="https://www.amtechpl.com/" rel="noopener noreferrer">AMT page</a></p>
       </div>
     </div>
-    <section class="specs-section" aria-labelledby="specs-amtgc501-ab19">
+    <div class="detail-tabs" data-detail-tabs>
+    <div class="detail-tablist" role="tablist" aria-label="Product details">
+      <button type="button" role="tab" id="specs-tab-amtgc501-ab19" aria-controls="specs-panel-amtgc501-ab19" aria-selected="true">Specifications</button>
+      <button type="button" role="tab" id="tech-tab-amtgc501-ab19" aria-controls="tech-panel-amtgc501-ab19" aria-selected="false" tabindex="-1">Technical</button>
+    </div>
+    <div role="tabpanel" id="specs-panel-amtgc501-ab19" aria-labelledby="specs-tab-amtgc501-ab19">
+      <section class="specs-section" aria-labelledby="specs-amtgc501-ab19">
       <h2 id="specs-amtgc501-ab19">Specifications</h2>
       <div class="table-scroll">
       <table class="specs">
@@ -143,16 +149,33 @@
       </table>
       </div>
     </section>
-    <section class="pubchem" aria-labelledby="pubchem-amtgc501-ab19">
-    <h2 id="pubchem-amtgc501-ab19">From PubChem</h2>
-    <p class="fine">Not printed in the AMT catalogue.</p>
-    <div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody><tr><th scope="row">Formula</th><td>C12H23N3O5 <span class="pubchem-tag">from PubChem</span></td></tr><tr><th scope="row">Molecular weight</th><td>289.33 <span class="pubchem-tag">from PubChem</span></td></tr></tbody></table></div>
-    <figure class="structure pubchem-structure">
-        <img src="/amt/redesign/assets/structures/pubchem/92042270.svg" alt="Structure of 1,1-Dimethylethyl 11-azido-3,6,9-trioxaundecanoate from PubChem" width="480" height="360">
-        <figcaption>Structure from PubChem</figcaption>
-      </figure>
+    </div>
+    <div role="tabpanel" id="tech-panel-amtgc501-ab19" aria-labelledby="tech-tab-amtgc501-ab19">
+      <section class="technical" data-technical aria-labelledby="technical-amtgc501-ab19">
+    <h2 id="technical-amtgc501-ab19">Technical</h2>
     
+    <div class="technical-pubchem">
+        <h3>From PubChem</h3>
+        <p class="fine">Not printed in the AMT catalogue.</p>
+        <div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody><tr><th scope="row">Formula</th><td>C12H23N3O5 <span class="pubchem-tag">from PubChem</span></td></tr><tr><th scope="row">Molecular weight</th><td>289.33 <span class="pubchem-tag">from PubChem</span></td></tr></tbody></table></div>
+        <figure class="structure pubchem-structure">
+        <img src="/amt/redesign/assets/structures/pubchem/92042270.svg" alt="Structure of 1,1-Dimethylethyl 11-azido-3,6,9-trioxaundecanoate from PubChem" width="480" height="360">
+        <figcaption>Structure from PubChem, CID 92042270</figcaption>
+      </figure>
+        <div class="identifier">
+    <h3>SMILES <span class="pubchem-tag">from PubChem</span></h3>
+    <p class="identifier-value">CC(C)(C)OC(=O)COCCOCCOCCN=[N+]=[N-]</p>
+    <button type="button" class="btn btn-secondary copy-identifier" data-copy="CC(C)(C)OC(=O)COCCOCCOCCN=[N+]=[N-]" aria-label="Copy SMILES from PubChem">Copy SMILES</button>
+  </div><div class="identifier">
+    <h3>InChIKey <span class="pubchem-tag">from PubChem</span></h3>
+    <p class="identifier-value">HMWOUJOCAQZURC-UHFFFAOYSA-N</p>
+    <button type="button" class="btn btn-secondary copy-identifier" data-copy="HMWOUJOCAQZURC-UHFFFAOYSA-N" aria-label="Copy InChIKey from PubChem">Copy InChIKey</button>
+  </div>
+        <p><a href="https://pubchem.ncbi.nlm.nih.gov/compound/92042270" rel="noopener noreferrer">PubChem CID 92042270</a></p>
+      </div>
   </section>
+    </div>
+  </div>
     
     <section class="related" aria-labelledby="related-amtgc501-ab19">
         <h2 id="related-amtgc501-ab19">Related in PEG Reagents and Linkers</h2>
@@ -196,5 +219,6 @@
   </div>
 </footer>
   <script type="module" src="/amt/redesign/js/theme.js"></script>
+  <script type="module" src="/amt/redesign/js/sw-register.js"></script>
 </body>
 </html>

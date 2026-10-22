@@ -560,6 +560,41 @@ function rememberProduct() {
   host.hidden = false;
 }
 
+function initDetailTabs() {
+  for (const host of document.querySelectorAll("[data-detail-tabs]")) {
+    const tabs = [...host.querySelectorAll('[role="tab"]')];
+    if (tabs.length < 2) continue;
+    const select = (tab) => {
+      for (const item of tabs) {
+        const on = item === tab;
+        item.setAttribute("aria-selected", on ? "true" : "false");
+        item.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(item.getAttribute("aria-controls"));
+        if (panel) panel.hidden = !on;
+      }
+    };
+    select(tabs.find((tab) => tab.getAttribute("aria-selected") === "true") || tabs[0]);
+    host.addEventListener("click", (event) => {
+      const tab = event.target?.closest?.('[role="tab"]');
+      if (!tab || !host.contains(tab)) return;
+      select(tab);
+    });
+    host.addEventListener("keydown", (event) => {
+      const index = tabs.indexOf(document.activeElement);
+      if (index < 0) return;
+      let next = index;
+      if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+      else if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+      else if (event.key === "Home") next = 0;
+      else if (event.key === "End") next = tabs.length - 1;
+      else return;
+      event.preventDefault();
+      tabs[next].focus();
+      select(tabs[next]);
+    });
+  }
+}
+
 function init() {
   if (!customElements.get("amt-quote-count")) {
     customElements.define("amt-quote-count", AmtQuoteCount);
@@ -607,6 +642,7 @@ function init() {
     }, 1500);
   });
   rememberProduct();
+  initDetailTabs();
   const page = document.querySelector("[data-quote-page]");
   if (page) {
     const form = page.querySelector("[data-quote-details]");

@@ -58,7 +58,7 @@
   </div>
   <div class="wrap brand-bar">
     <a class="brand" href="/amt/redesign/">
-      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" width="183" height="99" alt=""></span>
+      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" srcset="/amt/redesign/assets/amt-logo.png 183w, /amt/redesign/assets/amt-logo@2x.png 464w" sizes="(min-width: 56rem) 6.25rem, 5.5rem" width="183" height="99" alt=""></span>
       <span class="brand-name">Advanced Molecular Technologies</span>
     </a>
     <form class="search" role="search" action="/amt/redesign/catalogue/" method="get">
@@ -134,7 +134,13 @@
         <p class="source-line">Published source: <a href="https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf" rel="noopener noreferrer">Catalogue PDF</a> · <a href="https://www.amtechpl.com/" rel="noopener noreferrer">AMT page</a></p>
       </div>
     </div>
-    <section class="specs-section" aria-labelledby="specs-amtgc561-ee20">
+    <div class="detail-tabs" data-detail-tabs>
+    <div class="detail-tablist" role="tablist" aria-label="Product details">
+      <button type="button" role="tab" id="specs-tab-amtgc561-ee20" aria-controls="specs-panel-amtgc561-ee20" aria-selected="true">Specifications</button>
+      <button type="button" role="tab" id="tech-tab-amtgc561-ee20" aria-controls="tech-panel-amtgc561-ee20" aria-selected="false" tabindex="-1">Technical</button>
+    </div>
+    <div role="tabpanel" id="specs-panel-amtgc561-ee20" aria-labelledby="specs-tab-amtgc561-ee20">
+      <section class="specs-section" aria-labelledby="specs-amtgc561-ee20">
       <h2 id="specs-amtgc561-ee20">Specifications</h2>
       <div class="table-scroll">
       <table class="specs">
@@ -143,16 +149,33 @@
       </table>
       </div>
     </section>
-    <section class="pubchem" aria-labelledby="pubchem-amtgc561-ee20">
-    <h2 id="pubchem-amtgc561-ee20">From PubChem</h2>
-    <p class="fine">Not printed in the AMT catalogue.</p>
-    <div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody><tr><th scope="row">Formula</th><td>C8H19NO3 <span class="pubchem-tag">from PubChem</span></td></tr><tr><th scope="row">Molecular weight</th><td>177.24 <span class="pubchem-tag">from PubChem</span></td></tr></tbody></table></div>
-    <figure class="structure pubchem-structure">
-        <img src="/amt/redesign/assets/structures/pubchem/106937895.svg" alt="Structure of 2-[2-(2-Ethylamino-ethoxy)-ethoxy]-ethanol from PubChem" width="480" height="360">
-        <figcaption>Structure from PubChem</figcaption>
-      </figure>
+    </div>
+    <div role="tabpanel" id="tech-panel-amtgc561-ee20" aria-labelledby="tech-tab-amtgc561-ee20">
+      <section class="technical" data-technical aria-labelledby="technical-amtgc561-ee20">
+    <h2 id="technical-amtgc561-ee20">Technical</h2>
     
+    <div class="technical-pubchem">
+        <h3>From PubChem</h3>
+        <p class="fine">Not printed in the AMT catalogue.</p>
+        <div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody><tr><th scope="row">Formula</th><td>C8H19NO3 <span class="pubchem-tag">from PubChem</span></td></tr><tr><th scope="row">Molecular weight</th><td>177.24 <span class="pubchem-tag">from PubChem</span></td></tr></tbody></table></div>
+        <figure class="structure pubchem-structure">
+        <img src="/amt/redesign/assets/structures/pubchem/106937895.svg" alt="Structure of 2-[2-(2-Ethylamino-ethoxy)-ethoxy]-ethanol from PubChem" width="480" height="360">
+        <figcaption>Structure from PubChem, CID 106937895</figcaption>
+      </figure>
+        <div class="identifier">
+    <h3>SMILES <span class="pubchem-tag">from PubChem</span></h3>
+    <p class="identifier-value">CCNCCOCCOCCO</p>
+    <button type="button" class="btn btn-secondary copy-identifier" data-copy="CCNCCOCCOCCO" aria-label="Copy SMILES from PubChem">Copy SMILES</button>
+  </div><div class="identifier">
+    <h3>InChIKey <span class="pubchem-tag">from PubChem</span></h3>
+    <p class="identifier-value">DBXWNPCKJRXVAA-UHFFFAOYSA-N</p>
+    <button type="button" class="btn btn-secondary copy-identifier" data-copy="DBXWNPCKJRXVAA-UHFFFAOYSA-N" aria-label="Copy InChIKey from PubChem">Copy InChIKey</button>
+  </div>
+        <p><a href="https://pubchem.ncbi.nlm.nih.gov/compound/106937895" rel="noopener noreferrer">PubChem CID 106937895</a></p>
+      </div>
   </section>
+    </div>
+  </div>
     
     <section class="related" aria-labelledby="related-amtgc561-ee20">
         <h2 id="related-amtgc561-ee20">Related in PEG Reagents and Linkers</h2>
@@ -196,5 +219,6 @@
   </div>
 </footer>
   <script type="module" src="/amt/redesign/js/theme.js"></script>
+  <script type="module" src="/amt/redesign/js/sw-register.js"></script>
 </body>
 </html>

@@ -1,8 +1,6 @@
 /**
  * Registers the redesign service worker, scoped to /amt/redesign/.
- * The shell agent should include this once in _build/lib/layout.mjs,
- * next to the theme script:
- * <script type="module" src="/amt/redesign/js/sw-register.js"></script>
+ * layout.mjs includes this script when the file is present.
  */
 const SCOPE = "/amt/redesign/";
 
