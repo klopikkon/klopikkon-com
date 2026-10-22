@@ -37,7 +37,8 @@
       ]
     },
     { "label": "About", "path": "about/" },
-    { "label": "Contact", "path": "contact/" }
+    { "label": "Contact", "path": "contact/" },
+    { "label": "Compare", "path": "compare/" }
   ],
   "footerNav": [
     { "label": "Home", "path": "" },
@@ -47,6 +48,8 @@
     { "label": "Analytical services", "path": "about/#analytical-services" },
     { "label": "Literature", "path": "families/other/#organosilicons" },
     { "label": "Contact", "path": "contact/" },
+    { "label": "Compare", "path": "compare/" },
+    { "label": "Variants", "path": "variants/" },
     { "label": "Styleguide", "path": "styleguide/" },
     { "label": "Structure search", "href": "https://www.amtechpl.com/structure-search/" }
   ],
