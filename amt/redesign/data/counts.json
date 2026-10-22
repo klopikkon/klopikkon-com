@@ -1,0 +1,29 @@
+{
+  "uniqueProducts": 1347,
+  "byFamily": {
+    "lipids": 36,
+    "peg": 212,
+    "fluorophores": 40,
+    "organoborons": 1046,
+    "other": 13
+  },
+  "byPrimarySource": {
+    "lipids-20260826": 36,
+    "peg-20260903": 212,
+    "fluorophores-2026": 40,
+    "organoborons-20260421": 1046,
+    "homepage": 6,
+    "new-products-20250516": 7
+  },
+  "extractedRowsBeforeCollapse": {
+    "lipids-20260826": 36,
+    "peg-20260903": 217,
+    "fluorophores-2026": 40,
+    "organoborons-20260421": 1056,
+    "new-products-20250516": 9
+  },
+  "identicalRowsCollapsed": 3,
+  "skusWithMultipleListings": 4,
+  "parseAnomalies": 0,
+  "discrepancies": 21
+}

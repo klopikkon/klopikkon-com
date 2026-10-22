@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klopikkon.com/amt/redesign/data/products.schema.json",
+  "title": "AMT redesign catalogue",
+  "description": "One record per AMT SKU. Core fields are the stack contract. Extra fields (listings, priceRaw, homepagePacks, and so on) are allowed and documented in PLAN.md. Values are copied from amtechpl.com; null means the source did not publish that field.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": true,
+    "required": [
+      "id",
+      "sku",
+      "name",
+      "synonyms",
+      "family",
+      "subfamily",
+      "cas",
+      "formula",
+      "mw",
+      "purity",
+      "packs",
+      "structureImage",
+      "documents",
+      "source"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9-]*$",
+        "description": "URL slug. Lowercase SKU."
+      },
+      "sku": {
+        "type": "string",
+        "pattern": "^AMT[A-Z]{1,6}[0-9]{2,5}-[A-Za-z0-9]+$"
+      },
+      "name": {
+        "type": ["string", "null"],
+        "description": "Printed name. Null on the May 2025 flyer, which prints structures and CAS numbers but not names."
+      },
+      "synonyms": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "family": {
+        "type": "string",
+        "enum": ["lipids", "peg", "fluorophores", "organoborons", "other"]
+      },
+      "subfamily": { "type": ["string", "null"] },
+      "cas": { "type": ["string", "null"] },
+      "formula": { "type": ["string", "null"] },
+      "mw": { "type": ["number", "null"] },
+      "purity": {
+        "type": ["string", "null"],
+        "description": "Exactly as published, including spacing. Null when the row prints no purity, or when two listings of the same SKU disagree (see listings[].purity)."
+      },
+      "packs": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["size", "price", "currency", "priceText"],
+          "properties": {
+            "size": { "type": ["string", "null"] },
+            "price": { "type": ["number", "null"] },
+            "currency": { "type": ["string", "null"] },
+            "priceText": { "type": "string" },
+            "priceRaw": { "type": ["string", "null"] },
+            "listing": { "type": "integer", "minimum": 0 },
+            "purity": { "type": ["string", "null"] }
+          }
+        }
+      },
+      "structureImage": {
+        "type": ["string", "null"],
+        "description": "Path relative to amt/redesign/, or null when no image was published for this SKU."
+      },
+      "documents": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["sds", "coa", "datasheet"],
+        "properties": {
+          "sds": { "type": ["string", "null"] },
+          "coa": { "type": ["string", "null"] },
+          "datasheet": { "type": ["string", "null"] }
+        }
+      },
+      "source": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["url", "pdf", "page"],
+        "properties": {
+          "url": { "type": "string" },
+          "pdf": { "type": ["string", "null"] },
+          "page": { "type": ["integer", "null"] }
+        }
+      }
+    }
+  }
+}

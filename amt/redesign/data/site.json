@@ -1,0 +1,426 @@
+{
+  "crawled": "2026-10-22",
+  "source": "https://www.amtechpl.com/",
+  "publisher": "Advanced Molecular Technologies",
+  "contact": {
+    "streetAddress": "Unit 1/7-11 Rocco drive, Scoresby VIC 3179",
+    "postalAddress": "Unit 1/7-11 Rocco drive, Scoresby VIC 3179",
+    "streetAddressAsPublishedOnContactPage": [
+      "Unit 1/7-11",
+      "Rocco drive",
+      "Scoresby VIC 3179"
+    ],
+    "addressOnNewProductsPdf": "Unit 1/7-11 Rocco Drive Scoresby Victoria 3179 Australia",
+    "abn": "60 114 049 633",
+    "abnSource": "https://www.amtechpl.com/wp-content/uploads/2025/05/New_Products_20250516.pdf",
+    "phones": {
+      "australia": "03 9764 9220",
+      "international": "+61 3 9764 9220",
+      "telHref": "tel:0397649220"
+    },
+    "emails": {
+      "header": "enquiries@amtechpl.com",
+      "contactPage": "sales@amtechpl.com"
+    },
+    "mapEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d787.0785016365078!2d145.21648992918767!3d-37.899722540485016!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad63e0d1847a255%3A0xfc22de46a543b29b!2sUnit+1%2F7+Rocco+Dr%2C+Scoresby+VIC+3179%2C+Australia"
+  },
+  "shippingNotes": [
+    "Next day dispatch for in-stock items shipping within Australia! *Ordered before 12-noon!",
+    "Minimum order value of USD $150 for international shipping",
+    "Free delivery for all orders over $250.00 AUD. (Australian customers page)"
+  ],
+  "nav": {
+    "header": [
+      {
+        "label": "HOME",
+        "href": "https://www.amtechpl.com/"
+      },
+      {
+        "label": "CONTRACT RESEARCH",
+        "href": "https://www.amtechpl.com/contract-services/"
+      },
+      {
+        "label": "PRODUCTS",
+        "href": null,
+        "children": [
+          {
+            "label": "General Chemicals",
+            "href": "https://www.amtechpl.com/general-chemicals/"
+          },
+          {
+            "label": "Organoborons",
+            "href": "https://www.amtechpl.com/organoborons/"
+          },
+          {
+            "label": "Organosilicons",
+            "href": "https://www.amtechpl.com/organosilicons/"
+          },
+          {
+            "label": "Nucleosides",
+            "href": "https://www.amtechpl.com/nucleosides/"
+          },
+          {
+            "label": "Halogenated Organics",
+            "href": "https://www.amtechpl.com/halogenated-organics/"
+          },
+          {
+            "label": "Diaryls",
+            "href": "https://www.amtechpl.com/diaryls/"
+          },
+          {
+            "label": "Catalysts",
+            "href": "https://www.amtechpl.com/catalysts/"
+          },
+          {
+            "label": "Bioactives",
+            "href": "https://www.amtechpl.com/bioactives/"
+          },
+          {
+            "label": "PEG Reagents and Linkers",
+            "href": "https://www.amtechpl.com/peg-reagents-and-linkers/"
+          },
+          {
+            "label": "Fluorophores and Dyes",
+            "href": "https://www.amtechpl.com/fluorophores-and-dyes/"
+          }
+        ]
+      },
+      {
+        "label": "STRUCTURE SEARCH",
+        "href": "https://www.amtechpl.com/structure-search/"
+      },
+      {
+        "label": "ANALYTICAL SERVICES",
+        "href": "https://www.amtechpl.com/analytical-services/"
+      },
+      {
+        "label": "CONTACT",
+        "href": "https://www.amtechpl.com/contact/"
+      }
+    ],
+    "secondary": [
+      {
+        "label": "Partners",
+        "href": "https://www.amtechpl.com/partners/"
+      },
+      {
+        "label": "About Us",
+        "href": "https://www.amtechpl.com/about-us/"
+      },
+      {
+        "label": "News",
+        "href": "https://www.amtechpl.com/news/"
+      }
+    ],
+    "footer": [
+      {
+        "label": "Home",
+        "href": "https://www.amtechpl.com/"
+      },
+      {
+        "label": "About Us",
+        "href": "https://www.amtechpl.com/about-us/"
+      },
+      {
+        "label": "Literature",
+        "href": "https://www.amtechpl.com/literature/"
+      },
+      {
+        "label": "Structure Search",
+        "href": "https://www.amtechpl.com/structure-search/"
+      },
+      {
+        "label": "Analytical Services",
+        "href": "https://www.amtechpl.com/analytical-services/"
+      },
+      {
+        "label": "Contract Research",
+        "href": "https://www.amtechpl.com/contract-services/"
+      },
+      {
+        "label": "Contact",
+        "href": "https://www.amtechpl.com/contact/"
+      }
+    ]
+  },
+  "partners": [
+    {
+      "name": "Scaled Organics",
+      "href": "https://www.scaledorganics.com/",
+      "logo": "https://www.amtechpl.com/wp-content/uploads/2019/08/Scaled-Organics.jpg"
+    },
+    {
+      "name": "AK Scientific",
+      "href": "https://aksci.com/",
+      "logo": "https://www.amtechpl.com/wp-content/uploads/2019/08/AK-Scientific.jpg"
+    },
+    {
+      "name": "Key Organics",
+      "href": "https://www.keyorganics.net/",
+      "logo": "https://www.amtechpl.com/wp-content/uploads/2019/08/Key-Organics.jpg"
+    },
+    {
+      "name": "Frontier Specialty Chemicals",
+      "href": "https://frontierspecialtychemicals.com/product-category/functionalized-pegs-polyethylene-glycols-bioconjugation-linkers/",
+      "logo": "https://www.amtechpl.com/wp-content/uploads/2026/02/Frontier-logo-150x150.png"
+    }
+  ],
+  "structureSearch": {
+    "url": "https://www.amtechpl.com/structure-search/",
+    "iframe": "https://newsearch.chemexper.com/misc/hosted/amtechpl",
+    "quickSearch": "https://newsearch.chemexper.com/misc/hosted/amtechpl/quick.shtml?query=",
+    "note": "The structure search is a ChemExper iframe. amtechpl.com does not publish a static SKU table on that page. This extract does not query ChemExper."
+  },
+  "brochures": [
+    {
+      "title": "AMT Lipid Products – 2026",
+      "href": "https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf",
+      "family": "lipids",
+      "date": "2026-08-26"
+    },
+    {
+      "title": "AMT PEG Reagents & Linkers Catalogue Selection – 2026",
+      "href": "https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf",
+      "family": "peg",
+      "date": "2026-09-03"
+    },
+    {
+      "title": "AMT Fluorophores & Dyes Catalogue Selection – 2026",
+      "href": "https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf",
+      "family": "fluorophores",
+      "date": "2026-01-09"
+    },
+    {
+      "title": "AMT Organoborons Catalogue Selection – 2026",
+      "href": "https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf",
+      "family": "organoborons",
+      "date": "2026-04-21"
+    },
+    {
+      "title": "NEW PRODUCTS LIST",
+      "href": "https://www.amtechpl.com/wp-content/uploads/2025/05/New_Products_20250516.pdf",
+      "family": "other",
+      "date": "2025-05-16"
+    }
+  ],
+  "documents": {
+    "sds": null,
+    "coa": null,
+    "datasheet": null,
+    "note": "No SDS, COA, or datasheet links were found on the crawled pages or in the current catalogue PDFs."
+  },
+  "pages": [
+    {
+      "slug": "home",
+      "title": "Home",
+      "url": "https://www.amtechpl.com/",
+      "copy": "Welcome to Advanced Molecular Technologies\n\nBiotech Incubator and CRO\n\nGeneral Chemicals | Organoborons | Organosilicons | PEG Linkers | Fluorophores | Bioactives | Nucleosides\n\nNext day dispatch for in-stock items shipping within Australia!  *Ordered before 12-noon!\n\nFor PEG Linkers in the US see our partner Frontier Specialty Chemicals\n\nMinimum order value of USD $150 for international shipping\n\nCatalogue Search:\n\nRecent AMT Brochures\n\nAMT Lipid Products – 2026\nAMT PEG Reagents & Linkers Catalogue Selection – 2026\nAMT Fluorophores & Dyes Catalogue Selection – 2026\nAMT Organoborons Catalogue Selection – 2026\n\nNEW PRODUCTS LIST"
+    },
+    {
+      "slug": "about-us",
+      "title": "About Us",
+      "url": "https://www.amtechpl.com/about-us/",
+      "copy": "Advanced Molecular Technologies aims to be a biotech incubator and contract research organization specializing in medicinal chemistry and custom organic synthesis. Our services involve the design and synthesis of target molecules, structure activity correlations (SAR), the production of compounds under GLP suitable for in vivo studies, and analytical chemistry.\n\nAMT is currently incubating organoboron pharmaceuticals and diagnostics, PEG linkers for antibody drug conjugates (ADCs) and AMPK activators.\n\nCustom Synthesis\n\nContract Research\n\nAnalytical Services\n\nOrganic Synthesis\n\nChemical Supplier\n\nContract Research Organization\n\nRoute design & synthesis for new target molecules\n\nTraditional synthesis of complex molecules\n\nSynthesis of pharmacologically active reference compounds or positive controls\n\nStructure-Based Drug Design\n\nSynthesis of scaffolds, building blocks & lead optimisation\n\nSynthesis of metabolites, impurities & reference compounds\n\nAdvanced Molecular Technologies focuses on custom synthesis of target molecules through extensive organic and medicinal chemistry experience. Our dedicated team of chemists utilize a wide-range of synthetic chemistry techniques to obtain high-purity materials with very quick turnaround times.\n\nOur contract research organization (CRO) service is involved with many leading pharmaceutical, biotech, agricultural and institutional organization both within and outside of Australia.\n\nTarget Synthesis\n\nDrug Discovery\n\nSynthetic Intermediates\n\nBuilding-Blocks\n\nContact us for more information.\n\nAnalytical Services\n\nOur services extend towards the available use of laboratory-space, fume cupboards, equipment and analytical services. Analytical chemistry services include; Nuclear Magnetic Resonance (NMR), High Pressure Liquid Chromatography (HPLC), Gas Chromatography (GC), Infra-red (FT-IR), Flash Point, Optical Rotation, Dynamic Scanning Calorimetry (DSC), UV-Vis and Biotage Flash Chromatography. Expert analytical chemists are also available to interpret results, and consultation is offered upon request.\n\nNMR Analysis\n\nHPLC Analysis\n\nGC Analysis\n\nFT-Infrared Analysis\n\n& Much More!\n\nClick here to see more of our analytical services, or simply get in touch!"
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "url": "https://www.amtechpl.com/contact/",
+      "copy": "Contact Details\n\nStreet Address\n\nUnit 1/7-11\n\nRocco drive\n\nScoresby VIC 3179\n\nPostal Address\n\nUnit 1/7-11\n\nRocco drive\n\nScoresby VIC 3179\n\nTelephone:\n\nAustralian: 03 9764 9220\n\nInternational: +61 3 9764 9220\n\nEmail Address:\n\nsales@amtechpl.com\n\nContact Form\n\nYour Message\n\n×"
+    },
+    {
+      "slug": "contract-services",
+      "title": "Contract Research",
+      "url": "https://www.amtechpl.com/contract-services/",
+      "copy": "Custom Synthesis\n\nRoute design & synthesis for new target molecules\n\nTraditional synthesis of complex molecules\n\nSynthesis of pharmacologically active reference compounds or positive controls\n\nStructure-Based Drug Design\n\nSynthesis of scaffolds, building blocks & lead optimisation\n\nSynthesis of metabolites, impurities & reference compounds\n\nAdvanced Molecular Technologies focuses on custom synthesis of target molecules through extensive organic and medicinal chemistry experience. Our dedicated team of chemists utilise a wide-range of synthetic chemistry techniques to obtain high-purity materials with very quick turnaround times.\n\nOur contract research organisation (CRO) service is involved in projects with many leading pharmaceutical, biotech, agricultural and academic institutions, both within Australia and internationally.\n\nTarget Synthesis\n\nDrug Discovery\n\nSynthetic Intermediates\n\nBuilding-Blocks\n\nAMT Custom Synthesis in Action:"
+    },
+    {
+      "slug": "analytical-services",
+      "title": "Analytical Services",
+      "url": "https://www.amtechpl.com/analytical-services/",
+      "copy": "NMR | HPLC | GC | FT-IR | UV-Vis | Karl Fischer | Polarimetry | Thermogravimetic Analysis | Closed Cup Flash Point Tester | Biotage SP4 Flash Purification\n\nBruker Avance III 400 MHz NMR\n\nAbility to run NMR spectra on nuclei such as:\n\n1H, 13C, and 31P\n\nAutomatic Sample Changer (B-ACS 60)\n\nSamples (1-9) – From $25.00 (AUD) per sample / 1H NMR (raw data).\n\nSamples (10+) – Reduced rates available.\n\nProcessing, interpretation and additional NMR analytical services are available.\n\nContact Us to schedule analytical testing!\n\nWaters Alliance HPLC\n\nWaters 2998 PDA detector with a detection range from 190-790 nm\n\nWaters e2695 separations module\n\nPerkinElmer Clarus 580 Gas Chromatograph\n\nPhenomenex Zebron ZB-5 column with operating temperatures up to 360 °C\n\nFlame Ionisation Detector (FID)\n\nAgilent Cary 630 FTIR Spectrometer\n\nHighly-Sensitive Attenuated Total Reflection (ATR) cell\n\nQuantitative and qualitative information for routine analysis of solids, liquids, and gases\n\nJohn Morris 6850 UV-Vis\n\nGlass and quartz cuvette cells available\n\nVariable spectral bandwidths provide flexibility in your qualitative and quantitative analysis\n\n851 Titrando Coulometric Karl Fischer System\n\nAnalysis with HydranalTM – Coulomat AK Anolyte for Karl Fischer titrations\n\nRecommended measuring range: 10 µg – 200 mg absolute water\n\nRudolph Research Analytical Autopol I Automatic Polarimeter\n\n0.01° Arc accuracy with fixed 589 nm wavelength\n\nBuilt-in thermoprobe for temperature measurement\n\nMettler Toledo Differential Scanning Calorimetry (DSC) – DSC3\n\nRugged MultiSTAR sensor with 56 thermocouples\n\nMeasurement of enthalpy changes in samples due to changes in their physical and chemical properties\n\nSetaflash Series 3 Closed Cup Flash Point Tester\n\nSmall sample size of only 5 mL required\n\nFlash point of a sample within a temperature range of 0° to 300°C\n\nBiotage SP4 Flash Purification\n\nFour-column sequential flash purification system with expanded fraction bed,\n\ndesigned for multi-sample purification.\n\nSP4 variable dual wavelength detector"
+    },
+    {
+      "slug": "literature",
+      "title": "Literature",
+      "url": "https://www.amtechpl.com/literature/",
+      "copy": "Organosilicon Reagents\n\nHOMSi Reagents and Hiyama Cross-Coupling\n\nHOMSi reagent fact sheet\n\nCorey’s Disilane:\n\n2-Methoxyphenyl)dimethylsilyl Lithium and Cuprate Reagents Offer Unique Advantages in Multistep Synthesis\n\nThomas W. Lee and E. J. Corey\n\nOrg. Lett.; 2001; 3(21) pp 3337 – 3339; (Letter)\n\nDOI: 10.1021/ol0165746\n\nDondoni’s Reagent:\n\nThiazole-Mediated Synthetic Methodology\n\nAlessandro Dondoni and Alberto Marra\n\nChem. Rev.; 2004; 104(5) pp 2557-2600; (Review)\n\nDOI: 10.1021/cr020079l"
+    },
+    {
+      "slug": "news",
+      "title": "News",
+      "url": "https://www.amtechpl.com/news/",
+      "copy": "AMT Expands Customer Reach Through PEG Distribution Partnership with Frontier Specialty Chemicals\n\nNovember 20, 2025\nAdvanced Molecular Technologies (AMT) is pleased to announce a distribution partnership with Frontier Specialty Chemicals to enhance customer access to AMT’s portfolio of high-purity functionalized PEGs for customers across the US.\n\nUnder this arrangement, Frontier Specialty Chemicals will serve as a distribution and customer support partner, providing local sales, order management, and customer service to researchers and organizations seeking access to AMT products. This partnership strengthens AMT’s ability to deliver responsive customer support and efficient product distribution while maintaining the high standards of quality and reliability that customers expect.\n\nWith inventory located in the US to avoid customs delays, US customers can access AMT’s high purity compounds and support quicker and easier than before. These high-purity PEGS are available in catalogue and bulk quantities, as well as GMP quality materials to support reliable results from early research through scale-up.\n\nAMT looks forward to working closely with Frontier Specialty Chemicals to provide an improved customer experience and broaden access to our extensive range of PEG compounds and research products.\n\nAMT and IDT Australia Collaborate to Deliver GMP PEG Linkers\n\n22 December 2023\nAdvanced Molecular Technologies (AMT) is pleased to announce a collaboration with IDT Australia to provide customers with a streamlined pathway for the development and GMP manufacturing of polyethylene glycol (PEG) linkers. This collaboration was inspired by the increasing requests from AMT customers for GMP grade material.\n\nThe collaboration reflects AMT’s ongoing commitment to providing innovative chemistry solutions and expanding access to Australian-developed technologies in international markets. By combining technical expertise, manufacturing capability, and established commercial networks, AMT and IDT Australia able to support the growing requirements of customers across North America, Japan, and other global pharmaceutical markets.\n\nPEG linkers play a critical role in a growing range of advanced therapeutic modalities, including antibody-drug conjugates (ADCs), targeted drug delivery systems, peptide conjugates, and other bioconjugate technologies. As demand for these highly specialised materials continues to grow, the ability to transition seamlessly from research-scale development to GMP-compliant manufacture is increasingly important for pharmaceutical and biotechnology companies.\n\nThrough this collaboration, AMT will leverage its extensive expertise in linker chemistry, custom synthesis, process development, and scale-up to support the development of PEG linker technologies from early-stage research through to manufacturing readiness. IDT Australia will provide GMP manufacturing capabilities, analytical testing, quality systems, and regulatory support required for clinical and commercial supply.\n\nFor further information regarding PEG linkers, custom synthesis, process development, or GMP manufacturing services, please contact the AMT team.\n\nKey Organics and Advanced Molecular Technologies enter into an exclusive European supply & marketing agreement\n\nSeptember 2, 2013\nAdvanced Molecular Technologies Pty Ltd (AMT) and Key Organics Limited (Key Organics) today announced that they have entered into an exclusive European supply & marketing agreement.\n\nWithin its BIONET brand, Key Organics offers an extensive range of over 65,000 screening compounds, intermediates, building blocks and biochemicals to the international pharmaceutical, biotechnology and agrochemical industries together with the provision of contract chemistry R&D services, process scale-up and manufacture. Key Organics has access to further commercial scale manufacturing through its sister companies within The Tennant Group.\n\nBoth companies are embarked on a strategy to increase their range of new and exciting products and technologies such that this partnership makes good strategic sense. Key Organics has access to a global customer base within the global life sciences sector and excellent customer service and compound handling infrastructure that ensures that products are dispatched on the same day.\n\nThe agreement between the parties provides for the exclusive, European supply of AMT products by Key Organics. In addition, both companies wish to collaborate in order to further grow their differentiated technology and service offerings within the life sciences sector."
+    },
+    {
+      "slug": "partners",
+      "title": "Partners",
+      "url": "https://www.amtechpl.com/partners/",
+      "copy": ""
+    },
+    {
+      "slug": "australian-customers-exclusive-offers",
+      "title": "Australian customers",
+      "url": "https://www.amtechpl.com/australian-customers-exclusive-offers/",
+      "copy": "Advanced Molecular Technologies is proud to supply Australian clients with the following exclusive offers:\n\nFree delivery for all orders over $250.00 AUD.\n\nNext day dispatch for all orders ordered before 12-noon for in-stock items.\n\nLocal Product Storage for any regular chemicals or specialised products.\n\nPlease get in touch for more details!\n\nCustom Synthesis\n\nContract Research\n\nAnalytical Services\n\nOrganic Synthesis\n\nChemical Supplier"
+    },
+    {
+      "slug": "structure-search",
+      "title": "Structure Search",
+      "url": "https://www.amtechpl.com/structure-search/",
+      "copy": ""
+    },
+    {
+      "slug": "general-chemicals",
+      "title": "General Chemicals",
+      "url": "https://www.amtechpl.com/general-chemicals/",
+      "copy": ""
+    },
+    {
+      "slug": "organoborons",
+      "title": "Organoborons",
+      "url": "https://www.amtechpl.com/organoborons/",
+      "copy": "Catalogues\n\nGeneral Chemicals\n\nOrganoborons\n\nOrganosilicons\n\nNucleosides\n\nHalogenated Organics\n\nDiaryls\n\nCatalysts\n\nBioactives\n\nPEG Reagents and Linkers\n\nFluorophores and Dyes"
+    },
+    {
+      "slug": "organosilicons",
+      "title": "Organosilicons",
+      "url": "https://www.amtechpl.com/organosilicons/",
+      "copy": "Catalogues\n\nGeneral Chemicals\n\nOrganoborons\n\nOrganosilicons\n\nNucleosides\n\nHalogenated Organics\n\nDiaryls\n\nCatalysts\n\nBioactives\n\nPEG Reagents and Linkers\n\nFluorophores and Dyes"
+    },
+    {
+      "slug": "nucleosides",
+      "title": "Nucleosides",
+      "url": "https://www.amtechpl.com/nucleosides/",
+      "copy": "Catalogues\n\nGeneral Chemicals\n\nOrganoborons\n\nOrganosilicons\n\nNucleosides\n\nHalogenated Organics\n\nDiaryls\n\nCatalysts\n\nBioactives\n\nPEG Reagents and Linkers\n\nFluorophores and Dyes"
+    },
+    {
+      "slug": "halogenated-organics",
+      "title": "Halogenated Organics",
+      "url": "https://www.amtechpl.com/halogenated-organics/",
+      "copy": "Catalogues\n\nGeneral Chemicals\n\nOrganoborons\n\nOrganosilicons\n\nNucleosides\n\nHalogenated Organics\n\nDiaryls\n\nCatalysts\n\nBioactives\n\nPEG Reagents and Linkers\n\nFluorophores and Dyes"
+    },
+    {
+      "slug": "diaryls",
+      "title": "Diaryls",
+      "url": "https://www.amtechpl.com/diaryls/",
+      "copy": "Catalogues\n\nGeneral Chemicals\n\nOrganoborons\n\nOrganosilicons\n\nNucleosides\n\nHalogenated Organics\n\nDiaryls\n\nCatalysts\n\nBioactives\n\nPEG Reagents and Linkers\n\nFluorophores and Dyes"
+    },
+    {
+      "slug": "catalysts",
+      "title": "Catalysts",
+      "url": "https://www.amtechpl.com/catalysts/",
+      "copy": "Catalogues\n\nGeneral Chemicals\n\nOrganoborons\n\nOrganosilicons\n\nNucleosides\n\nHalogenated Organics\n\nDiaryls\n\nCatalysts\n\nBioactives\n\nPEG Reagents and Linkers\n\nFluorophores and Dyes"
+    },
+    {
+      "slug": "bioactives",
+      "title": "Bioactives",
+      "url": "https://www.amtechpl.com/bioactives/",
+      "copy": "Catalogues\n\nGeneral Chemicals\n\nOrganoborons\n\nOrganosilicons\n\nNucleosides\n\nHalogenated Organics\n\nDiaryls\n\nCatalysts\n\nBioactives\n\nPEG Reagents and Linkers\n\nFluorophores and Dyes"
+    },
+    {
+      "slug": "peg-reagents-and-linkers",
+      "title": "PEG Reagents and Linkers",
+      "url": "https://www.amtechpl.com/peg-reagents-and-linkers/",
+      "copy": "Catalogues\n\nGeneral Chemicals\n\nOrganoborons\n\nOrganosilicons\n\nNucleosides\n\nHalogenated Organics\n\nDiaryls\n\nCatalysts\n\nBioactives\n\nPEG Reagents and Linkers\n\nFluorophores and Dyes"
+    },
+    {
+      "slug": "fluorophores-and-dyes",
+      "title": "Fluorophores and Dyes",
+      "url": "https://www.amtechpl.com/fluorophores-and-dyes/",
+      "copy": "Catalogues\n\nGeneral Chemicals\n\nOrganoborons\n\nOrganosilicons\n\nNucleosides\n\nHalogenated Organics\n\nDiaryls\n\nCatalysts\n\nBioactives\n\nPEG Reagents and Linkers\n\nFluorophores and Dyes"
+    }
+  ],
+  "homepageFeaturedCount": 12,
+  "emptyCataloguePages": [
+    "general-chemicals",
+    "organoborons",
+    "organosilicons",
+    "nucleosides",
+    "halogenated-organics",
+    "diaryls",
+    "catalysts",
+    "bioactives",
+    "peg-reagents-and-linkers",
+    "fluorophores-and-dyes"
+  ],
+  "logos": [
+    {
+      "path": "assets/logos/web-logo.png",
+      "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2019/05/web-logo.png",
+      "kind": "logo",
+      "bytes": 2110,
+      "sha256": "57a9e09946431a833c048ef9b20f137ebc098d542b93a0e98f72e071d9f4e3e5"
+    },
+    {
+      "path": "assets/logos/AMT-Logo-e1586416288420.png",
+      "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/04/AMT-Logo-e1586416288420.png",
+      "kind": "favicon",
+      "bytes": 4247,
+      "sha256": "bb5dcec1aca979a90ed0fe8ccdae35fc380915f98c8653622ced8b8c91ff1c96"
+    },
+    {
+      "path": "assets/logos/AMT-Logo-e1586416437836.png",
+      "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/04/AMT-Logo-e1586416437836.png",
+      "kind": "apple-touch",
+      "bytes": 4247,
+      "sha256": "922ee7f9ee2e5638fad4f6c365b3f4d65689b5884ffb6b88a05dbe6935e2fb91"
+    },
+    {
+      "path": "assets/logos/White-Background-Logo-no-subtitle.png_20260217_080755_0000-scaled.png",
+      "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2026/02/White-Background-Logo-no-subtitle.png_20260217_080755_0000-scaled.png",
+      "kind": "logo",
+      "bytes": 96591,
+      "sha256": "33d624974ae0057fed6fa8f8e61505cf411af7858c45c4e2c249fb5c809c4b89"
+    },
+    {
+      "path": "assets/logos/Frontier-logo.png",
+      "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2026/02/Frontier-logo.png",
+      "kind": "partner-logo",
+      "bytes": 5505,
+      "sha256": "4f9e1b8f36321c3cc09aaef811421dd31d6569501cd9581d321e88f407837f38"
+    },
+    {
+      "path": "assets/logos/Frontier-logo-150x150.png",
+      "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2026/02/Frontier-logo-150x150.png",
+      "kind": "partner-logo",
+      "bytes": 9963,
+      "sha256": "175a1370cba156982849042b0a001c58a8da73f8e2bfdf0cf1fb5c4740ed38e8"
+    },
+    {
+      "path": "assets/logos/IDT-logo.png",
+      "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2026/02/IDT-logo.png",
+      "kind": "partner-logo",
+      "bytes": 5788,
+      "sha256": "26d522ce628da6887d40ddf6a9d5393dd1fce9fcc76a8dc03503a397f95fe74a"
+    },
+    {
+      "path": "assets/logos/Scaled-Organics.jpg",
+      "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2019/08/Scaled-Organics.jpg",
+      "kind": "partner-logo",
+      "bytes": 9788,
+      "sha256": "88d65efe2ce2c65c3904dd6a588263eb203e45a2a1ff6c380dc9b6771954070a"
+    },
+    {
+      "path": "assets/logos/AK-Scientific.jpg",
+      "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2019/08/AK-Scientific.jpg",
+      "kind": "partner-logo",
+      "bytes": 4477,
+      "sha256": "9ee2e2c77cd91027689787b97c1cc3869a946124501babf1d40b3ed743b38980"
+    },
+    {
+      "path": "assets/logos/Key-Organics.jpg",
+      "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2019/08/Key-Organics.jpg",
+      "kind": "partner-logo",
+      "bytes": 10319,
+      "sha256": "c0bcd9f751c3404629bca0b57b3e93120dd19c6e88c73303cb9220a5be19fb24"
+    },
+    {
+      "path": "assets/logos/Delivery-Truck-e1599703368301.png",
+      "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/09/Delivery-Truck-e1599703368301.png",
+      "kind": "icon",
+      "bytes": 6662,
+      "sha256": "c8a08cb1600cac3774d09513c5e3adeb6429bf4548f49079f37f6af41611034b"
+    }
+  ]
+}
