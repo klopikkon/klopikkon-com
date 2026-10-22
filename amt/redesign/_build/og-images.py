@@ -3,6 +3,13 @@
 
 Draws 1200×630 PNG files into amt/redesign/og/. Each card shows the AMT logo,
 the published name, SKU, CAS, and family. Prices are not read and not drawn.
+The files are then palette-quantised (pngquant --quality=55-80, then oxipng)
+so the folder stays under 20 MB. Install the tools with:
+
+    npm install pngquant-bin oxipng-bin
+
+and put that package's node_modules/.bin on PATH. Without them, the script
+falls back to a 32-colour Pillow quantise.
 
 Run from the repo root:
 
@@ -13,6 +20,8 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
+import subprocess
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -186,8 +195,33 @@ def main() -> None:
     for stale in OUT.glob("*.png"):
         if stale.name not in keep:
             stale.unlink()
+    quantise_cards(OUT)
     total = sum(path.stat().st_size for path in OUT.glob("*.png"))
     print(f"og cards: {len(keep)} files, {total} bytes")
+
+
+def quantise_cards(directory: Path) -> None:
+    """Palette PNG via pngquant (npx pngquant-bin) then oxipng, so the folder stays small."""
+    files = sorted(directory.glob("*.png"))
+    if not files:
+        return
+    pngquant = shutil.which("pngquant")
+    oxipng = shutil.which("oxipng")
+    if pngquant:
+        for path in files:
+            subprocess.run(
+                [pngquant, "--quality=55-80", "--speed", "1", "-f", "-o", str(path), str(path)],
+                check=True,
+            )
+        if oxipng:
+            subprocess.run([oxipng, "-o", "2", "--strip", "safe", "-q", *map(str, files)], check=True)
+        return
+    # Fallback when the dev binaries are not installed. 32 colours keeps text readable.
+    for path in files:
+        image = Image.open(path).convert("RGB")
+        image.quantize(colors=32, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).save(
+            path, "PNG", optimize=True
+        )
 
 
 if __name__ == "__main__":
