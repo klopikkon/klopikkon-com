@@ -14,6 +14,7 @@
       "synonyms",
       "family",
       "subfamily",
+      "subfamilySource",
       "cas",
       "formula",
       "mw",
@@ -51,7 +52,23 @@
         "type": "string",
         "enum": ["lipids", "peg", "fluorophores", "organoborons", "other"]
       },
-      "subfamily": { "type": ["string", "null"] },
+      "subfamily": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Heading AMT prints above the product, copied verbatim."
+      },
+      "subfamilySource": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["heading", "url", "page", "location"],
+        "properties": {
+          "heading": { "type": "string" },
+          "url": { "type": "string" },
+          "page": { "type": ["integer", "null"] },
+          "location": { "type": "string" },
+          "catalogueHeading": { "type": "string" }
+        }
+      },
       "cas": { "type": ["string", "null"] },
       "formula": {
         "type": ["string", "null"],

@@ -70,6 +70,22 @@ for (const product of products) {
   if (!families.has(product.family)) fail(`${label}: family ${product.family} is not in the schema enum`);
   else byFamily[product.family] = (byFamily[product.family] || 0) + 1;
 
+  if (typeof product.subfamily !== "string" || product.subfamily.length === 0) {
+    fail(`${label}: subfamily must be a non-empty string`);
+  }
+  const subSource = product.subfamilySource;
+  if (!subSource || subSource.heading !== product.subfamily) {
+    fail(`${label}: subfamilySource.heading must match subfamily`);
+  } else {
+    if (typeof subSource.url !== "string" || subSource.url.length === 0) fail(`${label}: subfamilySource.url missing`);
+    if (typeof subSource.location !== "string" || subSource.location.length === 0) fail(`${label}: subfamilySource.location missing`);
+    if (subSource.page !== null && !Number.isInteger(subSource.page)) fail(`${label}: subfamilySource.page must be an integer or null`);
+  }
+  if (product.subfamily === "Ionisable Lipid") {
+    const labels = product.homepageLabels || [];
+    if (!labels.includes("Ionisable Lipid")) fail(`${label}: Ionisable Lipid subfamily without that homepage label`);
+  }
+
   if (product.subfamily !== null && typeof product.subfamily !== "string") fail(`${label}: subfamily must be a string or null`);
   if (product.cas !== null && typeof product.cas !== "string") fail(`${label}: cas must be a string or null`);
   if (product.formula !== null && typeof product.formula !== "string") fail(`${label}: formula must be a string or null`);
@@ -185,6 +201,19 @@ for (const family of families) {
   const expected = counts.byFamily[family] || 0;
   if (actual !== expected) fail(`family ${family}: products.json has ${actual}, counts.json has ${expected}`);
 }
+const bySubfamily = {};
+for (const product of products) {
+  if (product && product.subfamily) bySubfamily[product.subfamily] = (bySubfamily[product.subfamily] || 0) + 1;
+}
+const expectedSubfamily = counts.bySubfamily || {};
+const subKeys = new Set([...Object.keys(bySubfamily), ...Object.keys(expectedSubfamily)]);
+for (const heading of subKeys) {
+  if ((bySubfamily[heading] || 0) !== (expectedSubfamily[heading] || 0)) {
+    fail(`subfamily ${JSON.stringify(heading)}: products.json has ${bySubfamily[heading] || 0}, counts.json has ${expectedSubfamily[heading] || 0}`);
+  }
+}
+if (!countsMd.includes("## Subfamily")) fail("COUNTS.md is missing the Subfamily section");
+
 const sourceSum = Object.values(counts.byPrimarySource).reduce((sum, n) => sum + n, 0);
 if (sourceSum !== products.length) {
   fail(`byPrimarySource sums to ${sourceSum}, products.json has ${products.length}`);

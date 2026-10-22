@@ -76,9 +76,23 @@ Cross-source pack differences: 4. See `data/discrepancies.json`.
 - Three organoboron packs have size `"25"` with no unit: AMTB1060-MP14, AMTB1062-IP14, AMTB1249-IB18. The unit glyph is not in the text layer, so the size is the digits that are. AMTGC1460-DH25 on the flyer prints `5mg` at $315; that token is stored as printed.
 - `purity` is null when the source row does not print one. The PEG, fluorophore and organoboron tables have no purity column. The lipids table prints one, copied with its spacing (for example `≥ 98%`). Four PEG rows add a `High Purity 99%` or `High purity 98%` line; that string is stored on the listing.
 - `documents.sds`, `documents.coa` and `documents.datasheet` are null. The crawled pages and current PDFs do not link SDS, COA or datasheet files.
-- `subfamily` is null. The current PDFs are flat lists; the homepage tag `Ionisable Lipid` is on `homepageLabels`, not promoted to a subfamily.
 - `synonyms` is an empty array. Parentheticals such as `(Exoria)` and `(PEG2000)` stay inside `name`.
 - Unpublished prices use `price` null and `priceText` `"quote"`. `priceRaw` keeps the printed token (`POA`, `Price on application`, or a masked `########`).
+
+## Subfamily
+
+Each `subfamily` is the heading AMT prints above that product, copied verbatim. `subfamilySource` records where it was read. The 2026 brochures are flat lists: the running header is the only heading on the page. The site adds one finer label, `Ionisable Lipid`, on three homepage cards. Headings such as helper lipids, mPEG-NHS, Cy dyes, or boronic acid versus pinacol ester are not printed in these PDFs or on the crawled pages, so they are not assigned.
+
+| Subfamily | Products |
+| --- | ---: |
+| Lipids from Advanced Molecular Technologies | 33 |
+| PEG Reagents and Linkers | 212 |
+| Fluorophores and Dyes | 40 |
+| AMT Organoboron Catalogue List | 1046 |
+| NEW PRODUCTS MAY 2025 | 7 |
+| Featured Products: | 6 |
+| Ionisable Lipid | 3 |
+
 
 ## External reference data
 
@@ -181,6 +195,15 @@ Cross-source pack differences: 4. See `data/discrepancies.json`.
         "mwNominal": 4
       }
     }
+  },
+  "bySubfamily": {
+    "Lipids from Advanced Molecular Technologies": 33,
+    "PEG Reagents and Linkers": 212,
+    "Fluorophores and Dyes": 40,
+    "AMT Organoboron Catalogue List": 1046,
+    "NEW PRODUCTS MAY 2025": 7,
+    "Featured Products:": 6,
+    "Ionisable Lipid": 3
   }
 }
 -->

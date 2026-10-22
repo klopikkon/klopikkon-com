@@ -831,7 +831,7 @@ def merge_products(catalogue_rows, flyer_rows, homepage):
             "name": name,
             "synonyms": [],
             "family": family,
-            "subfamily": None,
+            "subfamily": None,  # filled by assign_subfamily
             "cas": cas,
             "formula": None,
             "mw": None,
@@ -873,7 +873,7 @@ def merge_products(catalogue_rows, flyer_rows, homepage):
                 "name": item["name"],
                 "synonyms": [],
                 "family": "other",
-                "subfamily": None,
+                "subfamily": None,  # filled by assign_subfamily
                 "cas": None,
                 "formula": None,
                 "mw": None,
@@ -1234,6 +1234,76 @@ def source_counts(products):
     return dict(counts)
 
 
+PDF_HEADINGS = (
+    ("AMT-Lipids-20260826.pdf", "Lipids from Advanced Molecular Technologies"),
+    ("AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf", "PEG Reagents and Linkers"),
+    ("AMT-FluorophoresDyes-Catalogue-List-2026.pdf", "Fluorophores and Dyes"),
+    ("AMT-Organoboron-Compounds-List-20260421.pdf", "AMT Organoboron Catalogue List"),
+    ("New_Products_20250516.pdf", "NEW PRODUCTS MAY 2025"),
+)
+
+
+def catalogue_heading(product):
+    pdf = (product.get("source") or {}).get("pdf") or ""
+    for filename, heading in PDF_HEADINGS:
+        if pdf.endswith(filename):
+            return heading, pdf, product["source"].get("page"), "running header on the catalogue page"
+    return "Featured Products:", "https://www.amtechpl.com/", None, "homepage h2 above the card"
+
+
+def assign_subfamily(products):
+    """Set subfamily from the AMT heading the row is printed under.
+
+    The current brochures are flat lists. They do not print finer section
+    titles (no boronic-acid block, no mPEG-NHS block). The page title is the
+    heading. Homepage cards that print Ionisable Lipid use that label, which
+    is the only finer wording AMT publishes.
+    """
+    for product in products:
+        heading, url, page, location = catalogue_heading(product)
+        labels = product.get("homepageLabels") or []
+        if labels == ["Ionisable Lipid"]:
+            product["subfamily"] = "Ionisable Lipid"
+            product["subfamilySource"] = {
+                "heading": "Ionisable Lipid",
+                "url": "https://www.amtechpl.com/",
+                "page": None,
+                "location": "homepage card under Featured Products:",
+                "catalogueHeading": heading,
+            }
+        else:
+            product["subfamily"] = heading
+            product["subfamilySource"] = {
+                "heading": heading,
+                "url": url,
+                "page": page,
+                "location": location,
+            }
+
+
+def subfamily_counts(products):
+    order = [heading for _, heading in PDF_HEADINGS] + ["Featured Products:", "Ionisable Lipid"]
+    counts = {heading: 0 for heading in order}
+    for product in products:
+        counts[product["subfamily"]] = counts.get(product["subfamily"], 0) + 1
+    return {heading: count for heading, count in counts.items() if count}
+
+
+def subfamily_lines(by_subfamily):
+    lines = [
+        "## Subfamily",
+        "",
+        "Each `subfamily` is the heading AMT prints above that product, copied verbatim. `subfamilySource` records where it was read. The 2026 brochures are flat lists: the running header is the only heading on the page. The site adds one finer label, `Ionisable Lipid`, on three homepage cards. Headings such as helper lipids, mPEG-NHS, Cy dyes, or boronic acid versus pinacol ester are not printed in these PDFs or on the crawled pages, so they are not assigned.",
+        "",
+        "| Subfamily | Products |",
+        "| --- | ---: |",
+    ]
+    for heading, count in by_subfamily.items():
+        lines.append(f"| {heading} | {count} |")
+    lines.append("")
+    return lines
+
+
 def pubchem_lines(stats):
     lines = [
         "## External reference data",
@@ -1288,6 +1358,7 @@ def write_counts(products, row_counts, collapse_notes, discrepancies, anomalies,
         "skusWithMultipleListings": len(multi),
         "parseAnomalies": len(anomalies),
         "discrepancies": len(discrepancies),
+        "bySubfamily": subfamily_counts(products),
     }
     counts_path = ROOT / "data" / "counts.json"
     if counts_path.exists():
@@ -1389,10 +1460,10 @@ def write_counts(products, row_counts, collapse_notes, discrepancies, anomalies,
     lines.append("- Three organoboron packs have size `\"25\"` with no unit: AMTB1060-MP14, AMTB1062-IP14, AMTB1249-IB18. The unit glyph is not in the text layer, so the size is the digits that are. AMTGC1460-DH25 on the flyer prints `5mg` at $315; that token is stored as printed.")
     lines.append("- `purity` is null when the source row does not print one. The PEG, fluorophore and organoboron tables have no purity column. The lipids table prints one, copied with its spacing (for example `≥ 98%`). Four PEG rows add a `High Purity 99%` or `High purity 98%` line; that string is stored on the listing.")
     lines.append("- `documents.sds`, `documents.coa` and `documents.datasheet` are null. The crawled pages and current PDFs do not link SDS, COA or datasheet files.")
-    lines.append("- `subfamily` is null. The current PDFs are flat lists; the homepage tag `Ionisable Lipid` is on `homepageLabels`, not promoted to a subfamily.")
     lines.append("- `synonyms` is an empty array. Parentheticals such as `(Exoria)` and `(PEG2000)` stay inside `name`.")
     lines.append("- Unpublished prices use `price` null and `priceText` `\"quote\"`. `priceRaw` keeps the printed token (`POA`, `Price on application`, or a masked `########`).")
     lines.append("")
+    lines.extend(subfamily_lines(payload["bySubfamily"]))
     if payload.get("pubchem"):
         lines.extend(pubchem_lines(payload["pubchem"]))
     lines.append("## Not extracted")
@@ -1445,6 +1516,7 @@ def main():
     catalogue_skus = {r["sku"] for r in all_rows}
     flyer_only = sorted(flyer_skus - catalogue_skus)
     carry_external(products)
+    assign_subfamily(products)
     prior_manifest = []
     manifest_path = ASSETS / "manifest.json"
     if manifest_path.exists():
