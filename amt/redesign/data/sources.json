@@ -1,0 +1,322 @@
+{
+  "crawled": "2026-10-22",
+  "linkedBrochures": [
+    "https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf",
+    "https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf",
+    "https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf",
+    "https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf",
+    "https://www.amtechpl.com/wp-content/uploads/2025/05/New_Products_20250516.pdf"
+  ],
+  "literaturePdf": {
+    "url": "https://aksci.com/forms/AMT_Hiyama_HOMSi_Fact_Sheet_V2.1_201203S.pdf",
+    "linkedFrom": "https://www.amtechpl.com/literature/",
+    "extracted": false,
+    "reason": "Third-party HOMSi / Hiyama fact sheet, not an AMT catalogue of SKUs."
+  },
+  "mediaLibraryPdfs": [
+    {
+      "title": "AMT – PEG Reagents and Linkers Catalogue List 20260903",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf",
+      "date": "2026-09-03",
+      "bytes": 1039709,
+      "extracted": true,
+      "reason": "linked from the homepage as a current brochure"
+    },
+    {
+      "title": "AMT Lipids 20260826",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf",
+      "date": "2026-08-26",
+      "bytes": 283656,
+      "extracted": true,
+      "reason": "linked from the homepage as a current brochure"
+    },
+    {
+      "title": "AMT – Organoboron Compounds List 20260421",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf",
+      "date": "2026-04-20",
+      "bytes": 4266017,
+      "extracted": true,
+      "reason": "linked from the homepage as a current brochure"
+    },
+    {
+      "title": "AMT – Fluorophores&Dyes Catalogue List 2026",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf",
+      "date": "2026-01-09",
+      "bytes": 424125,
+      "extracted": true,
+      "reason": "linked from the homepage as a current brochure"
+    },
+    {
+      "title": "AMT – PEG Reagents and Linkers Catalogue List 20250516",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2025/05/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20250516.pdf",
+      "date": "2025-05-19",
+      "bytes": 959842,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "AMT Antiviral List 20250519",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2025/05/AMT-Antiviral-List-20250519.pdf",
+      "date": "2025-05-19",
+      "bytes": 95597,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "AMT – Organoboron Compounds List 20250519",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2025/05/AMT-Organoboron-Compounds-List-20250519.pdf",
+      "date": "2025-05-19",
+      "bytes": 3389510,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "New_Products_20250516",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2025/05/New_Products_20250516.pdf",
+      "date": "2025-05-16",
+      "bytes": 137508,
+      "extracted": true,
+      "reason": "linked from the homepage as a current brochure"
+    },
+    {
+      "title": "New_Products_Oct 2022_v1-20221010",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/10/New_Products_Oct-2022_v1-20221010.pdf",
+      "date": "2022-10-11",
+      "bytes": 82463,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(Feb 2022) AMT – Organoboron Compounds List 20220210old",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/02/Feb-2022-AMT-Organoboron-Compounds-List-20220210.pdf",
+      "date": "2022-02-10",
+      "bytes": 3528670,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(Feb 2022) Complete AMT – Fluorophores&Dyes Catalogue List 20220210old",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/02/Feb-2022-Complete-AMT-FluorophoresDyes-Catalogue-List-20220210.pdf",
+      "date": "2022-02-10",
+      "bytes": 350275,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(Feb 2022) AMT – PEG Reagents and Linkers Catalogue List 20220210old",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/02/Feb-2022-AMT-PEG-Reagents-and-Linkers-Catalogue-List-20220210.pdf",
+      "date": "2022-02-10",
+      "bytes": 953120,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(Feb 2022) AMT Antivial 20220210old",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/02/Feb-2022-AMT-Antivial-20220210.pdf",
+      "date": "2022-02-10",
+      "bytes": 129188,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(Jan 2022) AMT – PEG Reagents and Linkers Catalogue List 20220118.xlsx",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/01/Jan-2022-AMT-PEG-Reagents-and-Linkers-Catalogue-List-20220118.xlsx.pdf",
+      "date": "2022-01-18",
+      "bytes": 913037,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(Jan 2022) AMT – Organoboron Compounds List 20220118",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/01/Jan-2022-AMT-Organoboron-Compounds-List-20220118.pdf",
+      "date": "2022-01-18",
+      "bytes": 3528670,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(Jan 2022) Complete AMT – Fluorophores&Dyes Catalogue List 20220118",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/01/Jan-2022-Complete-AMT-FluorophoresDyes-Catalogue-List-20220118.pdf",
+      "date": "2022-01-18",
+      "bytes": 346097,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(New Jan 2022) AMT Antivial 20220118",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/01/New-Jan-2022-AMT-Antivial-20220118-1.pdf",
+      "date": "2022-01-18",
+      "bytes": 129188,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(New Jan 2022) AMT Antivial 20220118",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/01/New-Jan-2022-AMT-Antivial-20220118.pdf",
+      "date": "2022-01-18",
+      "bytes": 163288,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(Jan 2022) AMT – PEG Reagents and Linkers Catalogue List 20220118",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/01/Jan-2022-AMT-PEG-Reagents-and-Linkers-Catalogue-List-20220118.pdf",
+      "date": "2022-01-17",
+      "bytes": 1112345,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "New_Products_Jan 2022_v1-20220107",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/01/New_Products_Jan-2022_v1-20220107-2.pdf",
+      "date": "2022-01-07",
+      "bytes": 173649,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "New_Products_Jan 2022_v1-20220107",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2022/01/New_Products_Jan-2022_v1-20220107-1.pdf",
+      "date": "2022-01-07",
+      "bytes": 173649,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(Dec 2021) AMT – Fluorophores&Dyes Catalogue List 20211129 JW",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2021/12/Dec-2021-AMT-FluorophoresDyes-Catalogue-List-20211129-JW-1.pdf",
+      "date": "2021-12-03",
+      "bytes": 344742,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(Dec 2021) AMT – Fluorophores&Dyes Catalogue List 20211129 JW",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2021/12/Dec-2021-AMT-FluorophoresDyes-Catalogue-List-20211129-JW.pdf",
+      "date": "2021-12-01",
+      "bytes": 344742,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "(Dec 2021) AMT – PEG Reagents and Linkers Catalogue List_20211201JW",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2021/12/Dec-2021-AMT-PEG-Reagents-and-Linkers-Catalogue-List_20211201JW.pdf",
+      "date": "2021-12-01",
+      "bytes": 1068509,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "New_Products_December 2021_v1",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2021/11/New_Products_December-2021_v1.pdf",
+      "date": "2021-11-22",
+      "bytes": 193263,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "AMT_New_Products_Nov_2021_v1",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2021/10/AMT_New_Products_Nov_2021_v1.pdf",
+      "date": "2021-10-29",
+      "bytes": 182907,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "New_Products_JULY 2021",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2021/07/New_Products_JULY-2021.pdf",
+      "date": "2021-07-06",
+      "bytes": 190569,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "New_Products_JUNE_2021",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2021/06/New_Products_JUNE_2021.pdf",
+      "date": "2021-06-01",
+      "bytes": 157060,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "AMT – Organoboron Compound List",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2021/05/AMT-Organoboron-Compound-List.pdf",
+      "date": "2021-05-13",
+      "bytes": 3441260,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "AMT – Fluorophores, Dyes & PEG Linkers Catalogue List",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2021/03/AMT-Fluorophores-Dyes-PEG-Linkers-Catalogue-List.pdf",
+      "date": "2021-03-02",
+      "bytes": 1096566,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "AMT – Fluorophores, Dyes & PEG Linkers",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2021/02/AMT-Fluorophores-Dyes-PEG-Linkers.pdf",
+      "date": "2021-02-02",
+      "bytes": 943571,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "[Nov 2020] AMT – Antivirals Compound List",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2020/11/Nov-2020-AMT-Antivirals-Compound-List.pdf",
+      "date": "2020-11-11",
+      "bytes": 154529,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "AMT – Fluorophores, Dyes & PEG Linkers Catalogue Selection",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2020/05/AMT-Fluorophores-Dyes-PEG-Linkers-Catalogue-Selection.pdf",
+      "date": "2020-05-12",
+      "bytes": 713690,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "AMT – Antivirals Compound List",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2020/04/AMT-Antivirals-Compound-List.pdf",
+      "date": "2020-04-08",
+      "bytes": 143779,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "Advanced Molecular Technologies – Company Advert",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2020/04/Advanced-Molecular-Technologies-Company-Advert.pdf",
+      "date": "2020-04-07",
+      "bytes": 286424,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "AMT – Organoboron Compound List",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2020/04/AMT-Organoboron-Compound-List.pdf",
+      "date": "2020-04-07",
+      "bytes": 3327186,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "AMT – PEG Linkers – Flyer 2020",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2019/08/AMT-PEG-Linkers-Flyer-2019.pdf",
+      "date": "2019-08-23",
+      "bytes": 231160,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    },
+    {
+      "title": "AMT – Fluorophores, Dyes & PEG Linkers – Catalogue Selection 2019",
+      "url": "https://www.amtechpl.com/wp-content/uploads/2019/08/AMT-Fluorophores-Dyes-PEG-Linkers-Catalogue-Selection-2019.pdf",
+      "date": "2019-08-23",
+      "bytes": 1033444,
+      "extracted": false,
+      "reason": "in the media library only; not linked from the live pages crawled on 2026-10-22; superseded catalogue, not extracted"
+    }
+  ]
+}

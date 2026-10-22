@@ -1,0 +1,201 @@
+[
+  {
+    "sku": "AMTGC903-AL21",
+    "kind": "homepage-price-differs",
+    "size": "500 mg",
+    "homepagePrice": "$310",
+    "cataloguePrices": [
+      250
+    ]
+  },
+  {
+    "sku": "AMTGC903-AL21",
+    "kind": "homepage-price-differs",
+    "size": "1 g",
+    "homepagePrice": "$470",
+    "cataloguePrices": [
+      430
+    ]
+  },
+  {
+    "sku": "AMTGC936-SM21",
+    "kind": "name-differs-across-sources",
+    "canonical": "SM-102",
+    "other": "1-Octylnonyl 8-[(2-hydroxyethyl)[6-oxo-6-(undecyloxy)hexyl]amino]octanoate",
+    "otherSource": "peg-20260903"
+  },
+  {
+    "sku": "AMTGC936-SM21",
+    "kind": "packs-differ-across-sources",
+    "canonicalSource": "lipids-20260826",
+    "otherSource": "peg-20260903",
+    "otherPacks": [
+      {
+        "size": "100mg",
+        "price": 160,
+        "currency": "USD",
+        "priceText": "$160.00",
+        "priceRaw": "$160.00"
+      },
+      {
+        "size": "500mg",
+        "price": 450,
+        "currency": "USD",
+        "priceText": "$450.00",
+        "priceRaw": "$450.00"
+      }
+    ]
+  },
+  {
+    "sku": "AMTGC936-SM21",
+    "kind": "homepage-price-differs",
+    "size": "500 mg",
+    "homepagePrice": "$420",
+    "cataloguePrices": [
+      410
+    ]
+  },
+  {
+    "sku": "AMTGC936-SM21",
+    "kind": "homepage-price-differs",
+    "size": "1 g",
+    "homepagePrice": "$680",
+    "cataloguePrices": [
+      690
+    ]
+  },
+  {
+    "sku": "AMTGC1455-HA25",
+    "kind": "packs-differ-across-sources",
+    "canonicalSource": "lipids-20260826",
+    "otherSource": "new-products-20250516",
+    "otherPacks": [
+      {
+        "size": "100 mg",
+        "price": 150,
+        "currency": "USD",
+        "priceText": "$150",
+        "priceRaw": "$150"
+      },
+      {
+        "size": "500 mg",
+        "price": 420,
+        "currency": "USD",
+        "priceText": "$420",
+        "priceRaw": "$420"
+      }
+    ]
+  },
+  {
+    "sku": "AMTGC1461-SM25",
+    "kind": "packs-differ-across-sources",
+    "canonicalSource": "lipids-20260826",
+    "otherSource": "new-products-20250516",
+    "otherPacks": [
+      {
+        "size": null,
+        "price": null,
+        "currency": "USD",
+        "priceText": "quote",
+        "priceRaw": "Price on application"
+      }
+    ]
+  },
+  {
+    "sku": "AMTGC125-AT15",
+    "kind": "homepage-price-differs",
+    "size": "5 g",
+    "homepagePrice": "$80",
+    "cataloguePrices": [
+      65,
+      150
+    ]
+  },
+  {
+    "sku": "AMTGC125-AT15",
+    "kind": "homepage-price-differs",
+    "size": "25 g",
+    "homepagePrice": "$202",
+    "cataloguePrices": [
+      240,
+      450
+    ]
+  },
+  {
+    "sku": "AMTGC187-AC16",
+    "kind": "homepage-price-differs",
+    "size": "1 g",
+    "homepagePrice": "$80",
+    "cataloguePrices": [
+      90
+    ]
+  },
+  {
+    "sku": "AMTGC187-AC16",
+    "kind": "homepage-price-differs",
+    "size": "5 g",
+    "homepagePrice": "$240",
+    "cataloguePrices": [
+      270
+    ]
+  },
+  {
+    "sku": "AMTGC187-AC16",
+    "kind": "homepage-name-differs",
+    "canonical": "tert-Butyl (2-(2-(2-(2-azidoethoxy)ethoxy)ethoxy)ethyl)carbamate N3-PEG3-CH2CH2NtBoc",
+    "homepage": "tert-Butyl (2-(2-(2-(2-azidoethoxy)ethoxy)ethoxy)ethyl)carbamate"
+  },
+  {
+    "sku": "AMTB1087-OC15",
+    "kind": "packs-differ-across-sources",
+    "canonicalSource": "fluorophores-2026",
+    "otherSource": "organoborons-20260421",
+    "otherPacks": [
+      {
+        "size": "1g",
+        "price": 80,
+        "currency": "USD",
+        "priceText": "$80.00",
+        "priceRaw": "$80.00"
+      },
+      {
+        "size": "5g",
+        "price": 240,
+        "currency": "USD",
+        "priceText": "$240",
+        "priceRaw": "$240"
+      }
+    ]
+  },
+  {
+    "sku": "AMTB1263-CB18",
+    "kind": "name-differs-across-sources",
+    "canonical": "(S)-10-(3-((1-Carboxy-2-methylpropyl)amino)-3-oxopropyl)-5,5-difluoro-1,3,7,9-tetramethyl-5H-dipyrrolo[1,2-c:2',1'-f][1,3,2]diazaborinin-4-ium-5-uide",
+    "other": "(3-(5,5-difluoro-1,3,7,9-tetramethyl-5H-4l4,5l4-dipyrrolo[1,2-c:2',1'-f][1,3,2]diazaborinin-10-yl)propanoyl)-L-valine",
+    "otherSource": "organoborons-20260421"
+  },
+  {
+    "sku": "AMTGC1223-PL23",
+    "kind": "homepage-only"
+  },
+  {
+    "sku": "AMTGC1264-AH24",
+    "kind": "homepage-only"
+  },
+  {
+    "sku": "AMTGC1266-AO24",
+    "kind": "homepage-only"
+  },
+  {
+    "sku": "AMTGC1269-CB24",
+    "kind": "homepage-only"
+  },
+  {
+    "sku": "AMTH390-DF24",
+    "kind": "homepage-only"
+  },
+  {
+    "sku": "AMTGC1441-DB25",
+    "kind": "homepage-only"
+  }
+]
