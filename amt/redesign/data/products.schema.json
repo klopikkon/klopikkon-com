@@ -21,6 +21,7 @@
       "purity",
       "packs",
       "structureImage",
+      "structureImageSource",
       "documents",
       "source",
       "formulaExternal",
@@ -202,17 +203,29 @@
       },
       "structureImage": {
         "type": ["string", "null"],
-        "description": "Path relative to amt/redesign/, or null when no image was published for this SKU."
+        "description": "AMT product or structure image under assets/products/, or null when AMT published none for this SKU. Not a PubChem file."
+      },
+      "structureImageSource": {
+        "type": ["string", "null"],
+        "description": "URL of the AMT file in structureImage. Null when structureImage is null."
       },
       "documents": {
-        "type": "object",
-        "additionalProperties": true,
-        "required": ["sds", "coa", "datasheet"],
-        "properties": {
-          "sds": { "type": ["string", "null"] },
-          "coa": { "type": ["string", "null"] },
-          "datasheet": { "type": ["string", "null"] }
+        "type": "array",
+        "description": "SDS, COA, datasheet, spec sheet, or technical document URLs AMT publishes for this SKU. Empty when none are linked.",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "url", "source"],
+          "properties": {
+            "type": { "enum": ["sds", "coa", "datasheet", "spec", "technical"] },
+            "url": { "type": "string" },
+            "source": { "type": "string" }
+          }
         }
+      },
+      "priceConflict": {
+        "const": true,
+        "description": "True when a homepage card price and the catalogue pack for the same size disagree. Absent when they do not. Both prices are kept."
       },
       "source": {
         "type": "object",

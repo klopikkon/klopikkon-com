@@ -838,7 +838,8 @@ def merge_products(catalogue_rows, flyer_rows, homepage):
             "purity": purity,
             "packs": packs,
             "structureImage": None,
-            "documents": {"sds": None, "coa": None, "datasheet": None},
+            "structureImageSource": None,
+            "documents": [],
             "source": {
                 "url": "https://www.amtechpl.com/",
                 "pdf": winning[0]["pdf"],
@@ -880,7 +881,8 @@ def merge_products(catalogue_rows, flyer_rows, homepage):
                 "purity": None,
                 "packs": item["packs"],
                 "structureImage": None,
-                "documents": {"sds": None, "coa": None, "datasheet": None},
+                "structureImageSource": None,
+                "documents": [],
                 "source": {"url": "https://www.amtechpl.com/", "pdf": None, "page": None},
                 "listings": [],
                 "homepagePacks": item["packs"],
@@ -1107,6 +1109,7 @@ def attach_images(products, manifest):
         if url:
             by_sku[product["sku"]].append(url.rstrip('"'))
     chosen = {}
+    sources = {}
     for sku, urls in by_sku.items():
         unique = []
         for url in urls:
@@ -1116,14 +1119,14 @@ def attach_images(products, manifest):
         paths = []
         for url in ranked:
             filename = safe_name(url)
-            dest = ASSETS / "structures" / filename
+            dest = ASSETS / "products" / filename
             if not dest.exists():
                 try:
                     download(url, dest)
                 except Exception as error:  # noqa: BLE001
                     manifest.append({"path": None, "sourceUrl": url, "kind": "structure", "sku": sku, "error": str(error)})
                     continue
-            rel = f"assets/structures/{filename}"
+            rel = f"assets/products/{filename}"
             digest = hashlib.sha256(dest.read_bytes()).hexdigest()
             manifest.append(
                 {
@@ -1138,8 +1141,10 @@ def attach_images(products, manifest):
             paths.append(rel)
         if paths:
             chosen[sku] = paths[0]
+            sources[sku] = ranked[0]
     for product in products:
         product["structureImage"] = chosen.get(product["sku"])
+        product["structureImageSource"] = sources.get(product["sku"])
         product.pop("homepageImageUrl", None)
     return chosen
 
@@ -1502,7 +1507,7 @@ def write_counts(products, row_counts, collapse_notes, discrepancies, anomalies,
     lines.append("- Some dye names end in `diazaborinin-4-ium-5-uide`. That is the PDF text layer (the syllable between `diaza` and `inin` is not in the text). It is stored as printed.")
     lines.append("- Three organoboron packs have size `\"25\"` with no unit: AMTB1060-MP14, AMTB1062-IP14, AMTB1249-IB18. The unit glyph is not in the text layer, so the size is the digits that are. AMTGC1460-DH25 on the flyer prints `5mg` at $315; that token is stored as printed.")
     lines.append("- `purity` is null when the source row does not print one. The PEG, fluorophore and organoboron tables have no purity column. The lipids table prints one, copied with its spacing (for example `≥ 98%`). Four PEG rows add a `High Purity 99%` or `High purity 98%` line; that string is stored on the listing.")
-    lines.append("- `documents.sds`, `documents.coa` and `documents.datasheet` are null. The crawled pages and current PDFs do not link SDS, COA or datasheet files.")
+    lines.append("- `documents` is an empty list on every SKU. The crawled pages, media library, and current PDFs do not link an SDS, COA, datasheet, spec sheet, or technical document. Catalogue PDFs stay on `source.pdf`.")
     lines.append("- `synonyms` is an empty array. Parentheticals such as `(Exoria)` and `(PEG2000)` stay inside `name`.")
     lines.append("- Unpublished prices use `price` null and `priceText` `\"quote\"`. `priceRaw` keeps the printed token (`POA`, `Price on application`, or a masked `########`).")
     lines.append("")

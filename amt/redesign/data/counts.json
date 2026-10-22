@@ -171,5 +171,34 @@
         "null": 306
       }
     }
-  }
+  },
+  "documents": {
+    "products": 0,
+    "note": "No SDS, COA, datasheet, spec sheet, or technical document URL is published per SKU or per family. Catalogue PDFs stay on source.pdf.",
+    "byFamily": {
+      "lipids": 0,
+      "peg": 0,
+      "fluorophores": 0,
+      "organoborons": 0,
+      "other": 0
+    }
+  },
+  "amtImages": {
+    "products": 40,
+    "onHomepageCard": 12,
+    "mediaLibraryOnly": 28,
+    "byFamily": {
+      "lipids": 3,
+      "peg": 16,
+      "fluorophores": 5,
+      "organoborons": 10,
+      "other": 6
+    }
+  },
+  "priceConflict": [
+    "AMTGC903-AL21",
+    "AMTGC936-SM21",
+    "AMTGC125-AT15",
+    "AMTGC187-AC16"
+  ]
 }

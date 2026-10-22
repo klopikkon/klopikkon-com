@@ -75,7 +75,6 @@ Cross-source pack differences: 4. See `data/discrepancies.json`.
 - Some dye names end in `diazaborinin-4-ium-5-uide`. That is the PDF text layer (the syllable between `diaza` and `inin` is not in the text). It is stored as printed.
 - Three organoboron packs have size `"25"` with no unit: AMTB1060-MP14, AMTB1062-IP14, AMTB1249-IB18. The unit glyph is not in the text layer, so the size is the digits that are. AMTGC1460-DH25 on the flyer prints `5mg` at $315; that token is stored as printed.
 - `purity` is null when the source row does not print one. The PEG, fluorophore and organoboron tables have no purity column. The lipids table prints one, copied with its spacing (for example `≥ 98%`). Four PEG rows add a `High Purity 99%` or `High purity 98%` line; that string is stored on the listing.
-- `documents.sds`, `documents.coa` and `documents.datasheet` are null. The crawled pages and current PDFs do not link SDS, COA or datasheet files.
 - `synonyms` is an empty array. Parentheticals such as `(Exoria)` and `(PEG2000)` stay inside `name`.
 - Unpublished prices use `price` null and `priceText` `"quote"`. `priceRaw` keeps the printed token (`POA`, `Price on application`, or a masked `########`).
 
@@ -170,6 +169,25 @@ Fluorophore dye core:
 | organoborons | 1046 | 1045 | 531 | 531 | 531 | 0 |
 | other | 13 | 7 | 4 | 4 | 4 | 0 |
 | total | 1347 | 1330 | 673 | 673 | 673 | 4 |
+
+
+## AMT documents and images
+
+`documents` is a list of `{type, url, source}` only where AMT publishes an SDS, COA, datasheet, spec sheet, or technical document for that SKU. An empty list means no such file is linked. Catalogue PDFs stay on `source.pdf`. `structureImage` is a file AMT published for that SKU, saved unaltered under `assets/products/`, and `structureImageSource` is that file's URL. PubChem drawings stay on `structureImageExternal`. `priceConflict` is true when a homepage card price and the catalogue pack for the same size disagree. Both prices are kept.
+
+Documents: **0** products. No SDS, COA, datasheet, spec sheet, or technical document URL is published per SKU or per family. Catalogue PDFs stay on source.pdf.
+
+AMT images: **40** of 1347. 12 are the image on the current homepage card. 28 are media-library files named with the SKU and not on that card.
+
+| Family | Products | AMT image | Documents |
+| --- | ---: | ---: | ---: |
+| lipids | 36 | 3 | 0 |
+| peg | 212 | 16 | 0 |
+| fluorophores | 40 | 5 | 0 |
+| organoborons | 1046 | 10 | 0 |
+| other | 13 | 6 | 0 |
+
+`priceConflict`: AMTGC903-AL21, AMTGC936-SM21, AMTGC125-AT15, AMTGC187-AC16.
 
 
 ## Not extracted
@@ -353,6 +371,35 @@ Fluorophore dye core:
         "null": 306
       }
     }
-  }
+  },
+  "documents": {
+    "products": 0,
+    "note": "No SDS, COA, datasheet, spec sheet, or technical document URL is published per SKU or per family. Catalogue PDFs stay on source.pdf.",
+    "byFamily": {
+      "lipids": 0,
+      "peg": 0,
+      "fluorophores": 0,
+      "organoborons": 0,
+      "other": 0
+    }
+  },
+  "amtImages": {
+    "products": 40,
+    "onHomepageCard": 12,
+    "mediaLibraryOnly": 28,
+    "byFamily": {
+      "lipids": 3,
+      "peg": 16,
+      "fluorophores": 5,
+      "organoborons": 10,
+      "other": 6
+    }
+  },
+  "priceConflict": [
+    "AMTGC903-AL21",
+    "AMTGC936-SM21",
+    "AMTGC125-AT15",
+    "AMTGC187-AC16"
+  ]
 }
 -->
