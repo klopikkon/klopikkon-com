@@ -1,0 +1,378 @@
+{
+  "reviewedAt": "2026-10-22",
+  "browser": "Headless Chrome via puppeteer-core, desktop 1280×800 and mobile 390×844 CSS pixels",
+  "sites": {
+    "amt": {
+      "searchNote": "The homepage has an input type=search named s (placeholder “Name / Formula / CAS”) whose form action is the homepage. Typing into it in the first pass did not change the URL. A second pass requested the form’s GET URL https://www.amtechpl.com/?s=… for each query. Every results page was titled “You searched for {query}” and the rendered text was the heading “Search results for: {query}” followed by the About Us company copy. No product name, CAS hit, or price appeared for any of the five queries. A Structure Search item is in the navigation; a structure drawing was not submitted.",
+      "queries": [
+        {"query": "474922-26-4", "url": "https://www.amtechpl.com/?s=474922-26-4", "observed": "Results page contains the search heading and then the About Us text. No compound hit in the rendered text."},
+        {"query": "DSPE-PEG2000", "url": "https://www.amtechpl.com/?s=DSPE-PEG2000", "observed": "Same pattern: search heading, then About Us. No DSPE-PEG product in the rendered text."},
+        {"query": "mPEG-NHS", "url": "https://www.amtechpl.com/?s=mPEG-NHS", "observed": "Same pattern. No mPEG-NHS product in the rendered text."},
+        {"query": "Cy5", "url": "https://www.amtechpl.com/?s=Cy5", "observed": "Same pattern. No dye product in the rendered text."},
+        {"query": "pinacol boronate", "url": "https://www.amtechpl.com/?s=pinacol%20boronate", "observed": "Same pattern. No boronate product in the rendered text."}
+      ],
+      "filters": "The PEG family page had no select boxes, facet legends, or filter controls in the rendered DOM.",
+      "productNote": "https://www.amtechpl.com/peg-reagents-and-linkers/ is a family page titled “PEG Reagents and Linkers - Advanced Molecular Technologies”. The rendered text is navigation plus a company description. It is not a per-SKU page. The public page sitemap has no per-SKU URLs.",
+      "productFields": {
+        "cas": "Not in the rendered text of the family page.",
+        "mw": "Not in the rendered text.",
+        "purity": "Not in the rendered text.",
+        "pricing": "Not in the rendered text.",
+        "sds": "Not in the rendered text.",
+        "coa": "Not in the rendered text.",
+        "structure": "Not in the rendered text. Structure Search is a navigation link."
+      },
+      "mobile": "At 390 CSS pixels the home and PEG pages reported no horizontal overflow (scrollWidth minus innerWidth = 0). The home screenshot shows a menu button and stacked sections.",
+      "quoteCart": "Visible contact is telephone 03 9764 9220 and mailto links for enquiries@amtechpl.com on the home page and sales@amtechpl.com in the PEG page footer. No cart control was present. Nothing was submitted.",
+      "shots": [
+        {"src": "shots/amt-home-desktop.jpg", "alt": "AMT homepage on a desktop viewport, 22 October 2026", "caption": "AMT homepage, desktop."},
+        {"src": "shots/amt-product-desktop.jpg", "alt": "AMT PEG reagents and linkers family page on desktop", "caption": "PEG family page used as the catalogue page."},
+        {"src": "shots/amt-search-dspe-desktop.jpg", "alt": "AMT search results page for DSPE-PEG2000", "caption": "Search results for DSPE-PEG2000."},
+        {"src": "shots/amt-home-mobile.jpg", "alt": "AMT homepage on a 390 pixel wide viewport", "caption": "Homepage, mobile width."}
+      ]
+    },
+    "broadpharm": {
+      "searchNote": "Search URLs of the form /search?search_query= were allowed by robots.txt and were used. The results table has columns Catalog, Product Name, Structure, CAS, M.W., Purity, Pricing.",
+      "queries": [
+        {"query": "474922-26-4", "url": "https://broadpharm.com/search?search_query=474922-26-4", "observed": "2 results, both listing that CAS: DSPE-PEG-Amine sodium salt, MW 2,000 (BP-22722, purity 95%) and DSPE-PEG-Amine ammonium salt, MW 2,000 (BP-43715, purity 95%)."},
+        {"query": "DSPE-PEG2000", "url": "https://broadpharm.com/search?search_query=DSPE-PEG2000", "observed": "After a 6 second wait the page said 14 results. The visible rows were DSPE-PEG and other PEG-lipid variants (for example DSPE-PEG2-Mal, DMG-PEG 2000, DSPE-PEG-SH MW 2,000), not a single exact mPEG-DSPE 2000 row."},
+        {"query": "mPEG-NHS", "url": "https://broadpharm.com/search?search_query=mPEG-NHS", "observed": "25 results. The first rows included DSPE-NHS, PySS-PEG2-NHS, DSPE-PEG13-NHS and m-PEG1-NHS ester, so NHS reagents were returned and the top of the list was not only mPEG-NHS."},
+        {"query": "Cy5", "url": "https://broadpharm.com/search?search_query=Cy5", "observed": "Rows included DOPE-PEG-Cy5 and DSPE-PEG-Cy5 products."},
+        {"query": "pinacol boronate", "url": "https://broadpharm.com/search?search_query=pinacol+boronate", "observed": "The page said: Sorry, no results for “pinacol boronate”."}
+      ],
+      "filters": "The search result is a table with those columns. No facet sidebar was captured on the search page.",
+      "productNote": "Product BP-25269 rendered with title “m-PEG-DSPE sodium salt, MW 2,000, 459428-35-4 | BroadPharm”. The spec list shows the labels Formula, MW, CAS and Purity with no values in the rendered text. The product name states MW 2,000 and the title includes CAS 459428-35-4. The desktop screenshot shows a structure drawing.",
+      "productFields": {
+        "cas": "459428-35-4 is in the document title. The CAS row in the spec list had no value in the text.",
+        "mw": "MW 2,000 is in the product name. The MW row in the spec list was empty in the text.",
+        "purity": "The Purity row was empty in the rendered text.",
+        "pricing": "1 G $350.00 and 5 G $890.00 are in the text.",
+        "sds": "An SDS “View” link is in the text.",
+        "coa": "Not named in the captured text. An NMR “View” link is present.",
+        "structure": "A structure drawing is visible on the desktop product screenshot."
+      },
+      "mobile": "Home and product at 390 CSS pixels reported overflow 0.",
+      "quoteCart": "The product page has Cart links and an INQUIRE link to /contact?subject_product=BP-25269. The cart was not opened and the inquire form was not submitted.",
+      "shots": [
+        {"src": "shots/broadpharm-home-desktop.jpg", "alt": "BroadPharm homepage on desktop", "caption": "BroadPharm homepage."},
+        {"src": "shots/broadpharm-product-desktop.jpg", "alt": "BroadPharm product page for m-PEG-DSPE MW 2000", "caption": "BP-25269, m-PEG-DSPE, MW 2,000."},
+        {"src": "shots/broadpharm-search-cas-desktop.jpg", "alt": "BroadPharm search results for CAS 474922-26-4", "caption": "Search for 474922-26-4."},
+        {"src": "shots/broadpharm-home-mobile.jpg", "alt": "BroadPharm homepage at mobile width", "caption": "Homepage, mobile width."}
+      ]
+    },
+    "jenkem": {
+      "searchNote": "The header search control was not clickable in the first pass. A second pass requested https://jenkemusa.com/?s={query}&post_type=product.",
+      "queries": [
+        {"query": "474922-26-4", "url": "https://jenkemusa.com/?s=474922-26-4&post_type=product", "observed": "The page said “No products were found matching your selection.”"},
+        {"query": "DSPE-PEG2000", "url": "https://jenkemusa.com/product/reagents-for-lipid-nanoparticles", "observed": "The search URL redirected to the page “Reagents for Lipid Nanoparticles”, a description of GMP lipids and PEG-lipids for LNPs, not a list of DSPE-PEG2000 SKUs."},
+        {"query": "mPEG-NHS", "url": "https://jenkemusa.com/?s=mPEG-NHS&post_type=product", "observed": "Two hits were listed: (MAL)7-8ARMPEG-NHS and (MAL)3-4ARMPEG-NHS. They are NHS reagents, not mPEG-NHS."},
+        {"query": "Cy5", "url": "https://jenkemusa.com/?s=Cy5&post_type=product", "observed": "Hits were “Reagents for Lipid Nanoparticles” and “PEG (Amine)2, HCl Salt” with a price range of $60.00–$240.00. Neither name is Cy5."},
+        {"query": "pinacol boronate", "url": "https://jenkemusa.com/?s=pinacol%20boronate&post_type=product", "observed": "The page said “No products were found matching your selection.”"}
+      ],
+      "filters": "The measured product page has two dropdowns: pack (1g, 10g) and molecular weight (only 5000 was listed).",
+      "productNote": "https://jenkemusa.com/product/methoxy-peg-dspe is titled “Methoxy PEG DSPE - JenKem Technology USA”. The text says “≥95% Substitution” and offers an MSDS download. No CAS number was in the captured text.",
+      "productFields": {
+        "cas": "Not in the captured text.",
+        "mw": "A Molecular Weight dropdown listed 5000 only.",
+        "purity": "The description says ≥95% Substitution.",
+        "pricing": "The page shows a price range of $130.00 through $1,040.00, with pack options 1g and 10g.",
+        "sds": "“Click here to download the MSDS” is in the text.",
+        "coa": "Not in the captured text.",
+        "structure": "Not described in the captured text."
+      },
+      "mobile": "Home and product at 390 CSS pixels reported overflow 0.",
+      "quoteCart": "A Cart link points at /cart. The text says to email tech@jenkemusa.com for custom PEG details. The cart was not opened and no email was sent.",
+      "shots": [
+        {"src": "shots/jenkem-home-desktop.jpg", "alt": "JenKem Technology USA homepage", "caption": "JenKem USA homepage."},
+        {"src": "shots/jenkem-product-desktop.jpg", "alt": "JenKem Methoxy PEG DSPE product page", "caption": "Methoxy PEG DSPE product page."},
+        {"src": "shots/jenkem-home-mobile.jpg", "alt": "JenKem homepage at mobile width", "caption": "Homepage, mobile width."}
+      ]
+    },
+    "creativepeg": {
+      "searchNote": "Product search used the site’s own results URL /?s={query}&post_type=product&dgwt_wcas=1. The query string ?c= is what robots.txt disallows; these URLs do not use that parameter.",
+      "queries": [
+        {"query": "474922-26-4", "url": "https://creativepegworks.com/?s=474922-26-4&post_type=product&dgwt_wcas=1", "observed": "“No products were found matching your selection.” The visible query was spaced as 474922 26 4."},
+        {"query": "DSPE-PEG2000", "url": "https://creativepegworks.com/?s=DSPE-PEG2000&post_type=product&dgwt_wcas=1", "observed": "“No products were found matching your selection.” The page titled the query DSPE PEG2000."},
+        {"query": "mPEG-NHS", "url": "https://creativepegworks.com/?s=mPEG-NHS&post_type=product&dgwt_wcas=1", "observed": "The results page listed mPEG-SG (succinimidyl glutarate) and mPEG-SS among PEG products, so NHS-related PEGs appeared rather than an empty page."},
+        {"query": "Cy5", "url": "https://creativepegworks.com/?s=Cy5&post_type=product&dgwt_wcas=1", "observed": "“No products were found matching your selection.”"},
+        {"query": "pinacol boronate", "url": "https://creativepegworks.com/?s=pinacol+boronate&post_type=product&dgwt_wcas=1", "observed": "“No products were found matching your selection.”"}
+      ],
+      "filters": "The product and search pages expose “PEG Products By Functionality / Reactivity / Structure” as navigation, not as a facet panel on the measured SKU page.",
+      "productNote": "https://creativepegworks.com/product/mpeg-dspe-mw-2k is titled “mPEG-DSPE, MW 2k”. Catalog No PLS-2045. The description gives DSPE’s own CAS as 1069-79-0, which is the phospholipid parent, and says PEG molecular weight is measured by MALDI-MS or GPC.",
+      "productFields": {
+        "cas": "The text states “DSPE CAS number is 1069-79-0”. A CAS for the PEG conjugate was not in the captured text.",
+        "mw": "The name says MW 2k. The text says linear PEG PDI is 1.02–1.05.",
+        "purity": "Not given as a percent in the captured text.",
+        "pricing": "500 mg $300.00, 1 g $500.00, 5 g $1,500.00.",
+        "sds": "A link “SDS of mPEG-DSPE” points at a PDF under /wp-content/uploads/.",
+        "coa": "Not in the captured text.",
+        "structure": "A Structure tab label is in the text. The description explains the phospholipid."
+      },
+      "mobile": "Home and product retaken at 390 CSS pixels after the first mobile pass timed out. Both reported overflow 0.",
+      "quoteCart": "Add To Cart is on the page and the cart count link points at /cart. “Interested in Bulk Orders?” points at a contact path. Neither was submitted.",
+      "shots": [
+        {"src": "shots/creativepeg-home-desktop.jpg", "alt": "Creative PEGWorks homepage", "caption": "Creative PEGWorks homepage."},
+        {"src": "shots/creativepeg-product-desktop.jpg", "alt": "Creative PEGWorks mPEG-DSPE MW 2k product page", "caption": "mPEG-DSPE, MW 2k."},
+        {"src": "shots/creativepeg-search-dspe-desktop.jpg", "alt": "Creative PEGWorks search for DSPE-PEG2000", "caption": "Search for DSPE-PEG2000."},
+        {"src": "shots/creativepeg-home-mobile.jpg", "alt": "Creative PEGWorks homepage at mobile width", "caption": "Homepage, mobile width."}
+      ]
+    },
+    "avanti": {
+      "searchNote": "The homepage hero search is a POST form with input name SearchCriteria and placeholder “Search for a product by product name, number or CAS number”. Submitting it did not change the URL away from /en-gb. Product names appeared as autocomplete lines only for DSPE-PEG2000.",
+      "queries": [
+        {"query": "474922-26-4", "url": "https://www.avantiresearch.com/en-gb", "observed": "No product suggestion lines were added under the hero. The URL stayed on the homepage."},
+        {"query": "DSPE-PEG2000", "url": "https://www.avantiresearch.com/en-gb", "observed": "Three suggestion lines appeared: A89932 DSPE-PEG2000 Maleic amide, A89228 DSPE-PEG2000-N-Cyanine 3, and A82025 (793025) DSPE-PEG2000-Tetrazine."},
+        {"query": "mPEG-NHS", "url": "https://www.avantiresearch.com/en-gb", "observed": "No product suggestion lines. URL stayed on the homepage."},
+        {"query": "Cy5", "url": "https://www.avantiresearch.com/en-gb", "observed": "No product suggestion lines. URL stayed on the homepage."},
+        {"query": "pinacol boronate", "url": "https://www.avantiresearch.com/en-gb", "observed": "No product suggestion lines. URL stayed on the homepage."}
+      ],
+      "filters": "No facet controls were captured on the product page. The page links to product categories.",
+      "productNote": "The measured URL rendered as “18:0 PEG2000 PE | CAS 474922-77-5 | Avanti Research”. The body names it 1,2-distearoyl-sn-glycero-3-phosphoethanolamine-N-[methoxy(polyethylene glycol)-2000] (ammonium salt).",
+      "productFields": {
+        "cas": "474922-77-5, in the title and in a CAS number row.",
+        "mw": "Formula weight 2805.5. Molecular formula is given as C133H267N2O55P (average FW due to polydispersity of PEG).",
+        "purity": "The purity row says >99%.",
+        "pricing": "The quantity line displayed $0.00 before a pack was chosen. Request bulk pricing and Request a quote are on the page. No pack price was selected.",
+        "sds": "An SDS control is on the page.",
+        "coa": "“Certificates of Analysis” is in the text.",
+        "structure": "The molecular formula is in the text. A separate structure image was not identified in the text."
+      },
+      "mobile": "Home and product at 390 CSS pixels reported overflow 0.",
+      "quoteCart": "Add to cart, Buy, Request bulk pricing and Request a quote are on the product page. None were clicked. The header cart badge showed 0.",
+      "shots": [
+        {"src": "shots/avanti-home-desktop.jpg", "alt": "Avanti Research homepage", "caption": "Avanti Research homepage (avantilipids.com redirects here)."},
+        {"src": "shots/avanti-product-desktop.jpg", "alt": "Avanti Research 18:0 PEG2000 PE product page", "caption": "18:0 PEG2000 PE, CAS 474922-77-5."},
+        {"src": "shots/avanti-search-dspe-desktop.jpg", "alt": "Avanti homepage after searching DSPE-PEG2000", "caption": "DSPE-PEG2000 suggestions on the homepage."},
+        {"src": "shots/avanti-home-mobile.jpg", "alt": "Avanti Research homepage at mobile width", "caption": "Homepage, mobile width."}
+      ]
+    },
+    "cayman": {
+      "searchNote": "Search used /search?q=, which is not the disallowed /search.jsp path. Result pages show a count and filter groups.",
+      "queries": [
+        {"query": "474922-26-4", "url": "https://www.caymanchem.com/search?q=474922-26-4", "observed": "1 result: DSPE-PEG(2000)-amine (sodium salt), item 26000, purity ≥95%."},
+        {"query": "DSPE-PEG2000", "url": "https://www.caymanchem.com/search?q=DSPE-PEG2000", "observed": "22 results. The first visible item was DSPE-PEG(2000)-TCO, item 43626, purity ≥95%."},
+        {"query": "mPEG-NHS", "url": "https://www.caymanchem.com/search?q=mPEG-NHS", "observed": "1 result: mPEG(30000)-NHS ester, item 39743, purity ≥90%, with 100 mg at $109 and 250 mg at $259."},
+        {"query": "Cy5", "url": "https://www.caymanchem.com/search?q=Cy5", "observed": "6 results. The first was Cy5 (triethylamine salt), item 30752, purity ≥95%, 1 mg $107."},
+        {"query": "pinacol boronate", "url": "https://www.caymanchem.com/search?q=pinacol%20boronate", "observed": "1 result, Coumarin Boronic Acid pinacolate ester, CAS 190788-61-5, item 10818, purity ≥98%. The page also said “Did you mean pinacol borinate?”."}
+      ],
+      "filters": "Search results showed Clear Filters plus groups such as Product Type, Research Area and Fluorescence.",
+      "productNote": "Item 28181 rendered as DSPE-mPEG(2000) (sodium salt) with CAS 247925-28-6 in the title and body.",
+      "productFields": {
+        "cas": "247925-28-6.",
+        "mw": "A formal name and a SMILES string are in the text. A numeric molecular weight was not in the captured lines.",
+        "purity": "≥90%.",
+        "pricing": "50 mg $95, 100 mg $158, 250 mg $326, 500 mg $554, each with an Add control.",
+        "sds": "“Safety Data Sheet (SDS) (PDF)” links to cdn.caymanchem.com/cdn/msds/28181m.pdf.",
+        "coa": "“Find Certificates of Analysis” and “Download most recent Certificate of Analysis for this product” are in the text.",
+        "structure": "A SMILES string is in the text. The page links a product insert PDF."
+      },
+      "mobile": "Home and product at 390 CSS pixels reported overflow 0. The homepage is a JavaScript application.",
+      "quoteCart": "View Cart links to /cart and showed a subtotal of $0. Add controls sit next to the pack prices. They were not clicked.",
+      "shots": [
+        {"src": "shots/cayman-home-desktop.jpg", "alt": "Cayman Chemical homepage", "caption": "Cayman Chemical homepage."},
+        {"src": "shots/cayman-product-desktop.jpg", "alt": "Cayman Chemical DSPE-mPEG 2000 product page", "caption": "Item 28181, DSPE-mPEG(2000)."},
+        {"src": "shots/cayman-search-dspe-desktop.jpg", "alt": "Cayman search results for DSPE-PEG2000", "caption": "Search for DSPE-PEG2000."},
+        {"src": "shots/cayman-home-mobile.jpg", "alt": "Cayman Chemical homepage at mobile width", "caption": "Homepage, mobile width."}
+      ]
+    },
+    "tci": {
+      "searchNote": "Not run. The homepage, robots.txt and the product URL all returned an Akamai Access Denied page from this host.",
+      "queries": [
+        {"query": "474922-26-4", "observed": "Not requested. The host returned Access Denied before a search box could be used."},
+        {"query": "DSPE-PEG2000", "observed": "Not requested."},
+        {"query": "mPEG-NHS", "observed": "Not requested."},
+        {"query": "Cy5", "observed": "Not requested."},
+        {"query": "pinacol boronate", "observed": "Not requested."}
+      ],
+      "filters": "Not observed. The response was an Access Denied page.",
+      "productNote": "https://www.tcichemicals.com/US/en/p/A2420 returned HTTP 403 with title “Access Denied” and an errors.edgesuite.net reference. No catalogue content was visible.",
+      "productFields": {
+        "cas": "Not observed. The response was Access Denied.",
+        "mw": "Not observed.",
+        "purity": "Not observed.",
+        "pricing": "Not observed.",
+        "sds": "Not observed.",
+        "coa": "Not observed.",
+        "structure": "Not observed."
+      },
+      "mobile": "The mobile screenshot is the same Access Denied page. Catalogue layout was not visible.",
+      "quoteCart": "No cart or quote control was on the denial page. Nothing was submitted.",
+      "shots": [
+        {"src": "shots/tci-home-desktop.jpg", "alt": "Akamai Access Denied page for the TCI homepage", "caption": "TCI homepage request, Access Denied."},
+        {"src": "shots/tci-product-desktop.jpg", "alt": "Akamai Access Denied page for a TCI product URL", "caption": "Product URL A2420, Access Denied."},
+        {"src": "shots/tci-home-mobile.jpg", "alt": "Access Denied page at mobile width for TCI", "caption": "Same denial at mobile width."}
+      ]
+    },
+    "sigma": {
+      "searchNote": "robots.txt (fetched in the browser, HTTP 200) allows / and disallows /*/search?focus= and /*/search/?focus=. Search was therefore requested as /US/en/search/{query} with no focus parameter. Every one of those URLs returned Akamai Access Denied. Relevance was not observed.",
+      "queries": [
+        {"query": "474922-26-4", "url": "https://www.sigmaaldrich.com/US/en/search/474922-26-4", "observed": "Access Denied (Akamai). No results page."},
+        {"query": "DSPE-PEG2000", "url": "https://www.sigmaaldrich.com/US/en/search/DSPE-PEG2000", "observed": "Access Denied."},
+        {"query": "mPEG-NHS", "url": "https://www.sigmaaldrich.com/US/en/search/mPEG-NHS", "observed": "Access Denied."},
+        {"query": "Cy5", "url": "https://www.sigmaaldrich.com/US/en/search/Cy5", "observed": "Access Denied."},
+        {"query": "pinacol boronate", "url": "https://www.sigmaaldrich.com/US/en/search/pinacol%20boronate", "observed": "Access Denied."}
+      ],
+      "filters": "Not observed. Search responses were Access Denied. The homepage itself did load.",
+      "productNote": "Lighthouse’s mobile runs received HTTP 200 for https://www.sigmaaldrich.com/US/en/product/aldrich/718513. The later review browser received Access Denied for that same URL (errors.edgesuite.net). Desktop Lighthouse runs also failed with status 403. Product-field text was not visible in the review.",
+      "productFields": {
+        "cas": "Not observed in the review. The review response was Access Denied.",
+        "mw": "Not observed in the review.",
+        "purity": "Not observed in the review.",
+        "pricing": "Not observed in the review.",
+        "sds": "Not observed in the review. robots.txt also disallows several certificate paths; those were not requested.",
+        "coa": "Not observed in the review.",
+        "structure": "Not observed in the review."
+      },
+      "mobile": "The homepage loaded at 390 CSS pixels with overflow 0 and title “MilliporeSigma | Life Science Products & Service Solutions”. The product URL at mobile width was Access Denied. Desktop homepage overflow was 40 pixels.",
+      "quoteCart": "The loaded homepage shows Login / Register, Quick Order and a Cart badge of 0. None were opened.",
+      "shots": [
+        {"src": "shots/sigma-home-desktop.jpg", "alt": "MilliporeSigma homepage on desktop", "caption": "Homepage did load."},
+        {"src": "shots/sigma-product-desktop.jpg", "alt": "Access Denied page for a Sigma-Aldrich product URL", "caption": "Product URL 718513 during the review: Access Denied."},
+        {"src": "shots/sigma-home-mobile.jpg", "alt": "MilliporeSigma homepage at mobile width", "caption": "Homepage, mobile width."},
+        {"src": "shots/sigma-search-cas-desktop.jpg", "alt": "Access Denied page for a Sigma-Aldrich search URL", "caption": "Search URL for the CAS, Access Denied."}
+      ]
+    },
+    "lumiprobe": {
+      "searchNote": "The header search inputs have no form action. /search?q= is not disallowed (robots.txt disallows /api/, /admin and /auth2), so that URL was used.",
+      "queries": [
+        {"query": "474922-26-4", "url": "https://www.lumiprobe.com/search?q=474922-26-4", "observed": "The page said 100 results. The first product title in the text was Ac4GalNAl, which is not that CAS."},
+        {"query": "DSPE-PEG2000", "url": "https://www.lumiprobe.com/search?q=DSPE-PEG2000", "observed": "“0 results found” and “No results match your query.”"},
+        {"query": "mPEG-NHS", "url": "https://www.lumiprobe.com/search?q=mPEG-NHS", "observed": "The page said 100 results. The first visible hit was the NHS Esters category."},
+        {"query": "Cy5", "url": "https://www.lumiprobe.com/search?q=Cy5", "observed": "The page said 100 results. The first visible hit was the sulfo-Cyanine5 category."},
+        {"query": "pinacol boronate", "url": "https://www.lumiprobe.com/search?q=pinacol+boronate", "observed": "The page said 15 results. The first product title was 3,5-Dimethyl-BDP, a boron dipyrromethene dye, not a pinacol boronate."}
+      ],
+      "filters": "Search results show type counts (Product, Ready kit, Product category, Pages, Help). The product page itself has no facet selects.",
+      "productNote": "https://www.lumiprobe.com/p/cy5-nhs-ester is titled “Cyanine5 NHS ester”.",
+      "productFields": {
+        "cas": "1263093-76-0.",
+        "mw": "667.54.",
+        "purity": "Not given as a percent. Quality control is listed as NMR 1H and HPLC-MS.",
+        "pricing": "1 mg $129.90, 5 mg $169.90, 25 mg $479.90, 50 mg $739.90, 100 mg $1 250.00.",
+        "sds": "No SDS link was in the captured controls.",
+        "coa": "Not in the captured text.",
+        "structure": "The page offers “Download as .cdx” and gives formula C36H42N3BF4O4."
+      },
+      "mobile": "Home and product at 390 CSS pixels reported overflow 0.",
+      "quoteCart": "View Cart links to /cart. Buy now and Add to cart are on the product page. They were not clicked.",
+      "shots": [
+        {"src": "shots/lumiprobe-home-desktop.jpg", "alt": "Lumiprobe homepage", "caption": "Lumiprobe homepage."},
+        {"src": "shots/lumiprobe-product-desktop.jpg", "alt": "Lumiprobe Cyanine5 NHS ester product page", "caption": "Cyanine5 NHS ester."},
+        {"src": "shots/lumiprobe-search-dspe-desktop.jpg", "alt": "Lumiprobe search results for DSPE-PEG2000", "caption": "Search for DSPE-PEG2000."},
+        {"src": "shots/lumiprobe-home-mobile.jpg", "alt": "Lumiprobe homepage at mobile width", "caption": "Homepage, mobile width."}
+      ]
+    },
+    "boc": {
+      "searchNote": "Not run. robots.txt disallows */search and any URL with a query string. Those URLs were not requested.",
+      "queries": [
+        {"query": "474922-26-4", "observed": "Not requested. robots.txt disallows search URLs."},
+        {"query": "DSPE-PEG2000", "observed": "Not requested."},
+        {"query": "mPEG-NHS", "observed": "Not requested."},
+        {"query": "Cy5", "observed": "Not requested."},
+        {"query": "pinacol boronate", "observed": "Not requested."}
+      ],
+      "filters": "Not tested. Search URLs are disallowed. The product page itself had no facet selects in the capture.",
+      "productNote": "The phospholipids-list product page is titled “CAS 205494-72-0 (DPPE-mPEG) - BOC Sciences”. Catalog NO. B4059-254018.",
+      "productFields": {
+        "cas": "205494-72-0 on this product. Other CAS numbers lower on the page belong to other listed compounds.",
+        "mw": "Molecular weight 794.0. Formula (C2H4O)nC39H76NO10P.",
+        "purity": "A Purity label appears later in the text; a percent for this product was not on the same captured lines as the catalog number.",
+        "pricing": "100 mg $199, marked in stock.",
+        "sds": "Not in the captured text for this product.",
+        "coa": "Not in the captured text.",
+        "structure": "The page has the heading “DPPE-mPEG Chemical Structure”."
+      },
+      "mobile": "Home and product at 390 CSS pixels reported overflow 0.",
+      "quoteCart": "The page has Bulk order and Add to cart. The header “Shopping Cart” points at /inquirybasket, which robots.txt disallows, so that URL was not opened. Add to cart was not clicked.",
+      "shots": [
+        {"src": "shots/boc-home-desktop.jpg", "alt": "BOC Sciences homepage", "caption": "BOC Sciences homepage."},
+        {"src": "shots/boc-product-desktop.jpg", "alt": "BOC Sciences DPPE-mPEG product page", "caption": "DPPE-mPEG, CAS 205494-72-0."},
+        {"src": "shots/boc-product-mobile.jpg", "alt": "BOC Sciences product page at mobile width", "caption": "Same product, mobile width."}
+      ]
+    },
+    "biochempeg": {
+      "searchNote": "Not run. robots.txt disallows /search.do and /Search.do. The search form was not submitted.",
+      "queries": [
+        {"query": "474922-26-4", "observed": "Not requested. Search URLs are disallowed."},
+        {"query": "DSPE-PEG2000", "observed": "Not requested."},
+        {"query": "mPEG-NHS", "observed": "Not requested."},
+        {"query": "Cy5", "observed": "Not requested."},
+        {"query": "pinacol boronate", "observed": "Not requested."}
+      ],
+      "filters": "Not tested via search. The product page is a table of molecular weights rather than a facet sidebar.",
+      "productNote": "https://www.biochempeg.com/product/DSPE-PEG-Mal.html is titled “DSPE-PEG-Maleimide, 474922-22-0, PEG Lipids Supply - Biopharma PEG”. CatalogID 10452.",
+      "productFields": {
+        "cas": "474922-22-0.",
+        "mw": "The table lists many nominal PEG molecular weights from 200 through 20K.",
+        "purity": "≥95% next to the catalog id.",
+        "pricing": "Several lower molecular weights say Inquiry. From 1K upward the captured rows show 1 g $400.00 and 5 g $1,250.00, including the 2K row.",
+        "sds": "An MSDS link points at an anchor on the same product page.",
+        "coa": "Not in the captured text.",
+        "structure": "Not identified as an image in the text. The product is described as a PEG lipid."
+      },
+      "mobile": "Home and product at 390 CSS pixels reported overflow 0. A cookie banner was present (“I agree / I decline”).",
+      "quoteCart": "My Cart points at /order/shopcart/, which robots.txt disallows, so it was not opened. Inquiry controls and a mailto to sales@biochempeg.com are on the page. Nothing was submitted.",
+      "shots": [
+        {"src": "shots/biochempeg-home-desktop.jpg", "alt": "Biopharma PEG homepage", "caption": "Biopharma PEG homepage."},
+        {"src": "shots/biochempeg-product-desktop.jpg", "alt": "Biopharma PEG DSPE-PEG-Mal product page", "caption": "DSPE-PEG-Mal product page."},
+        {"src": "shots/biochempeg-home-mobile.jpg", "alt": "Biopharma PEG homepage at mobile width", "caption": "Homepage, mobile width."}
+      ]
+    },
+    "nanocs": {
+      "searchNote": "Not run. robots.txt disallows /*?route=product/search. The search form was not submitted. nanocs.com failed the TLS handshake; the measured host is nanocs.net.",
+      "queries": [
+        {"query": "474922-26-4", "observed": "Not requested. The product-search route is disallowed."},
+        {"query": "DSPE-PEG2000", "observed": "Not requested."},
+        {"query": "mPEG-NHS", "observed": "Not requested."},
+        {"query": "Cy5", "observed": "Not requested."},
+        {"query": "pinacol boronate", "observed": "Not requested."}
+      ],
+      "filters": "The product page has a category dropdown (filter_category_id) listing PEG groups such as Amine Reactive PEGs and NHS PEG. It was not changed.",
+      "productNote": "https://www.nanocs.net/DSPE-PEG2000-Maleimide-2k.htm is titled “DSPE PEG Maleimide, DSPE-PEG-MAL”. Cat. No. PG2-DSML-2k.",
+      "productFields": {
+        "cas": "Not in the captured text.",
+        "mw": "Specification 2000 Da.",
+        "purity": ">95%.",
+        "pricing": "100 mg at $385.00.",
+        "sds": "An SDS link points at a PDF under /document/MSDS/.",
+        "coa": "Not in the captured text.",
+        "structure": "Not identified in the captured text. The synonym line names Maleimide PEG DSPE."
+      },
+      "mobile": "The 390 CSS-pixel screenshot is 780 device pixels wide. The captured layout still shows several catalogue columns side by side rather than a single stacked column. The script’s overflow figure was 0, so the columns fit the viewport width that Chrome used.",
+      "quoteCart": "Add to Cart is on the page. My Cart points at a checkout route, which robots.txt disallows, so it was not opened. Add to cart was not clicked.",
+      "shots": [
+        {"src": "shots/nanocs-home-desktop.jpg", "alt": "Nanocs homepage on desktop", "caption": "Nanocs homepage (nanocs.net)."},
+        {"src": "shots/nanocs-product-desktop.jpg", "alt": "Nanocs DSPE PEG maleimide product page", "caption": "DSPE PEG maleimide, 2000 Da."},
+        {"src": "shots/nanocs-home-mobile.jpg", "alt": "Nanocs homepage screenshot at mobile viewport size", "caption": "Homepage at a 390 CSS-pixel viewport. Columns remain side by side."}
+      ]
+    },
+    "aatbio": {
+      "searchNote": "GET /robots.txt returned HTTP 404, so no disallow rules were published. Search used /search?query=.",
+      "queries": [
+        {"query": "474922-26-4", "url": "https://www.aatbio.com/search?query=474922-26-4", "observed": "The page said “No results”."},
+        {"query": "DSPE-PEG2000", "url": "https://www.aatbio.com/search?query=DSPE-PEG2000", "observed": "The page said “No results”."},
+        {"query": "mPEG-NHS", "url": "https://www.aatbio.com/search?query=mPEG-NHS", "observed": "A hit titled “ReadiCleave™ AML Cy5 NHS ester” was visible, an NHS ester dye rather than mPEG-NHS."},
+        {"query": "Cy5", "url": "https://www.aatbio.com/search?query=Cy5", "observed": "The first visible product was “Cyanine 5 monosuccinimidyl ester [equivalent to Cy5® NHS ester]”."},
+        {"query": "pinacol boronate", "url": "https://www.aatbio.com/search?query=pinacol%20boronate", "observed": "The results heading was present and no product title was in the captured text."}
+      ],
+      "filters": "Search results are split into PRODUCTS and RESOURCES. The product page has no facet selects.",
+      "productNote": "The representative dye page is https://www.aatbio.com/products/ifluor-488-succinimidyl-ester, titled “iFluor® 488 succinimidyl ester”. It was linked from the iFluor labeling-dyes catalogue.",
+      "productFields": {
+        "cas": "The word CAS is not in the captured product text.",
+        "mw": "Molecular weight is not in the captured text.",
+        "purity": "Purity is not in the captured text.",
+        "pricing": "Catalog 1023, 1 mg $237; 71023, 100 ug $88; 71503, 5 mg $830; 71553, 10 mg $1383.",
+        "sds": "SDS links are present, including per-catalog SDS URLs on docs.aatbio.com.",
+        "coa": "Not in the captured text.",
+        "structure": "Not named in the captured text. The page has spectrum and protocol sections."
+      },
+      "mobile": "Home and product at 390 CSS pixels reported overflow 0.",
+      "quoteCart": "Add to Cart and Inquire are on the product page. Neither was clicked.",
+      "shots": [
+        {"src": "shots/aatbio-home-desktop.jpg", "alt": "AAT Bioquest homepage", "caption": "AAT Bioquest homepage."},
+        {"src": "shots/aatbio-product-desktop.jpg", "alt": "AAT Bioquest iFluor 488 succinimidyl ester product page", "caption": "iFluor 488 succinimidyl ester."},
+        {"src": "shots/aatbio-search-cas-desktop.jpg", "alt": "AAT Bioquest search results for a CAS number", "caption": "Search for 474922-26-4."},
+        {"src": "shots/aatbio-home-mobile.jpg", "alt": "AAT Bioquest homepage at mobile width", "caption": "Homepage, mobile width."}
+      ]
+    }
+  }
+}

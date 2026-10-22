@@ -1,0 +1,61 @@
+{
+  "id": "tci",
+  "reviewedAt": "2026-10-22T03:45:19.023Z",
+  "home": {
+    "url": "https://www.tcichemicals.com/US/en/",
+    "status": 403,
+    "cookie": null,
+    "title": "Access Denied",
+    "text": "Access Denied\nYou don't have permission to access \"http://www.tcichemicals.com/US/en/\" on this server.\n\nReference #18.cd0c0317.1792640719.bdf8c614\n\nhttps://errors.edgesuite.net/18.cd0c0317.1792640719.bdf8c614",
+    "overflow": 0,
+    "scrollWidth": 1280,
+    "controls": [],
+    "selects": [],
+    "legends": [],
+    "shot": "shots/tci-home-desktop.jpg"
+  },
+  "product": {
+    "url": "https://www.tcichemicals.com/US/en/p/A2420",
+    "status": 403,
+    "cookie": null,
+    "title": "Access Denied",
+    "text": "Access Denied\nYou don't have permission to access \"http://www.tcichemicals.com/US/en/p/A2420\" on this server.\n\nReference #18.cd0c0317.1792640721.bdf8e2d2\n\nhttps://errors.edgesuite.net/18.cd0c0317.1792640721.bdf8e2d2",
+    "interesting": [],
+    "overflow": 0,
+    "controls": [],
+    "selects": [],
+    "legends": [],
+    "shots": [
+      "shots/tci-product-desktop.jpg",
+      "shots/tci-product-desktop-scrolled.jpg"
+    ]
+  },
+  "mobileHome": {
+    "url": "https://www.tcichemicals.com/US/en/",
+    "status": 403,
+    "cookie": null,
+    "title": "Access Denied",
+    "text": "Access Denied\nYou don't have permission to access \"http://www.tcichemicals.com/US/en/\" on this server.\n\nReference #18.cd0c0317.1792640725.bdf90ace\n\nhttps://errors.edgesuite.net/18.cd0c0317.1792640725.bdf90ace",
+    "overflow": 0,
+    "scrollWidth": 980,
+    "innerWidth": 980,
+    "shot": "shots/tci-home-mobile.jpg"
+  },
+  "mobileProduct": {
+    "url": "https://www.tcichemicals.com/US/en/p/A2420",
+    "status": 403,
+    "cookie": null,
+    "title": "Access Denied",
+    "text": "Access Denied\nYou don't have permission to access \"http://www.tcichemicals.com/US/en/p/A2420\" on this server.\n\nReference #18.cd0c0317.1792640727.bdf93532\n\nhttps://errors.edgesuite.net/18.cd0c0317.1792640727.bdf93532",
+    "overflow": 0,
+    "scrollWidth": 980,
+    "innerWidth": 980,
+    "controls": [],
+    "shot": "shots/tci-product-mobile.jpg"
+  },
+  "search": {
+    "skipped": true,
+    "reason": "Homepage and robots.txt returned Akamai Access Denied during discovery. Search was not run.",
+    "queries": []
+  }
+}

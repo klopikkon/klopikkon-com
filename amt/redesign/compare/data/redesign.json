@@ -1,0 +1,11 @@
+{
+  "id": "redesign",
+  "name": "New AMT redesign",
+  "status": "pending live measurement",
+  "homeUrl": "https://klopikkon.com/amt/redesign/",
+  "productUrl": null,
+  "measuredAt": null,
+  "lighthouse": null,
+  "review": null,
+  "note": "Reserved column. Scores stay empty until a later pass writes measured Lighthouse runs and review notes into this file. Nothing here is estimated."
+}

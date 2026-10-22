@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /auth2
+
+Sitemap: https://www.lumiprobe.com/sitemap.xml
+Sitemap: https://ru.lumiprobe.com/sitemap.xml
+Sitemap: https://de.lumiprobe.com/sitemap.xml
+Sitemap: https://cn.lumiprobe.com/sitemap.xml
+Sitemap: https://hk.lumiprobe.com/sitemap.xml

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://broadpharm.com/web/sitemap_2024.xml

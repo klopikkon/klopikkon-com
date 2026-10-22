@@ -1,0 +1,12 @@
+{
+  "status": "error",
+  "siteId": "tci",
+  "page": "home",
+  "formFactor": "desktop",
+  "run": 2,
+  "startedAt": "2026-10-22T03:20:35.168115+00:00",
+  "elapsedMs": 17363,
+  "exitCode": 1,
+  "requestedUrl": "https://www.tcichemicals.com/US/en/",
+  "error": "Runtime error encountered: Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests. (Status code: 403)\n"
+}

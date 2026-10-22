@@ -1,0 +1,7 @@
+User-agent: *
+Disallow:       /app/screen/ProductPrintable/
+Disallow:       /legacy/
+Disallow:       /search.jsp
+
+User-agent: AhrefsBot
+Crawl-delay: 10

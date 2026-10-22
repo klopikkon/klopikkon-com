@@ -1,0 +1,134 @@
+{
+  "study": "AMT concept-redesign competitor comparison",
+  "observedOn": "2026-10-22",
+  "tool": {
+    "lighthouse": "13.5.0",
+    "chrome": "/usr/bin/google-chrome",
+    "formFactors": ["mobile", "desktop"],
+    "runs": 3,
+    "mobile": "Lighthouse default mobile emulation, throttlingMethod simulate",
+    "desktop": "Lighthouse --preset=desktop",
+    "categories": ["performance", "accessibility", "best-practices", "seo"],
+    "metrics": ["largest-contentful-paint", "cumulative-layout-shift", "total-blocking-time", "total-byte-weight"]
+  },
+  "queries": ["474922-26-4", "DSPE-PEG2000", "mPEG-NHS", "Cy5", "pinacol boronate"],
+  "sites": [
+    {
+      "id": "amt",
+      "name": "AMT (current site)",
+      "homeUrl": "https://www.amtechpl.com/",
+      "productUrl": "https://www.amtechpl.com/peg-reagents-and-linkers/",
+      "productLabel": "PEG reagents and linkers family page",
+      "selection": "The Yoast page sitemap (https://www.amtechpl.com/page-sitemap.xml, fetched 2026-10-22) lists 20 URLs. They are the home page, service pages, and family pages such as /peg-reagents-and-linkers/, /fluorophores-and-dyes/ and /organoborons/. No per-SKU product URL is in that sitemap, so the PEG family page is the representative catalogue page.",
+      "robots": "https://www.amtechpl.com/robots.txt allows User-agent: * with an empty Disallow (Yoast block) and links a sitemap."
+    },
+    {
+      "id": "broadpharm",
+      "name": "BroadPharm",
+      "homeUrl": "https://broadpharm.com/",
+      "productUrl": "https://broadpharm.com/product/bp-25269",
+      "productLabel": "m-PEG-DSPE, MW 2,000 (BP-25269)",
+      "selection": "The DSPE category page https://broadpharm.com/product-categories/polymer-peg/dspe (fetched 2026-10-22) lists a row whose link text is “m-PEG-DSPE, MW 2,000” and whose href is /product/bp-25269. That product URL returned HTTP 200.",
+      "robots": "https://broadpharm.com/robots.txt is User-agent: * Allow: / plus a sitemap."
+    },
+    {
+      "id": "jenkem",
+      "name": "JenKem Technology",
+      "homeUrl": "https://jenkemusa.com/",
+      "productUrl": "https://jenkemusa.com/product/methoxy-peg-dspe",
+      "productLabel": "Methoxy PEG DSPE product URL from the product sitemap",
+      "selection": "https://www.jenkemusa.com/ redirected to https://jenkemusa.com/ on 2026-10-22. The product URL is a loc in https://jenkemusa.com/product-sitemap.xml. https://www.jenkem.com/ is a separate Chinese site (page title 北京键凯科技股份有限公司) and was not measured.",
+      "robots": "https://www.jenkemusa.com/robots.txt allows uploads and disallows /wp-content/plugins/, /wp-admin/, /kdev/ and /oldwp/."
+    },
+    {
+      "id": "creativepeg",
+      "name": "Creative PEGWorks",
+      "homeUrl": "https://creativepegworks.com/",
+      "productUrl": "https://creativepegworks.com/product/mpeg-dspe-mw-2k",
+      "productLabel": "mPEG-DSPE MW 2k product URL",
+      "selection": "Product sitemap 7 lists pack URLs such as /product/mpeg-dspe-mw-2k-500mg. The unsuffixed URL https://creativepegworks.com/product/mpeg-dspe-mw-2k returned HTTP 200 on 2026-10-22 and is the page that was measured.",
+      "robots": "https://creativepegworks.com/robots.txt disallows /wp-admin/ (except admin-ajax.php) and /*?c=*."
+    },
+    {
+      "id": "avanti",
+      "name": "Avanti Polar Lipids (Avanti Research)",
+      "homeUrl": "https://www.avantiresearch.com/en-gb",
+      "productUrl": "https://www.avantiresearch.com/en-gb/products/product/880120-180-peg2000-pe-ammonium-salt",
+      "productLabel": "Sitemap product 880120-180-peg2000-pe-ammonium-salt",
+      "selection": "Both https://avantilipids.com/robots.txt and https://www.avantilipids.com/robots.txt redirected to https://www.avantiresearch.com/robots.txt. The homepage fetch of https://www.avantiresearch.com/ landed on /en-gb, which is also the sitemap x-default. The product URL is a loc in https://www.avantiresearch.com/websitemap.xml whose path contains peg2000-pe. Visible page title is recorded in the review notes, not inferred from the slug.",
+      "robots": "Avanti Research robots.txt allows / and disallows /elmah.axd, /en-gb/login and Sitecore paths."
+    },
+    {
+      "id": "cayman",
+      "name": "Cayman Chemical",
+      "homeUrl": "https://www.caymanchem.com/",
+      "productUrl": "https://www.caymanchem.com/product/28181/dspe-mpeg-2000-sodium-salt",
+      "productLabel": "Search-result product 28181",
+      "selection": "The homepage is a JavaScript app (curl returns a short shell). Headless Chrome rendered the title “Home | Cayman Chemical”. A headless load of https://www.caymanchem.com/search?q=DSPE-PEG rendered the title “31 Results | DSPE-PEG | Search | Cayman Chemical” and included the link /product/28181/dspe-mpeg-2000-sodium-salt. That link is the measured product page. /search.jsp is disallowed and was not requested; /search?q= is a different path.",
+      "robots": "https://www.caymanchem.com/robots.txt disallows /app/screen/ProductPrintable/, /legacy/ and /search.jsp. AhrefsBot has Crawl-delay: 10. No crawl-delay for *."
+    },
+    {
+      "id": "tci",
+      "name": "TCI",
+      "homeUrl": "https://www.tcichemicals.com/US/en/",
+      "productUrl": "https://www.tcichemicals.com/US/en/p/A2420",
+      "productLabel": "Attempted product A2420",
+      "selection": "https://www.tcichemicals.com/robots.txt and https://www.tcichemicals.com/US/en/ both returned an Akamai “Access Denied” HTML page from this host on 2026-10-22, so a product URL could not be chosen from the live catalogue. The attempted product URL is the TCI link already published on the AMT ranking page for amino-PEG3-OH (https://www.tcichemicals.com/US/en/p/A2420). If Lighthouse only received the denial page, the table says blocked and does not treat those scores as the catalogue.",
+      "robots": "robots.txt itself was Access Denied (Akamai reference page). No crawl rules could be read. Requests were limited to the Lighthouse runs."
+    },
+    {
+      "id": "sigma",
+      "name": "Sigma-Aldrich / Merck",
+      "homeUrl": "https://www.sigmaaldrich.com/US/en",
+      "productUrl": "https://www.sigmaaldrich.com/US/en/product/aldrich/718513",
+      "productLabel": "Attempted product 718513",
+      "selection": "Curl discovery from this host did not return a page: HTTP/2 failed with curl error 92 (INTERNAL_ERROR), HTTP/1.1 timed out with 0 bytes, and an early headless Chrome attempt reported net::ERR_HTTP2_PROTOCOL_ERROR. The product URL is the Sigma-Aldrich link already published on the AMT ranking page for 4-bromomethylphenyl pinacol boronate (Aldrich 718513). Lighthouse Chrome later received HTTP 200 for the homepage on mobile and desktop, and for this product URL on mobile, three runs each. Desktop Lighthouse on the product URL returned status 403 on all three runs; those runs are marked blocked and are not scored. A separate headless review of the product URL and of path-search URLs received Akamai Access Denied.",
+      "robots": "A later review fetch of https://www.sigmaaldrich.com/robots.txt succeeded. The excerpt is stored in compare/data/captures/sigma.json under search.robotsExcerpt. It disallows some search and certificate paths. The review still did not request certificate URLs. Path-search URLs used in the review were answered with Akamai Access Denied."
+    },
+    {
+      "id": "lumiprobe",
+      "name": "Lumiprobe",
+      "homeUrl": "https://www.lumiprobe.com/",
+      "productUrl": "https://www.lumiprobe.com/p/cy5-nhs-ester",
+      "productLabel": "Cy5 NHS ester",
+      "selection": "The product URL is a loc in https://www.lumiprobe.com/sitemap.xml. It returned HTTP 200 on 2026-10-22.",
+      "robots": "https://www.lumiprobe.com/robots.txt allows / and disallows /api/, /admin and /auth2."
+    },
+    {
+      "id": "boc",
+      "name": "BOC Sciences",
+      "homeUrl": "https://www.bocsci.com/",
+      "productUrl": "https://www.bocsci.com/product/dppe-mpeg-cas-205494-72-0-254018.html",
+      "productLabel": "Phospholipid-list product dppe-mpeg",
+      "selection": "https://www.bocsci.com/products/phospholipids-3395.html returned HTTP 200 with title “Lipid Products for Research - BOC Sciences” and linked /product/dppe-mpeg-cas-205494-72-0-254018.html, which returned HTTP 200. Search URLs were not requested.",
+      "robots": "https://www.bocsci.com/robots.txt disallows *? and */search, plus inquiry, shop, order and several other paths. Those paths were not requested."
+    },
+    {
+      "id": "biochempeg",
+      "name": "Biopharma PEG",
+      "homeUrl": "https://www.biochempeg.com/",
+      "productUrl": "https://www.biochempeg.com/product/DSPE-PEG-Mal.html",
+      "productLabel": "DSPE-PEG-Mal product URL from the sitemap",
+      "selection": "The URL is a loc in https://www.biochempeg.com/sitemap.xml and returned HTTP 200 on 2026-10-22. Included as a PEG-linker catalogue alongside Nanocs and AAT Bioquest.",
+      "robots": "robots.txt allows / and disallows /user/, /admin/, /order/, /cart/, /search.do, /Search.do and filter query patterns. Search and cart URLs were not requested."
+    },
+    {
+      "id": "nanocs",
+      "name": "Nanocs",
+      "homeUrl": "https://www.nanocs.net/",
+      "productUrl": "https://www.nanocs.net/DSPE-PEG2000-Maleimide-2k.htm",
+      "productLabel": "DSPE PEG Maleimide page linked from the homepage",
+      "selection": "https://www.nanocs.com/ failed the TLS handshake (OpenSSL tlsv1 alert internal error). https://www.nanocs.net/ returned HTTP 200 with title “Nanocs | Innovative Life Science Products” and linked DSPE-PEG2000-Maleimide-2k.htm. That page returned HTTP 200 with title “DSPE PEG Maleimide, DSPE-PEG-MAL”.",
+      "robots": "https://www.nanocs.net/robots.txt disallows /*?route=product/search, checkout and account routes. The search form was not submitted."
+    },
+    {
+      "id": "aatbio",
+      "name": "AAT Bioquest",
+      "homeUrl": "https://www.aatbio.com/",
+      "productUrl": "https://www.aatbio.com/products/ifluor-488-succinimidyl-ester",
+      "productLabel": "iFluor 488 succinimidyl ester",
+      "selection": "Included as a fluorophore-catalogue peer to Lumiprobe. https://www.aatbio.com/catalog/ifluor-labeling-dyes (title “iFluor® Labeling Dyes | AAT Bioquest”) links /products/ifluor-488-succinimidyl-ester. Headless Chrome rendered that product title as “iFluor® 488 succinimidyl ester | AAT Bioquest”.",
+      "robots": "GET https://www.aatbio.com/robots.txt returned HTTP 404 and an HTML document, so no robots rules were published at that URL."
+    }
+  ]
+}
