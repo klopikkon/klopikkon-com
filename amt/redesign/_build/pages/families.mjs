@@ -160,7 +160,7 @@ function familyListings(family, rows) {
 }
 
 function familyPage({ family, products }) {
-  const rows = products.filter((product) => product && product.family === family.id);
+  const rows = listable(products.filter((product) => product && product.family === family.id));
   const { named, html } = familyListings(family, rows);
   const quote = family.quote
     ? `<blockquote><p>${esc(family.quote)}</p></blockquote><p class="fine"><a href="${url("about/#incubating")}">About Us</a></p>`
@@ -187,12 +187,16 @@ function familyPage({ family, products }) {
 </div>`;
 }
 
+function listable(rows) {
+  return rows.filter((product) => product && product.id && String(product.name || "").trim());
+}
+
 function rowsForGroup(products, group) {
-  return products.filter((product) => {
-    if (!product || product.family !== "other") return false;
+  return listable(products.filter((product) => {
+    if (product.family !== "other") return false;
     const sub = anchorId(product.subfamily);
     return sub === group.id || product.subfamily === group.id || product.subfamily === group.name;
-  });
+  }));
 }
 
 function literatureBlock(literature) {
@@ -223,7 +227,29 @@ export async function build({ site, products, renderPage, writeFile }) {
     await writeFile(`${family.path}index.html`, html);
   }
 
-  const groups = (site.otherGroups || [])
+  const otherGroups = site.otherGroups || [];
+  const matched = new Set();
+  for (const group of otherGroups) {
+    for (const row of rowsForGroup(products, group)) matched.add(row.id);
+  }
+  const unfiled = listable(products.filter((product) => product.family === "other" && !matched.has(product.id)));
+  const unfiledBlock = unfiled.length
+    ? `<section id="rest">
+        <h2>Without a catalogue heading</h2>
+        <p class="fine">These rows are filed as other and have no subfamily in the catalogue file.</p>
+        ${groupBlock({
+          rows: unfiled,
+          caption: "Other catalogues",
+          familyId: "other",
+          subfamily: "",
+          total: unfiled.length,
+          headingId: "",
+          hideSubfamily: true,
+        })}
+      </section>`
+    : "";
+
+  const groups = otherGroups
     .map((group) => {
       const rows = rowsForGroup(products, group);
       const lit = group.id === "organosilicons" ? literatureBlock(site.literature) : "";
@@ -261,6 +287,7 @@ export async function build({ site, products, renderPage, writeFile }) {
     </section>
     <div class="wrap prose">
       ${groups}
+      ${unfiledBlock}
       ${sourceLine("amtechpl.com", "https://www.amtechpl.com/")}
     </div>`,
   });

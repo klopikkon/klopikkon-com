@@ -602,6 +602,7 @@ th, td {
   text-align: left;
   vertical-align: top;
   border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
 }
 
 thead th {
