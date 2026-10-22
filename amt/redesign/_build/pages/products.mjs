@@ -2,9 +2,10 @@
  * Product pages: one products/<id>/index.html per catalogue row.
  * Loaded by the shell _build/build.mjs. HTML goes through ctx.writeFile.
  */
+import { readFileSync } from "node:fs";
 import { mkdir, readdir, readFile, rm, writeFile as fsWriteFile } from "node:fs/promises";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { canonical, url } from "../lib/paths.mjs";
 import { breadcrumbs, priceBadge } from "../lib/ui.mjs";
 import {
@@ -70,7 +71,7 @@ function renderTechnical(product, id, cache) {
   if (amt?.mw) amtRows.push(sourceRow("Molecular weight", amt.mw, "Published by AMT", "source-tag"));
   const amtImage = amt?.image
     ? `<figure class="structure">
-        <img src="${escapeHtml(structureUrl(product))}" alt="Structure of ${escapeHtml(displayName(product))} published by Advanced Molecular Technologies" width="480" height="360">
+        ${structureImg(structureUrl(product), `Structure of ${displayName(product)} published by Advanced Molecular Technologies`)}
         <figcaption>Structure published by AMT</figcaption>
       </figure>`
     : "";
@@ -91,7 +92,7 @@ function renderTechnical(product, id, cache) {
   if (fields?.mw) pubRows.push(sourceRow("Molecular weight", fields.mw, "from PubChem", "pubchem-tag"));
   const pubImage = fields?.image
     ? `<figure class="structure pubchem-structure">
-        <img src="${escapeHtml(structureUrl({ structureImage: fields.image }) || fields.image)}" alt="Structure of ${escapeHtml(displayName(product))} from PubChem" width="480" height="360">
+        ${structureImg(structureUrl({ structureImage: fields.image }) || fields.image, `Structure of ${displayName(product)} from PubChem`)}
         <figcaption>Structure from PubChem${fields.cid ? `, CID ${escapeHtml(fields.cid)}` : ""}</figcaption>
       </figure>`
     : "";
@@ -168,6 +169,72 @@ function structureUrl(product) {
   if (/^https?:\/\//i.test(src)) return src;
   if (src.startsWith("/")) return src;
   return url(src);
+}
+
+const redesignRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
+
+function structureSize(src) {
+  if (!src || /^https?:\/\//i.test(src)) return null;
+  let rel = String(src).split("?")[0].split("#")[0];
+  if (rel.startsWith("/amt/redesign/")) rel = rel.slice("/amt/redesign/".length);
+  else if (rel.startsWith("/")) return null;
+  if (!rel || rel.includes("..")) return null;
+  let buf;
+  try {
+    buf = readFileSync(path.join(redesignRoot, rel));
+  } catch {
+    return null;
+  }
+  if (buf.length >= 24 && buf[0] === 0x89 && buf.toString("ascii", 1, 4) === "PNG") {
+    const width = buf.readUInt32BE(16);
+    const height = buf.readUInt32BE(20);
+    if (width > 0 && height > 0) return { width, height };
+  }
+  if (buf.length >= 10 && buf.toString("ascii", 0, 3) === "GIF") {
+    const width = buf.readUInt16LE(6);
+    const height = buf.readUInt16LE(8);
+    if (width > 0 && height > 0) return { width, height };
+  }
+  if (buf.length > 4 && buf[0] === 0xff && buf[1] === 0xd8) {
+    let offset = 2;
+    while (offset < buf.length - 8) {
+      if (buf[offset] !== 0xff) break;
+      const marker = buf[offset + 1];
+      if (marker === 0xd9 || marker === 0xda) break;
+      const length = buf.readUInt16BE(offset + 2);
+      if (marker >= 0xc0 && marker <= 0xc3) {
+        const height = buf.readUInt16BE(offset + 5);
+        const width = buf.readUInt16BE(offset + 7);
+        if (width > 0 && height > 0) return { width, height };
+      }
+      offset += 2 + length;
+    }
+  }
+  const tag = buf.subarray(0, 500).toString("utf8").match(/<svg\b[^>]*>/i)?.[0];
+  if (!tag) return null;
+  const attr = (name) => {
+    const match = tag.match(new RegExp(`\\b${name}="([\\d.]+)"`));
+    const value = match ? Math.round(Number(match[1])) : 0;
+    return value > 0 ? value : null;
+  };
+  const width = attr("width");
+  const height = attr("height");
+  if (width && height) return { width, height };
+  const box = tag.match(/viewBox="\s*[-\d.]+\s+[-\d.]+\s+([\d.]+)\s+([\d.]+)\s*"/);
+  if (!box) return null;
+  const boxWidth = Math.round(Number(box[1]));
+  const boxHeight = Math.round(Number(box[2]));
+  if (boxWidth > 0 && boxHeight > 0) return { width: boxWidth, height: boxHeight };
+  return null;
+}
+
+function structureImg(src, alt) {
+  const size = structureSize(src);
+  const safeSrc = escapeHtml(src);
+  const responsive = size
+    ? ` srcset="${safeSrc} 1x" width="${size.width}" height="${size.height}"`
+    : "";
+  return `<img src="${safeSrc}"${responsive} alt="${escapeHtml(alt)}">`;
 }
 
 function familyTitle(site, family) {
@@ -367,7 +434,7 @@ function renderProduct(product, all, match, site, cache) {
   const image = structureUrl(product);
   const figure = image
     ? `<figure class="structure">
-        <img src="${escapeHtml(image)}" alt="Structure of ${escapeHtml(displayName(product))} published by Advanced Molecular Technologies" width="480" height="360">
+        ${structureImg(image, `Structure of ${displayName(product)} published by Advanced Molecular Technologies`)}
       </figure>`
     : `<figure class="structure structure-placeholder">
         <svg viewBox="0 0 160 100" aria-hidden="true" focusable="false">

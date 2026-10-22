@@ -24,7 +24,8 @@
 
 .structure img {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   height: auto;
   background: #ffffff;
   border-radius: var(--radius-md);

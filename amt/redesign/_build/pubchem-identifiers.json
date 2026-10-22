@@ -851,6 +851,10 @@
     "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2CN(C)C",
     "inchiKey": "FYNFIFQXALVLHC-UHFFFAOYSA-N"
   },
+  "46739725": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CN3CCN(CC3)C",
+    "inchiKey": "PESZAXRJFGLGTR-UHFFFAOYSA-N"
+  },
   "46739736": {
     "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C=NC3CCCCC3",
     "inchiKey": "BAVKTLABAAKQAH-UHFFFAOYSA-N"

@@ -304,6 +304,11 @@ for (const [id, html] of pages) {
   }
   if (product.structureImage) assert(html.includes(product.structureImage), `${id} missing published structure image`);
   else assert(html.includes("No structure image published by AMT"), `${id} missing structure placeholder`);
+  for (const img of html.matchAll(/<img src="([^"]*\/assets\/structures\/[^"]+)"([^>]*)>/g)) {
+    assert(/\ssrcset="[^"]+\s1x"/.test(img[2]), `${id} structure image missing srcset`);
+    assert(/\swidth="\d+"/.test(img[2]) && /\sheight="\d+"/.test(img[2]), `${id} structure image missing width and height`);
+    assert(!(/width="480"/.test(img[2]) && /height="360"/.test(img[2])), `${id} structure image uses a placeholder box`);
+  }
   for (const pack of product.packs || []) {
     const label = pack.price == null || String(pack.priceText || "").toLowerCase() === "quote" ? "Quote" : pack.priceText;
     assert(html.includes(label), `${id} missing pack label ${label}`);
