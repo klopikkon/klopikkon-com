@@ -272,7 +272,7 @@ function renderPriceConflict(product) {
   if (!view) return "";
   const list = (title, rows) => {
     if (!rows.length) return "";
-    return `<div class="price-conflict-set"><h3>${escapeHtml(title)}</h3><ul>${rows
+    return `<div class="price-conflict-set"><p class="price-conflict-label">${escapeHtml(title)}</p><ul>${rows
       .map((row) => `<li><span class="price-conflict-size">${escapeHtml(row.size)}</span> <span class="price-conflict-price">${escapeHtml(row.price)}</span></li>`)
       .join("")}</ul></div>`;
   };
