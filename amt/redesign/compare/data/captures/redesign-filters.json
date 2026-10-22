@@ -1,0 +1,114 @@
+[
+  {
+    "q": "(none)",
+    "live": "1,347 products. Search, or browse by family.",
+    "legends": [],
+    "names": [],
+    "mwNote": ""
+  },
+  {
+    "q": "ALC-0315",
+    "live": "1 product for ALC-0315.",
+    "legends": [
+      "Family",
+      "CAS",
+      "Molecular weight",
+      "Purity",
+      "Pack size",
+      "Price, USD"
+    ],
+    "names": [
+      "ALC-0315"
+    ],
+    "mwNote": "Read from the printed product name. Not an AMT heading."
+  },
+  {
+    "q": "DSPE",
+    "live": "0 products for DSPE.",
+    "legends": [
+      "CAS",
+      "Molecular weight",
+      "Price, USD"
+    ],
+    "names": [],
+    "mwNote": "Read from the printed product name. Not an AMT heading."
+  },
+  {
+    "q": "PEG2000",
+    "live": "2 products for PEG2000.",
+    "legends": [
+      "Family",
+      "CAS",
+      "Molecular weight",
+      "Purity",
+      "Pack size",
+      "Price, USD"
+    ],
+    "names": [
+      "ALC-0159 (PEG2000)",
+      "DMG-PEG (PEG2000)"
+    ],
+    "mwNote": "Read from the printed product name. Not an AMT heading."
+  },
+  {
+    "q": "mPEG",
+    "live": "0 products for mPEG.",
+    "legends": [
+      "CAS",
+      "Molecular weight",
+      "Price, USD"
+    ],
+    "names": [],
+    "mwNote": "Read from the printed product name. Not an AMT heading."
+  },
+  {
+    "q": "NHS",
+    "live": "0 products for NHS.",
+    "legends": [
+      "CAS",
+      "Molecular weight",
+      "Price, USD"
+    ],
+    "names": [],
+    "mwNote": "Read from the printed product name. Not an AMT heading."
+  },
+  {
+    "q": "boronate",
+    "live": "3 products for boronate.",
+    "legends": [
+      "Family",
+      "CAS",
+      "Molecular weight",
+      "Purity",
+      "Pack size",
+      "Price, USD"
+    ],
+    "names": [
+      "Sodium 3-(methoxyphenylboronate)",
+      "Sodium 4-(methoxyphenylboronate)",
+      "Sodium phenylboronate"
+    ],
+    "mwNote": "Read from the printed product name. Not an AMT heading."
+  },
+  {
+    "q": "pinacol",
+    "live": "254 products for pinacol. Page 1 of 11.",
+    "legends": [
+      "Family",
+      "Type (from name)",
+      "CAS",
+      "Molecular weight",
+      "Purity",
+      "Pack size",
+      "Price, USD"
+    ],
+    "names": [
+      "(2-Amino-6-fluorophenyl)boronic acid pinacol ester",
+      "(2-Chloro-6-fluorophenyl)boronic acid pinacol ester",
+      "(2-Nitro-6-fluorophenyl)boronic acid pinacol ester",
+      "(3-hydroxyphenyl)boronic acid pinacol ester",
+      "(3-vinylphenyl)boronic acid pinacol ester"
+    ],
+    "mwNote": "Read from the printed product name. Not an AMT heading."
+  }
+]

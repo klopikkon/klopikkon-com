@@ -1,0 +1,9 @@
+User-Agent: *
+Allow: /wp-content/uploads/
+Disallow: /wp-content/plugins/
+Disallow: /wp-admin/
+Disallow: /kdev/
+Disallow: /oldwp/
+Disallow: /wp-admin/
+ 
+Sitemap: https://www.jenkemusa.com/sitemap_index.xml

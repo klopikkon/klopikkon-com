@@ -1,0 +1,12 @@
+{
+  "status": "error",
+  "siteId": "sigma",
+  "page": "product",
+  "formFactor": "desktop",
+  "run": 3,
+  "startedAt": "2026-10-22T03:30:16.547307+00:00",
+  "elapsedMs": 18618,
+  "exitCode": 1,
+  "requestedUrl": "https://www.sigmaaldrich.com/US/en/product/aldrich/718513",
+  "error": "Runtime error encountered: Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests. (Status code: 403)\n"
+}

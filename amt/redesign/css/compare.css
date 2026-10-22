@@ -1,0 +1,429 @@
+/* Competitor comparison. Uses design tokens when the shell defines them.
+   Header rules apply only to the fallback shell (class cmp-fallback). */
+
+.cmp-fallback {
+  margin: 0;
+  background: var(--paper, #f4f1ea);
+  color: var(--ink, #1c1916);
+  font-family: "Iowan Old Style", Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+}
+
+.cmp-fallback .skip {
+  position: absolute;
+  left: -999px;
+}
+
+.cmp-fallback .skip:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+  background: #fff;
+  color: #1c1916;
+  padding: 0.4rem 0.6rem;
+  z-index: 3;
+}
+
+.cmp-fallback .header-inner,
+.cmp-fallback .footer-inner,
+.cmp-fallback main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+}
+
+.cmp-fallback .header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.2rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cmp-fallback .site-header,
+.cmp-fallback .site-footer {
+  border-bottom: 1px solid var(--line, #d7d0c4);
+}
+
+.cmp-fallback .site-footer {
+  border-bottom: 0;
+  border-top: 1px solid var(--line, #d7d0c4);
+  margin-top: 2rem;
+}
+
+.cmp-fallback .brand {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 650;
+}
+
+.cmp-fallback .brand-tag {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--muted, #5c564e);
+}
+
+.cmp-fallback .site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cmp-fallback .site-nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cmp-fallback .site-nav a[aria-current="page"] {
+  border-bottom: 1px solid currentColor;
+}
+
+.cmp-fallback button[data-theme-toggle] {
+  font: inherit;
+  background: transparent;
+  color: inherit;
+  border: 1px solid var(--line, #d7d0c4);
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]).cmp-fallback,
+  :root:not([data-theme="light"]) .cmp-fallback {
+    background: #141210;
+    color: #f3efe6;
+  }
+}
+
+:root[data-theme="dark"] .cmp-fallback,
+:root[data-theme="dark"].cmp-fallback {
+  background: #141210;
+  color: #f3efe6;
+}
+
+.compare {
+  --cmp-ink: var(--ink, #152033);
+  --cmp-muted: var(--muted, #3d4b5f);
+  --cmp-line: var(--line, #d9d3c6);
+  --cmp-card: var(--surface, #fffcf7);
+  --cmp-paper: var(--bg, #f3f0e8);
+  --cmp-link: var(--link, #0b3f86);
+  --cmp-good-bg: var(--green-bg, #e3f6e8);
+  --cmp-good-ink: var(--green-ink, #0c5a2c);
+  --cmp-mid-bg: var(--amber-bg, #fff3d6);
+  --cmp-mid-ink: var(--amber-ink, #6b4500);
+  --cmp-poor-bg: var(--red-bg, #fdecea);
+  --cmp-poor-ink: var(--red-ink, #8d1d18);
+  --cmp-focus: var(--focus, #0b3f86);
+  color: var(--cmp-ink);
+  line-height: 1.5;
+  padding-top: 1.5rem;
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .compare {
+    --cmp-ink: var(--ink, #e7eef8);
+    --cmp-muted: var(--muted, #c5d2e2);
+    --cmp-line: var(--line, #314056);
+    --cmp-card: var(--surface, #1a2433);
+    --cmp-paper: var(--bg, #0e141c);
+    --cmp-link: var(--link, #9dc2f0);
+    --cmp-good-bg: var(--green-bg, #123224);
+    --cmp-good-ink: var(--green-ink, #b7f0cc);
+    --cmp-mid-bg: var(--amber-bg, #3a2c12);
+    --cmp-mid-ink: var(--amber-ink, #ffe1a8);
+    --cmp-poor-bg: var(--red-bg, #3c1c1c);
+    --cmp-poor-ink: var(--red-ink, #ffc9c4);
+    --cmp-focus: var(--focus, #9dc2f0);
+  }
+}
+
+:root[data-theme="dark"] .compare {
+  --cmp-ink: var(--ink, #e7eef8);
+  --cmp-muted: var(--muted, #c5d2e2);
+  --cmp-line: var(--line, #314056);
+  --cmp-card: var(--surface, #1a2433);
+  --cmp-paper: var(--bg, #0e141c);
+  --cmp-link: var(--link, #9dc2f0);
+  --cmp-good-bg: var(--green-bg, #123224);
+  --cmp-good-ink: var(--green-ink, #b7f0cc);
+  --cmp-mid-bg: var(--amber-bg, #3a2c12);
+  --cmp-mid-ink: var(--amber-ink, #ffe1a8);
+  --cmp-poor-bg: var(--red-bg, #3c1c1c);
+  --cmp-poor-ink: var(--red-ink, #ffc9c4);
+  --cmp-focus: var(--focus, #9dc2f0);
+}
+
+.compare :focus-visible {
+  outline: 3px solid var(--cmp-focus);
+  outline-offset: 2px;
+}
+
+.compare h1 {
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  margin: 0 0 0.5rem;
+}
+
+.compare h2 {
+  font-size: 1.35rem;
+  line-height: 1.25;
+  margin: 2rem 0 0.6rem;
+}
+
+.compare h3 {
+  font-size: 1.05rem;
+  margin: 1.2rem 0 0.4rem;
+}
+
+.compare p,
+.compare li {
+  max-width: 68rem;
+}
+
+.compare a {
+  color: var(--cmp-link);
+}
+
+.compare .cmp-lede {
+  font-size: 1.08rem;
+  color: var(--cmp-muted);
+  max-width: 46rem;
+}
+
+.compare .cmp-meta {
+  color: var(--cmp-muted);
+  font-size: 0.92rem;
+}
+
+.compare .cmp-kicker {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--cmp-line);
+  padding: 0.12rem 0.45rem;
+  margin-bottom: 0.7rem;
+}
+
+.compare .cmp-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.compare .cmp-card {
+  background: var(--cmp-card);
+  border: 1px solid var(--cmp-line);
+  padding: 0.85rem 0.95rem;
+}
+
+.compare .cmp-card h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+
+.compare .cmp-score-lg {
+  font-variant-numeric: tabular-nums;
+  font-size: 1.8rem;
+  line-height: 1.1;
+  margin: 0.2rem 0;
+}
+
+.compare .cmp-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--cmp-line);
+  background: var(--cmp-card);
+  margin: 0.6rem 0 1rem;
+}
+
+.compare table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  min-width: 68rem;
+}
+
+.compare caption {
+  caption-side: top;
+  text-align: left;
+  padding: 0.55rem 0.55rem 0.35rem;
+  color: var(--cmp-ink);
+  font-size: 0.92rem;
+}
+
+.compare th,
+.compare td {
+  border-bottom: 1px solid var(--cmp-line);
+  text-align: left;
+  vertical-align: top;
+  padding: 0.5rem 0.55rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.compare th {
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--cmp-muted);
+  font-weight: 650;
+  background: var(--cmp-card);
+}
+
+.compare th button {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0.35rem 0.1rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.compare th button[aria-sort="ascending"]::after {
+  content: " \2191";
+}
+
+.compare th button[aria-sort="descending"]::after {
+  content: " \2193";
+}
+
+.compare td.cmp-sticky,
+.compare th.cmp-sticky {
+  position: sticky;
+  left: 0;
+  background: var(--cmp-card);
+  z-index: 1;
+  min-width: 9.5rem;
+  box-shadow: 1px 0 0 var(--cmp-line);
+}
+
+.compare thead th.cmp-sticky {
+  z-index: 2;
+}
+
+.compare .cmp-band-good {
+  background: var(--cmp-good-bg);
+  color: var(--cmp-good-ink);
+}
+
+.compare .cmp-band-mid {
+  background: var(--cmp-mid-bg);
+  color: var(--cmp-mid-ink);
+}
+
+.compare .cmp-band-poor {
+  background: var(--cmp-poor-bg);
+  color: var(--cmp-poor-ink);
+}
+
+.compare .cmp-pending {
+  color: var(--cmp-muted);
+  font-style: italic;
+}
+
+.compare .cmp-shots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 0.75rem;
+  margin: 0.6rem 0 1rem;
+}
+
+.compare .cmp-trio {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 800px) {
+  .compare .cmp-trio {
+    grid-template-columns: 1fr;
+  }
+}
+
+.compare figure {
+  margin: 0;
+  background: var(--cmp-card);
+  border: 1px solid var(--cmp-line);
+  padding: 0.4rem;
+}
+
+.compare figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: var(--cmp-card);
+}
+
+.compare figcaption {
+  font-size: 0.82rem;
+  color: var(--cmp-muted);
+  padding: 0.35rem 0.2rem 0.15rem;
+}
+
+.compare .cmp-site {
+  border-top: 1px solid var(--cmp-line);
+  padding-top: 0.4rem;
+  margin-top: 1.2rem;
+}
+
+.compare dl.cmp-fields {
+  display: grid;
+  grid-template-columns: minmax(7rem, 12rem) 1fr;
+  gap: 0.25rem 0.75rem;
+  margin: 0.4rem 0 0.8rem;
+}
+
+.compare dl.cmp-fields dt {
+  font-weight: 650;
+}
+
+.compare dl.cmp-fields dd {
+  margin: 0;
+}
+
+.compare details {
+  margin: 0.4rem 0 0.8rem;
+}
+
+.compare .cmp-note {
+  background: var(--cmp-card);
+  border: 1px solid var(--cmp-line);
+  padding: 0.75rem 0.9rem;
+}
+
+.compare ul.cmp-tight {
+  padding-left: 1.2rem;
+}
+
+.compare .cmp-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.8rem;
+  font-size: 0.85rem;
+  margin: 0.4rem 0 0.8rem;
+}
+
+.compare .cmp-swatch {
+  display: inline-block;
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 1px solid var(--cmp-line);
+  vertical-align: -0.1rem;
+  margin-right: 0.25rem;
+}
+
+@media (max-width: 640px) {
+  .compare dl.cmp-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .compare table {
+    font-size: 0.84rem;
+  }
+}

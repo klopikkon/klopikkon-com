@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /*?sort
+Disallow: /*?route=checkout/
+Disallow: /*?route=account/
+Disallow: /*?route=product/search
+Disallow: /*?page=1
+Disallow: /*&create=1
+Allow: /

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /elmah.axd
+Disallow: /en-gb/login
+Disallow: /en-gb/sitecore
+Disallow: /en-gb/Sitecore
+Sitemap: https://www.avantiresearch.com/websitemap.xml

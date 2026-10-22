@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /user/
+Disallow: /admin/
+Disallow: /Admin/
+Disallow: /order/
+Disallow: /cart/
+Disallow: /search.do
+Disallow: /Search.do
+Disallow: /*prop_filter=
+Disallow: /*?rel=
+Sitemap: https://www.biochempeg.com/sitemap.xml
