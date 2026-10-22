@@ -6,6 +6,7 @@
  */
 
 export const CART_KEY = "amt-quote-cart";
+export const RECENT_KEY = "amt-recent-products";
 const QUOTE_PATH = "/amt/redesign/quote/";
 
 export function emptyCart() {
@@ -305,6 +306,51 @@ function onAdd(event) {
   }
 }
 
+function readRecent() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.filter((item) => item && item.id && item.name) : [];
+  } catch {
+    return [];
+  }
+}
+
+function rememberProduct() {
+  const article = document.querySelector("[data-product-id]");
+  const host = document.querySelector("[data-recent]");
+  if (!article || !host) return;
+  const id = article.getAttribute("data-product-id") || "";
+  const name = article.querySelector("h1")?.textContent?.trim() || "";
+  const sku = article.querySelector(".sku-value")?.textContent?.trim() || "";
+  if (!id || !name) return;
+  const previous = readRecent().filter((item) => item.id !== id);
+  const next = [{ id, name, sku }, ...previous].slice(0, 8);
+  localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+  const list = host.querySelector("[data-recent-list]");
+  if (!list) return;
+  list.replaceChildren();
+  const shown = previous.slice(0, 5);
+  if (!shown.length) {
+    host.hidden = true;
+    return;
+  }
+  for (const item of shown) {
+    const li = document.createElement("li");
+    const link = document.createElement("a");
+    link.href = `/amt/redesign/products/${encodeURIComponent(item.id)}/`;
+    const nameEl = document.createElement("span");
+    nameEl.className = "related-name";
+    nameEl.textContent = item.name;
+    const skuEl = document.createElement("span");
+    skuEl.className = "related-sku";
+    skuEl.textContent = item.sku || "";
+    link.append(nameEl, skuEl);
+    li.append(link);
+    list.append(li);
+  }
+  host.hidden = false;
+}
+
 function init() {
   if (!customElements.get("amt-quote-count")) {
     customElements.define("amt-quote-count", AmtQuoteCount);
@@ -325,6 +371,11 @@ function init() {
     window.dispatchEvent(new CustomEvent("amt:add-to-quote", { detail }));
   });
   window.addEventListener("amt:add-to-quote", onAdd);
+  document.addEventListener("click", (event) => {
+    const printButton = event.target?.closest?.("[data-print-spec]");
+    if (!printButton) return;
+    window.print();
+  });
   document.addEventListener("click", async (event) => {
     const button = event.target?.closest?.("[data-copy]");
     if (!button) return;
@@ -346,6 +397,7 @@ function init() {
       button.textContent = original;
     }, 1500);
   });
+  rememberProduct();
   const page = document.querySelector("[data-quote-page]");
   if (page) {
     const form = page.querySelector("[data-quote-details]");
