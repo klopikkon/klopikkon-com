@@ -268,7 +268,7 @@ def run_job(job: dict) -> str:
         cmd = [
             "npx",
             "--yes",
-            "lighthouse",
+            os.environ.get("LH_PACKAGE", "lighthouse@13.5.0"),
             job["url"],
             "--quiet",
             f"--chrome-flags={CHROME_FLAGS}",

@@ -228,10 +228,13 @@ function renderBody(model) {
   const { sitesDoc, redesign, review, columns } = model;
   const fetchTimes = model.runs.map((run) => run.fetchTime).filter(Boolean).sort();
   const when = fetchTimes.length ? `${fetchTimes[0].slice(0, 10)} to ${fetchTimes[fetchTimes.length - 1].slice(0, 10)}` : sitesDoc.observedOn;
+  const lede = redesignPending(redesign)
+    ? `Lab metrics for the current Advanced Molecular Technologies site and twelve chemical catalogues. Each figure is the median of up to three Lighthouse ${esc(sitesDoc.tool.lighthouse)} runs. The new redesign column stays empty until <code>compare/data/redesign.json</code> carries a real measurement.`
+    : `Lab metrics for the current Advanced Molecular Technologies site, the live concept redesign, and twelve chemical catalogues. Each figure is the median of up to three Lighthouse ${esc(sitesDoc.tool.lighthouse)} runs, read from the measurement files.`;
   return `<div class="wrap compare">
 <p class="cmp-kicker">Concept redesign · measured comparison</p>
 <h1>Competitor comparison</h1>
-<p class="lede cmp-lede">Lab metrics for the current Advanced Molecular Technologies site and twelve chemical catalogues. Each figure is the median of up to three Lighthouse ${esc(sitesDoc.tool.lighthouse)} runs. The new redesign column stays empty until <code>compare/data/redesign.json</code> carries a real measurement.</p>
+<p class="lede cmp-lede">${lede}</p>
 <p class="cmp-meta">Run dates in the raw files: ${esc(when)}. Tooling recorded in <code>compare/data/sites.json</code>. Colour bands are the published Lighthouse score bands (90 / 50) and Core Web Vitals bands (LCP 2.5 s / 4 s, CLS 0.1 / 0.25, TBT 200 ms / 600 ms). They are not a separate score.</p>
 ${renderScorecard(columns, redesign)}
 <h2>Lighthouse medians</h2>
@@ -243,9 +246,10 @@ ${renderScorecard(columns, redesign)}
 <span>blocked or failed = no number, the run did not return the catalogue</span>
 </div>
 ${renderTable(columns, redesign)}
-${renderRunDetails(columns)}
+${renderRunDetails(columns, redesign)}
 <h2>Hands-on review</h2>
-${renderReview(columns, review, sitesDoc)}
+${renderSearchCompare(redesign)}
+${renderReview(columns, review, sitesDoc, redesign)}
 <h2>Method</h2>
 ${renderMethod(sitesDoc, model.runs, redesign)}
 </div>
@@ -253,10 +257,6 @@ ${renderMethod(sitesDoc, model.runs, redesign)}
 }
 
 function renderScorecard(columns, redesign) {
-  const cards = [];
-  const amt = columns.find((col) => col.site.id === "amt");
-  if (amt) cards.push(scoreCard(amt.site.name, summarise(amt.groups["home|mobile"], "performance"), "Current site, mobile home performance"));
-  cards.push(redesignCard(redesign));
   const ranked = columns
     .map((col) => {
       const summary = summarise(col.groups["home|mobile"], "performance");
@@ -264,11 +264,23 @@ function renderScorecard(columns, redesign) {
       return { name: col.site.name, summary };
     })
     .filter((item) => item.summary.n);
+  if (!redesignPending(redesign)) {
+    const redesignHome = redesignSummary(redesign, "home", "mobile", "performance");
+    if (redesignHome?.n) {
+      redesignHome.metric = "performance";
+      ranked.push({ name: redesign.name, summary: redesignHome });
+    }
+  }
   ranked.sort((a, b) => b.summary.median - a.summary.median);
   const best = ranked[0];
   const worst = ranked[ranked.length - 1];
-  if (best) cards.push(scoreCard(best.name, best.summary, "Highest measured mobile home performance"));
-  if (worst && worst !== best) cards.push(scoreCard(worst.name, worst.summary, "Lowest measured mobile home performance"));
+  const cards = [];
+  const amt = columns.find((col) => col.site.id === "amt");
+  if (amt) cards.push(scoreCard(amt.site.name, summarise(amt.groups["home|mobile"], "performance"), "Current site, mobile home performance"));
+  const redesignIsBest = best && best.name === redesign.name;
+  cards.push(redesignCard(redesign, redesignIsBest ? "Highest measured mobile home performance" : "Redesign, mobile home performance"));
+  if (best && best.name !== redesign.name) cards.push(scoreCard(best.name, best.summary, "Highest measured mobile home performance"));
+  if (worst && worst !== best && worst.name !== redesign.name) cards.push(scoreCard(worst.name, worst.summary, "Lowest measured mobile home performance"));
   const blocked = columns.filter((col) => {
     const runs = col.groups["home|mobile"] || [];
     return runs.length && runs.every((run) => isBlocked(run));
@@ -283,13 +295,13 @@ function scoreCard(name, summary, caption) {
   return `<article class="cmp-card"><h3>${esc(name)}</h3><p class="cmp-score-lg">${esc(cell.text)}</p><p class="cmp-meta">${esc(caption)}. Median of ${summary.n} successful run${summary.n === 1 ? "" : "s"}.</p></article>`;
 }
 
-function redesignCard(redesign) {
+function redesignCard(redesign, caption) {
   if (redesignPending(redesign)) {
     return `<article class="cmp-card"><h3>${esc(redesign.name)}</h3><p class="cmp-score-lg cmp-pending">Pending</p><p class="cmp-meta">${esc(redesign.note)}</p></article>`;
   }
   const summary = redesignSummary(redesign, "home", "mobile", "performance");
   if (!summary) return `<article class="cmp-card"><h3>${esc(redesign.name)}</h3><p class="cmp-pending">No home mobile median in redesign.json.</p></article>`;
-  return scoreCard(redesign.name, summary, "Redesign, mobile home performance");
+  return scoreCard(redesign.name, summary, caption);
 }
 
 function renderTable(columns, redesign) {
@@ -320,7 +332,7 @@ function renderTable(columns, redesign) {
     if (col.site.id === "amt") continue;
     rows.push(renderSiteRow(col, specs));
   }
-  return `<div class="cmp-scroll" tabindex="0" role="region" aria-label="Sortable Lighthouse medians"><table data-sort-table><caption>Lighthouse medians for the home page and one product page. Pending cells have no measured number.</caption><thead><tr>${head}</tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
+  return `<div class="cmp-scroll" tabindex="0" role="region" aria-label="Sortable Lighthouse medians"><table data-sort-table><caption>Lighthouse medians for the home page and one product page. A blocked or failed cell has no measured number.</caption><thead><tr>${head}</tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
 }
 
 function renderSiteRow(col, specs) {
@@ -354,39 +366,42 @@ function renderRedesignRow(redesign, specs) {
   return `<tr>${cells.join("")}</tr>`;
 }
 
-function renderRunDetails(columns) {
+function renderRunGroup(runs) {
+  return runs.map((run) => {
+    const perf = metricValue(run, "performance");
+    const lcp = metricValue(run, "lcp");
+    const cls = metricValue(run, "cls");
+    const tbt = metricValue(run, "tbt");
+    const bytes = metricValue(run, "bytes");
+    const a11y = metricValue(run, "accessibility");
+    const bp = metricValue(run, "best-practices");
+    const seo = metricValue(run, "seo");
+    let line;
+    if (usable(run)) {
+      line = `run ${run.run}: perf ${fmtScore(perf)}, a11y ${fmtScore(a11y)}, best practices ${fmtScore(bp)}, SEO ${fmtScore(seo)}, LCP ${fmtMetric("lcp", lcp)}, CLS ${fmtMetric("cls", cls)}, TBT ${fmtMetric("tbt", tbt)}, weight ${fmtMetric("bytes", bytes)}`;
+      if (run.fetchTime) line += `, fetchTime ${run.fetchTime}`;
+      if (run.finalUrl) line += `, final URL ${run.finalUrl}`;
+    } else if (isBlocked(run)) {
+      const fromError = (String(run.error || "").match(/Status code:\s*\d+/i) || [])[0] || "";
+      const reason = run.blockReason || fromError;
+      const status = run.mainDocumentStatus ? String(run.mainDocumentStatus) : "";
+      const statusBit = status && !String(reason).includes(status) ? `, HTTP ${status}` : "";
+      line = `run ${run.run}: blocked${reason ? ` (${reason})` : ""}${statusBit}`;
+    } else {
+      const err = String(run.error || run.runtimeError?.message || "no catalogue result").replace(/\s+/g, " ").slice(0, 220);
+      line = `run ${run.run}: failed — ${err}`;
+    }
+    const file = run.file ? ` · <a href="/amt/redesign/compare/data/lighthouse/${esc(run.file)}">raw JSON</a>` : "";
+    return `<li>${esc(line)}${file}</li>`;
+  }).join("");
+}
+
+function renderRunDetails(columns, redesign) {
   const blocks = columns.map((col) => {
     const keys = Object.keys(col.groups).sort();
     const parts = keys.map((key) => {
       const [page, form] = key.split("|");
-      const runs = col.groups[key];
-      const items = runs.map((run) => {
-        const perf = metricValue(run, "performance");
-        const lcp = metricValue(run, "lcp");
-        const cls = metricValue(run, "cls");
-        const tbt = metricValue(run, "tbt");
-        const bytes = metricValue(run, "bytes");
-        const a11y = metricValue(run, "accessibility");
-        const bp = metricValue(run, "best-practices");
-        const seo = metricValue(run, "seo");
-        let line;
-        if (usable(run)) {
-          line = `run ${run.run}: perf ${fmtScore(perf)}, a11y ${fmtScore(a11y)}, best practices ${fmtScore(bp)}, SEO ${fmtScore(seo)}, LCP ${fmtMetric("lcp", lcp)}, CLS ${fmtMetric("cls", cls)}, TBT ${fmtMetric("tbt", tbt)}, weight ${fmtMetric("bytes", bytes)}`;
-          if (run.fetchTime) line += `, fetchTime ${run.fetchTime}`;
-          if (run.finalUrl) line += `, final URL ${run.finalUrl}`;
-        } else if (isBlocked(run)) {
-          const fromError = (String(run.error || "").match(/Status code:\s*\d+/i) || [])[0] || "";
-          const reason = run.blockReason || fromError;
-          const status = run.mainDocumentStatus ? String(run.mainDocumentStatus) : "";
-          const statusBit = status && !String(reason).includes(status) ? `, HTTP ${status}` : "";
-          line = `run ${run.run}: blocked${reason ? ` (${reason})` : ""}${statusBit}`;
-        } else {
-          const err = String(run.error || run.runtimeError?.message || "no catalogue result").replace(/\s+/g, " ").slice(0, 220);
-          line = `run ${run.run}: failed — ${err}`;
-        }
-        return `<li>${esc(line)} · <a href="/amt/redesign/compare/data/lighthouse/${esc(run.file)}">raw JSON</a></li>`;
-      });
-      return `<h3>${esc(page)} · ${esc(form)}</h3><ul class="cmp-tight">${items.join("")}</ul>`;
+      return `<h3>${esc(page)} · ${esc(form)}</h3><ul class="cmp-tight">${renderRunGroup(col.groups[key])}</ul>`;
     });
     return `<section class="cmp-site" id="site-${esc(col.site.id)}"><h2>${esc(col.site.name)}</h2>
 <p>${esc(col.site.selection)}</p>
@@ -394,13 +409,62 @@ function renderRunDetails(columns) {
 <p class="cmp-meta">${esc(col.site.robots)}</p>
 ${parts.join("")}</section>`;
   });
-  return blocks.join("");
+  return `${blocks.join("")}${renderRedesignRuns(redesign)}`;
 }
 
-function renderReview(columns, review, sitesDoc) {
-  const pending = `<section class="cmp-site" id="site-redesign"><h2>New AMT redesign</h2><p class="cmp-pending">Pending live measurement. This section reads <code>compare/data/redesign.json</code>. No screenshots or scores are filled in until that file leaves status “pending live measurement”.</p></section>`;
+function renderRedesignRuns(redesign) {
+  if (redesignPending(redesign)) {
+    return `<section class="cmp-site" id="site-redesign"><h2>${esc(redesign.name)}</h2><p class="cmp-pending">${esc(redesign.note || "Pending live measurement.")}</p></section>`;
+  }
+  const runs = Array.isArray(redesign.runs) ? redesign.runs : [];
+  const groups = {};
+  for (const run of runs) {
+    const key = `${run.page}|${run.formFactor}`;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(run);
+  }
+  for (const list of Object.values(groups)) list.sort((a, b) => (a.run || 0) - (b.run || 0));
+  const parts = Object.keys(groups).sort().map((key) => {
+    const [page, form] = key.split("|");
+    return `<h3>${esc(page)} · ${esc(form)}</h3><ul class="cmp-tight">${renderRunGroup(groups[key])}</ul>`;
+  });
+  const catalogue = ["performance", "accessibility", "best-practices", "seo", "lcp", "cls", "tbt", "bytes"]
+    .map((metric) => {
+      const summary = redesignSummary(redesign, "catalogue", "mobile", metric);
+      if (!summary) return "";
+      summary.metric = metric;
+      const cell = cellText(summary);
+      return `<li>Catalogue, mobile, ${esc(metric)}: ${esc(cell.text)} (median of ${summary.n} successful run${summary.n === 1 ? "" : "s"})</li>`;
+    })
+    .join("");
+  const urls = [
+    redesign.homeUrl ? `Home: <a href="${esc(redesign.homeUrl)}">${esc(redesign.homeUrl)}</a>` : "",
+    redesign.catalogueUrl ? `Catalogue: <a href="${esc(redesign.catalogueUrl)}">${esc(redesign.catalogueUrl)}</a>` : "",
+    redesign.productUrl ? `Product: <a href="${esc(redesign.productUrl)}">${esc(redesign.productUrl)}</a>${redesign.productLabel ? ` — ${esc(redesign.productLabel)}` : ""}` : "",
+  ].filter(Boolean);
+  return `<section class="cmp-site" id="site-redesign"><h2>${esc(redesign.name)}</h2>
+<p>${esc(redesign.note || "")}</p>
+<p class="cmp-meta">${urls.join("<br>")}</p>
+${catalogue ? `<h3>Catalogue medians</h3><p class="cmp-meta">The comparison table uses the home page and the product page. The catalogue URL was measured as well and is not a column on the other rows.</p><ul class="cmp-tight">${catalogue}</ul>` : ""}
+${parts.join("")}</section>`;
+}
+
+function renderSearchCompare(redesign) {
+  const shots = redesign?.searchCompare;
+  if (!Array.isArray(shots) || !shots.length) return "";
+  const figs = shots
+    .map(
+      (shot) => `<figure><img src="${esc(shot.src)}" alt="${esc(shot.alt)}" loading="lazy"><figcaption>${esc(shot.caption)}</figcaption></figure>`,
+    )
+    .join("");
+  const note = redesign.searchCompareNote ? `<p>${esc(redesign.searchCompareNote)}</p>` : "";
+  return `<section class="cmp-site" id="search-dspe"><h2>Search for DSPE-PEG2000</h2>${note}<div class="cmp-shots cmp-trio">${figs}</div></section>`;
+}
+
+function renderReview(columns, review, sitesDoc, redesign) {
+  const redesignNote = renderRedesignBehaviour(redesign);
   if (!review || !review.sites) {
-    return `<p class="cmp-note">The hands-on review file <code>compare/data/review.json</code> is not present, so this build has no search, filter, product-detail, mobile, or quote notes. Lighthouse numbers above still come only from <code>compare/data/lighthouse/</code>.</p>${pending}`;
+    return `<p class="cmp-note">The hands-on review file <code>compare/data/review.json</code> is not present, so this build has no competitor search, filter, product-detail, mobile, or quote notes.</p>${redesignNote}`;
   }
   const order = ["amt", ...columns.map((col) => col.site.id).filter((id) => id !== "amt")];
   const seen = new Set();
@@ -413,7 +477,13 @@ function renderReview(columns, review, sitesDoc) {
     if (!site || !note) continue;
     blocks.push(renderSiteReview(site, note));
   }
-  return `${blocks.join("")}${pending}`;
+  return `${blocks.join("")}${redesignNote}`;
+}
+
+function renderRedesignBehaviour(redesign) {
+  const note = redesign?.review;
+  if (!note || redesignPending(redesign)) return "";
+  return renderSiteReview({ name: redesign.name || "New AMT redesign" }, note);
 }
 
 function renderSiteReview(site, note) {
@@ -446,6 +516,14 @@ ${shots ? `<div class="cmp-shots">${shots}</div>` : ""}
 </section>`;
 }
 
+function redesignMethod(redesign) {
+  const status = esc(redesign?.status || "");
+  if (redesignPending(redesign)) {
+    return `The new redesign is a column only. <code>compare/data/redesign.json</code> currently has status “${status}”. A later pass replaces that status and adds either <code>runs</code> (trimmed Lighthouse objects with <code>page</code> and <code>formFactor</code>) or <code>lighthouse.home/product.mobile/desktop</code> medians. Until then the column shows pending and no number.`;
+  }
+  return `The redesign column reads <code>compare/data/redesign.json</code>, status “${status}”. Its home, catalogue, and product URLs were measured with the same Lighthouse settings as the other rows. The table’s product columns use the product URL. Catalogue medians are listed under the redesign heading. Behaviour notes are the <code>review</code> object in that file.`;
+}
+
 function renderMethod(sitesDoc, runs, redesign) {
   const ok = runs.filter(usable).length;
   const blocked = runs.filter((run) => isBlocked(run)).length;
@@ -454,8 +532,8 @@ function renderMethod(sitesDoc, runs, redesign) {
   return `<div class="cmp-note">
 <p>Lighthouse ${esc(versions.join(", ") || sitesDoc.tool.lighthouse)} was run with Chrome headless (<code>--headless=new --no-sandbox --disable-gpu</code>). Mobile runs use Lighthouse’s default mobile emulation and simulated throttling. Desktop runs use <code>--preset=desktop</code>. Categories: performance, accessibility, best practices, SEO. The page reports the median. With an even number of successful runs the median is the mean of the two middle values. Scores are stored as Lighthouse’s 0–1 values and shown rounded to the nearest integer. LCP, CLS, TBT and total byte weight are the audit <code>numericValue</code> fields.</p>
 <p>Each URL was run three times. This build read ${runs.length} run files: ${ok} returned a catalogue document, ${blocked} were flagged blocked (HTTP status ≥ 400 or an error/challenge URL), ${failed} failed before a report. A blocked or failed run contributes no number. Image payloads and audit item lists were removed from the stored JSON; scores, numeric values, the main-document status and the Lighthouse metadata were copied across. The trim note is inside each file.</p>
-<p>Hands-on checks used headless Chrome. The same five queries were typed where the site’s robots.txt allows a search URL: ${esc(sitesDoc.queries.join(", "))}. Where robots.txt disallows search, cart, or inquiry URLs, those URLs were not requested and the note says so. No quote form was submitted, no account was created, and nobody was contacted.</p>
-<p>The new redesign is a column only. <code>compare/data/redesign.json</code> currently has status “${esc(redesign.status)}”. A later pass replaces that status and adds either <code>runs</code> (trimmed Lighthouse objects with <code>page</code> and <code>formFactor</code>) or <code>lighthouse.home/product.mobile/desktop</code> medians. Until then the column shows pending and no number.</p>
+<p>Hands-on checks used headless Chrome. The same five queries were used where the site’s robots.txt allows a search URL: ${esc(sitesDoc.queries.join(", "))}. Where robots.txt disallows search, cart, or inquiry URLs, those URLs were not requested and the note says so. No account was created, no order was placed, and no email was sent. On the redesign, Add to quote was clicked once so the in-browser quote list could be read. The mailto control was not opened.</p>
+<p>${redesignMethod(redesign)}</p>
 </div>
 <ul class="cmp-tight">
 ${sitesDoc.sites

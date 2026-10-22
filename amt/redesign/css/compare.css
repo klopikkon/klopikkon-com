@@ -336,6 +336,16 @@
   margin: 0.6rem 0 1rem;
 }
 
+.compare .cmp-trio {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 800px) {
+  .compare .cmp-trio {
+    grid-template-columns: 1fr;
+  }
+}
+
 .compare figure {
   margin: 0;
   background: var(--cmp-card);
