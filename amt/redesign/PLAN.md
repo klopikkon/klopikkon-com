@@ -82,8 +82,8 @@ Paths below are under `/amt/redesign/`. Each HTML page carries `noindex,nofollow
 | `mw` | `null` (number when a future source actually prints one) |
 | `purity` | Exact published string, including the space in `≥ 98%`. `null` when the row prints none, or when two listings disagree |
 | `packs[]` | `{size, price, currency, priceText}`. Unpublished price: `price` null and `priceText` `"quote"` |
-| `structureImage` | `assets/structures/…` relative to `amt/redesign/`, or `null` |
-| `documents` | `{sds, coa, datasheet}`, all `null`. No SDS/COA/datasheet links were published |
+| `structureImage` | AMT file under `assets/products/`, or `null`. `structureImageSource` is that file's URL. PubChem stays on `structureImageExternal` |
+| `documents` | `[{type, url, source}]` for an SDS, COA, datasheet, spec sheet, or technical document AMT publishes for the SKU. `[]` when none is linked |
 | `source` | `{url, pdf, page}`. PDF products use the homepage as `url` plus the PDF URL and page. Homepage-only products have `pdf` null |
 
 Extra fields other agents can read:
@@ -92,7 +92,7 @@ Extra fields other agents can read:
 - `packs[].listing` and `packs[].purity` — set when one SKU has two different rows, so the prices are not merged.
 - `listings[]` — every kept row (source id, pdf, page, name, cas, purity, packs).
 - `alsoListedIn[]` — the same SKU in a non-primary brochure.
-- `homepagePacks`, `homepageLabels` — featured card only. Card currency is null because the card does not name one. Card prices do not replace catalogue packs.
+- `homepagePacks`, `homepageLabels` — featured card only. Card currency is null because the card does not name one. Card prices do not replace catalogue packs. `priceConflict` is true when a card price and the catalogue pack for the same size disagree. Both values stay.
 - `catalogueNote` — a printed note that is not a pack (for example `Not Isomer Specific`).
 
 `data/site.json` has contact (street and postal "Unit 1/7-11 Rocco drive, Scoresby VIC 3179", phones, `enquiries@` and `sales@`, ABN from the flyer only), the live amtechpl.com menu on `sourceNav` (header, secondary, footer, absolute URLs), shipping notes, brochure list, ChemExper iframe note, and `pages[]` copy for the 20 live WordPress pages. `emptyCataloguePages` lists the ten product-menu slugs whose live HTML is the shared menu and not a SKU table.

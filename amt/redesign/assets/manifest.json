@@ -5787,5 +5787,325 @@
     "cid": 177929775,
     "bytes": 1927,
     "sha256": "a884b33a579793ae59fd95e1ef2890b99b6b10cae2a376d2270b74424b6f1d09"
+  },
+  {
+    "path": "assets/products/Lipid-5.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2025/10/Lipid-5.png",
+    "kind": "product-image",
+    "sku": "AMTGC1533-LP25",
+    "bytes": 2678,
+    "sha256": "c7cdd9aa4a9151329be046c175fb55a503fdc04a34da510bdabccd9b6018e830"
+  },
+  {
+    "path": "assets/products/AMTGC903-AL21.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2025/04/AMTGC903-AL21.png",
+    "kind": "product-image",
+    "sku": "AMTGC903-AL21",
+    "bytes": 2415,
+    "sha256": "c4ccdd33d932d422d2def0eff851a77ffd65c590b5771e4fb328b1fce6f0bda9"
+  },
+  {
+    "path": "assets/products/AMTGC936-SM21.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2025/04/AMTGC936-SM21.png",
+    "kind": "product-image",
+    "sku": "AMTGC936-SM21",
+    "bytes": 2774,
+    "sha256": "22a6aaf69e4d13a9b87c863155aed4fa527a3508d69d2d77f991676e3eca3ea9"
+  },
+  {
+    "path": "assets/products/AMTB1369-AE21.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2021/11/AMTB1369-AE21.png",
+    "kind": "product-image",
+    "sku": "AMTB1369-AE21",
+    "bytes": 2351,
+    "sha256": "d6a885417773c0b6b88d687c5e3d9b6b5926210a6e34402f4dac44bba8d7ac5c"
+  },
+  {
+    "path": "assets/products/AMTGC125-AT15.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2021/02/AMTGC125-AT15.png",
+    "kind": "product-image",
+    "sku": "AMTGC125-AT15",
+    "bytes": 9978,
+    "sha256": "7efa2e8d4d091470df968a072a1e768056e0ce7e095ba5a89fe7550542ccf409"
+  },
+  {
+    "path": "assets/products/AMTGC187-AC16.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2021/05/AMTGC187-AC16.png",
+    "kind": "product-image",
+    "sku": "AMTGC187-AC16",
+    "bytes": 7658,
+    "sha256": "da5a5fbd856a4f0bfa989f2df792e2b4b885f5fb00fad50418efa565a1536f75"
+  },
+  {
+    "path": "assets/products/AMTGC300-AA17-e1580430997381.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/01/AMTGC300-AA17-e1580430997381.png",
+    "kind": "product-image",
+    "sku": "AMTGC300-AA17",
+    "bytes": 9797,
+    "sha256": "f37e1f629f8536c3fcb6a62b196b1ae6396f22e8a20c2126524c0b9194be0b5b"
+  },
+  {
+    "path": "assets/products/AMTGC345-PY17.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2022/01/AMTGC345-PY17.png",
+    "kind": "product-image",
+    "sku": "AMTGC345-PY17",
+    "bytes": 1962,
+    "sha256": "98058bc43b4e9038c6701cae9b035dc4f66456802cb100088a37a2892f840a91"
+  },
+  {
+    "path": "assets/products/AMTGC502-AT19-e1580430760806.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/01/AMTGC502-AT19-e1580430760806.png",
+    "kind": "product-image",
+    "sku": "AMTGC502-AT19",
+    "bytes": 4990,
+    "sha256": "625916439e1b7c74af19deba3dff804d44696f52af3362f49633224d87978074"
+  },
+  {
+    "path": "assets/products/AMTGC542-TT20-1-e1580428232885.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/01/AMTGC542-TT20-1-e1580428232885.png",
+    "kind": "product-image",
+    "sku": "AMTGC542-TT20",
+    "bytes": 5759,
+    "sha256": "ca24ca1524278af9a5e6dc33ebc40979810d96f54e4f0403f92ff131227ff9e1"
+  },
+  {
+    "path": "assets/products/AMTGC654-AA20-e1602129354362.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/10/AMTGC654-AA20-e1602129354362.png",
+    "kind": "product-image",
+    "sku": "AMTGC654-AA20",
+    "bytes": 5722,
+    "sha256": "75b8846169861b2d67d482a19dd5df9986c2993a98a5f11166151ddd9260d697"
+  },
+  {
+    "path": "assets/products/AMTGC679-HM20-e1602129456955.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/10/AMTGC679-HM20-e1602129456955.png",
+    "kind": "product-image",
+    "sku": "AMTGC679-HM20",
+    "bytes": 4628,
+    "sha256": "afaa573fdef6d8ebbb76ed34bd46ba5851046d69a39b21fd4b5d255935df703d"
+  },
+  {
+    "path": "assets/products/AMTGC699-HA20-e1597990823691.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/08/AMTGC699-HA20-e1597990823691.png",
+    "kind": "product-image",
+    "sku": "AMTGC699-HA20",
+    "bytes": 5902,
+    "sha256": "5ee58ca05fc2086a1c46c0eb2bef856acd9f2f99c67f646d4a9b261270a82d96"
+  },
+  {
+    "path": "assets/products/AMTGC721-AT20.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2021/05/AMTGC721-AT20.png",
+    "kind": "product-image",
+    "sku": "AMTGC721-AT20",
+    "bytes": 6644,
+    "sha256": "f2d2aacdbd4a6563ad097f552c868f168fad7a925075640fa484914f5e8073ac"
+  },
+  {
+    "path": "assets/products/AMTGC807-AM21.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2024/02/AMTGC807-AM21.png",
+    "kind": "product-image",
+    "sku": "AMTGC807-AM21",
+    "bytes": 1472,
+    "sha256": "d301dd4ba0727bcddfeda90a1b3e9e8a991bb4c8ee3a803de3c268fc7ca679c4"
+  },
+  {
+    "path": "assets/products/AMTGC893-BT21.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2021/11/AMTGC893-BT21.png",
+    "kind": "product-image",
+    "sku": "AMTGC893-BT21",
+    "bytes": 2612,
+    "sha256": "357a1825dadabda9c003169b7a2d4a20e52dd954b6bab84ffb78ad0bf97b1828"
+  },
+  {
+    "path": "assets/products/AMTGC909-PP21.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2022/02/AMTGC909-PP21.png",
+    "kind": "product-image",
+    "sku": "AMTGC909-PP21",
+    "bytes": 2857,
+    "sha256": "a575e46fa7fd2a5ec32728a0d06468313dd70a3ca647a79fa285c0d54c7dffcf"
+  },
+  {
+    "path": "assets/products/AMTGC937-AT21.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2022/10/AMTGC937-AT21.png",
+    "kind": "product-image",
+    "sku": "AMTGC937-AT21",
+    "bytes": 2263,
+    "sha256": "1788bdd1b76f0a3fb9e48a8eb5431eedbf5564c753b4bf467b8506cd401f7dfc"
+  },
+  {
+    "path": "assets/products/AMTGC993-AT22.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2022/02/AMTGC993-AT22.png",
+    "kind": "product-image",
+    "sku": "AMTGC993-AT22",
+    "bytes": 3450,
+    "sha256": "50702001cae821db205175ce1c845af302a369e502aec636581c628f3dfe0b8e"
+  },
+  {
+    "path": "assets/products/AMTB1261-CB18-e1580432127786.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/01/AMTB1261-CB18-e1580432127786.png",
+    "kind": "product-image",
+    "sku": "AMTB1261-CB18",
+    "bytes": 9555,
+    "sha256": "d776eb82105e1c831b40f8ab98c4fb6cc289a5b0569219eb520e736df53c5f27"
+  },
+  {
+    "path": "assets/products/AMTB1263-CB18-e1580434906894.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/01/AMTB1263-CB18-e1580434906894.png",
+    "kind": "product-image",
+    "sku": "AMTB1263-CB18",
+    "bytes": 9697,
+    "sha256": "6390994880a7f9851ee702ec3ec776ab304da21490f5980a3bfcab383a14b35e"
+  },
+  {
+    "path": "assets/products/AMTGC007-AS11.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2021/12/AMTGC007-AS11.png",
+    "kind": "product-image",
+    "sku": "AMTGC007-AS11",
+    "bytes": 2423,
+    "sha256": "b0d1c05d74717a063209e528f5911b0c2ce122f6d94c682d1e418c2239039372"
+  },
+  {
+    "path": "assets/products/AMTGC182-OF16.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2022/01/AMTGC182-OF16.png",
+    "kind": "product-image",
+    "sku": "AMTGC182-OF16",
+    "bytes": 2539,
+    "sha256": "c14d97ec014fbec0c88a6fd891865903e472ca716ea315fa293ff5eceaa7d4ea"
+  },
+  {
+    "path": "assets/products/AMTGC479-TU19-e1580433443304.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/01/AMTGC479-TU19-e1580433443304.png",
+    "kind": "product-image",
+    "sku": "AMTGC479-TU19",
+    "bytes": 7413,
+    "sha256": "1d3a916eec111e65190b09a74665c9097044d30d9a4d5de3323d93d75e2dcc9b"
+  },
+  {
+    "path": "assets/products/AMTB1233-BA18-e1580427144526.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/01/AMTB1233-BA18-e1580427144526.png",
+    "kind": "product-image",
+    "sku": "AMTB1233-BA18",
+    "bytes": 5991,
+    "sha256": "c93a82ec33a31a178ed59ee0f65836534cd73f2de1ecee05ea05f0b125e171fb"
+  },
+  {
+    "path": "assets/products/AMTB1282-HB19.gif",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2019/11/AMTB1282-HB19.gif",
+    "kind": "product-image",
+    "sku": "AMTB1282-HB19",
+    "bytes": 3602,
+    "sha256": "280dac6637200ecb94f780b6d3d87ea99e2930ff31a0a1258694b0bdfbfe8731"
+  },
+  {
+    "path": "assets/products/AMTB1326-MD20.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2022/01/AMTB1326-MD20.png",
+    "kind": "product-image",
+    "sku": "AMTB1326-MD20",
+    "bytes": 2223,
+    "sha256": "d1b4a0528cde151e4a6eb3d344f547e416ea69059b919daa0743c628c2512952"
+  },
+  {
+    "path": "assets/products/AMTB1332-MB20.jpg",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2021/02/AMTB1332-MB20.jpg",
+    "kind": "product-image",
+    "sku": "AMTB1332-MB20",
+    "bytes": 10143,
+    "sha256": "9f36905ff37351d2703a6ce19296d5f42a39bd2773eeaa5752689791d6c3d557"
+  },
+  {
+    "path": "assets/products/AMTB1338-IP20.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2022/02/AMTB1338-IP20.png",
+    "kind": "product-image",
+    "sku": "AMTB1338-IP20",
+    "bytes": 3453,
+    "sha256": "a191347750016bf4ce12f152cfb6ba4f4fbd3e1421041c3880494a6b693e055d"
+  },
+  {
+    "path": "assets/products/AMTB1347-DM21.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2022/01/AMTB1347-DM21.png",
+    "kind": "product-image",
+    "sku": "AMTB1347-DM21",
+    "bytes": 2883,
+    "sha256": "e6bd4f6eb652355ea74d96013d7d87fb90ffeb456277100cb92a2e8fb2ae3026"
+  },
+  {
+    "path": "assets/products/AMTB1353-PI21.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2021/05/AMTB1353-PI21.png",
+    "kind": "product-image",
+    "sku": "AMTB1353-PI21",
+    "bytes": 9004,
+    "sha256": "2d2b42f4b383cf5ae5915b53db4eaaca8290ad8d881d7667eaab6623131eb925"
+  },
+  {
+    "path": "assets/products/AMTB1358-MO21.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2022/02/AMTB1358-MO21.png",
+    "kind": "product-image",
+    "sku": "AMTB1358-MO21",
+    "bytes": 3114,
+    "sha256": "16a2f7d0a5495f690e612e6c97c45c0ab135d68902b21c390f59bda296dbed1d"
+  },
+  {
+    "path": "assets/products/AMTB1408-FH24.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2024/02/AMTB1408-FH24.png",
+    "kind": "product-image",
+    "sku": "AMTB1408-FH24",
+    "bytes": 1602,
+    "sha256": "4907278b2e4d795fb55cf8443cc5608c5708ce3f14f07471377065f43c5169f8"
+  },
+  {
+    "path": "assets/products/AMTB652-CB13-e1580427353267.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2020/01/AMTB652-CB13-e1580427353267.png",
+    "kind": "product-image",
+    "sku": "AMTB652-CB13",
+    "bytes": 5965,
+    "sha256": "13b577340135865ebd29ac416098496fd17af0b505ef25fe00b5a6c2e8af50e6"
+  },
+  {
+    "path": "assets/products/AMTGC1223-PL23.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2024/02/AMTGC1223-PL23.png",
+    "kind": "product-image",
+    "sku": "AMTGC1223-PL23",
+    "bytes": 2499,
+    "sha256": "a6a5a5f60929aef03fb774b246ee276b47cb83e32ac88297458a8598d4d2e4e8"
+  },
+  {
+    "path": "assets/products/AMTGC1264-AH24.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2024/02/AMTGC1264-AH24.png",
+    "kind": "product-image",
+    "sku": "AMTGC1264-AH24",
+    "bytes": 3182,
+    "sha256": "0922caace5c09b09cdd2b91022f473105ae0f463c9a8511d737f1ad78e02b939"
+  },
+  {
+    "path": "assets/products/AMTGC1266-AO24.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2024/02/AMTGC1266-AO24.png",
+    "kind": "product-image",
+    "sku": "AMTGC1266-AO24",
+    "bytes": 2120,
+    "sha256": "6c71e87d57d38f7ece6dc060c79dca06b718106b6b2bb731bf735efc2c35b5cf"
+  },
+  {
+    "path": "assets/products/AMTGC1269-CB24.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2024/02/AMTGC1269-CB24.png",
+    "kind": "product-image",
+    "sku": "AMTGC1269-CB24",
+    "bytes": 2224,
+    "sha256": "fcdce3864d23f0a0fc890c614667eaf50c20e9d3ac2d88d8daf3124dcebab5cb"
+  },
+  {
+    "path": "assets/products/AMTGC1441-DB25-1.jpg",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2026/01/AMTGC1441-DB25-1.jpg",
+    "kind": "product-image",
+    "sku": "AMTGC1441-DB25",
+    "bytes": 10923,
+    "sha256": "f383427a3a747efb678590e90a0c9706fa3d6216b622334dd2dec6c9fdaa7422"
+  },
+  {
+    "path": "assets/products/AMTH390-DF24.png",
+    "sourceUrl": "https://www.amtechpl.com/wp-content/uploads/2024/02/AMTH390-DF24.png",
+    "kind": "product-image",
+    "sku": "AMTH390-DF24",
+    "bytes": 1925,
+    "sha256": "2a31733273952ba69361eb7143e6a1df68efeffb75cfea9e95547532b19f9e65"
   }
 ]

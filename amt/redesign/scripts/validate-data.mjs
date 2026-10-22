@@ -26,6 +26,25 @@ const classRules = loadClassRules();
 const itemSchema = schema.items;
 const required = itemSchema.required;
 const families = new Set(itemSchema.properties.family.enum);
+
+function normSize(size) {
+  return String(size || "").replace(/\s+/g, "").toLowerCase();
+}
+
+function priceConflict(product) {
+  const home = Array.isArray(product.homepagePacks) ? product.homepagePacks : [];
+  if (!home.length) return false;
+  const pdfPrices = new Map();
+  for (const pack of product.packs || []) {
+    const key = normSize(pack.size);
+    if (!pdfPrices.has(key)) pdfPrices.set(key, new Set());
+    pdfPrices.get(key).add(pack.price);
+  }
+  return home.some((pack) => {
+    const prices = pdfPrices.get(normSize(pack.size));
+    return !prices || !prices.has(pack.price);
+  });
+}
 const idPattern = new RegExp(itemSchema.properties.id.pattern);
 const skuPattern = new RegExp(itemSchema.properties.sku.pattern);
 const packRequired = itemSchema.properties.packs.items.required;
@@ -120,17 +139,43 @@ for (const product of products) {
   if (product.structureImage !== null && typeof product.structureImage !== "string") {
     fail(`${label}: structureImage must be a string or null`);
   }
+  if (product.structureImage) {
+    if (!product.structureImage.startsWith("assets/products/")) {
+      fail(`${label}: structureImage must be an AMT file under assets/products/`);
+    } else if (!existsSync(join(root, product.structureImage))) {
+      fail(`${label}: AMT structure image file is missing`);
+    }
+    if (typeof product.structureImageSource !== "string" || !product.structureImageSource.startsWith("https://www.amtechpl.com/")) {
+      fail(`${label}: structureImageSource must be the AMT file URL`);
+    }
+    if (product.structureImageExternal && product.structureImage === product.structureImageExternal) {
+      fail(`${label}: structureImage must not reuse the PubChem file`);
+    }
+  } else if (product.structureImageSource != null) {
+    fail(`${label}: structureImageSource set without an AMT image`);
+  }
 
   const documents = product.documents;
-  if (!documents || typeof documents !== "object") {
-    fail(`${label}: documents must be an object`);
+  if (!Array.isArray(documents)) {
+    fail(`${label}: documents must be an array`);
   } else {
-    for (const key of ["sds", "coa", "datasheet"]) {
-      if (!Object.prototype.hasOwnProperty.call(documents, key)) fail(`${label}: documents.${key} missing`);
-      else if (documents[key] !== null && typeof documents[key] !== "string") {
-        fail(`${label}: documents.${key} must be a string or null`);
+    for (const doc of documents) {
+      if (!doc || typeof doc !== "object") {
+        fail(`${label}: documents entry must be an object`);
+        continue;
       }
+      if (!["sds", "coa", "datasheet", "spec", "technical"].includes(doc.type)) {
+        fail(`${label}: documents type ${doc.type} is not an SDS, COA, datasheet, spec, or technical sheet`);
+      }
+      if (typeof doc.url !== "string" || !doc.url.startsWith("https://")) fail(`${label}: document url must be https`);
+      if (typeof doc.source !== "string" || doc.source.length === 0) fail(`${label}: document source is missing`);
     }
+  }
+  const conflict = priceConflict(product);
+  if (conflict) {
+    if (product.priceConflict !== true) fail(`${label}: homepage and catalogue prices disagree but priceConflict is not true`);
+  } else if (Object.prototype.hasOwnProperty.call(product, "priceConflict")) {
+    fail(`${label}: priceConflict is set without a homepage/catalogue price disagreement`);
   }
 
   const pegNominal = /(?:^|[^A-Za-z0-9])m?PEG\s*(?:\(\s*(\d{3,})\s*\)|[\s-]?(\d{3,}))(?!\d)/gi;
@@ -235,6 +280,19 @@ for (const heading of subKeys) {
 }
 if (!countsMd.includes("## Subfamily")) fail("COUNTS.md is missing the Subfamily section");
 if (!countsMd.includes("## Name-derived class")) fail("COUNTS.md is missing the Name-derived class section");
+if (!countsMd.includes("## AMT documents and images")) fail("COUNTS.md is missing the AMT documents and images section");
+const imageCount = products.filter((product) => product.structureImage).length;
+const documentCount = products.filter((product) => Array.isArray(product.documents) && product.documents.length).length;
+const conflictSkus = products.filter((product) => product.priceConflict === true).map((product) => product.sku);
+if (!counts.amtImages || counts.amtImages.products !== imageCount) {
+  fail(`counts.json amtImages.products does not match products.json (${imageCount})`);
+}
+if (!counts.documents || counts.documents.products !== documentCount) {
+  fail(`counts.json documents.products does not match products.json (${documentCount})`);
+}
+if (JSON.stringify(counts.priceConflict || []) !== JSON.stringify(conflictSkus)) {
+  fail("counts.json priceConflict does not match products.json");
+}
 const expectedClass = classCounts(products, classRules);
 if (JSON.stringify(counts.classDerived) !== JSON.stringify(expectedClass)) {
   fail("counts.json classDerived does not match the name rules");
