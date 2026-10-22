@@ -1,4 +1,4 @@
-import { pagesFor, BASE_PATH, LIVE_ORIGIN, help, liveStatus, locate, parseArgs, report } from "./common.mjs";
+import { pagesFor, BASE_PATH, LIVE_ORIGIN, help, liveStatus, locate, parseArgs, relaunchWithNpx, report } from "./common.mjs";
 import { startServer } from "./server.mjs";
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
@@ -105,14 +105,28 @@ async function main() {
   const violations = [];
   const moderates = [];
 
-  if (!pages.length && !args.live) {
+  if (!pages.length) {
+    const skips = ["no representative HTML pages yet (home, about, contact, family, catalogue, product, quote, compare)"];
+    const failures = [];
+    if (args.live) {
+      const live = await liveStatus(`${BASE_PATH}/`);
+      if (live.error) failures.push(`[live] ${live.url} could not be fetched (${live.error})`);
+      else if (live.status === 404) skips.push(`[live] ${live.url} is not published yet (HTTP 404)`);
+      else if (!live.ok) failures.push(`[live] ${live.url} returned HTTP ${live.status}`);
+      else skips.push("[live] no local page list to mirror onto the live site");
+    }
     report(located, {
       name: "check-a11y",
-      status: "skip",
-      skips: ["no representative HTML pages yet (home, about, contact, family, catalogue, product, quote, compare)"],
+      status: failures.length ? "fail" : "skip",
+      failures,
+      skips,
     });
     return;
   }
+
+  relaunchWithNpx(import.meta.url, ["playwright@1.64.1", "@axe-core/playwright@4.14.0"], {
+    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1",
+  });
 
   let chromium;
   let AxeBuilder;

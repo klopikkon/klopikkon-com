@@ -11,6 +11,7 @@ import {
   locate,
   pagesFor,
   parseArgs,
+  relaunchWithNpx,
   report,
 } from "./common.mjs";
 import { upsertBlock } from "./report.mjs";
@@ -238,6 +239,11 @@ async function main() {
   const rows = [];
 
   if (!pages.length) skips.push("no local lighthouse pages yet (home, catalogue, product, quote, compare)");
+  else {
+    relaunchWithNpx(import.meta.url, ["lighthouse@13.5.0"], {
+      CHROME_PATH: process.env.CHROME_PATH || "/usr/local/bin/google-chrome",
+    });
+  }
 
   let server;
   try {

@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -306,6 +306,27 @@ export async function liveStatus(urlPath = `${BASE_PATH}/`) {
   } catch (error) {
     return { url, status: 0, ok: false, error: error.message };
   }
+}
+
+/**
+ * Re-run this process under `npx -p` when a dev tool is actually needed.
+ * Returns false when this process is already that relaunch.
+ */
+export function relaunchWithNpx(scriptUrl, packages, extraEnv = {}) {
+  if (process.env.QA_DEPS === "1") return false;
+  const args = ["--yes"];
+  for (const spec of packages) args.push("-p", spec);
+  args.push("node", fileURLToPath(scriptUrl), ...process.argv.slice(2));
+  const result = spawnSync("npx", args, {
+    stdio: "inherit",
+    env: {
+      ...process.env,
+      QA_DEPS: "1",
+      npm_config_update_notifier: "false",
+      ...extraEnv,
+    },
+  });
+  process.exit(result.status ?? 1);
 }
 
 export function help(name, extra = "") {
