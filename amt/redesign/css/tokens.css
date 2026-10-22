@@ -1,0 +1,86 @@
+/* AMT concept redesign tokens.
+   Light is the default. Dark applies only when data-theme="dark"
+   (set before first paint from prefers-color-scheme or the saved choice). */
+
+:root {
+  color-scheme: light;
+  --bg: #f3f0e8;
+  --bg-subtle: #e6e1d6;
+  --surface: #fffcf7;
+  --ink: #152033;
+  --muted: #3d4b5f;
+  --faint: #5c6b7e;
+  --line: #d9d3c6;
+  --control: #6f6a60;
+  --accent: #0b3f86;
+  --accent-ink: #ffffff;
+  --accent-soft: #e5eef8;
+  --link: #0b3f86;
+  --focus: #0b3f86;
+  --copper: #7a3e12;
+  --green-bg: #e3f6e8;
+  --green-ink: #0c5a2c;
+  --green-border: #1d7a40;
+  --amber-bg: #fff3d6;
+  --amber-ink: #6b4500;
+  --amber-border: #8a5a00;
+  --red-bg: #fdecea;
+  --red-ink: #8d1d18;
+  --red-border: #a33b32;
+  --shadow-1: 0 1px 0 rgba(21, 32, 51, 0.06);
+  --shadow-2: 0 10px 28px rgba(21, 32, 51, 0.08);
+  --shadow-3: 0 18px 44px rgba(21, 32, 51, 0.14);
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --font-sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.125rem;
+  --step-2: 1.35rem;
+  --step-3: clamp(1.6rem, 1.25rem + 1.2vw, 2rem);
+  --step-4: clamp(2rem, 1.45rem + 2vw, 3.15rem);
+  --measure: 68ch;
+  --page: 72rem;
+  --tap: 2.75rem;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e141c;
+  --bg-subtle: #171f2b;
+  --surface: #1a2433;
+  --ink: #e7eef8;
+  --muted: #c5d2e2;
+  --faint: #adbdcf;
+  --line: #314056;
+  --control: #8ea3bd;
+  --accent: #9dc2f0;
+  --accent-ink: #0c1c30;
+  --accent-soft: #1d3148;
+  --link: #9dc2f0;
+  --focus: #9dc2f0;
+  --copper: #f0b07a;
+  --green-bg: #123224;
+  --green-ink: #b7f0cc;
+  --green-border: #3e9a62;
+  --amber-bg: #3a2c12;
+  --amber-ink: #ffe1a8;
+  --amber-border: #d7a24a;
+  --red-bg: #3c1c1c;
+  --red-ink: #ffc9c4;
+  --red-border: #e07a72;
+  --shadow-1: 0 1px 0 rgba(0, 0, 0, 0.45);
+  --shadow-2: 0 10px 28px rgba(0, 0, 0, 0.35);
+  --shadow-3: 0 18px 44px rgba(0, 0, 0, 0.5);
+}
