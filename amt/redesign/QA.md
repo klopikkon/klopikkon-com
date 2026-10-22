@@ -147,12 +147,12 @@ axe is the WCAG AA gate for serious and critical issues. The Lighthouse accessib
 
 ## Findings (2026-10-22, current main)
 
-`amt/redesign/_qa/run-all --live` against this branch rebased onto current `main`, and against `https://klopikkon.com/amt/redesign/`. Exit code 1. Chrome for Lighthouse and axe was `/opt/google/chrome/chrome` (the `/usr/local/bin/google-chrome` wrapper is unwrapped). There is no `compare/index.html`, so that Lighthouse and axe slot was skipped. Family compare pages from merged PR #81 are in the link crawl.
+`amt/redesign/_qa/run-all --live` against this branch rebased onto current `main` (after PRs #84 and #86), and against `https://klopikkon.com/amt/redesign/`. Exit code 1. Chrome for Lighthouse and axe was `/opt/google/chrome/chrome`. The `/usr/local/bin/google-chrome` wrapper pins one profile and port 9222; the harness follows that script to the real binary, and this run finished all 48 Lighthouse samples without a stall. There is no `compare/index.html` on main, so that slot was skipped.
 
 | Check | Result |
 | --- | --- |
-| `check-meta` | Pass. 1431 HTML pages. Nothing outside `amt/redesign/` links in. |
-| `check-links` | Pass. 2314 internal URLs, local and live, all HTTP 200. |
+| `check-meta` | Pass. 1441 HTML pages. Nothing outside `amt/redesign/` links in. |
+| `check-links` | Pass. 3008 internal URLs, local and live, all HTTP 200. |
 | `check-counts` | Fail. 1347 pages, 1347 JSON rows, `COUNTS.md` agrees, family totals agree. Ten `cas` values are the sentinel `No CAS#`. |
 | `check-a11y` | Pass. 0 serious or critical. Incomplete `color-contrast` on home and lipids. |
 | `lighthouse` | Fail. One gate: local quote mobile LCP 2.55s. SEO 66 on every row, reported separately. |
@@ -188,13 +188,13 @@ Owner: **product**.
 
 Page: https://klopikkon.com/amt/redesign/quote/ (`quote/index.html`).
 
-Local mobile, median of 3, LCP 2.55s (runs 2554 ms, 2579 ms, 2553 ms). Budget is ≤ 2.5s. Performance score is 94, which is inside the score gate. Local desktop LCP is 0.57s. Live mobile LCP is 1.08s and passes. The failure is the throttled local lab run only.
+Local mobile, median of 3, LCP 2.55s (runs 2553 ms, 2555 ms, and 2557 ms). Budget is ≤ 2.5s. Performance score is 94, which is inside the score gate. Local desktop LCP is 0.57s. Live mobile LCP is 1.09s and passes. The failure is the throttled local lab run only.
 
 ### Notes that do not fail the run
 
-- **shell.** `/amt/redesign/quote/` is an orphan: no other redesign HTML links to it. `js/cart.js` names `QUOTE_PATH`. `/amt/redesign/404.html` is also unlinked, which is expected for a 404 page. Both local and live crawls checked 2314 URLs and got HTTP 200.
+- **shell.** `/amt/redesign/quote/` is an orphan: no other redesign HTML links to it. `js/cart.js` names `QUOTE_PATH`. `/amt/redesign/404.html` is also unlinked, which is expected for a 404 page. Both local and live crawls checked 3008 URLs and got HTTP 200. This run is after PRs #84 and #86 landed on main, including the preview images.
 - **shell.** axe `color-contrast` was incomplete, not a violation, on home and lipids, light and dark, 375px and 1440px, local and live. 0 serious or critical on home, about, contact, catalogue, quote, styleguide, lipids, and `products/amtb001-b06/`.
-- **compare.** No open PR adds `compare/index.html`. Merged PR #81 shipped `families/<family>/compare/`. Those five pages were in the link crawl. Lighthouse did not measure a top-level compare URL because the file is absent.
+- **compare.** `compare/index.html` is not on main, so Lighthouse did not measure it. Open PR #87 adds that page. Merged PR #81 already shipped `families/<family>/compare/`, and those five pages were in the link crawl.
 
 ## Latest results
 
@@ -205,7 +205,7 @@ The blocks below are rewritten by `run-all` and `lighthouse`. The findings above
 <!-- harness-main:start -->
 ### main
 
-Scanned `/workspace/amt/redesign` (`cursor/amt-redesign-qa-ac08` @ `3ffcc2b9`) at 2026-10-22T04:18:15.902Z.
+Scanned `/workspace/amt/redesign` (`cursor/amt-redesign-qa-ac08` @ `4ae6e0db`) at 2026-10-22T04:31:15.234Z.
 
 | Check | Result |
 | --- | --- |
@@ -216,17 +216,17 @@ Scanned `/workspace/amt/redesign` (`cursor/amt-redesign-qa-ac08` @ `3ffcc2b9`) a
 | lighthouse | fail |
 
 **check-meta**
-- 1431 HTML page(s) carry noindex,nofollow and the footer note
+- 1441 HTML page(s) carry noindex,nofollow and the footer note
 - no page outside amt/redesign links to it
 
 **check-links**
-- local server http://127.0.0.1:41639
+- local server http://127.0.0.1:43275
 - [local] orphan HTML (not linked from another redesign page): /amt/redesign/404.html
 - [local] orphan HTML (not linked from another redesign page): /amt/redesign/quote/
-- [local] checked 2314 internal URL(s)
+- [local] checked 3008 internal URL(s)
 - [live] orphan HTML (not linked from another redesign page): /amt/redesign/404.html
 - [live] orphan HTML (not linked from another redesign page): /amt/redesign/quote/
-- [live] checked 2314 internal URL(s)
+- [live] checked 3008 internal URL(s)
 
 **check-counts**
 - 1347 rendered product page(s)
@@ -244,7 +244,7 @@ Scanned `/workspace/amt/redesign` (`cursor/amt-redesign-qa-ac08` @ `3ffcc2b9`) a
 - amtb1406-ba24: page CAS Not published != data No CAS#
 
 **check-a11y**
-- local server http://127.0.0.1:38373
+- local server http://127.0.0.1:40557
 - local pages: home, about, contact, catalogue, quote, styleguide, lipids, product; themes light/dark; widths 375 and 1440
 - [local] home light 375px: incomplete color-contrast
 - [local] home light 1440px: incomplete color-contrast
@@ -267,8 +267,8 @@ Scanned `/workspace/amt/redesign` (`cursor/amt-redesign-qa-ac08` @ `3ffcc2b9`) a
 **lighthouse**
 - 16 page/form median(s) from 3 run(s)
 - chrome /opt/google/chrome/chrome
-- local server http://127.0.0.1:37169
-- [local] quote mobile: LCP ms 2554 > 2500
+- local server http://127.0.0.1:39261
+- [local] quote mobile: LCP ms 2555 > 2500
 <!-- harness-main:end -->
 
 <!-- lighthouse-main:start -->
@@ -280,21 +280,21 @@ On the local HTTP server, best-practices ignores `is-on-https` and `redirects-ht
 | Target | Page | Form | Perf | A11y | BP | SEO | LCP | CLS | TBT | Gate |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | local | home | mobile | 100 | 100 | 100 | 66 | 1.35s | 0.000 | 0ms | pass |
-| local | home | desktop | 100 | 100 | 100 | 66 | 0.37s | 0.000 | 0ms | pass |
+| local | home | desktop | 100 | 100 | 100 | 66 | 0.34s | 0.000 | 0ms | pass |
 | local | catalogue | mobile | 99 | 100 | 100 | 66 | 1.65s | 0.000 | 0ms | pass |
 | local | catalogue | desktop | 100 | 100 | 100 | 66 | 0.36s | 0.000 | 0ms | pass |
 | local | quote | mobile | 94 | 100 | 100 | 66 | 2.55s | 0.000 | 0ms | fail |
 | local | quote | desktop | 100 | 100 | 100 | 66 | 0.57s | 0.000 | 0ms | pass |
-| local | product | mobile | 100 | 100 | 100 | 66 | 1.35s | 0.000 | 0ms | pass |
-| local | product | desktop | 100 | 100 | 100 | 66 | 0.32s | 0.000 | 0ms | pass |
-| live | home | mobile | 100 | 100 | 100 | 66 | 0.92s | 0.000 | 0ms | pass |
+| local | product | mobile | 100 | 100 | 100 | 66 | 1.50s | 0.000 | 0ms | pass |
+| local | product | desktop | 100 | 100 | 100 | 66 | 0.36s | 0.000 | 0ms | pass |
+| live | home | mobile | 100 | 100 | 100 | 66 | 0.90s | 0.000 | 0ms | pass |
 | live | home | desktop | 100 | 100 | 100 | 66 | 0.25s | 0.000 | 0ms | pass |
 | live | catalogue | mobile | 100 | 100 | 100 | 66 | 1.06s | 0.000 | 0ms | pass |
-| live | catalogue | desktop | 100 | 100 | 100 | 66 | 0.29s | 0.000 | 0ms | pass |
-| live | quote | mobile | 100 | 100 | 100 | 66 | 1.08s | 0.000 | 0ms | pass |
-| live | quote | desktop | 100 | 100 | 100 | 66 | 0.29s | 0.000 | 0ms | pass |
+| live | catalogue | desktop | 100 | 100 | 100 | 66 | 0.25s | 0.000 | 0ms | pass |
+| live | quote | mobile | 100 | 100 | 100 | 66 | 1.09s | 0.000 | 0ms | pass |
+| live | quote | desktop | 100 | 100 | 100 | 66 | 0.30s | 0.000 | 0ms | pass |
 | live | product | mobile | 100 | 100 | 100 | 66 | 1.06s | 0.000 | 0ms | pass |
-| live | product | desktop | 100 | 100 | 100 | 66 | 0.24s | 0.000 | 0ms | pass |
+| live | product | desktop | 100 | 100 | 100 | 66 | 0.26s | 0.000 | 0ms | pass |
 
 SEO `is-crawlable` score is 0 on every measured page because robots noindex is required.
 <!-- lighthouse-main:end -->
