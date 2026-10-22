@@ -17,6 +17,7 @@ const REQUIRED = [
   "families/organoborons/index.html",
   "families/other/index.html",
   "styleguide/index.html",
+  "404.html",
 ];
 
 function assertShell(rel, html) {

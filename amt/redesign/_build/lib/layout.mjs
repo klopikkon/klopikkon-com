@@ -166,6 +166,7 @@ export function renderPage({ title, description, path, body, head = "" }) {
   <link rel="stylesheet" href="${assetCss("tokens.css")}">
   <link rel="stylesheet" href="${assetCss("base.css")}">
   <link rel="stylesheet" href="${assetCss("components.css")}">
+  <link rel="stylesheet" href="${assetCss("print.css")}" media="print">
   ${head}
 </head>
 <body>

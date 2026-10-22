@@ -1,6 +1,6 @@
 import { esc, paragraphs, rich } from "../lib/html.mjs";
 import { url } from "../lib/paths.mjs";
-import { featuredCard } from "../lib/ui.mjs";
+import { featuredCard, motif } from "../lib/ui.mjs";
 
 export async function build({ site, renderPage, writeFile }) {
   const heroLinks = (site.hero.categories || [])
@@ -35,8 +35,9 @@ export async function build({ site, renderPage, writeFile }) {
     .join("");
 
   const body = `<section class="hero">
+  ${motif("home-lattice")}
   <div class="wrap hero-grid">
-    <div>
+    <div class="hero-copy">
       <p class="eyebrow">${esc(site.hero.eyebrow)}</p>
       <h1>${esc(site.hero.title)}</h1>
       <p class="lede">${esc(site.hero.lede)}</p>

@@ -418,8 +418,76 @@ p:has(> .btn) {
   font-weight: 700;
 }
 
+.hero,
+.family-hero {
+  position: relative;
+  overflow: hidden;
+}
+
 .hero {
   padding-block: var(--space-6) var(--space-5);
+}
+
+.family-hero {
+  padding-bottom: var(--space-6);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.hero-motif {
+  position: absolute;
+  inset: -8% -6% auto;
+  height: 120%;
+  color: var(--accent);
+  opacity: 0.28;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(105deg, transparent 0%, transparent 18%, #000 68%);
+  mask-image: linear-gradient(105deg, transparent 0%, transparent 18%, #000 68%);
+}
+
+.family-hero .hero-motif {
+  opacity: 0.2;
+  color: var(--copper);
+}
+
+.hero-motif svg {
+  display: block;
+  width: 115%;
+  height: 100%;
+  animation: motif-drift 32s ease-in-out infinite alternate;
+}
+
+.motif-molecule {
+  opacity: 0.85;
+}
+
+.motif-molecule path {
+  stroke-dasharray: 8 10;
+  animation: motif-dash 14s linear infinite;
+}
+
+.hero-grid,
+.family-hero .wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-copy {
+  animation: hero-rise 0.6s ease both;
+}
+
+@keyframes motif-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-2%, -1.5%, 0); }
+}
+
+@keyframes motif-dash {
+  to { stroke-dashoffset: -72; }
+}
+
+@keyframes hero-rise {
+  from { transform: translate3d(0, 0.4rem, 0); }
+  to { transform: translate3d(0, 0, 0); }
 }
 
 .hero-grid {

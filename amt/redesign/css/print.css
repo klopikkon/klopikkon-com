@@ -1,0 +1,93 @@
+/* Print only. The document links this file with media="print". */
+
+@media print {
+  :root,
+  [data-theme="dark"] {
+    color-scheme: light;
+    --bg: #ffffff;
+    --bg-subtle: #ffffff;
+    --surface: #ffffff;
+    --ink: #000000;
+    --muted: #222222;
+    --faint: #333333;
+    --line: #bbbbbb;
+    --control: #444444;
+    --accent: #000000;
+    --accent-ink: #ffffff;
+    --accent-soft: #f2f2f2;
+    --link: #000000;
+    --focus: #000000;
+    --copper: #000000;
+    --green-bg: #ffffff;
+    --green-ink: #000000;
+    --green-border: #000000;
+    --amber-bg: #ffffff;
+    --amber-ink: #000000;
+    --amber-border: #000000;
+    --red-bg: #ffffff;
+    --red-ink: #000000;
+    --red-border: #000000;
+    --shadow-1: none;
+    --shadow-2: none;
+    --shadow-3: none;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .skip-link,
+  .theme-toggle,
+  .site-nav,
+  .menu-bar,
+  .nav-toggle,
+  .hero-motif,
+  form.search,
+  #search {
+    display: none !important;
+  }
+
+  a,
+  .btn {
+    color: #000;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  .site-header,
+  .site-footer,
+  .hero,
+  .family-hero,
+  .card,
+  .fact-list li,
+  .quote-band,
+  .concept-note {
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .card,
+  .fact-list li,
+  .quote-band,
+  tr,
+  .concept-note {
+    break-inside: avoid;
+  }
+
+  .logo {
+    width: 4.5rem;
+  }
+}
