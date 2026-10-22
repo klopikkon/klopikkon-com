@@ -4,7 +4,7 @@ Verification for the unlisted concept redesign under `/amt/redesign/`. The integ
 
 GitHub Pages serves `main` directly (`.nojekyll`, `CNAME`). There is no Pages workflow under `.github/`, so this harness is not wired into CI. Run it locally, then again with `--live` after the pages are on `main`.
 
-Tools are dev-only. The static build stays zero-dependency. Playwright, axe-core, and Lighthouse are fetched with `npx` the first time those checks run. Node 20 or newer is required. Accessibility and Lighthouse need Chrome (`CHROME_PATH`, or `/usr/local/bin/google-chrome`).
+Tools are dev-only. The static build stays zero-dependency. The first accessibility or Lighthouse run installs Playwright, axe-core, and Lighthouse into `~/.cache/amt-redesign-qa` (npm cache, not a repo dependency). Node 20 or newer is required. Accessibility and Lighthouse need Chrome. Set `CHROME_PATH` to the real binary. When it is unset, the Lighthouse script uses `/opt/google/chrome/chrome` if that file exists. The `/usr/local/bin/google-chrome` wrapper pins one user-data-dir, so a second Lighthouse Chrome blocks on that profile; do not point `CHROME_PATH` at the wrapper.
 
 ## How to run
 
@@ -76,7 +76,7 @@ products: 1200
 lipids: 100
 ```
 
-`products` (aliases: `total`, `total products`) is required once the file exists. Family rows are checked only when present. The five family ids are `lipids`, `peg`, `fluorophores`, `organoborons`, and `other`.
+`products` (aliases: `total`, `total products`, `total unique skus`) is required once the file exists. A line such as `Total unique SKUs: **1347**.` counts. Family rows are checked only when present. The five family ids are `lipids`, `peg`, `fluorophores`, `organoborons`, and `other`. Bold markers and a trailing full stop are ignored.
 
 ## Performance budget
 
@@ -131,7 +131,8 @@ axe is the WCAG AA gate for serious and critical issues. The Lighthouse accessib
 - One directory per product: `products/<id>/index.html`, id taken from `products.json`.
 - Render sku, pack size, and `priceText` in the HTML, not only in a client-side template. The count check ignores `script` and `style`.
 - When `cas` is null, don’t print a CAS number. When it is set, print that exact string.
-- `quote/index.html` is a Lighthouse and accessibility target. The quote action stays a `mailto:` to the published AMT address. No payment step, no invented price.
+- When `structureImage` is set, render that file with width, height, and a text alternative. `amtgc903-al21` already has `assets/structures/AMTGC903-AL21.png` in the tree and the page still shows the “No structure image published by AMT” placeholder.
+- `quote/index.html` is a Lighthouse and accessibility target. Link it from the header or from the product quote control. No other redesign page points at `/amt/redesign/quote/` today, so `check-links` reports it as an orphan. The quote action stays a `mailto:` to the published AMT address. No payment step, no invented price.
 
 ### Compare
 
@@ -141,11 +142,147 @@ axe is the WCAG AA gate for serious and critical issues. The Lighthouse accessib
 ### Integrator
 
 - Order that goes green: data files, then shell, then catalogue, product, quote, and compare. `run-all` stays red on link 404s while those targets are still missing. That is the signal, not a reason to weaken the check.
-- Re-run `amt/redesign/_qa/run-all --live` after Pages has published `main`. Until then the live half skips.
+- Re-run `amt/redesign/_qa/run-all --live` after Pages publishes a new `main`. Lighthouse always tries the live origin. A 404 there is a skip. `check-links` and `check-a11y` crawl it only with `--live`.
 - Moderate axe findings are listed in the result block and in `_qa/results/check-a11y.json`. They do not fail CI-style, but they are still worth clearing before sign-off.
+
+## Findings (2026-10-22)
+
+Two trees were checked. The blocks under “Latest results” are the current branch, which already contains merged `main` (shell PR #73, the data files, and the product/quote pages) plus this harness. PR #73’s shell-only tree was checked separately and is written up here so a later `run-all` does not erase it.
+
+### Current tree
+
+| Check | Result |
+| --- | --- |
+| `check-meta` | Pass. 22 HTML pages have `noindex,nofollow` and the footer note. No page outside `amt/redesign/` links to it. |
+| `check-links` | Fail. `/amt/redesign/catalogue/` is HTTP 404. Search forms on about, contact, fluorophores, and lipids already post there. `/amt/redesign/quote/` exists but nothing else in the redesign links to it (orphan note, not a failure). 44 internal URLs were checked. |
+| `check-counts` | Fail. 12 rendered product pages, `data/products.json` has 1347, and `data/COUNTS.md` “Total unique SKUs” is 1347. Family totals in COUNTS.md match the JSON. Six of the twelve pages do not show the catalogue CAS, pack size strings, or `priceText`. 1335 products have no page. |
+| `check-a11y` | Pass. 0 serious or critical on home, about, contact, quote, styleguide, lipids, and one product page, light and dark, 375px and 1440px. Lipids at 1440px (light and dark) has an incomplete `color-contrast` check. That is a note, not a failure. Catalogue and compare were not scanned; those directories are not in the tree. |
+| `lighthouse` | Pass against the budget. Median of 3, mobile and desktop, local and live, for home, quote, and `products/amtgc1223-pl23/`. Catalogue and compare were not measured. SEO is 66 on every row because `is-crawlable` is 0; that column is not a gate. |
+
+`products/price-match.md` says this product build read `_build/fixtures/products.json` (12 rows), not `data/products.json`. Six of those twelve pages match `products.json` on sku, CAS, pack size, and `priceText`: `amtgc1223-pl23`, `amtgc1264-ah24`, `amtgc1266-ao24`, `amtgc1269-cb24`, `amtgc1441-db25`, and `amth390-df24`. The other six do not. `amtgc903-al21` is CAS `2036272-55-4` in the JSON with packs `500mg` `$250.00`, `1g` `$430.00`, and `2g` `$790.00`; the rendered page shows none of those strings. The same gap is on `amtgc1533-lp25`, `amtgc936-sm21`, `amtgc187-ac16`, and `amtgc807-am21` (CAS present in data and missing on the page; pack size strings such as `100mg` or `5g` missing; `priceText` such as `$140.00` not on the page). `amtgc125-at15` is two catalogue rows (standard and high purity, pack sizes `5g` and `25g` on each) and neither price set (`$65.00` / `$240.00` and `$150.00` / `$450.00`) is on the page. `amtgc903-al21` has `structureImage` `assets/structures/AMTGC903-AL21.png` and that file is in the tree. The rendered page still uses a placeholder captioned “No structure image published by AMT”.
+
+Live product best-practices is 96, local is 100. The live audit that scored 0 is `image-size-responsive` (an image served below the resolution of its displayed size). 96 is still inside the 90 gate. Give structure and content images width, height, and a file at least as large as the CSS box.
+
+The live origin `https://klopikkon.com/amt/redesign/` answered HTTP 200, so the live half ran. It is the shell that is already on `main`. Quote and the sample product page are published there too. Catalogue is not.
+
+`run-all` will stay red until `catalogue/index.html` returns 200 and every product page matches `products.json`. That is the integrator signal.
+
+### PR #73 shell only (`43204b1`)
+
+Checked with `--root` pointed at that worktree, before product pages and `data/products.json` were on this branch.
+
+| Check | Result |
+| --- | --- |
+| `check-meta` | Pass. 9 HTML pages. |
+| `check-links` | Fail. `/amt/redesign/catalogue/` 404, plus 12 product URLs from the family tables (`amth390-df24`, `amtgc1533-lp25`, `amtgc903-al21`, `amtgc936-sm21`, `amtgc1223-pl23`, `amtgc1264-ah24`, `amtgc1266-ao24`, `amtgc1269-cb24`, `amtgc125-at15`, `amtgc807-am21`, `amtgc1441-db25`, `amtgc187-ac16`). Those product files exist on current `main`; the catalogue file still does not. |
+| `check-counts` | Skip. No `data/products.json`, `data/COUNTS.md`, or `products/` directory. The shell fixture has 12 rows and is not the source of record. |
+| `check-a11y`, `lighthouse` | Not re-run on the shell-only commit. Current `main` already includes those pages, and the tables below are that tree. |
 
 ## Latest results
 
-The blocks below are rewritten by `run-all` and `lighthouse`. Hand-written findings from the run that opened this PR sit with them.
+The blocks below are rewritten by `run-all` and `lighthouse`. The findings above are hand-written and are not replaced by those scripts.
 
 <!-- harness-blocks -->
+
+<!-- harness-main:start -->
+### main
+
+Scanned `/workspace/amt/redesign` (`cursor/amt-redesign-qa-ac08` @ `390d609`) at 2026-10-22T04:02:19.475Z.
+
+| Check | Result |
+| --- | --- |
+| check-meta | pass |
+| check-links | fail |
+| check-counts | fail |
+| check-a11y | pass |
+| lighthouse | pass |
+
+**check-meta**
+- 22 HTML page(s) carry noindex,nofollow and the footer note
+- no page outside amt/redesign links to it
+
+**check-links**
+- local server http://127.0.0.1:33417
+- [local] orphan HTML (not linked from another redesign page): /amt/redesign/quote/
+- [local] checked 44 internal URL(s)
+- [local] HTTP 404 /amt/redesign/catalogue/ (/amt/redesign/about/ form[action], /amt/redesign/contact/ form[action], /amt/redesign/families/fluorophores/ form[action], /amt/redesign/families/lipids/ form[action])
+
+**check-counts**
+- 12 rendered product page(s)
+- data/products.json has 1347 product(s)
+- COUNTS.md products matches products.json (1347)
+- amtgc1533-lp25: page does not show CAS 2089251-33-0
+- amtgc1533-lp25: page does not show pack size "100mg"
+- amtgc1533-lp25: expected "$140.00" 1 time(s) on the page, found 0
+- amtgc903-al21: page does not show CAS 2036272-55-4
+- amtgc903-al21: page does not show pack size "500mg"
+- amtgc903-al21: page does not show pack size "1g"
+- amtgc903-al21: page does not show pack size "2g"
+- amtgc903-al21: expected "$250.00" 1 time(s) on the page, found 0
+- amtgc903-al21: expected "$430.00" 1 time(s) on the page, found 0
+- amtgc903-al21: expected "$790.00" 1 time(s) on the page, found 0
+- amtgc936-sm21: page does not show CAS 2089251-47-6
+- amtgc936-sm21: page does not show pack size "100mg"
+- amtgc936-sm21: page does not show pack size "500mg"
+- amtgc936-sm21: page does not show pack size "1g"
+- amtgc936-sm21: expected "$150.00" 1 time(s) on the page, found 0
+- amtgc936-sm21: expected "$410.00" 1 time(s) on the page, found 0
+- amtgc936-sm21: expected "$690.00" 1 time(s) on the page, found 0
+- amtgc125-at15: page does not show CAS 134179-38-7
+- amtgc125-at15: page does not show pack size "5g"
+- amtgc125-at15: page does not show pack size "25g"
+- amtgc125-at15: page does not show pack size "5g"
+- amtgc125-at15: page does not show pack size "25g"
+- amtgc125-at15: expected "$65.00" 1 time(s) on the page, found 0
+- amtgc125-at15: expected "$240.00" 1 time(s) on the page, found 0
+- amtgc125-at15: expected "$150.00" 1 time(s) on the page, found 0
+- amtgc125-at15: expected "$450.00" 1 time(s) on the page, found 0
+- amtgc187-ac16: page does not show CAS 642091-68-7
+- amtgc187-ac16: page does not show pack size "1g"
+- amtgc187-ac16: page does not show pack size "5g"
+- amtgc187-ac16: expected "$90.00" 1 time(s) on the page, found 0
+- amtgc187-ac16: expected "$270.00" 1 time(s) on the page, found 0
+- amtgc807-am21: page does not show CAS 1072920-62-7
+- amtgc807-am21: page does not show pack size "1g"
+- amtgc807-am21: page does not show pack size "5g"
+- amtgc807-am21: expected "$80.00" 1 time(s) on the page, found 0
+- amtgc807-am21: expected "$240.00" 1 time(s) on the page, found 0
+- 1335 products have no page at products/<id>/index.html (first: amtgc1044-ad22, amtgc1179-al23, amtgc1297-do24, amtgc1444-dm25, amtgc1455-ha25, amtgc1461-sm25, amtgc1487-il25, amtgc1505-bh25)
+- product page count 12 != products.json count 1347
+- product page count 12 != COUNTS.md products 1347
+
+**check-a11y**
+- local server http://127.0.0.1:39737
+- local pages: home, about, contact, quote, styleguide, lipids, product; themes light/dark; widths 375 and 1440
+- [local] lipids light 1440px: incomplete color-contrast
+- [local] lipids dark 1440px: incomplete color-contrast
+- axe WCAG AA: 0 serious/critical across 7 page(s)
+
+**lighthouse**
+- 12 page/form median(s) from 3 run(s)
+- local server http://127.0.0.1:41069
+<!-- harness-main:end -->
+
+<!-- lighthouse-main:start -->
+### main
+
+Median of 3 Lighthouse run(s). SEO is reported and is not a gate: `noindex,nofollow` makes `is-crawlable` fail on purpose.
+On the local HTTP server, best-practices ignores `is-on-https` and `redirects-http`.
+
+| Target | Page | Form | Perf | A11y | BP | SEO | LCP | CLS | TBT | Gate |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| local | home | mobile | 100 | 100 | 100 | 66 | 1.35s | 0.000 | 0ms | pass |
+| local | home | desktop | 100 | 100 | 100 | 66 | 0.33s | 0.000 | 0ms | pass |
+| local | quote | mobile | 100 | 100 | 100 | 66 | 1.20s | 0.000 | 0ms | pass |
+| local | quote | desktop | 100 | 100 | 100 | 66 | 0.33s | 0.000 | 0ms | pass |
+| local | product | mobile | 100 | 100 | 100 | 66 | 1.20s | 0.000 | 0ms | pass |
+| local | product | desktop | 100 | 100 | 100 | 66 | 0.33s | 0.000 | 0ms | pass |
+| live | home | mobile | 100 | 100 | 100 | 66 | 0.91s | 0.000 | 0ms | pass |
+| live | home | desktop | 100 | 100 | 100 | 66 | 0.24s | 0.000 | 0ms | pass |
+| live | quote | mobile | 100 | 100 | 100 | 66 | 1.05s | 0.000 | 0ms | pass |
+| live | quote | desktop | 100 | 100 | 100 | 66 | 0.29s | 0.000 | 0ms | pass |
+| live | product | mobile | 100 | 100 | 96 | 66 | 1.06s | 0.000 | 0ms | pass |
+| live | product | desktop | 100 | 100 | 96 | 66 | 0.25s | 0.000 | 0ms | pass |
+
+SEO `is-crawlable` score is 0 on every measured page because robots noindex is required.
+<!-- lighthouse-main:end -->

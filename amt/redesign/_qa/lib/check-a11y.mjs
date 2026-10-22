@@ -1,4 +1,6 @@
-import { pagesFor, BASE_PATH, LIVE_ORIGIN, help, liveStatus, locate, parseArgs, relaunchWithNpx, report } from "./common.mjs";
+import path from "node:path";
+import { createRequire } from "node:module";
+import { pagesFor, BASE_PATH, LIVE_ORIGIN, ensureToolPackages, help, liveStatus, locate, parseArgs, report } from "./common.mjs";
 import { startServer } from "./server.mjs";
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
@@ -74,7 +76,8 @@ async function auditPages({ AxeBuilder, browser, origin, pages, label, failures,
             }
           }
           if (results.incomplete?.length) {
-            notes.push(`[${label}] ${where}: ${results.incomplete.length} incomplete axe check(s)`);
+            const ids = [...new Set(results.incomplete.map((item) => item.id))].join(", ");
+            notes.push(`[${label}] ${where}: incomplete ${ids}`);
           }
         } catch (error) {
           failures.push(`[${label}] ${spec.id} ${theme} ${viewport.width}px: ${error.message}`);
@@ -124,17 +127,16 @@ async function main() {
     return;
   }
 
-  relaunchWithNpx(import.meta.url, ["playwright@1.64.1", "@axe-core/playwright@4.14.0"], {
-    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1",
-  });
-
   let chromium;
   let AxeBuilder;
   try {
-    ({ chromium } = await import("playwright"));
-    ({ default: AxeBuilder } = await import("@axe-core/playwright"));
+    const tools = ensureToolPackages(["playwright@1.64.1", "@axe-core/playwright@4.14.0"]);
+    const require = createRequire(path.join(tools.nodeModules, "playwright", "package.json"));
+    ({ chromium } = require("playwright"));
+    const axeMod = require("@axe-core/playwright");
+    AxeBuilder = axeMod.AxeBuilder || axeMod.default || axeMod;
   } catch (error) {
-    console.error(`FAIL check-a11y\n  ${error.message}\n  Run amt/redesign/_qa/check-a11y (it loads Playwright and axe-core with npx).`);
+    console.error(`FAIL check-a11y\n  ${error.message}`);
     process.exitCode = 1;
     return;
   }

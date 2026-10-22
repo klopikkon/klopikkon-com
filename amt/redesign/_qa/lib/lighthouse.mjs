@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { BUDGET, LOCAL_HTTP_BP_AUDITS, RUNS } from "./budget.mjs";
@@ -10,8 +10,8 @@ import {
   liveStatus,
   locate,
   pagesFor,
+  ensureToolPackages,
   parseArgs,
-  relaunchWithNpx,
   report,
 } from "./common.mjs";
 import { upsertBlock } from "./report.mjs";
@@ -77,12 +77,40 @@ function runOnce(url, form, outFile) {
     "--chrome-flags=--headless=new --no-sandbox --disable-dev-shm-usage",
   ];
   if (form === "desktop") args.push("--preset=desktop");
-  const result = spawnSync("lighthouse", args, {
-    encoding: "utf8",
-    timeout: 180000,
-    env: process.env,
+  const bin = process.env.LIGHTHOUSE_BIN || "lighthouse";
+  return new Promise((resolve) => {
+    const child = spawn(bin, args, {
+      detached: true,
+      stdio: ["ignore", "pipe", "pipe"],
+      env: process.env,
+    });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => {
+      stdout += chunk;
+    });
+    child.stderr.on("data", (chunk) => {
+      stderr += chunk;
+    });
+    const killGroup = () => {
+      try {
+        process.kill(-child.pid, "SIGKILL");
+      } catch {
+        /* the process group has already exited */
+      }
+    };
+    const timer = setTimeout(killGroup, 90000);
+    child.on("error", (error) => {
+      clearTimeout(timer);
+      killGroup();
+      resolve({ status: 1, stdout, stderr, error });
+    });
+    child.on("close", (status) => {
+      clearTimeout(timer);
+      killGroup();
+      resolve({ status: status ?? 1, stdout, stderr });
+    });
   });
-  return result;
 }
 
 function loadLhr(file) {
@@ -113,9 +141,11 @@ async function measure({ origin, pages, label, isLocal, runs, resultsDir, failur
           `lighthouse-${label}-${spec.id}-${form}-${index}.json`,
         );
         fs.rmSync(outFile, { force: true });
-        let result = runOnce(url, form, outFile);
-        if ((result.status !== 0 || !fs.existsSync(outFile)) && result.status !== 0) {
-          result = runOnce(url, form, outFile);
+        console.error(`lighthouse ${label} ${spec.id} ${form} run ${index}/${runs}`);
+        let result = await runOnce(url, form, outFile);
+        if (result.status !== 0 || !fs.existsSync(outFile)) {
+          fs.rmSync(outFile, { force: true });
+          result = await runOnce(url, form, outFile);
         }
         if (result.status !== 0 || !fs.existsSync(outFile)) {
           lastError = (
@@ -240,9 +270,13 @@ async function main() {
 
   if (!pages.length) skips.push("no local lighthouse pages yet (home, catalogue, product, quote, compare)");
   else {
-    relaunchWithNpx(import.meta.url, ["lighthouse@13.5.0"], {
-      CHROME_PATH: process.env.CHROME_PATH || "/usr/local/bin/google-chrome",
-    });
+    const tools = ensureToolPackages(["lighthouse@13.5.0"]);
+    process.env.LIGHTHOUSE_BIN = tools.bin("lighthouse");
+    // The /usr/local/bin/google-chrome wrapper pins one user-data-dir, so a
+    // second Lighthouse Chrome blocks on that profile. Use the real binary.
+    if (!process.env.CHROME_PATH || process.env.CHROME_PATH === "/usr/local/bin/google-chrome") {
+      if (fs.existsSync("/opt/google/chrome/chrome")) process.env.CHROME_PATH = "/opt/google/chrome/chrome";
+    }
   }
 
   let server;

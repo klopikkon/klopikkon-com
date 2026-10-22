@@ -1,5 +1,6 @@
 import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -308,25 +309,48 @@ export async function liveStatus(urlPath = `${BASE_PATH}/`) {
   }
 }
 
+const TOOL_CACHE = path.join(os.homedir(), ".cache", "amt-redesign-qa");
+
+function packageName(spec) {
+  if (spec.startsWith("@")) {
+    const [scope, rest] = spec.split("/");
+    return `${scope}/${rest.split("@")[0]}`;
+  }
+  return spec.split("@")[0];
+}
+
 /**
- * Re-run this process under `npx -p` when a dev tool is actually needed.
- * Returns false when this process is already that relaunch.
+ * Install dev-only checkers into a user cache. Nothing is added to the repo.
+ * @param {string[]} packages npm package specs, pinned
  */
-export function relaunchWithNpx(scriptUrl, packages, extraEnv = {}) {
-  if (process.env.QA_DEPS === "1") return false;
-  const args = ["--yes"];
-  for (const spec of packages) args.push("-p", spec);
-  args.push("node", fileURLToPath(scriptUrl), ...process.argv.slice(2));
-  const result = spawnSync("npx", args, {
-    stdio: "inherit",
-    env: {
-      ...process.env,
-      QA_DEPS: "1",
-      npm_config_update_notifier: "false",
-      ...extraEnv,
-    },
-  });
-  process.exit(result.status ?? 1);
+export function ensureToolPackages(packages) {
+  fs.mkdirSync(TOOL_CACHE, { recursive: true });
+  const pkgFile = path.join(TOOL_CACHE, "package.json");
+  if (!fs.existsSync(pkgFile)) fs.writeFileSync(pkgFile, "{\"private\":true}\n");
+  const missing = packages.filter(
+    (spec) => !fs.existsSync(path.join(TOOL_CACHE, "node_modules", packageName(spec), "package.json")),
+  );
+  if (missing.length) {
+    const result = spawnSync(
+      "npm",
+      ["install", "--prefix", TOOL_CACHE, "--no-fund", "--no-audit", ...missing],
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1",
+          npm_config_update_notifier: "false",
+        },
+      },
+    );
+    if (result.status !== 0) {
+      throw new Error(`Could not install ${missing.join(", ")} for the QA harness`);
+    }
+  }
+  return {
+    nodeModules: path.join(TOOL_CACHE, "node_modules"),
+    bin: (name) => path.join(TOOL_CACHE, "node_modules", ".bin", name),
+  };
 }
 
 export function help(name, extra = "") {

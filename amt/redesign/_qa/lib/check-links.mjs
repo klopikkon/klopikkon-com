@@ -188,6 +188,7 @@ async function crawl(job) {
     }
     cache.set(urlPath, record);
     if (record.status !== 200) continue;
+    if (!(urlPath === BASE_PATH || urlPath.startsWith(`${BASE_PATH}/`))) continue;
 
     const baseUrl = `${origin}${urlPath}`;
     let extracted = [];
@@ -216,18 +217,22 @@ async function crawl(job) {
 
   for (const [urlPath, record] of cache) {
     if (record.status === 200) continue;
-    const via = refs
-      .filter((ref) => ref.urlPath === urlPath)
-      .slice(0, 3)
-      .map((ref) => `${ref.from} ${ref.kind}`)
-      .join(", ");
+    const via = [];
+    const seenFrom = new Set();
+    for (const ref of refs) {
+      if (ref.urlPath !== urlPath || seenFrom.has(ref.from)) continue;
+      seenFrom.add(ref.from);
+      via.push(`${ref.from} ${ref.kind}`);
+      if (via.length === 4) break;
+    }
     const why = record.error ? record.error : `HTTP ${record.status}`;
-    failures.push(`[${label}] ${why} ${urlPath}${via ? ` (${via})` : ""}`);
+    failures.push(`[${label}] ${why} ${urlPath}${via.length ? ` (${via.join(", ")})` : ""}`);
   }
 
   const seenFragments = new Set();
   for (const ref of refs) {
     if (!ref.id) continue;
+    if (!(ref.urlPath === BASE_PATH || ref.urlPath.startsWith(`${BASE_PATH}/`))) continue;
     const record = cache.get(ref.urlPath);
     if (!record || record.status !== 200 || record.kind !== "html") continue;
     const key = `${ref.urlPath}#${ref.id}`;

@@ -10,6 +10,9 @@ const KEY_ALIASES = new Map([
   ["total", "products"],
   ["total products", "products"],
   ["all products", "products"],
+  ["total unique skus", "products"],
+  ["unique skus", "products"],
+  ["unique products", "products"],
   ["source count", "products"],
   ["source counts", "products"],
   ["lipids", "lipids"],
@@ -52,12 +55,13 @@ export function parseCounts(markdown) {
     line = line.replace(/^[-*]\s+/, "");
     let cells = line.split("|").map((cell) => cell.replace(/\*+/g, "").trim()).filter(Boolean);
     if (cells.length !== 2) {
-      const match = line.match(/^([A-Za-z][A-Za-z ]*?)\s*:\s*([\d,]+)\s*$/);
+      const plain = line.replace(/\*/g, "").replace(/\.+\s*$/, "");
+      const match = plain.match(/^([A-Za-z][A-Za-z ]*?)\s*:\s*([\d,]+)\s*$/);
       cells = match ? [match[1], match[2]] : [];
     }
     if (cells.length !== 2) continue;
-    const key = KEY_ALIASES.get(cells[0].toLowerCase());
-    const num = cells[1].replace(/,/g, "");
+    const key = KEY_ALIASES.get(cells[0].toLowerCase().replace(/\*+/g, ""));
+    const num = cells[1].replace(/[,*]/g, "").replace(/\.$/, "");
     if (!key || !/^\d+$/.test(num)) continue;
     const value = Number(num);
     if (Object.prototype.hasOwnProperty.call(found, key) && found[key] !== value) {
@@ -177,6 +181,7 @@ async function main() {
     notes.push(`data/products.json has ${products.length} product(s)`);
     const ids = new Set();
     const skus = new Set();
+    const missing = [];
     const familyCounts = Object.fromEntries(FAMILIES.map((family) => [family, 0]));
     for (const product of products) {
       const id = product && product.id != null ? String(product.id) : "";
@@ -199,9 +204,16 @@ async function main() {
       }
       if (hasPages) {
         const file = rendered.get(id) || pageFileFor(productsDir, id);
-        if (!file) failures.push(`${id}: no rendered page at products/${id}/index.html`);
+        if (!file) missing.push(id);
         else checkPage(id, product, file, failures);
       }
+    }
+    if (missing.length > 12) {
+      failures.push(
+        `${missing.length} products have no page at products/<id>/index.html (first: ${missing.slice(0, 8).join(", ")})`,
+      );
+    } else {
+      for (const id of missing) failures.push(`${id}: no rendered page at products/${id}/index.html`);
     }
     if (hasPages) {
       if (rendered.size !== products.length) {
