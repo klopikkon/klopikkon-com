@@ -1,5 +1,17 @@
+import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { esc } from "./html.mjs";
 import { canonical, normalizePath, url } from "./paths.mjs";
+
+const redesignRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+
+/** Product pages ship this later. Omit the tag until the file exists so a 404 cannot fail the console audit. */
+function serviceWorkerScript() {
+  const rel = "js/sw-register.js";
+  if (!existsSync(join(redesignRoot, rel))) return "";
+  return `\n  <script type="module" src="${url(rel)}"></script>`;
+}
 
 let siteContext = null;
 
@@ -177,7 +189,7 @@ export function renderPage({ title, description, path, body, head = "" }) {
     ${body}
   </main>
   ${footer(current)}
-  <script type="module" src="${url("js/theme.js")}"></script>
+  <script type="module" src="${url("js/theme.js")}"></script>${serviceWorkerScript()}
 </body>
 </html>
 `;
