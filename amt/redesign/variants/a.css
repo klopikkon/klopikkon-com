@@ -1,0 +1,182 @@
+/* Direction A — clinical Swiss grid. Hairlines, a numbered margin, no chrome. */
+
+body { font-weight: 430; }
+
+.site-header { border-bottom: 1px solid var(--line); }
+
+.utility, .brand-row, .nav-list, .hero, .block, .family-open, .site-footer .wrap {
+  width: min(100% - 2rem, var(--page));
+  margin-inline: auto;
+}
+
+.utility {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  font-size: var(--step--1);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.brand-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.75rem 0 1rem;
+}
+
+.brand {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.brand img { width: 5.5rem; height: auto; object-fit: contain; }
+
+.nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.nav-list a {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: var(--step--1);
+  border-bottom: 1px solid transparent;
+}
+
+.nav-list a[aria-current="page"] { border-bottom-color: var(--line); }
+
+.hero, .block, .family-open {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 0.75rem 1rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.idx {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+}
+
+.hero-split, .split {
+  display: grid;
+  gap: 1.5rem;
+}
+
+h1 {
+  margin: 0.35rem 0 0.6rem;
+  font-family: var(--display);
+  font-size: var(--step-4);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  max-width: 16ch;
+}
+
+.lede { margin: 0; max-width: 36ch; font-size: var(--step-2); }
+
+.eyebrow, .footer-label {
+  margin: 0;
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.toc, .facts, .plain-list { margin: 0; padding: 0; list-style: none; }
+
+.toc { counter-reset: toc; }
+
+.toc li { counter-increment: toc; border-top: 1px solid var(--line); }
+
+.toc a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: var(--tap);
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.toc a::before {
+  content: counter(toc, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  margin-right: 0.75rem;
+}
+
+h2 {
+  margin: 0 0 0.75rem;
+  font-size: var(--step-2);
+  font-weight: 550;
+  letter-spacing: -0.03em;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr);
+  gap: 0.35rem 1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.entry h3 { margin: 0; font-size: 1rem; font-weight: 550; }
+
+.entry h3 a { color: inherit; }
+
+.meta { margin: 0.2rem 0 0; color: var(--muted); font-size: var(--step--1); }
+
+.note {
+  display: inline-block;
+  border: 1px solid var(--line);
+  padding: 0.1rem 0.35rem;
+  font-size: var(--step--1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.news article { padding: 1rem 0; border-top: 1px solid var(--line); }
+
+.news h3 { margin: 0 0 0.25rem; font-size: 1.15rem; }
+
+.fine { color: var(--muted); font-size: var(--step--1); }
+
+.direction {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.catalogue table { font-variant-numeric: tabular-nums; }
+
+.catalogue th { font-weight: 550; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.8125rem; }
+
+@media (min-width: 52rem) {
+  .brand-row { grid-template-columns: minmax(0, 16rem) minmax(0, 1fr) auto; align-items: end; }
+  .hero-split { grid-template-columns: 1.15fr 0.85fr; align-items: start; }
+  .split { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 36rem) {
+  .entry { grid-template-columns: minmax(0, 1fr); }
+}

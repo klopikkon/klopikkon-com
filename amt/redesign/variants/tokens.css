@@ -1,0 +1,241 @@
+/* Shared token contract for the three AMT concept directions.
+   Property names match css/tokens.css, so copying one block into :root
+   is enough for the live shell to take on that look.
+   Set data-look="a" | "b" | "c" on <html>. Dark is data-theme="dark",
+   except Lab, which is dark until data-theme="light". */
+
+:root,
+[data-look="a"] {
+  color-scheme: light;
+  --bg: #f7f7f4;
+  --bg-subtle: #ecece8;
+  --surface: #ffffff;
+  --ink: #141414;
+  --muted: #3f3f3f;
+  --faint: #4d4d4d;
+  --line: #141414;
+  --control: #141414;
+  --accent: #141414;
+  --accent-ink: #f7f7f4;
+  --accent-soft: #ecece8;
+  --link: #141414;
+  --focus: #141414;
+  --copper: #141414;
+  --viz: #141414;
+  --green-bg: #e5f2e8;
+  --green-ink: #0d4a28;
+  --green-border: #0d4a28;
+  --amber-bg: #fff3d6;
+  --amber-ink: #6b4500;
+  --amber-border: #8a5a00;
+  --red-bg: #fdecea;
+  --red-ink: #8d1d18;
+  --red-border: #a33b32;
+  --shadow-1: none;
+  --shadow-2: none;
+  --shadow-3: none;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-pill: 0;
+  --radius: 0;
+  --shadow: none;
+  --font-sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  --display: var(--font-sans);
+  --step--1: 0.75rem;
+  --step-0: 1rem;
+  --step-1: 1.125rem;
+  --step-2: 1.35rem;
+  --step-3: clamp(1.6rem, 1.2rem + 1vw, 2rem);
+  --step-4: clamp(2rem, 1.3rem + 2vw, 3.25rem);
+  --measure: 68ch;
+  --page: 76rem;
+  --tap: 2.75rem;
+}
+
+[data-look="a"][data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111111;
+  --bg-subtle: #1c1c1c;
+  --surface: #161616;
+  --ink: #f7f7f4;
+  --muted: #d6d6d1;
+  --faint: #c2c2bc;
+  --line: #f7f7f4;
+  --control: #f7f7f4;
+  --accent: #f7f7f4;
+  --accent-ink: #111111;
+  --accent-soft: #1c1c1c;
+  --link: #f7f7f4;
+  --focus: #f7f7f4;
+  --copper: #f7f7f4;
+  --viz: #f7f7f4;
+  --green-bg: #123224;
+  --green-ink: #b7f0cc;
+  --green-border: #3e9a62;
+  --amber-bg: #3a2c12;
+  --amber-ink: #ffe1a8;
+  --amber-border: #d7a24a;
+  --red-bg: #3c1c1c;
+  --red-ink: #ffc9c4;
+  --red-border: #e07a72;
+}
+
+[data-look="b"] {
+  color-scheme: dark;
+  --bg: #07141c;
+  --bg-subtle: #0c1e2b;
+  --surface: #102636;
+  --ink: #e7f6ff;
+  --muted: #c5deee;
+  --faint: #a9cfe3;
+  --line: #1e4a63;
+  --control: #8eebff;
+  --accent: #dff56a;
+  --accent-ink: #142000;
+  --accent-soft: #163246;
+  --link: #c6f56a;
+  --focus: #dff56a;
+  --copper: #8eebff;
+  --viz: #8eebff;
+  --green-bg: #123224;
+  --green-ink: #b7f0cc;
+  --green-border: #3e9a62;
+  --amber-bg: #3a2c12;
+  --amber-ink: #ffe1a8;
+  --amber-border: #d7a24a;
+  --red-bg: #3c1c1c;
+  --red-ink: #ffc9c4;
+  --red-border: #e07a72;
+  --shadow-1: none;
+  --shadow-2: none;
+  --shadow-3: none;
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-pill: 2px;
+  --radius: 2px;
+  --shadow: none;
+  --font-sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  --display: var(--font-mono);
+  --step--1: 0.75rem;
+  --step-0: 1rem;
+  --step-1: 1.05rem;
+  --step-2: 1.25rem;
+  --step-3: clamp(1.4rem, 1.1rem + 1vw, 1.8rem);
+  --step-4: clamp(1.8rem, 1.1rem + 2.4vw, 3.4rem);
+  --measure: 70ch;
+  --page: 78rem;
+  --tap: 2.75rem;
+}
+
+[data-look="b"][data-theme="light"] {
+  color-scheme: light;
+  --bg: #f2f6f3;
+  --bg-subtle: #e3eee6;
+  --surface: #ffffff;
+  --ink: #102018;
+  --muted: #24382e;
+  --faint: #2f4a3d;
+  --line: #1a3a32;
+  --control: #145c28;
+  --accent: #145c28;
+  --accent-ink: #f3ffe8;
+  --accent-soft: #e3eee6;
+  --link: #0f5c2c;
+  --focus: #145c28;
+  --copper: #0f5c2c;
+  --viz: #0b6e86;
+  --green-bg: #e5f2e8;
+  --green-ink: #0d4a28;
+  --green-border: #0d4a28;
+  --amber-bg: #fff3d6;
+  --amber-ink: #6b4500;
+  --amber-border: #8a5a00;
+  --red-bg: #fdecea;
+  --red-ink: #8d1d18;
+  --red-border: #a33b32;
+}
+
+[data-look="c"] {
+  color-scheme: light;
+  --bg: #f3eadf;
+  --bg-subtle: #e7d9c8;
+  --surface: #fffaf3;
+  --ink: #24160f;
+  --muted: #5c4336;
+  --faint: #684a3b;
+  --line: #c4aa92;
+  --control: #8a3416;
+  --accent: #8a3416;
+  --accent-ink: #fffaf3;
+  --accent-soft: #f6e4d4;
+  --link: #8a3416;
+  --focus: #8a3416;
+  --copper: #8a3416;
+  --viz: #8a3416;
+  --green-bg: #e5f2e8;
+  --green-ink: #0d4a28;
+  --green-border: #0d4a28;
+  --amber-bg: #fff3d6;
+  --amber-ink: #6b4500;
+  --amber-border: #8a5a00;
+  --red-bg: #fdecea;
+  --red-ink: #8d1d18;
+  --red-border: #a33b32;
+  --shadow-1: 0 1px 0 rgba(36, 22, 15, 0.06);
+  --shadow-2: 0 12px 32px rgba(36, 22, 15, 0.08);
+  --shadow-3: 0 18px 44px rgba(36, 22, 15, 0.12);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-pill: 0;
+  --radius: 0;
+  --shadow: var(--shadow-2);
+  --font-sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  --display: Georgia, "Iowan Old Style", Palatino, "Palatino Linotype", serif;
+  --step--1: 0.8125rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(1.8rem, 1.3rem + 1.4vw, 2.4rem);
+  --step-4: clamp(2.75rem, 1.2rem + 5.2vw, 6rem);
+  --measure: 62ch;
+  --page: 74rem;
+  --tap: 2.75rem;
+}
+
+[data-look="c"][data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1c130e;
+  --bg-subtle: #2a1c14;
+  --surface: #261910;
+  --ink: #f6eee6;
+  --muted: #e4d0c0;
+  --faint: #d7beab;
+  --line: #5c4334;
+  --control: #f0b080;
+  --accent: #f0b080;
+  --accent-ink: #2a140c;
+  --accent-soft: #3a261c;
+  --link: #f0b080;
+  --focus: #f0b080;
+  --copper: #f0b080;
+  --viz: #f0b080;
+  --green-bg: #123224;
+  --green-ink: #b7f0cc;
+  --green-border: #3e9a62;
+  --amber-bg: #3a2c12;
+  --amber-ink: #ffe1a8;
+  --amber-border: #d7a24a;
+  --red-bg: #3c1c1c;
+  --red-ink: #ffc9c4;
+  --red-border: #e07a72;
+  --shadow-1: none;
+  --shadow-2: none;
+  --shadow-3: none;
+  --shadow: none;
+}

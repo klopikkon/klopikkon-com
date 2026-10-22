@@ -1,5 +1,17 @@
+import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { esc } from "./html.mjs";
 import { canonical, normalizePath, url } from "./paths.mjs";
+
+const redesignRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+
+/** Product pages ship this later. Omit the tag until the file exists so a 404 cannot fail the console audit. */
+function serviceWorkerScript() {
+  const rel = "js/sw-register.js";
+  if (!existsSync(join(redesignRoot, rel))) return "";
+  return `\n  <script type="module" src="${url(rel)}"></script>`;
+}
 
 let siteContext = null;
 
@@ -66,7 +78,7 @@ function header(current) {
   </div>
   <div class="wrap brand-bar">
     <a class="brand" href="${url("")}">
-      <span class="brand-mark"><img class="logo" src="${url("assets/amt-logo.png")}" width="183" height="99" alt=""></span>
+      <span class="brand-mark"><img class="logo" src="${url("assets/amt-logo.png")}" srcset="${url("assets/amt-logo.png")} 183w, ${url("assets/amt-logo@2x.png")} 464w" sizes="(min-width: 56rem) 6.25rem, 5.5rem" width="183" height="99" alt=""></span>
       <span class="brand-name">${esc(data.name)}</span>
     </a>
     <form class="search" role="search" action="${url("catalogue/")}" method="get">
@@ -177,7 +189,7 @@ export function renderPage({ title, description, path, body, head = "" }) {
     ${body}
   </main>
   ${footer(current)}
-  <script type="module" src="${url("js/theme.js")}"></script>
+  <script type="module" src="${url("js/theme.js")}"></script>${serviceWorkerScript()}
 </body>
 </html>
 `;
