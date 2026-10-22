@@ -1,0 +1,1079 @@
+/**
+ * Catalogue search for the AMT concept redesign.
+ *
+ * Chemist-oriented matching over a prepared index:
+ * names, synonyms, SKU, exact and partial CAS (hyphens optional),
+ * formula, typo tolerance, and PEG length versus nominal mass
+ * (PEG3 is three ethylene-oxide units; PEG2000 / mPEG 2k is a mass).
+ *
+ * The same module runs in the browser and under Node tests.
+ * `amt:add-to-quote` is dispatched on `document` with `{id, sku, pack}`.
+ */
+
+const FAMILY_LABELS = {
+  lipids: "Lipids",
+  peg: "PEG reagents and linkers",
+  fluorophores: "Fluorophores and dyes",
+  organoborons: "Organoborons",
+  other: "Other",
+};
+
+const FAMILY_ORDER = ["lipids", "peg", "fluorophores", "organoborons", "other"];
+
+const ANCHORS = {
+  dspe: ["dspe", "distearoylphosphatidylethanolamine", "distearoyl phosphoethanolamine"],
+  dmg: ["dmg", "dimyristoyl"],
+  dspc: ["dspc", "distearoyl phosphocholine"],
+  dopc: ["dopc"],
+  dppc: ["dppc"],
+  dotap: ["dotap"],
+  dodap: ["dodap"],
+};
+
+const PAGE_SIZE = 24;
+
+function familyLabel(family) {
+  return FAMILY_LABELS[family] || family || "Other";
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[ch]));
+}
+
+function escReg(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function compact(value) {
+  return String(value ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function normSize(size) {
+  const match = String(size ?? "").match(/(\d+(?:\.\d+)?)\s*(mg|g|kg)/i);
+  if (!match) return String(size ?? "");
+  const n = Number(match[1]);
+  const num = Number.isInteger(n) ? String(n) : String(n);
+  return `${num} ${match[2].toLowerCase()}`;
+}
+
+function sizeMg(size) {
+  const match = String(size ?? "").match(/(\d+(?:\.\d+)?)\s*(mg|g|kg)/i);
+  if (!match) return Number.POSITIVE_INFINITY;
+  const n = Number(match[1]);
+  const unit = match[2].toLowerCase();
+  if (unit === "kg") return n * 1e6;
+  if (unit === "g") return n * 1000;
+  return n;
+}
+
+function moneyLabel(pack) {
+  if (!pack || pack.price == null || pack.priceText === "quote") return "Quote";
+  return pack.priceText || (Number.isInteger(pack.price) ? `$${pack.price}` : `$${Number(pack.price).toFixed(2)}`);
+}
+
+function looksLikeFormula(value) {
+  if (!/^([A-Z][a-z]?\d*)+$/.test(value) || !/[CH]/.test(value) || !/\d/.test(value)) return false;
+  if (value.length < 2 || value.length > 48) return false;
+  // Catalogue codes such as ALC0315 are all capitals plus a trailing number.
+  if (/^[A-Z]{2,}\d+$/.test(value)) return false;
+  if (!/H/.test(value) && value.length > 6) return false;
+  return true;
+}
+
+function casParts(value) {
+  const raw = String(value ?? "");
+  if (!raw || /no\s*cas/i.test(raw)) return [];
+  return raw.match(/\d{2,7}-\d{2}-\d/g) || [];
+}
+
+function damerau(a, b, limit) {
+  if (a === b) return 0;
+  const la = a.length;
+  const lb = b.length;
+  if (Math.abs(la - lb) > limit) return limit + 1;
+  const prev2 = new Uint16Array(lb + 1);
+  const prev = new Uint16Array(lb + 1);
+  const cur = new Uint16Array(lb + 1);
+  for (let j = 0; j <= lb; j += 1) prev[j] = j;
+  for (let i = 1; i <= la; i += 1) {
+    cur[0] = i;
+    let rowMin = cur[0];
+    for (let j = 1; j <= lb; j += 1) {
+      const cost = a.charCodeAt(i - 1) === b.charCodeAt(j - 1) ? 0 : 1;
+      let value = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+      if (i > 1 && j > 1 && a.charCodeAt(i - 1) === b.charCodeAt(j - 2) && a.charCodeAt(i - 2) === b.charCodeAt(j - 1)) {
+        value = Math.min(value, prev2[j - 2] + 1);
+      }
+      cur[j] = value;
+      if (value < rowMin) rowMin = value;
+    }
+    if (rowMin > limit) return limit + 1;
+    prev2.set(prev);
+    prev.set(cur);
+  }
+  return prev[lb];
+}
+
+/**
+ * Read a PEG description out of a string.
+ * PEG3 / m-PEG3 → oligomer length. PEG2000 / PEG(400) / mPEG 2k → nominal mass.
+ * The matched text is removed from `rest` so it is not searched again as words.
+ */
+function extractPeg(text) {
+  let rest = String(text ?? "");
+  let methoxy = /\bm[\s-]*peg\b/i.test(rest) || /\bmpeg/i.test(rest);
+  let n = null;
+  let mw = null;
+  const take = (re) => {
+    const match = rest.match(re);
+    if (!match) return null;
+    rest = `${rest.slice(0, match.index)} ${rest.slice(match.index + match[0].length)}`;
+    return match;
+  };
+  let match = take(/\bpeg\s*\(\s*(\d{2,5})\s*\)/i);
+  if (match) mw = Number(match[1]);
+  if (mw == null) {
+    match = take(/\b(m[\s-]*)?peg[\s-]*(\d+(?:\.\d+)?)\s*k\b/i);
+    if (match) {
+      mw = Math.round(Number(match[2]) * 1000);
+      if (match[1]) methoxy = true;
+    }
+  }
+  if (mw == null) {
+    match = take(/\b(m[\s-]*)?peg[\s-]*(\d{3,5})\b/i);
+    if (match) {
+      mw = Number(match[2]);
+      if (match[1]) methoxy = true;
+    }
+  }
+  if (mw == null) {
+    match = take(/\b(m[\s-]*)?peg[\s-]*(\d{1,2})\b/i);
+    if (match) {
+      n = Number(match[2]);
+      if (match[1]) methoxy = true;
+    }
+  }
+  if (mw == null && n == null) {
+    match = take(/\bmpeg(\d{1,5})\b/i);
+    if (match) {
+      methoxy = true;
+      const num = Number(match[1]);
+      if (num >= 100) mw = num;
+      else n = num;
+    }
+  }
+  if (n == null && mw == null && !methoxy) return null;
+  rest = rest.replace(/\bm[\s-]*peg\b/gi, " ").replace(/\bmpeg\b/gi, " ").replace(/\bpegs?\b/gi, " ");
+  return { n, mw, methoxy, rest };
+}
+
+function indexTokens(text) {
+  const out = new Set();
+  const lower = String(text ?? "").toLowerCase();
+  for (const chunk of lower.split(/[\s,/()+[\]:]+/)) {
+    const piece = chunk.replace(/^[.\-]+|[.\-]+$/g, "");
+    if (piece.length < 2) continue;
+    out.add(piece);
+    const flat = piece.replace(/[^a-z0-9]/g, "");
+    if (flat.length >= 2) out.add(flat);
+    for (const part of piece.split(/[^a-z0-9+]+/)) {
+      if (part.length >= 2) out.add(part);
+    }
+  }
+  return [...out];
+}
+
+function queryTokens(text) {
+  const out = [];
+  for (const chunk of String(text ?? "").toLowerCase().split(/\s+/)) {
+    const piece = chunk.replace(/^[^\w+]+|[^\w+]+$/g, "");
+    if (piece.length < 2) continue;
+    if (piece === "peg" || piece === "mpeg" || piece === "k") continue;
+    out.push(piece);
+    const flat = piece.replace(/[^a-z0-9]/g, "");
+    if (flat.length >= 2 && flat !== piece) out.push(flat);
+  }
+  return [...new Set(out)];
+}
+
+function prepareRecord(product) {
+  if (product && product._prepared) return product;
+  const syn = Array.isArray(product.synonyms) ? product.synonyms.filter(Boolean) : (product.syn || []);
+  const packs = (product.packs || []).map((pack) => {
+    if (Array.isArray(pack)) {
+      return {
+        size: pack[0],
+        price: pack[1],
+        currency: pack[2] || "USD",
+        priceText: pack[3] || (pack[1] == null ? "quote" : String(pack[1])),
+        sizeNorm: normSize(pack[0]),
+      };
+    }
+    return {
+      size: pack.size,
+      price: pack.price ?? null,
+      currency: pack.currency || "USD",
+      priceText: pack.priceText || (pack.price == null ? "quote" : String(pack.price)),
+      sizeNorm: normSize(pack.size),
+    };
+  });
+  const priced = packs.map((pack) => pack.price).filter((price) => typeof price === "number");
+  const pegSource = [product.name, ...syn].join(" ");
+  const peg = extractPeg(pegSource) || { n: null, mw: null, methoxy: false };
+  const casRaw = casParts(product.cas);
+  const name = product.name || "";
+  const record = {
+    _prepared: true,
+    id: product.id,
+    sku: product.sku || "",
+    name,
+    syn,
+    fam: product.family || product.fam || "other",
+    sub: product.subfamily || product.sub || "",
+    cas: product.cas || "",
+    formula: product.formula || "",
+    mw: typeof product.mw === "number" ? product.mw : null,
+    pur: product.purity || product.pur || "",
+    packs,
+    pegN: peg.n,
+    pegMw: peg.mw,
+    pegMe: Boolean(peg.methoxy),
+    minPrice: priced.length ? Math.min(...priced) : null,
+    quoteOnly: packs.length === 0 || priced.length === 0,
+    casRaw,
+    casDigits: casRaw.map((cas) => cas.replace(/\D/g, "")),
+    skuKey: compact(product.sku),
+    nameKey: compact(name),
+    formulaKey: String(product.formula || "").replace(/\s+/g, ""),
+    tokens: indexTokens([name, ...syn, product.sku, product.cas, product.formula].join(" ")),
+    nameTokens: indexTokens(name),
+    sourceTitle: product.source?.pdf ? `${product.source.pdf}${product.source.page ? `, page ${product.source.page}` : ""}` : "",
+  };
+  return record;
+}
+
+function hydrate(record) {
+  if (record.tokenSet) return record;
+  const prepared = record._prepared ? record : prepareRecord(record);
+  prepared.tokenSet = new Set(prepared.tokens);
+  prepared.nameTokenSet = new Set(prepared.nameTokens);
+  prepared.blob = [prepared.name, ...prepared.syn, prepared.sku, prepared.cas, prepared.formula].join(" ").toLowerCase();
+  return prepared;
+}
+
+function parseQuery(raw) {
+  const original = String(raw ?? "").trim();
+  const parsed = { raw: original, cas: null, formula: null, peg: null, anchors: [], tokens: [] };
+  if (!original) return parsed;
+
+  const squashed = original.replace(/\s+/g, "");
+  if (/^[\d-]+$/.test(squashed)) {
+    const digits = squashed.replace(/\D/g, "");
+    if (digits.length >= 3) {
+      parsed.cas = { digits, formatted: squashed.includes("-") ? squashed : null };
+      return parsed;
+    }
+  }
+
+  let work = original;
+  const casMatch = work.match(/\d{2,7}-\d{2}-\d/);
+  if (casMatch) {
+    parsed.cas = { digits: casMatch[0].replace(/\D/g, ""), formatted: casMatch[0] };
+    work = `${work.slice(0, casMatch.index)} ${work.slice(casMatch.index + casMatch[0].length)}`;
+  }
+
+  const peg = extractPeg(work);
+  if (peg) {
+    parsed.peg = { n: peg.n, mw: peg.mw, methoxy: peg.methoxy };
+    work = peg.rest;
+  }
+
+  const anchors = [];
+  for (const key of Object.keys(ANCHORS)) {
+    const re = new RegExp(`\\b${key}\\b`, "i");
+    if (re.test(work)) {
+      anchors.push(key);
+      work = work.replace(re, " ");
+    }
+  }
+  parsed.anchors = anchors;
+
+  const formulaSource = work.replace(/\s+/g, "");
+  if (looksLikeFormula(formulaSource)) {
+    parsed.formula = formulaSource;
+    work = "";
+  } else {
+    const lone = work.trim();
+    if (looksLikeFormula(lone)) {
+      parsed.formula = lone;
+      work = "";
+    }
+  }
+
+  parsed.tokens = queryTokens(work);
+  return parsed;
+}
+
+function casScore(record, cas) {
+  if (!cas) return null;
+  if (!record.casDigits.length) return 0;
+  for (const digits of record.casDigits) {
+    if (digits === cas.digits) return 1000;
+  }
+  if (cas.digits.length >= 5) {
+    for (const digits of record.casDigits) {
+      if (digits.startsWith(cas.digits)) return 720;
+    }
+  }
+  if (cas.digits.length >= 6) {
+    for (const digits of record.casDigits) {
+      if (digits.includes(cas.digits)) return 460;
+    }
+    if (cas.formatted) {
+      for (const raw of record.casRaw) {
+        if (raw.includes(cas.formatted)) return 460;
+      }
+    }
+  }
+  return 0;
+}
+
+function pegOk(record, peg) {
+  if (!peg) return true;
+  if (peg.mw != null && record.pegMw !== peg.mw) return false;
+  if (peg.n != null && record.pegN !== peg.n) return false;
+  if (peg.methoxy && !record.pegMe) return false;
+  if (peg.mw == null && peg.n == null && peg.methoxy && !record.pegMe) return false;
+  return peg.mw != null || peg.n != null || peg.methoxy;
+}
+
+function anchorOk(record, anchors) {
+  if (!anchors.length) return true;
+  for (const key of anchors) {
+    const alts = ANCHORS[key] || [key];
+    const matched = alts.some((alt) => alt.split(/\s+/).every((word) => record.blob.includes(word)));
+    if (!matched) return false;
+  }
+  return true;
+}
+
+function formulaScore(record, formula) {
+  if (!formula) return null;
+  if (!record.formulaKey) return 0;
+  if (record.formulaKey === formula) return 780;
+  if (record.formulaKey.includes(formula) || formula.includes(record.formulaKey)) return 240;
+  return 0;
+}
+
+function tokenHit(record, token) {
+  const flat = token.replace(/[^a-z0-9]/g, "");
+  if (record.tokenSet.has(token) || (flat && record.tokenSet.has(flat))) {
+    const inName = record.nameTokenSet.has(token) || (flat && record.nameTokenSet.has(flat));
+    return { score: inName ? 84 : 58, needle: token };
+  }
+  if (flat.length >= 4) {
+    for (const candidate of record.nameTokens) {
+      if (candidate.startsWith(flat)) return { score: 40, needle: candidate };
+    }
+    for (const candidate of record.tokens) {
+      if (candidate.startsWith(flat)) return { score: 28, needle: candidate };
+    }
+  }
+  if (flat.length >= 5 && record.blob.includes(flat)) return { score: 24, needle: flat };
+  if (flat.length >= 5 && !/\d/.test(flat)) {
+    const limit = flat.length >= 9 ? 2 : 1;
+    let best = null;
+    for (const candidate of record.tokens) {
+      if (candidate.length < 5 || /\d/.test(candidate)) continue;
+      if (Math.abs(candidate.length - flat.length) > limit) continue;
+      if (!best && candidate[0] !== flat[0] && Math.abs(candidate.charCodeAt(0) - flat.charCodeAt(0)) > 1) continue;
+      const distance = damerau(flat, candidate, limit);
+      if (distance <= limit && (!best || distance < best.distance)) {
+        best = { distance, needle: candidate };
+      }
+    }
+    if (best) return { score: best.distance === 1 ? 18 : 11, needle: best.needle };
+    if (flat.length >= 6) {
+      for (const candidate of record.tokens) {
+        if (candidate.length <= flat.length || candidate.length > flat.length + 12 || /\d/.test(candidate)) continue;
+        for (let i = 0; i <= candidate.length - flat.length; i += 1) {
+          const slice = candidate.slice(i, i + flat.length);
+          if (slice[0] !== flat[0]) continue;
+          if (damerau(flat, slice, 1) <= 1) return { score: 14, needle: slice };
+        }
+      }
+    }
+  }
+  return { score: 0, needle: "" };
+}
+
+function skuBonus(record, raw) {
+  const key = compact(raw);
+  if (key.length < 5) return 0;
+  if (key === record.skuKey) return 960;
+  if (record.skuKey.startsWith(key) && key.length >= 6) return 520;
+  return 0;
+}
+
+function searchRecords(records, state) {
+  const parsed = parseQuery(state.q || "");
+  const queryKey = compact(state.q || "");
+  const hits = [];
+  for (const raw of records) {
+    const record = hydrate(raw);
+    if (!passesFilters(record, state)) continue;
+    const empty = !parsed.raw;
+    let score = 1;
+    const needles = new Set();
+    if (!empty) {
+      const cas = casScore(record, parsed.cas);
+      if (cas === 0) continue;
+      if (!pegOk(record, parsed.peg)) continue;
+      if (!anchorOk(record, parsed.anchors)) continue;
+      const formula = formulaScore(record, parsed.formula);
+      if (formula === 0) continue;
+      let tokenScore = 0;
+      let failed = false;
+      for (const token of parsed.tokens) {
+        const hit = tokenHit(record, token);
+        if (!hit.score) {
+          failed = true;
+          break;
+        }
+        tokenScore += hit.score;
+        if (hit.needle) needles.add(hit.needle);
+        needles.add(token);
+      }
+      if (failed) continue;
+      const hasConstraint = parsed.cas || parsed.peg || parsed.anchors.length || parsed.formula || parsed.tokens.length;
+      if (!hasConstraint) continue;
+      score = tokenScore;
+      if (cas) score += cas;
+      if (formula) score += formula;
+      if (parsed.peg?.mw != null) score += 640;
+      if (parsed.peg?.n != null) score += 540;
+      if (parsed.anchors.length) score += 220 * parsed.anchors.length;
+      score += skuBonus(record, parsed.raw);
+      if (queryKey && record.nameKey === queryKey) score += 860;
+      else if (queryKey.length >= 6 && Math.abs(queryKey.length - record.nameKey.length) <= (queryKey.length >= 12 ? 2 : 1) && damerau(queryKey, record.nameKey, queryKey.length >= 12 ? 2 : 1) <= (queryKey.length >= 12 ? 2 : 1)) score += 420;
+      else if (queryKey.length >= 4 && record.nameKey.startsWith(queryKey)) score += 180;
+      if (parsed.raw && record.blob.includes(parsed.raw.toLowerCase())) score += 70;
+      if (parsed.cas?.formatted) needles.add(parsed.cas.formatted);
+      if (parsed.peg?.mw) {
+        needles.add(String(parsed.peg.mw));
+        needles.add(`PEG${parsed.peg.mw}`);
+      }
+      if (parsed.peg?.n != null) needles.add(`PEG${parsed.peg.n}`);
+    }
+    hits.push({ record, score, needles: [...needles].filter((needle) => String(needle).length >= 2) });
+  }
+
+  const sort = state.sort || "relevance";
+  hits.sort((a, b) => compareHits(a, b, sort, Boolean(parsed.raw)));
+  return { hits, parsed };
+}
+
+function passesFilters(record, state) {
+  if (state.family?.length && !state.family.includes(record.fam)) return false;
+  if (state.sub?.length && !state.sub.includes(record.sub || "")) return false;
+  if (state.cas === "yes" && !record.casRaw.length) return false;
+  if (state.cas === "no" && record.casRaw.length) return false;
+  if (state.mwMin != null || state.mwMax != null) {
+    if (typeof record.mw !== "number") return false;
+    if (state.mwMin != null && record.mw < state.mwMin) return false;
+    if (state.mwMax != null && record.mw > state.mwMax) return false;
+  }
+  if (state.purity?.length) {
+    const label = record.pur || "Not stated";
+    if (!state.purity.includes(label)) return false;
+  }
+  if (state.pack?.length) {
+    const sizes = new Set(record.packs.map((pack) => pack.sizeNorm));
+    if (!state.pack.some((size) => sizes.has(normSize(size)) || sizes.has(size))) return false;
+  }
+  if (state.priceMin != null || state.priceMax != null) {
+    const matched = record.packs.some((pack) => {
+      if (typeof pack.price !== "number") return false;
+      if (state.priceMin != null && pack.price < state.priceMin) return false;
+      if (state.priceMax != null && pack.price > state.priceMax) return false;
+      return true;
+    });
+    if (!matched) return false;
+  }
+  if (state.quote && !record.quoteOnly) return false;
+  return true;
+}
+
+function clearedQuery(state) {
+  return { ...emptyState(), q: state.q || "", sort: "relevance" };
+}
+
+function runSearch(records, state) {
+  const queried = searchRecords(records, clearedQuery(state));
+  const pool = queried.hits.map((hit) => hit.record);
+  const facets = facetCounts(pool, state);
+  const hits = queried.hits.filter((hit) => passesFilters(hit.record, state));
+  hits.sort((a, b) => compareHits(a, b, state.sort || "relevance", Boolean((state.q || "").trim())));
+  return { hits, facets, parsed: queried.parsed };
+}
+
+function compareHits(a, b, sort, hasQuery) {
+  if (sort === "name" || (sort === "relevance" && !hasQuery)) {
+    return a.record.name.localeCompare(b.record.name, "en", { numeric: true, sensitivity: "base" });
+  }
+  if (sort === "mw") {
+    const aw = a.record.mw ?? Number.POSITIVE_INFINITY;
+    const bw = b.record.mw ?? Number.POSITIVE_INFINITY;
+    if (aw !== bw) return aw - bw;
+  } else if (sort === "price") {
+    const ap = a.record.minPrice ?? Number.POSITIVE_INFINITY;
+    const bp = b.record.minPrice ?? Number.POSITIVE_INFINITY;
+    if (ap !== bp) return ap - bp;
+  } else if (b.score !== a.score) {
+    return b.score - a.score;
+  }
+  return a.record.name.localeCompare(b.record.name, "en", { numeric: true, sensitivity: "base" });
+}
+
+function facetCounts(records, state) {
+  const families = new Map();
+  const subs = new Map();
+  const purities = new Map();
+  const packs = new Map();
+  let casYes = 0;
+  let casNo = 0;
+  let quote = 0;
+  const consider = (skip) => records.filter((record) => passesFilters(hydrate(record), { ...state, ...skip }));
+  for (const record of consider({ family: [] })) {
+    families.set(record.fam, (families.get(record.fam) || 0) + 1);
+  }
+  for (const record of consider({ sub: [] })) {
+    const key = record.sub || "Unspecified";
+    subs.set(key, (subs.get(key) || 0) + 1);
+  }
+  for (const record of consider({ purity: [] })) {
+    const key = record.pur || "Not stated";
+    purities.set(key, (purities.get(key) || 0) + 1);
+  }
+  for (const record of consider({ pack: [] })) {
+    const seen = new Set();
+    for (const pack of record.packs) {
+      if (!pack.sizeNorm || seen.has(pack.sizeNorm)) continue;
+      seen.add(pack.sizeNorm);
+      packs.set(pack.sizeNorm, (packs.get(pack.sizeNorm) || 0) + 1);
+    }
+  }
+  for (const record of consider({ cas: "any" })) {
+    if (record.casRaw.length) casYes += 1;
+    else casNo += 1;
+  }
+  for (const record of consider({ quote: false })) {
+    if (record.quoteOnly) quote += 1;
+  }
+  const byCount = (map) => [...map.entries()].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])));
+  const familyRows = [...families.entries()].sort((a, b) => {
+    const ai = FAMILY_ORDER.indexOf(a[0]);
+    const bi = FAMILY_ORDER.indexOf(b[0]);
+    return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
+  });
+  return {
+    family: familyRows,
+    sub: byCount(subs),
+    purity: byCount(purities),
+    pack: [...packs.entries()].sort((a, b) => sizeMg(a[0]) - sizeMg(b[0])),
+    casYes,
+    casNo,
+    quote,
+  };
+}
+
+function highlight(text, needles) {
+  const source = String(text ?? "");
+  const useful = [...new Set(needles || [])].filter((needle) => String(needle).length >= 3).sort((a, b) => b.length - a.length);
+  if (!useful.length || !source) return esc(source);
+  const re = new RegExp(useful.map(escReg).join("|"), "gi");
+  let html = "";
+  let last = 0;
+  for (const match of source.matchAll(re)) {
+    const index = match.index ?? 0;
+    html += esc(source.slice(last, index));
+    html += `<mark class="cat-mark">${esc(match[0])}</mark>`;
+    last = index + match[0].length;
+  }
+  html += esc(source.slice(last));
+  return html;
+}
+
+function emptyState() {
+  return {
+    q: "",
+    family: [],
+    sub: [],
+    cas: "any",
+    mwMin: null,
+    mwMax: null,
+    purity: [],
+    pack: [],
+    priceMin: null,
+    priceMax: null,
+    quote: false,
+    sort: "relevance",
+    page: 1,
+  };
+}
+
+function numOrNull(value) {
+  if (value == null || value === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
+function listParam(params, key) {
+  const values = typeof params.getAll === "function" ? params.getAll(key) : [];
+  return values.flatMap((value) => String(value).split(",")).map((value) => value.trim()).filter(Boolean);
+}
+
+function stateFromParams(params) {
+  const state = emptyState();
+  state.q = params.get("q") || "";
+  state.family = listParam(params, "family");
+  state.sub = listParam(params, "sub");
+  const cas = params.get("cas");
+  state.cas = cas === "yes" || cas === "no" ? cas : "any";
+  const mw = params.get("mw");
+  if (mw && mw.includes("-")) {
+    const [min, max] = mw.split("-");
+    state.mwMin = numOrNull(min);
+    state.mwMax = numOrNull(max);
+  } else {
+    state.mwMin = numOrNull(params.get("mwMin"));
+    state.mwMax = numOrNull(params.get("mwMax"));
+  }
+  state.purity = listParam(params, "purity");
+  state.pack = listParam(params, "pack").map(normSize);
+  const price = params.get("price");
+  if (price && price.includes("-")) {
+    const [min, max] = price.split("-");
+    state.priceMin = numOrNull(min);
+    state.priceMax = numOrNull(max);
+  } else {
+    state.priceMin = numOrNull(params.get("priceMin"));
+    state.priceMax = numOrNull(params.get("priceMax"));
+  }
+  state.quote = params.get("quote") === "1" || params.get("quote") === "only";
+  const sort = params.get("sort");
+  state.sort = ["relevance", "name", "mw", "price"].includes(sort) ? sort : "relevance";
+  const page = Number(params.get("page") || 1);
+  state.page = Number.isFinite(page) && page > 1 ? Math.floor(page) : 1;
+  return state;
+}
+
+function rangeParam(min, max) {
+  if (min == null && max == null) return "";
+  return `${min ?? ""}-${max ?? ""}`;
+}
+
+function stateToQuery(state) {
+  const params = new URLSearchParams();
+  if (state.q) params.set("q", state.q);
+  if (state.family?.length) params.set("family", state.family.join(","));
+  if (state.sub?.length) params.set("sub", state.sub.join(","));
+  if (state.cas === "yes" || state.cas === "no") params.set("cas", state.cas);
+  const mw = rangeParam(state.mwMin, state.mwMax);
+  if (mw && mw !== "-") params.set("mw", mw);
+  if (state.purity?.length) params.set("purity", state.purity.join(","));
+  if (state.pack?.length) params.set("pack", state.pack.join(","));
+  const price = rangeParam(state.priceMin, state.priceMax);
+  if (price && price !== "-") params.set("price", price);
+  if (state.quote) params.set("quote", "1");
+  if (state.sort && state.sort !== "relevance") params.set("sort", state.sort);
+  if (state.page > 1) params.set("page", String(state.page));
+  const text = params.toString();
+  return text ? `?${text}` : "";
+}
+
+function activeFilterCount(state) {
+  return (state.family?.length ? 1 : 0)
+    + (state.sub?.length ? 1 : 0)
+    + (state.cas !== "any" ? 1 : 0)
+    + (state.mwMin != null || state.mwMax != null ? 1 : 0)
+    + (state.purity?.length ? 1 : 0)
+    + (state.pack?.length ? 1 : 0)
+    + (state.priceMin != null || state.priceMax != null ? 1 : 0)
+    + (state.quote ? 1 : 0);
+}
+
+function renderCard(hit, href) {
+  const record = hit.record;
+  const needles = hit.needles || [];
+  const kicker = `${familyLabel(record.fam)}${record.sub ? ` · ${record.sub}` : ""}`;
+  const cas = record.cas ? `CAS ${record.cas}` : "No CAS published";
+  const syn = record.syn.slice(0, 2).join(" · ");
+  const packItems = record.packs.map((pack) => `<li>${esc(pack.size)} · ${esc(moneyLabel(pack))}</li>`).join("");
+  const options = record.packs.map((pack) => (
+    `<option value="${esc(pack.size)}">${esc(pack.size)} · ${esc(moneyLabel(pack))}</option>`
+  )).join("");
+  const price = record.quoteOnly ? "Quote" : `From ${moneyLabel(record.packs.find((pack) => pack.price === record.minPrice) || record.packs[0])}`;
+  const source = record.sourceTitle ? ` title="${esc(record.sourceTitle)}"` : "";
+  return `<li class="cat-card">
+    <div class="cat-card-main">
+      <p class="cat-kicker"${source}>${highlight(kicker, needles)}</p>
+      <h2><a class="cat-name" href="${esc(href)}">${highlight(record.name, needles)}</a></h2>
+      <p class="cat-meta">
+        <span class="cat-sku">${highlight(record.sku, needles)}</span>
+        <span class="cat-cas">${highlight(cas, needles)}</span>
+        ${record.pur ? `<span class="cat-pur">${highlight(record.pur, needles)}</span>` : ""}
+        ${record.formula ? `<span class="cat-formula">${highlight(record.formula, needles)}</span>` : ""}
+        ${record.mw != null ? `<span class="cat-mw">${esc(record.mw)} Da</span>` : ""}
+      </p>
+      ${syn ? `<p class="cat-syn">${highlight(syn, needles)}</p>` : ""}
+      ${packItems ? `<ul class="cat-packs">${packItems}</ul>` : ""}
+    </div>
+    <div class="cat-buy" data-quote-root>
+      <p class="cat-price">${esc(price)}</p>
+      ${options ? `<label class="cat-pack-label"><span>Pack</span><select data-pack-select aria-label="Pack size for ${esc(record.name)}">${options}</select></label>` : ""}
+      <button type="button" class="cat-quote" data-add-quote data-id="${esc(record.id)}" data-sku="${esc(record.sku)}" data-pack="${esc(record.packs[0]?.size || "")}">Add to quote</button>
+    </div>
+  </li>`;
+}
+
+function checkList(name, legend, rows, selected, labeler) {
+  if (!rows.length) return "";
+  const items = rows.map(([value, count]) => {
+    const key = `${name}:${value}`;
+    const checked = selected.includes(value) ? " checked" : "";
+    return `<label class="cat-check">
+      <input type="checkbox" data-facet="${esc(name)}" data-facet-key="${esc(key)}" value="${esc(value)}"${checked}>
+      <span>${esc(labeler ? labeler(value) : value)}</span>
+      <span class="cat-count">${count}</span>
+    </label>`;
+  }).join("");
+  return `<fieldset class="cat-facet"><legend>${esc(legend)}</legend><div class="cat-facet-list">${items}</div></fieldset>`;
+}
+
+function renderFilters(facets, state, hasMw) {
+  const cas = (value, label, count) => `<label class="cat-check"><input type="radio" name="cas" data-facet="cas" value="${value}"${state.cas === value ? " checked" : ""}><span>${label}</span><span class="cat-count">${count}</span></label>`;
+  return `
+    <div class="cat-filter-head">
+      <h2 id="cat-filter-title">Filters</h2>
+      <button type="button" class="cat-textish" data-clear-all>Clear all</button>
+      <button type="button" class="cat-textish cat-filter-close" data-close-filters>Close</button>
+    </div>
+    ${checkList("family", "Family", facets.family, state.family, familyLabel)}
+    ${checkList("sub", "Subfamily", facets.sub.filter((row) => row[0] !== "Unspecified" || state.sub.includes("Unspecified")), state.sub)}
+    <p class="cat-facet-note">Subfamily is read off the published name.</p>
+    <fieldset class="cat-facet">
+      <legend>CAS</legend>
+      ${cas("any", "Any", facets.casYes + facets.casNo)}
+      ${cas("yes", "Listed", facets.casYes)}
+      ${cas("no", "Not listed", facets.casNo)}
+    </fieldset>
+    <fieldset class="cat-facet">
+      <legend>Molecular weight</legend>
+      ${hasMw ? "" : `<p class="cat-facet-note">No molecular weights are published in this extract. A range matches nothing until they are.</p>`}
+      <div class="cat-range">
+        <label>Min <input type="number" inputmode="decimal" min="0" data-range="mwMin" value="${state.mwMin ?? ""}" aria-label="Minimum molecular weight"></label>
+        <label>Max <input type="number" inputmode="decimal" min="0" data-range="mwMax" value="${state.mwMax ?? ""}" aria-label="Maximum molecular weight"></label>
+      </div>
+    </fieldset>
+    ${checkList("purity", "Purity", facets.purity, state.purity)}
+    ${checkList("pack", "Pack size", facets.pack, state.pack)}
+    <fieldset class="cat-facet">
+      <legend>Price, USD</legend>
+      <p class="cat-facet-note">Any listed pack whose price falls in the range.</p>
+      <div class="cat-range">
+        <label>Min <input type="number" inputmode="decimal" min="0" data-range="priceMin" value="${state.priceMin ?? ""}" aria-label="Minimum price"></label>
+        <label>Max <input type="number" inputmode="decimal" min="0" data-range="priceMax" value="${state.priceMax ?? ""}" aria-label="Maximum price"></label>
+      </div>
+      <label class="cat-check">
+        <input type="checkbox" data-facet="quote" data-facet-key="quote"${state.quote ? " checked" : ""}>
+        <span>Quote only</span>
+        <span class="cat-count">${facets.quote}</span>
+      </label>
+    </fieldset>`;
+}
+
+function renderChips(state) {
+  const chips = [];
+  const add = (label, patch) => chips.push(`<button type="button" class="cat-chip" data-chip="${esc(JSON.stringify(patch))}">${esc(label)} <span aria-hidden="true">×</span></button>`);
+  if (state.q) add(`“${state.q}”`, { q: "" });
+  for (const family of state.family) add(familyLabel(family), { family: state.family.filter((value) => value !== family) });
+  for (const sub of state.sub) add(sub, { sub: state.sub.filter((value) => value !== sub) });
+  if (state.cas === "yes") add("CAS listed", { cas: "any" });
+  if (state.cas === "no") add("CAS not listed", { cas: "any" });
+  if (state.mwMin != null || state.mwMax != null) add(`MW ${state.mwMin ?? "0"}–${state.mwMax ?? "∞"}`, { mwMin: null, mwMax: null });
+  for (const purity of state.purity) add(purity, { purity: state.purity.filter((value) => value !== purity) });
+  for (const pack of state.pack) add(pack, { pack: state.pack.filter((value) => value !== pack) });
+  if (state.priceMin != null || state.priceMax != null) add(`$${state.priceMin ?? "0"}–${state.priceMax ?? "∞"}`, { priceMin: null, priceMax: null });
+  if (state.quote) add("Quote only", { quote: false });
+  return chips.join("");
+}
+
+function renderPager(page, pages) {
+  if (pages <= 1) return "";
+  const links = [];
+  const windowStart = Math.max(1, page - 2);
+  const windowEnd = Math.min(pages, page + 2);
+  const push = (n, label = String(n)) => {
+    const current = n === page ? ` aria-current="page"` : "";
+    links.push(`<button type="button" class="cat-page" data-page="${n}"${current}>${label}</button>`);
+  };
+  push(Math.max(1, page - 1), "Previous");
+  if (windowStart > 1) push(1);
+  for (let n = windowStart; n <= windowEnd; n += 1) push(n);
+  if (windowEnd < pages) push(pages);
+  push(Math.min(pages, page + 1), "Next");
+  return links.join("");
+}
+
+function boot(root) {
+  const form = root.querySelector("#cat-form");
+  const input = root.querySelector("#cat-q");
+  const sort = root.querySelector("#cat-sort");
+  const live = root.querySelector("#cat-live");
+  const results = root.querySelector("#cat-results");
+  const pager = root.querySelector("#cat-pager");
+  const chips = root.querySelector("#cat-chips");
+  const filters = root.querySelector("#cat-filters");
+  const openButton = root.querySelector(".cat-filter-open");
+  const hasMw = root.dataset.hasMw === "1";
+  const productBase = root.dataset.productBase || "../products/";
+  let records = [];
+  let state = stateFromParams(new URLSearchParams(location.search));
+
+  const mobile = () => window.matchMedia("(max-width: 959px)").matches;
+
+  function writeControls() {
+    if (input && input.value !== state.q) input.value = state.q;
+    if (sort && sort.value !== state.sort) sort.value = state.sort;
+    const count = activeFilterCount(state);
+    if (openButton) {
+      openButton.textContent = count ? `Filters (${count})` : "Filters";
+    }
+  }
+
+  function persist(mode) {
+    const url = `${location.pathname}${stateToQuery(state)}${location.hash}`;
+    if (mode === "push") history.pushState(null, "", url);
+    else history.replaceState(null, "", url);
+  }
+
+  function focusFilters(previous) {
+    if (!previous) return;
+    const next = filters.querySelector(`[data-facet-key="${CSS.escape(previous)}"]`);
+    if (next) next.focus();
+  }
+
+  function render(mode) {
+    writeControls();
+    const searched = runSearch(records, state);
+    const total = searched.hits.length;
+    const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    if (state.page > pages) state.page = pages;
+    const start = (state.page - 1) * PAGE_SIZE;
+    const slice = searched.hits.slice(start, start + PAGE_SIZE);
+    const previous = document.activeElement?.dataset?.facetKey || "";
+    filters.innerHTML = renderFilters(searched.facets, state, hasMw);
+    focusFilters(previous);
+    chips.innerHTML = renderChips(state);
+    if (!total) {
+      results.innerHTML = `<p class="cat-empty">No products match. Clear a filter, or browse by family below.</p>`;
+    } else {
+      results.innerHTML = `<ol class="cat-list" start="${start + 1}">${slice.map((hit) => renderCard(hit, `${productBase}${encodeURIComponent(hit.record.id)}/`)).join("")}</ol>`;
+    }
+    pager.innerHTML = renderPager(state.page, pages);
+    const noun = total === 1 ? "product" : "products";
+    const queryBit = state.q ? ` for ${state.q}` : "";
+    const pageBit = pages > 1 ? ` Page ${state.page} of ${pages}.` : "";
+    live.textContent = `${total} ${noun}${queryBit}.${pageBit}`;
+    if (mode) persist(mode);
+  }
+
+  function patch(partial, mode) {
+    state = { ...state, ...partial, page: partial.page ?? 1 };
+    render(mode);
+  }
+
+  input?.addEventListener("input", () => {
+    patch({ q: input.value, page: 1 }, "replace");
+  });
+  sort?.addEventListener("change", () => patch({ sort: sort.value, page: state.page }, "push"));
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    patch({ q: input.value }, "replace");
+  });
+
+  filters.addEventListener("change", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    if (target.dataset.facet === "family" || target.dataset.facet === "sub" || target.dataset.facet === "purity" || target.dataset.facet === "pack") {
+      const key = target.dataset.facet === "family" ? "family" : target.dataset.facet === "sub" ? "sub" : target.dataset.facet === "purity" ? "purity" : "pack";
+      const current = new Set(state[key]);
+      const value = key === "pack" ? normSize(target.value) : target.value;
+      if (target.checked) current.add(value);
+      else current.delete(value);
+      patch({ [key]: [...current] }, "push");
+      return;
+    }
+    if (target.name === "cas") patch({ cas: target.value }, "push");
+    if (target.dataset.facet === "quote") patch({ quote: target.checked }, "push");
+  });
+  filters.addEventListener("input", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement) || !target.dataset.range) return;
+    patch({ [target.dataset.range]: numOrNull(target.value) }, "replace");
+  });
+  filters.addEventListener("click", (event) => {
+    const clear = event.target.closest("[data-clear-all]");
+    if (clear) {
+      const q = state.q;
+      state = { ...emptyState(), q };
+      if (input) input.value = q;
+      render("push");
+    }
+    if (event.target.closest("[data-close-filters]")) closeFilters();
+  });
+  chips.addEventListener("click", (event) => {
+    const chip = event.target.closest("[data-chip]");
+    if (!chip) return;
+    patch(JSON.parse(chip.dataset.chip), "push");
+  });
+  pager.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-page]");
+    if (!button) return;
+    state = { ...state, page: Number(button.dataset.page) };
+    render("push");
+    results.querySelector(".cat-name")?.focus();
+  });
+
+  function openFilters() {
+    if (!mobile()) return;
+    filters.classList.add("is-open");
+    filters.setAttribute("role", "dialog");
+    filters.setAttribute("aria-modal", "true");
+    openButton?.setAttribute("aria-expanded", "true");
+    document.body.classList.add("cat-lock");
+    filters.querySelector("input, button")?.focus();
+  }
+  function closeFilters() {
+    filters.classList.remove("is-open");
+    filters.removeAttribute("role");
+    filters.removeAttribute("aria-modal");
+    openButton?.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("cat-lock");
+    openButton?.focus();
+  }
+  openButton?.addEventListener("click", openFilters);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && filters.classList.contains("is-open")) closeFilters();
+    if (event.key === "/" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA" && document.activeElement?.tagName !== "SELECT") {
+      event.preventDefault();
+      input?.focus();
+    }
+    if (!filters.classList.contains("is-open") || !mobile() || event.key !== "Tab") return;
+    const nodes = [...filters.querySelectorAll("button, input, select, a")];
+    if (!nodes.length) return;
+    const first = nodes[0];
+    const last = nodes[nodes.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
+  input?.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown") {
+      const first = results.querySelector(".cat-name");
+      if (first) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
+  results.addEventListener("keydown", (event) => {
+    const links = [...results.querySelectorAll(".cat-name")];
+    const index = links.indexOf(document.activeElement);
+    if (index < 0) return;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      links[Math.min(index + 1, links.length - 1)].focus();
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      if (index === 0) input?.focus();
+      else links[index - 1].focus();
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      links[0].focus();
+    } else if (event.key === "End") {
+      event.preventDefault();
+      links[links.length - 1].focus();
+    }
+  });
+
+  window.addEventListener("popstate", () => {
+    state = stateFromParams(new URLSearchParams(location.search));
+    render();
+  });
+
+  live.textContent = "Loading the catalogue index.";
+  fetch(new URL(root.dataset.index || "index.json", document.baseURI).href)
+    .then((response) => {
+      if (!response.ok) throw new Error(String(response.status));
+      return response.json();
+    })
+    .then((payload) => {
+      const items = Array.isArray(payload) ? payload : payload.items;
+      records = items.map(hydrate);
+      render();
+    })
+    .catch(() => {
+      live.textContent = "The search index did not load. The family lists below still work.";
+    });
+}
+
+function onQuoteClick(event) {
+  const button = event.target.closest?.("[data-add-quote]");
+  if (!button) return;
+  const root = button.closest("[data-quote-root]") || button.parentElement;
+  const select = root?.querySelector("[data-pack-select]");
+  const pack = select?.value || button.dataset.pack || "";
+  const detail = { id: button.dataset.id || "", sku: button.dataset.sku || "", pack };
+  document.dispatchEvent(new CustomEvent("amt:add-to-quote", { bubbles: true, detail }));
+  const status = document.getElementById("cat-quote-status");
+  const message = `Added ${detail.sku || detail.id}${pack ? `, ${pack}` : ""} to the quote.`;
+  if (status) status.textContent = message;
+  button.dataset.added = "true";
+}
+
+if (typeof document !== "undefined") {
+  const app = document.querySelector("[data-catalogue-app]");
+  if (app) boot(app);
+  document.addEventListener("click", onQuoteClick);
+}
+
+export {
+  ANCHORS,
+  FAMILY_LABELS,
+  PAGE_SIZE,
+  activeFilterCount,
+  extractPeg,
+  familyLabel,
+  highlight,
+  hydrate,
+  normSize,
+  parseQuery,
+  prepareRecord,
+  runSearch,
+  searchRecords,
+  stateFromParams,
+  stateToQuery,
+};

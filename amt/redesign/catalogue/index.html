@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="1349 products copied from the published AMT lists: lipids (26 Aug 2026), PEG reagents and linkers (3 Sep 2026), fluorophores and dyes (2026), and organoborons (21 Apr 2026). 36 lipids, 217 peg reagents and linkers, 40 fluorophores and dyes, 1056 organoborons. A price that was not printed is a quote.">
+<title>Catalogue · AMT concept redesign</title>
+<link rel="stylesheet" href="../css/catalogue.css">
+</head>
+<body>
+<!-- layout fallback: _build/lib/layout.mjs was not available. catalogue.mjs supplied this shell for the integrator. -->
+<a class="cat-skip" href="#catalogue">Skip to catalogue</a>
+<header class="cat-shell">
+  <div class="cat-shell-inner">
+    <a class="cat-brand" href="../"><span>AMT</span> <small>Concept redesign</small></a>
+    <nav aria-label="Primary">
+      <a href="./" aria-current="page">Catalogue</a>
+    </nav>
+    <button type="button" data-theme-toggle>Theme</button>
+  </div>
+</header>
+<main class="catalogue" id="catalogue" data-catalogue-app data-index="index.json" data-has-mw="0" data-product-base="../products/">
+  <header class="cat-intro">
+    <p class="cat-eyebrow">Catalogue</p>
+    <h1>Search the AMT list</h1>
+    <p class="cat-lede">1349 products copied from the published AMT lists: lipids (26 Aug 2026), PEG reagents and linkers (3 Sep 2026), fluorophores and dyes (2026), and organoborons (21 Apr 2026). 36 lipids, 217 peg reagents and linkers, 40 fluorophores and dyes, 1056 organoborons. A price that was not printed is a quote.</p>
+  </header>
+  <form id="cat-form" role="search" action="" method="get">
+    <div class="cat-toolbar">
+      <label class="cat-search">
+        <span>Search</span>
+        <input id="cat-q" name="q" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search" placeholder="Name, CAS, SKU, formula, mPEG 2k" aria-autocomplete="list" aria-controls="cat-results" aria-describedby="cat-hint">
+      </label>
+      <label class="cat-sort">Sort
+        <select id="cat-sort" name="sort">
+          <option value="relevance">Relevance</option>
+          <option value="name">Name</option>
+          <option value="mw">Molecular weight</option>
+          <option value="price">Price</option>
+        </select>
+      </label>
+      <button type="button" class="cat-filter-open" aria-expanded="false" aria-controls="cat-filters">Filters</button>
+    </div>
+    <p id="cat-hint" class="cat-hint">CAS works with or without hyphens. PEG3 is an oligomer length; PEG2000 and mPEG 2k are a nominal mass. Arrow keys move through results. <kbd>/</kbd> focuses search.</p>
+    <div class="cat-layout">
+      <aside id="cat-filters" class="cat-filters" aria-labelledby="cat-filter-title"></aside>
+      <div>
+        <p id="cat-live" class="cat-live" aria-live="polite">Loading the catalogue index.</p>
+        <div id="cat-chips" class="cat-chips"></div>
+        <div id="cat-results">
+          <p class="cat-empty">The searchable list loads in the browser. The family pages below list every product without JavaScript.</p>
+        </div>
+        <nav id="cat-pager" class="cat-pager" aria-label="Results pages"></nav>
+        <p id="cat-quote-status" class="cat-quote-status" aria-live="polite"></p>
+      </div>
+    </div>
+  </form>
+  <section class="cat-families" aria-labelledby="cat-browse-title">
+    <h2 id="cat-browse-title">Browse by family</h2>
+    <a class="cat-family-link" href="./lipids/"><span>Lipids</span><span class="cat-count">36</span></a><a class="cat-family-link" href="./peg/"><span>PEG reagents and linkers</span><span class="cat-count">217</span></a><a class="cat-family-link" href="./fluorophores/"><span>Fluorophores and dyes</span><span class="cat-count">40</span></a><a class="cat-family-link" href="./organoborons/"><span>Organoborons</span><span class="cat-count">1056</span></a>
+  </section>
+</main>
+<script type="module" src="../js/search.js"></script>
+<footer class="cat-shell-foot">
+  <p>Concept redesign, not the official AMT site. Names, CAS numbers and prices are copied from Advanced Molecular Technologies’ published lists. Unpublished prices are quotes.</p>
+</footer>
+<script>
+(function () {
+  var key = "amt-theme";
+  var saved = null;
+  try { saved = localStorage.getItem(key); } catch (err) { saved = null; }
+  if (saved === "light" || saved === "dark") {
+    document.documentElement.setAttribute("data-theme", saved);
+    document.documentElement.style.colorScheme = saved;
+  }
+  document.addEventListener("click", function (event) {
+    var button = event.target.closest && event.target.closest("[data-theme-toggle]");
+    if (!button) return;
+    var current = document.documentElement.getAttribute("data-theme");
+    if (current !== "light" && current !== "dark") {
+      current = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    var next = current === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    document.documentElement.style.colorScheme = next;
+    try { localStorage.setItem(key, next); } catch (err) {}
+  });
+})();
+</script>
+</body>
+</html>
