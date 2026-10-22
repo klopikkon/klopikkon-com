@@ -75,7 +75,7 @@ Paths below are under `/amt/redesign/`. Each HTML page carries `noindex,nofollow
 | `name` | Printed name. `null` for the seven flyer-only SKUs (structures and CAS, no name) |
 | `synonyms` | Always `[]`. Parentheticals such as `(Exoria)` stay inside `name` |
 | `family` | `lipids` \| `peg` \| `fluorophores` \| `organoborons` \| `other` |
-| `subfamily` | `null`. The homepage tag `Ionisable Lipid` is on `homepageLabels` |
+| `subfamily` | The heading AMT prints above the product, verbatim. `subfamilySource` records the PDF running header or the homepage card. The brochures are flat lists, so this is the catalogue title except three cards labelled `Ionisable Lipid` |
 | `cas` | Printed CAS, or a string such as `No CAS#`. `null` if absent |
 | `formula` | `null`. No formula column, and structure drawings are not OCR'd |
 | `mw` | `null` (number when a future source actually prints one) |
