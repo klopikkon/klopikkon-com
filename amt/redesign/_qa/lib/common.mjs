@@ -353,6 +353,86 @@ export function ensureToolPackages(packages) {
   };
 }
 
+const PINNED_CHROME_PROFILE = /--user-data-dir=\S|--remote-debugging-port=\d+/;
+
+function scriptHead(file) {
+  let fd;
+  try {
+    fd = fs.openSync(file, "r");
+    const buf = Buffer.alloc(4096);
+    const n = fs.readSync(fd, buf, 0, buf.length, 0);
+    const text = buf.slice(0, n).toString("utf8");
+    return text.startsWith("#!") ? text : null;
+  } catch {
+    return null;
+  } finally {
+    if (fd !== undefined) fs.closeSync(fd);
+  }
+}
+
+function chromeElfBeside(file) {
+  try {
+    const dir = path.dirname(fs.realpathSync(file));
+    const sibling = path.join(dir, "chrome");
+    if (sibling !== fs.realpathSync(file) && fs.existsSync(sibling) && !scriptHead(sibling)) return sibling;
+  } catch {
+    /* not a readable script */
+  }
+  return null;
+}
+
+/** Follow a Chrome launcher script that pins one profile. Return an ELF when one sits beside an official wrapper. */
+function unwrapChrome(file, seen = new Set()) {
+  let resolved;
+  try {
+    resolved = fs.realpathSync(file);
+  } catch {
+    return null;
+  }
+  if (seen.has(resolved)) return null;
+  seen.add(resolved);
+  const head = scriptHead(resolved);
+  if (!head) return resolved;
+  if (PINNED_CHROME_PROFILE.test(head)) {
+    const execMatch = head.match(/^\s*exec\s+(\/\S+)/m);
+    if (execMatch) return unwrapChrome(execMatch[1], seen);
+    return null;
+  }
+  return chromeElfBeside(resolved) || resolved;
+}
+
+/**
+ * Chrome binary for Lighthouse and Playwright.
+ * A PATH wrapper that pins `--user-data-dir` and `--remote-debugging-port` makes every
+ * later Chrome join that one profile and stall. Prefer the real binary.
+ */
+export function resolveChromeBinary() {
+  const candidates = [];
+  if (process.env.CHROME_PATH) candidates.push(process.env.CHROME_PATH);
+  candidates.push(
+    "/opt/google/chrome/chrome",
+    "/usr/bin/google-chrome-stable",
+    "/usr/bin/google-chrome",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+  );
+  for (const dir of (process.env.PATH || "").split(path.delimiter)) {
+    if (!dir) continue;
+    for (const name of ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser"]) {
+      candidates.push(path.join(dir, name));
+    }
+  }
+  const seen = new Set();
+  for (const candidate of candidates) {
+    if (!candidate || seen.has(candidate)) continue;
+    seen.add(candidate);
+    if (!fs.existsSync(candidate)) continue;
+    const binary = unwrapChrome(candidate);
+    if (binary && fs.existsSync(binary)) return binary;
+  }
+  return null;
+}
+
 export function help(name, extra = "") {
   return `Usage: amt/redesign/_qa/${name} [--root <amt/redesign>] [--repo <repo>] [--label <name>]${extra}
 

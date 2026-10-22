@@ -4,7 +4,7 @@ Verification for the unlisted concept redesign under `/amt/redesign/`. The integ
 
 GitHub Pages serves `main` directly (`.nojekyll`, `CNAME`). There is no Pages workflow under `.github/`, so this harness is not wired into CI. Run it locally, then again with `--live` after the pages are on `main`.
 
-Tools are dev-only. The static build stays zero-dependency. The first accessibility or Lighthouse run installs Playwright, axe-core, and Lighthouse into `~/.cache/amt-redesign-qa` (npm cache, not a repo dependency). Node 20 or newer is required. Accessibility and Lighthouse need Chrome. Set `CHROME_PATH` to the real binary. When it is unset, the Lighthouse script uses `/opt/google/chrome/chrome` if that file exists. The `/usr/local/bin/google-chrome` wrapper pins one user-data-dir, so a second Lighthouse Chrome blocks on that profile; do not point `CHROME_PATH` at the wrapper.
+Tools are dev-only. The static build stays zero-dependency. The first accessibility or Lighthouse run installs Playwright, axe-core, and Lighthouse into `~/.cache/amt-redesign-qa` (npm cache, not a repo dependency). Node 20 or newer is required. Accessibility and Lighthouse need Chrome. The harness resolves `CHROME_PATH`, then known install paths, then `PATH`. If that file is a launcher script that pins `--user-data-dir` or `--remote-debugging-port`, it follows the script’s `exec` to the real binary (on this machine, `/usr/local/bin/google-chrome` pins port 9222 and one profile, so a second Chrome stalls). An official `google-chrome` wrapper is replaced by the `chrome` ELF beside it when that file exists.
 
 ## How to run
 

@@ -1,6 +1,6 @@
 import path from "node:path";
 import { createRequire } from "node:module";
-import { pagesFor, BASE_PATH, LIVE_ORIGIN, ensureToolPackages, help, liveStatus, locate, parseArgs, report } from "./common.mjs";
+import { pagesFor, BASE_PATH, LIVE_ORIGIN, ensureToolPackages, help, liveStatus, locate, parseArgs, report, resolveChromeBinary } from "./common.mjs";
 import { startServer } from "./server.mjs";
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
@@ -12,6 +12,14 @@ const THEMES = ["light", "dark"];
 
 async function launchBrowser(chromium) {
   const args = ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"];
+  const executablePath = resolveChromeBinary();
+  if (executablePath) {
+    try {
+      return await chromium.launch({ executablePath, headless: true, args });
+    } catch {
+      /* fall through to Playwright's own lookup */
+    }
+  }
   try {
     return await chromium.launch({ channel: "chrome", headless: true, args });
   } catch (chromeError) {

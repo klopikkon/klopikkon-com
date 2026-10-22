@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"
-if [ -z "${CHROME_PATH:-}" ] && [ -x /opt/google/chrome/chrome ]; then
-  export CHROME_PATH=/opt/google/chrome/chrome
-fi
 exec node "$DIR/lib/lighthouse.mjs" "$@"

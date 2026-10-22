@@ -13,6 +13,7 @@ import {
   ensureToolPackages,
   parseArgs,
   report,
+  resolveChromeBinary,
 } from "./common.mjs";
 import { upsertBlock } from "./report.mjs";
 import { startServer } from "./server.mjs";
@@ -272,10 +273,12 @@ async function main() {
   else {
     const tools = ensureToolPackages(["lighthouse@13.5.0"]);
     process.env.LIGHTHOUSE_BIN = tools.bin("lighthouse");
-    // The /usr/local/bin/google-chrome wrapper pins one user-data-dir, so a
-    // second Lighthouse Chrome blocks on that profile. Use the real binary.
-    if (!process.env.CHROME_PATH || process.env.CHROME_PATH === "/usr/local/bin/google-chrome") {
-      if (fs.existsSync("/opt/google/chrome/chrome")) process.env.CHROME_PATH = "/opt/google/chrome/chrome";
+    const chrome = resolveChromeBinary();
+    if (chrome) {
+      process.env.CHROME_PATH = chrome;
+      notes.push(`chrome ${chrome}`);
+    } else {
+      notes.push("no Chrome binary found; Lighthouse will use its default lookup");
     }
   }
 
