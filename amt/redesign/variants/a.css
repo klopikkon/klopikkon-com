@@ -38,7 +38,7 @@ body { font-weight: 430; }
   letter-spacing: -0.02em;
 }
 
-.brand img { width: 5.5rem; height: auto; }
+.brand img { width: 5.5rem; height: auto; object-fit: contain; }
 
 .nav-list {
   display: flex;

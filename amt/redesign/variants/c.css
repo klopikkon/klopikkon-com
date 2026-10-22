@@ -35,7 +35,7 @@ body { font-size: 1.0625rem; }
   line-height: 1.1;
 }
 
-.brand img { width: 5.5rem; height: auto; }
+.brand img { width: 5.5rem; height: auto; object-fit: contain; }
 
 .nav-list {
   display: flex;
@@ -176,6 +176,9 @@ h2 {
 .catalogue th:first-child { font-family: var(--display); font-size: 1.05rem; font-weight: 500; }
 
 .lead-plates { margin: 0 0 1.5rem; }
+
+.product-sheet h1 { max-width: 8ch; }
+.product-sheet .structure { background: var(--surface); padding: 0.8rem; box-shadow: var(--shadow); }
 
 @media (min-width: 52rem) {
   .brand-row { grid-template-columns: minmax(0, 20rem) minmax(12rem, 1fr) auto; align-items: end; }

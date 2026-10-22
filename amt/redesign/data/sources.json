@@ -1,5 +1,6 @@
 {
   "crawled": "2026-10-22",
+  "notes": "Header density file assets/amt-logo@2x.png is the unaltered 464×243 PNG from https://www.amtechpl.com/wp-content/uploads/2020/04/AMT-Logo.png. The 183×99 file matches https://www.amtechpl.com/wp-content/uploads/2019/05/web-logo.png (the live header img, whose srcset is only 1x and whose data-retina_logo_url is empty). No SVG logo is published. Favicon and apple-touch are the 229×242 mark at AMT-Logo-e1586416288420.png. The 2026 wordmark https://www.amtechpl.com/wp-content/uploads/2026/02/White-Background-Logo-no-subtitle.png_20260217_080755_0000.png is 3003×553 and is a different drawing, not a 2× of the header mark. Catalogue PDFs embed the header mark at about 168×94.",
   "linkedBrochures": [
     "https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf",
     "https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf",

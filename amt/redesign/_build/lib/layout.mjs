@@ -78,7 +78,7 @@ function header(current) {
   </div>
   <div class="wrap brand-bar">
     <a class="brand" href="${url("")}">
-      <span class="brand-mark"><img class="logo" src="${url("assets/amt-logo.png")}" width="183" height="99" alt=""></span>
+      <span class="brand-mark"><img class="logo" src="${url("assets/amt-logo.png")}" srcset="${url("assets/amt-logo.png")} 183w, ${url("assets/amt-logo@2x.png")} 464w" sizes="(min-width: 56rem) 6.25rem, 5.5rem" width="183" height="99" alt=""></span>
       <span class="brand-name">${esc(data.name)}</span>
     </a>
     <form class="search" role="search" action="${url("catalogue/")}" method="get">

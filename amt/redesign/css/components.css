@@ -83,6 +83,7 @@
   width: 5.5rem;
   height: auto;
   aspect-ratio: 183 / 99;
+  object-fit: contain;
 }
 
 .brand-name {

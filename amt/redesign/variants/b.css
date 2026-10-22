@@ -47,7 +47,7 @@ body::before {
   font-family: var(--font-mono);
 }
 
-.brand img { width: 5.5rem; height: auto; background: #fff; }
+.brand img { width: 5.5rem; height: auto; object-fit: contain; background: #fff; }
 
 .nav-list {
   display: flex;
@@ -87,6 +87,9 @@ body::before {
   padding: 1rem 0 1.25rem;
   border-bottom: 1px solid var(--line);
 }
+
+.product-sheet { border-left: 3px solid var(--accent); padding-left: 0.9rem; }
+.product-sheet .spec dd { font-family: var(--font-mono); color: var(--accent); }
 
 .status, .direction, .eyebrow {
   margin: 0;

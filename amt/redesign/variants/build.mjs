@@ -14,6 +14,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const redesign = join(here, "..");
 const FLYER_ID = "new-products-20250516";
 const ASSET = "/amt/redesign";
+const SHOWCASE_ID = "amtgc1533-lp25";
 
 const LOOKS = {
   a: {
@@ -111,8 +112,14 @@ function countsOf(products) {
   return rows.map((row) => ({ ...row, width: `${Math.max(4, Math.round((row.count / max) * 100))}%` }));
 }
 
-function productHref(product) {
+function productHref(product, look) {
+  if (look && product.id === SHOWCASE_ID) return `${ASSET}/variants/${look}/products/${SHOWCASE_ID}/`;
   return url(`products/${encodeURIComponent(product.id)}/`);
+}
+
+function featuredHref(item, look) {
+  if (item.sku === "AMTGC1533-LP25") return `${ASSET}/variants/${look}/products/${SHOWCASE_ID}/`;
+  return url(`catalogue/?q=${encodeURIComponent(item.sku || item.name || "")}`);
 }
 
 function lipidHref(look) {
@@ -152,8 +159,10 @@ function page({ look, title, description, path, css, body, index = false }) {
 }
 
 function brand(site, href) {
+  const logo = `${ASSET}/assets/amt-logo.png`;
+  const logo2 = `${ASSET}/assets/amt-logo@2x.png`;
   return `<a class="brand" href="${href}">
-      <img src="${ASSET}/assets/amt-logo.png" width="183" height="99" alt="">
+      <img src="${logo}" srcset="${logo} 183w, ${logo2} 464w" sizes="5.5rem" width="183" height="99" alt="">
       <span>${esc(site.name)}</span>
     </a>`;
 }
@@ -316,10 +325,10 @@ function platesHtml(lipids) {
   return [truck, ...structures].join("");
 }
 
-function tableHtml(rows, caption) {
+function tableHtml(rows, caption, look) {
   const body = rows
     .map((product) => `<tr>
-        <th scope="row"><a href="${productHref(product)}">${esc(product.name || product.sku || "")}</a></th>
+        <th scope="row"><a href="${productHref(product, look)}">${esc(product.name || product.sku || "")}</a></th>
         <td class="sku">${esc(product.sku || "")}</td>
         <td>${esc(product.cas || "")}</td>
         <td>${esc(product.purity || "")}</td>
@@ -349,7 +358,7 @@ function homeA(model) {
   const featured = (site.featured || [])
     .map((item) => `<article class="entry">
         <div>
-          <h3><a href="${url(`catalogue/?q=${encodeURIComponent(item.sku || item.name || "")}`)}">${esc(item.name)}</a></h3>
+          <h3><a href="${featuredHref(item, look)}">${esc(item.name)}</a></h3>
           <p class="meta">${esc(item.familyLabel || "")} · <span class="sku">${esc(item.sku || "")}</span>${item.note ? ` · <span class="note">${esc(item.note)}</span>` : ""}</p>
         </div>
         <ul class="pack-list">${packs(item.packs)}</ul>
@@ -482,7 +491,7 @@ function homeB(model) {
   const featured = (site.featured || [])
     .map((item) => `<article class="card">
         <p class="eyebrow">${esc(item.familyLabel || "")}</p>
-        <h3><a href="${url(`catalogue/?q=${encodeURIComponent(item.sku || item.name || "")}`)}">${esc(item.name)}</a></h3>
+        <h3><a href="${featuredHref(item, look)}">${esc(item.name)}</a></h3>
         <p class="sku">${esc(item.sku || "")}</p>
         ${item.note ? `<p class="meta">${esc(item.note)}</p>` : ""}
         <ul class="pack-list">${packs(item.packs)}</ul>
@@ -574,7 +583,7 @@ function homeC(model) {
   const featured = (site.featured || [])
     .map((item) => `<article class="story">
         <p class="eyebrow">${esc(item.familyLabel || "")}</p>
-        <h3><a href="${url(`catalogue/?q=${encodeURIComponent(item.sku || item.name || "")}`)}">${esc(item.name)}</a></h3>
+        <h3><a href="${featuredHref(item, look)}">${esc(item.name)}</a></h3>
         <p class="fine"><span class="sku">${esc(item.sku || "")}</span>${item.note ? ` · ${esc(item.note)}` : ""}</p>
         <ul class="pack-list">${packs(item.packs)}</ul>
       </article>`)
@@ -662,10 +671,49 @@ function familyPage(model, look) {
   <section class="section block" id="catalogue">
     ${look === "a" ? `<p class="idx">02</p><div>` : ""}
     <h2>${lipids.length} published lipid rows</h2>
-    ${tableHtml(lipids, "Lipids")}
+    ${tableHtml(lipids, "Lipids", look)}
     <p class="fine">Published text from <a href="${esc(family.sourceHref)}" rel="noopener noreferrer">${esc(family.sourceLabel)}</a>.</p>
     ${look === "a" ? `</div>` : ""}
   </section>
+</main>
+${footer(site)}`;
+}
+
+function productPage(model, look) {
+  const { site, family, showcase } = model;
+  const facts = [
+    ["CAS", showcase.cas],
+    ["Purity", showcase.purity],
+  ].filter(([, value]) => value);
+  const dl = `<dl class="spec">${facts
+    .map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`)
+    .join("")}</dl>`;
+  const label = Array.isArray(showcase.homepageLabels) && showcase.homepageLabels[0]
+    ? `<p class="note">${esc(showcase.homepageLabels[0])}</p>`
+    : "";
+  const figure = showcase.structureImage
+    ? `<div class="structure">${structureFigure(showcase)}</div>`
+    : "";
+  const quote = `<p><a class="btn" href="mailto:${esc(site.contact.emailSales)}?subject=${encodeURIComponent(`Quote ${showcase.sku}`)}">Request a quote</a></p>`;
+  const current = `${ASSET}/variants/${look}/products/${SHOWCASE_ID}/`;
+  return `${header(site, look, current)}
+<main id="main">
+  <article class="product-sheet ${look === "a" ? "family-open" : "section"}">
+    ${look === "a" ? `<p class="idx">01</p>` : ""}
+    <div class="family-copy">
+      <p class="eyebrow"><a href="${lipidHref(look)}">${esc(family.title)}</a></p>
+      <h1>${esc(showcase.name)}</h1>
+      <p class="sku">${esc(showcase.sku)}</p>
+      ${label}
+      ${figure}
+      ${dl}
+      <h2>Packs</h2>
+      <ul class="pack-list">${packs(showcase.packs)}</ul>
+      ${quote}
+      <p class="fine">Prices in US dollars. Published text from <a href="${esc(family.sourceHref)}" rel="noopener noreferrer">${esc(family.sourceLabel)}</a>.</p>
+      <p><a href="${lipidHref(look)}">Back to the ${esc(family.title)} catalogue</a></p>
+    </div>
+  </article>
 </main>
 ${footer(site)}`;
 }
@@ -685,14 +733,12 @@ function indexPage(site, manifest) {
       const shots = [
         shotFigure(manifest, `${look.id}-home-desktop`, `${look.name} home, desktop`),
         shotFigure(manifest, `${look.id}-home-mobile`, `${look.name} home, mobile`),
-        shotFigure(manifest, `${look.id}-lipids-desktop`, `${look.name} lipids, desktop`),
-        shotFigure(manifest, `${look.id}-lipids-mobile`, `${look.name} lipids, mobile`),
       ].join("");
       return `<article class="direction" id="look-${look.id}">
         <h2>${esc(look.name)}</h2>
         <p>${esc(look.line)}</p>
         <div class="shots">${shots}</div>
-        <p class="links"><a href="${ASSET}/variants/${look.id}/">Open the ${esc(look.name)} home</a> <a href="${ASSET}/variants/${look.id}/lipids/">Open lipids</a></p>
+        <p class="links"><a href="${ASSET}/variants/${look.id}/">Home</a> <a href="${ASSET}/variants/${look.id}/lipids/">Lipids catalogue</a> <a href="${ASSET}/variants/${look.id}/products/${SHOWCASE_ID}/">Lipid 5</a></p>
       </article>`;
     })
     .join("");
@@ -705,7 +751,7 @@ function indexPage(site, manifest) {
   </header>
   <main id="main" class="chooser">
     <h1>Three looks for the catalogue</h1>
-    <p class="lede">Same published AMT copy in each direction. Pick one. The buttons below swap the shared tokens on this page: colour, type, and corner radius.</p>
+    <p class="lede">Each direction is a home, the lipids catalogue, and the Lipid 5 page, linked together. The buttons swap colour, type, and radius.</p>
     <div class="look-switch" role="group" aria-label="Apply a variant token set">
       <button type="button" data-look-set="a" aria-pressed="false">Swiss grid</button>
       <button type="button" data-look-set="b" aria-pressed="false">Lab readout</button>
@@ -784,12 +830,23 @@ async function main() {
       css: ["tokens.css", "base.css", `${look}.css`],
       body: familyPage(model, look),
     });
+    const showcase = lipids.find((row) => row.id === SHOWCASE_ID);
+    if (!showcase) throw new Error(`Missing showcase product ${SHOWCASE_ID}`);
+    const productHtml = page({
+      look,
+      title: `${showcase.name} · ${LOOKS[look].name} · Advanced Molecular Technologies`,
+      description: `${showcase.name}, ${showcase.sku}. ${family.description}`,
+      path: `variants/${look}/products/${SHOWCASE_ID}/`,
+      css: ["tokens.css", "base.css", `${look}.css`],
+      body: productPage({ ...model, showcase }, look),
+    });
     await writePage(`${look}/index.html`, home);
     await writePage(`${look}/lipids/index.html`, familyHtml);
+    await writePage(`${look}/products/${SHOWCASE_ID}/index.html`, productHtml);
   }
   await writePage("index.html", indexPage(site, manifest));
 
-  const pages = ["index.html", "a/index.html", "a/lipids/index.html", "b/index.html", "b/lipids/index.html", "c/index.html", "c/lipids/index.html"];
+  const pages = ["index.html", "a/index.html", "a/lipids/index.html", "b/index.html", "b/lipids/index.html", "c/index.html", "c/lipids/index.html", `a/products/${SHOWCASE_ID}/index.html`, `b/products/${SHOWCASE_ID}/index.html`, `c/products/${SHOWCASE_ID}/index.html`];
   for (const rel of pages) {
     const html = await readFile(join(here, rel), "utf8");
     for (const needle of ["noindex,nofollow", site.conceptNote]) {
@@ -799,6 +856,15 @@ async function main() {
     if (rel.endsWith("lipids/index.html") && !html.includes("Search and filter this family")) {
       throw new Error(`${rel} missing catalogue link`);
     }
+  }
+  for (const look of ["a", "b", "c"]) {
+    const href = `${ASSET}/variants/${look}/products/${SHOWCASE_ID}/`;
+    const home = await readFile(join(here, `${look}/index.html`), "utf8");
+    const listing = await readFile(join(here, `${look}/lipids/index.html`), "utf8");
+    const product = await readFile(join(here, `${look}/products/${SHOWCASE_ID}/index.html`), "utf8");
+    if (!home.includes(href) || !listing.includes(href)) throw new Error(`${look} does not link to Lipid 5`);
+    if (!product.includes(`${ASSET}/variants/${look}/lipids/`)) throw new Error(`${look} product does not link back to lipids`);
+    if (!product.includes("2089251-33-0") || !product.includes("$140.00")) throw new Error(`${look} product dropped published fields`);
   }
   console.log(`variants: 7 pages, ${lipids.length} lipids, ${entries.length} new products`);
 }

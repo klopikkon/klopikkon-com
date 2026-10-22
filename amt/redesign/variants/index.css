@@ -9,7 +9,7 @@ body { font-family: var(--font-sans); }
 
 .mast { padding: 1.25rem 0 0.5rem; }
 
-.brand img { width: 5.5rem; height: auto; }
+.brand img { width: 5.5rem; height: auto; object-fit: contain; }
 
 .brand-row, .utility {
   display: flex;

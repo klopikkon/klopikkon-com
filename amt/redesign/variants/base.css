@@ -148,6 +148,20 @@ th, td {
 
 .sku { font-family: var(--font-mono); font-size: 0.875rem; }
 
+.spec { margin: 1rem 0; }
+.spec div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 0.5rem;
+  border-top: 1px solid var(--line);
+  padding: 0.55rem 0;
+}
+.spec dt, .spec dd { margin: 0; }
+.spec dt { font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.structure { margin: 1rem 0; }
+.structure img { width: min(100%, 18rem); height: auto; background: #fff; }
+.note { margin: 0.25rem 0 0; font-size: 0.875rem; letter-spacing: 0.04em; text-transform: uppercase; }
+
 .site-footer {
   margin-top: 3rem;
   padding: 2rem 0 2.5rem;
