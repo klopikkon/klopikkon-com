@@ -41,25 +41,80 @@ function declaredSubfamilies(family) {
 
 function matchesGroup(product, group) {
   const raw = String(product.subfamily || "").trim();
-  if (!raw) return false;
+  if (!raw || repeatsFamily(raw, group.family)) return false;
   return raw === group.name || raw === group.id || anchorId(raw) === group.id;
 }
 
-function groupFamily(rows, family) {
-  const declared = declaredSubfamilies(family).map((group) => ({ ...group, rows: [] }));
+function sameFamilyLabel(left, right) {
+  if (!left || !right || left === "group" || right === "group") return false;
+  if (left === right) return true;
+  if (right.startsWith(`${left}-`) || left.startsWith(`${right}-`)) return true;
+  if (right === `${left}s` || left === `${right}s`) return true;
+  return false;
+}
+
+/** PDF running headers repeat the family name. Those are not chemical classes. */
+export function repeatsFamily(subfamily, family) {
+  if (!family) return false;
+  const sub = anchorId(subfamily);
+  return sameFamilyLabel(sub, anchorId(family.id)) || sameFamilyLabel(sub, anchorId(family.title));
+}
+
+function classLabel(product) {
+  const value = product?.classDerived;
+  if (value == null || value === false) return "";
+  if (typeof value === "string") return value.trim();
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const label = classLabel({ classDerived: item });
+      if (label) return label;
+    }
+    return "";
+  }
+  if (typeof value === "object") return String(value.label || value.name || value.value || "").trim();
+  return String(value).trim();
+}
+
+function groupsFromLabels(rows, labelOf) {
+  const buckets = new Map();
+  const rest = [];
+  for (const product of rows) {
+    const raw = labelOf(product);
+    if (!raw) {
+      rest.push(product);
+      continue;
+    }
+    if (!buckets.has(raw)) buckets.set(raw, []);
+    buckets.get(raw).push(product);
+  }
+  const seen = new Set();
+  const named = [...buckets.keys()]
+    .sort((a, b) => a.localeCompare(b, "en"))
+    .map((name) => ({
+      name,
+      id: uniqueId(anchorId(name), seen),
+      rows: buckets.get(name),
+    }));
+  return { named, rest };
+}
+
+export function groupFamily(rows, family) {
+  if (rows.some((product) => classLabel(product))) {
+    const grouped = groupsFromLabels(rows, (product) => classLabel(product));
+    return { ...grouped, derived: true };
+  }
+  const declared = declaredSubfamilies(family).map((group) => ({ ...group, family, rows: [] }));
+  const declaredNames = new Set(declared.map((group) => group.name));
   const extras = new Map();
   const rest = [];
   for (const product of rows) {
     const raw = String(product.subfamily || "").trim();
     const declaredGroup = declared.find((group) => matchesGroup(product, group));
-    if (declaredGroup) {
-      declaredGroup.rows.push(product);
-    } else if (raw) {
+    if (declaredGroup) declaredGroup.rows.push(product);
+    else if (raw && !repeatsFamily(raw, family) && !declaredNames.has(raw)) {
       if (!extras.has(raw)) extras.set(raw, []);
       extras.get(raw).push(product);
-    } else {
-      rest.push(product);
-    }
+    } else rest.push(product);
   }
   const seen = new Set(declared.map((group) => group.id));
   const extraGroups = [...extras.keys()]
@@ -69,7 +124,8 @@ function groupFamily(rows, family) {
       id: uniqueId(anchorId(name), seen),
       rows: extras.get(name),
     }));
-  return { named: [...declared, ...extraGroups], rest };
+  const named = [...declared, ...extraGroups].filter((group) => group.rows.length || declared.includes(group));
+  return { named, rest, derived: false };
 }
 
 function catalogueUrl(familyId, subfamily) {
@@ -205,11 +261,14 @@ function brochureLine(brochure) {
   return `<p><a href="${esc(brochure.href)}" rel="noopener noreferrer">${esc(brochure.label)}</a></p>`;
 }
 
+const DERIVED_NOTE = "These groups are derived from the product name. They are not headings from the AMT catalogue.";
+
 function catalogueGroups(family, rows) {
-  const { named, rest } = groupFamily(rows, family);
+  const { named, rest, derived } = groupFamily(rows, family);
   if (!named.length) {
     return {
       named,
+      derived: false,
       groups: [{
         id: "all",
         name: family.title,
@@ -228,7 +287,7 @@ function catalogueGroups(family, rows) {
     headingId: group.id,
     rows: group.rows,
     familyId: family.id,
-    subfamily: group.name,
+    subfamily: derived ? "" : group.name,
     hideSubfamily: true,
     extra: "",
   }));
@@ -244,19 +303,21 @@ function catalogueGroups(family, rows) {
       extra: "",
     });
   }
-  return { named, groups };
+  return { named, groups, derived };
 }
 
-function familyPage({ family, pageModel, named, starts }) {
+function familyPage({ family, pageModel, named, starts, derived }) {
   const quote = family.quote
     ? `<blockquote><p>${esc(family.quote)}</p></blockquote><p class="fine"><a href="${url("about/#incubating")}">About Us</a></p>`
     : "";
+  const derivedNote = derived ? `<p class="fine">${esc(DERIVED_NOTE)}</p>` : "";
   const intro = pageModel.page === 1
-    ? `${paragraphs(family.paragraphs)}
-    ${quote}
-    ${brochureLine(family.brochure)}
-    ${chips(named, starts, family.path)}`
-    : `<p class="fine">Page ${pageModel.page} of ${pageModel.pages}</p>`;
+    ? [paragraphs(family.paragraphs), quote, brochureLine(family.brochure), derivedNote, chips(named, starts, family.path)]
+      .filter(Boolean)
+      .join("\n    ")
+    : [pageModel.pages > 1 ? `<p class="fine">Page ${pageModel.page} of ${pageModel.pages}</p>` : "", derivedNote]
+      .filter(Boolean)
+      .join("\n    ");
   const crumbs = [
     { label: "Home", href: url("") },
     { label: "Products", href: url("#families") },
@@ -329,7 +390,7 @@ export async function build({ site, products, renderPage, writeFile, outDir }) {
   for (const family of site.families) {
     if (outDir) await rm(join(outDir, family.path, "page"), { recursive: true, force: true });
     const rows = listable(products.filter((product) => product && product.family === family.id));
-    const { named, groups } = catalogueGroups(family, rows);
+    const { named, groups, derived } = catalogueGroups(family, rows);
     const { pages, starts } = buildPages(groups);
     for (const pageModel of pages) {
       const path = pagePath(family.path, pageModel.page);
@@ -341,7 +402,7 @@ export async function build({ site, products, renderPage, writeFile, outDir }) {
         description: family.description,
         path,
         head: pageLinks(family.path, pageModel.page, pageModel.pages),
-        body: familyPage({ family, pageModel, named, starts }),
+        body: familyPage({ family, pageModel, named, starts, derived }),
       });
       await writeFile(`${path}index.html`, html);
     }
