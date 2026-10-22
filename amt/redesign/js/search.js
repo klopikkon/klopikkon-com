@@ -48,6 +48,27 @@ const ANCHORS = {
 
 const PAGE_SIZE = 24;
 
+/** Display order for the name-derived type facet. Empty classes are omitted. */
+const TYPE_ORDER = [
+  "boronic acid",
+  "pinacol ester",
+  "MIDA ester",
+  "trifluoroborate",
+  "BODIPY",
+  "Cy3",
+  "Cy5",
+  "FITC",
+  "mPEG",
+  "heterobifunctional",
+  "multi-arm",
+  "NHS",
+  "maleimide",
+  "azide",
+  "DBCO",
+  "amine",
+  "acid",
+];
+
 function familyLabel(family) {
   return FAMILY_LABELS[family] || family || "Other";
 }
@@ -268,6 +289,32 @@ function isCompact(product) {
   return Boolean(product && typeof product.s === "string" && product.sku == null);
 }
 
+/** Tokens from `classDerived`. Null and unmatched products contribute none. */
+function classTokens(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return Array.isArray(value) ? value.filter(Boolean) : [];
+  }
+  const tokens = [];
+  if (value.boronClass) tokens.push(value.boronClass);
+  if (value.dyeCore) tokens.push(value.dyeCore);
+  if (value.architecture) tokens.push(value.architecture);
+  if (Array.isArray(value.reactiveGroups)) tokens.push(...value.reactiveGroups.filter(Boolean));
+  return tokens;
+}
+
+/**
+ * PubChem CID for the card image. Omitted when AMT already published a structure.
+ * Compact rows store the CID in `pi` only in that case.
+ */
+function pubchemCid(product) {
+  if (!product || product.structureImage) return null;
+  const direct = product.externalSource?.cid;
+  if (Number.isInteger(direct) && direct > 0) return direct;
+  const path = String(product.structureImageExternal || "");
+  const match = path.match(/(?:^|\/)(\d+)\.svg$/);
+  return match ? Number(match[1]) : null;
+}
+
 function packFrom(pack) {
   if (Array.isArray(pack)) {
     const price = typeof pack[1] === "number" ? pack[1] : null;
@@ -306,6 +353,10 @@ function toCompact(product) {
   if (typeof product.mw === "number") row.m = product.mw;
   if (product.formulaExternal) row.oe = product.formulaExternal;
   if (typeof product.mwExternal === "number") row.me = product.mwExternal;
+  const types = classTokens(product.classDerived);
+  if (types.length) row.cd = types;
+  const cid = pubchemCid(product);
+  if (cid) row.pi = cid;
   if (product.subfamily) row.u = product.subfamily;
   if (Array.isArray(product.synonyms) && product.synonyms.length) row.y = product.synonyms.filter(Boolean);
   if (Array.isArray(product.homepageLabels) && product.homepageLabels.length) row.h = product.homepageLabels.filter(Boolean);
@@ -346,6 +397,12 @@ function prepareRecord(product) {
   const mwExternal = typeof mwExternalValue === "number" ? mwExternalValue : null;
   const pur = row ? (product.p || "") : (product.purity || product.pur || "");
   const subGiven = row ? (product.u || "") : (product.subfamily || product.sub || "");
+  const types = row
+    ? (Array.isArray(product.cd) ? product.cd.filter(Boolean) : [])
+    : classTokens(product.classDerived);
+  const structureCid = row
+    ? (Number.isInteger(product.pi) && product.pi > 0 ? product.pi : null)
+    : pubchemCid(product);
   const packs = (row ? (product.k || []) : (product.packs || [])).map(packFrom);
   const priced = packs.map((pack) => pack.price).filter((price) => typeof price === "number");
   const peg = extractPeg([name, ...syn, ...labels].join(" ")) || { n: null, mw: null, methoxy: false };
@@ -361,6 +418,8 @@ function prepareRecord(product) {
     note,
     fam,
     sub,
+    types,
+    structureCid,
     cas: casRaw.join(" & "),
     formula,
     formulaExternal,
@@ -378,6 +437,7 @@ function prepareRecord(product) {
     skuKey: compact(sku),
     nameKey: compact(name),
     formulaKey: String(formula || "").replace(/\s+/g, ""),
+    formulaExternalKey: String(formulaExternal || "").replace(/\s+/g, ""),
     tokens: indexTokens([name, ...syn, ...labels, note, sku, searchableCas, formula, formulaExternal].filter(Boolean).join(" ")),
     nameTokens: indexTokens(name),
   };
@@ -490,10 +550,23 @@ function anchorOk(record, anchors) {
 
 function formulaScore(record, formula) {
   if (!formula) return null;
-  if (!record.formulaKey) return 0;
-  if (record.formulaKey === formula) return 780;
-  if (record.formulaKey.includes(formula) || formula.includes(record.formulaKey)) return 240;
+  if (record.formulaKey && record.formulaKey === formula) return 780;
+  if (record.formulaExternalKey && record.formulaExternalKey === formula) return 640;
+  if (record.formulaKey && (record.formulaKey.includes(formula) || formula.includes(record.formulaKey))) return 240;
+  if (record.formulaExternalKey && (record.formulaExternalKey.includes(formula) || formula.includes(record.formulaExternalKey))) return 180;
   return 0;
+}
+
+function weightValue(record) {
+  if (typeof record.mw === "number") return record.mw;
+  if (typeof record.mwExternal === "number") return record.mwExternal;
+  return null;
+}
+
+function weightLabel(record) {
+  if (typeof record.mw === "number") return `${record.mw} Da`;
+  if (typeof record.mwExternal === "number") return `${record.mwExternal} Da · PubChem`;
+  return "";
 }
 
 function tokenHit(record, token) {
@@ -607,12 +680,14 @@ function searchRecords(records, state) {
 function passesFilters(record, state) {
   if (state.family?.length && !state.family.includes(record.fam)) return false;
   if (state.sub?.length && !state.sub.includes(record.sub || "")) return false;
+  if (state.type?.length && !state.type.some((token) => record.types?.includes(token))) return false;
   if (state.cas === "yes" && !record.casRaw.length) return false;
   if (state.cas === "no" && record.casRaw.length) return false;
   if (state.mwMin != null || state.mwMax != null) {
-    if (typeof record.mw !== "number") return false;
-    if (state.mwMin != null && record.mw < state.mwMin) return false;
-    if (state.mwMax != null && record.mw > state.mwMax) return false;
+    const weight = weightValue(record);
+    if (weight == null) return false;
+    if (state.mwMin != null && weight < state.mwMin) return false;
+    if (state.mwMax != null && weight > state.mwMax) return false;
   }
   if (state.purity?.length) {
     const label = record.pur || "Not stated";
@@ -653,8 +728,8 @@ function compareHits(a, b, sort, hasQuery) {
     return (a.record.name || a.record.sku).localeCompare(b.record.name || b.record.sku, "en", { numeric: true, sensitivity: "base" });
   }
   if (sort === "mw") {
-    const aw = a.record.mw ?? Number.POSITIVE_INFINITY;
-    const bw = b.record.mw ?? Number.POSITIVE_INFINITY;
+    const aw = weightValue(a.record) ?? Number.POSITIVE_INFINITY;
+    const bw = weightValue(b.record) ?? Number.POSITIVE_INFINITY;
     if (aw !== bw) return aw - bw;
   } else if (sort === "price") {
     const ap = a.record.minPrice ?? Number.POSITIVE_INFINITY;
@@ -669,6 +744,7 @@ function compareHits(a, b, sort, hasQuery) {
 function facetCounts(records, state) {
   const families = new Map();
   const subs = new Map();
+  const types = new Map();
   const purities = new Map();
   const packs = new Map();
   let casYes = 0;
@@ -681,6 +757,14 @@ function facetCounts(records, state) {
   for (const record of consider({ sub: [] })) {
     const key = record.sub || "Unspecified";
     subs.set(key, (subs.get(key) || 0) + 1);
+  }
+  for (const record of consider({ type: [] })) {
+    const seen = new Set();
+    for (const token of record.types || []) {
+      if (!token || seen.has(token)) continue;
+      seen.add(token);
+      types.set(token, (types.get(token) || 0) + 1);
+    }
   }
   for (const record of consider({ purity: [] })) {
     const key = record.pur || "Not stated";
@@ -707,9 +791,18 @@ function facetCounts(records, state) {
     const bi = FAMILY_ORDER.indexOf(b[0]);
     return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
   });
+  const typeRows = [...types.entries()].sort((a, b) => {
+    const ai = TYPE_ORDER.indexOf(a[0]);
+    const bi = TYPE_ORDER.indexOf(b[0]);
+    const ao = ai < 0 ? 99 : ai;
+    const bo = bi < 0 ? 99 : bi;
+    if (ao !== bo) return ao - bo;
+    return b[1] - a[1] || String(a[0]).localeCompare(String(b[0]));
+  });
   return {
     family: familyRows,
     sub: byCount(subs),
+    type: typeRows,
     purity: byCount(purities),
     pack: [...packs.entries()].sort((a, b) => sizeMg(a[0]) - sizeMg(b[0])),
     casYes,
@@ -740,6 +833,7 @@ function emptyState() {
     q: "",
     family: [],
     sub: [],
+    type: [],
     cas: "any",
     mwMin: null,
     mwMax: null,
@@ -769,6 +863,7 @@ function stateFromParams(params) {
   state.q = params.get("q") || "";
   state.family = listParam(params, "family");
   state.sub = listParam(params, "sub");
+  state.type = listParam(params, "type");
   const cas = params.get("cas");
   state.cas = cas === "yes" || cas === "no" ? cas : "any";
   const mw = params.get("mw");
@@ -809,6 +904,7 @@ function stateToQuery(state) {
   if (state.q) params.set("q", state.q);
   if (state.family?.length) params.set("family", state.family.join(","));
   if (state.sub?.length) params.set("sub", state.sub.join(","));
+  if (state.type?.length) params.set("type", state.type.join(","));
   if (state.cas === "yes" || state.cas === "no") params.set("cas", state.cas);
   const mw = rangeParam(state.mwMin, state.mwMax);
   if (mw && mw !== "-") params.set("mw", mw);
@@ -826,6 +922,7 @@ function stateToQuery(state) {
 function activeFilterCount(state) {
   return (state.family?.length ? 1 : 0)
     + (state.sub?.length ? 1 : 0)
+    + (state.type?.length ? 1 : 0)
     + (state.cas !== "any" ? 1 : 0)
     + (state.mwMin != null || state.mwMax != null ? 1 : 0)
     + (state.purity?.length ? 1 : 0)
@@ -834,11 +931,19 @@ function activeFilterCount(state) {
     + (state.quote ? 1 : 0);
 }
 
-function renderCard(hit, href) {
+function structureHtml(record, base) {
+  if (!record.structureCid || !base) return "";
+  const title = record.name || record.sku || "this product";
+  const src = `${base}${record.structureCid}.svg`;
+  return `<figure class="cat-structure"><img src="${esc(src)}" alt="PubChem structure of ${esc(title)}" width="72" height="56" loading="lazy" decoding="async"><figcaption>PubChem</figcaption></figure>`;
+}
+
+function renderCard(hit, href, structureBase) {
   const record = hit.record;
   const needles = hit.needles || [];
   const title = record.name || "Name not published";
-  const kicker = `${familyLabel(record.fam)}${record.sub ? ` · ${record.sub}` : ""}`;
+  const typeBit = record.types?.length ? ` · ${record.types.join(", ")}` : "";
+  const kicker = `${familyLabel(record.fam)}${typeBit}`;
   const cas = record.cas ? `CAS ${record.cas}` : "No CAS published";
   const syn = record.syn.slice(0, 2).join(" · ");
   const packItems = record.packs.map((pack) => {
@@ -854,6 +959,7 @@ function renderCard(hit, href) {
   const note = record.note ? `<p class="hint">${esc(record.note)}</p>` : "";
   return `<li class="card product-card">
     <div>
+      ${structureHtml(record, structureBase)}
       <p class="kicker">${highlight(kicker, needles)}</p>
       <h2><a class="cat-name" href="${esc(href)}">${highlight(title, needles)}</a></h2>
       <p class="sku">${highlight(record.sku, needles)}</p>
@@ -861,7 +967,8 @@ function renderCard(hit, href) {
         <span>${highlight(cas, needles)}</span>
         ${record.pur ? `<span>${highlight(record.pur, needles)}</span>` : ""}
         ${record.formula ? `<span>${highlight(record.formula, needles)}</span>` : ""}
-        ${record.mw != null ? `<span>${esc(record.mw)} Da</span>` : ""}
+        ${record.formulaExternal && record.formulaExternal !== record.formula ? `<span>${highlight(record.formulaExternal, needles)} · PubChem</span>` : ""}
+        ${weightLabel(record) ? `<span>${esc(weightLabel(record))}</span>` : ""}
       </p>
       ${label}
       ${note}
@@ -890,7 +997,7 @@ function checkList(name, legend, rows, selected, labeler) {
   return `<fieldset class="cat-facet"><legend>${esc(legend)}</legend><div class="cat-facet-list">${items}</div></fieldset>`;
 }
 
-function renderFilters(facets, state, hasMw) {
+function renderFilters(facets, state, mwNote) {
   const cas = (value, label, count) => `<label class="cat-check"><input type="radio" name="cas" data-facet="cas" value="${value}"${state.cas === value ? " checked" : ""}><span>${label}</span><span class="cat-count">${count}</span></label>`;
   return `
     <div class="cat-filter-head">
@@ -899,8 +1006,8 @@ function renderFilters(facets, state, hasMw) {
       <button type="button" class="cat-textish cat-filter-close" data-close-filters>Close</button>
     </div>
     ${checkList("family", "Family", facets.family, state.family, familyLabel)}
-    ${checkList("sub", "Subfamily", facets.sub.filter((row) => row[0] !== "Unspecified" || state.sub.includes("Unspecified")), state.sub)}
-    <p class="cat-facet-note">Subfamily is read off the published name.</p>
+    ${checkList("type", "Type (from name)", facets.type || [], state.type || [])}
+    <p class="cat-facet-note">Read from the printed product name. Not an AMT heading.</p>
     <fieldset class="cat-facet">
       <legend>CAS</legend>
       ${cas("any", "Any", facets.casYes + facets.casNo)}
@@ -909,7 +1016,7 @@ function renderFilters(facets, state, hasMw) {
     </fieldset>
     <fieldset class="cat-facet">
       <legend>Molecular weight</legend>
-      ${hasMw ? "" : `<p class="cat-facet-note">No molecular weights are published in this extract. A range matches nothing until they are.</p>`}
+      ${mwNote ? `<p class="cat-facet-note">${esc(mwNote)}</p>` : ""}
       <div class="cat-range">
         <label>Min <input type="number" inputmode="decimal" min="0" data-range="mwMin" value="${state.mwMin ?? ""}" aria-label="Minimum molecular weight"></label>
         <label>Max <input type="number" inputmode="decimal" min="0" data-range="mwMax" value="${state.mwMax ?? ""}" aria-label="Maximum molecular weight"></label>
@@ -938,6 +1045,7 @@ function renderChips(state) {
   if (state.q) add(`“${state.q}”`, { q: "" });
   for (const family of state.family) add(familyLabel(family), { family: state.family.filter((value) => value !== family) });
   for (const sub of state.sub) add(sub, { sub: state.sub.filter((value) => value !== sub) });
+  for (const token of state.type || []) add(token, { type: state.type.filter((value) => value !== token) });
   if (state.cas === "yes") add("CAS listed", { cas: "any" });
   if (state.cas === "no") add("CAS not listed", { cas: "any" });
   if (state.mwMin != null || state.mwMax != null) add(`MW ${state.mwMin ?? "0"}–${state.mwMax ?? "∞"}`, { mwMin: null, mwMax: null });
@@ -1012,13 +1120,30 @@ function boot(root) {
     const start = (state.page - 1) * PAGE_SIZE;
     const slice = searched.hits.slice(start, start + PAGE_SIZE);
     const previous = document.activeElement?.dataset?.facetKey || "";
-    filters.innerHTML = renderFilters(searched.facets, state, hasMw);
+    filters.innerHTML = renderFilters(searched.facets, state, mwNote(records));
     focusFilters(previous);
     chips.innerHTML = renderChips(state);
+    const correction = state.q ? didYouMean(records, state.q) : "";
+    const did = root.querySelector("#cat-did-you-mean");
+    if (did) {
+      did.hidden = !correction;
+      did.innerHTML = correction
+        ? `Did you mean <button type="button" data-did-you-mean="${esc(correction)}">${esc(correction)}</button>?`
+        : "";
+    }
+    const suggest = root.querySelector("#cat-suggest");
+    if (suggest) {
+      const options = state.q.trim().length >= 2 ? searched.hits.slice(0, 6) : [];
+      suggest.hidden = options.length === 0;
+      suggest.innerHTML = options.map((hit, index) => suggestionOption(hit, `cat-opt-${index}`)).join("");
+      input?.setAttribute("aria-expanded", options.length ? "true" : "false");
+      input?.setAttribute("aria-controls", "cat-suggest");
+    }
     if (!total) {
       results.innerHTML = `<p class="cat-empty">No products match. Clear a filter, or browse by family below.</p>`;
     } else {
-      results.innerHTML = `<ol class="cat-list" start="${start + 1}">${slice.map((hit) => renderCard(hit, `${productBase}${encodeURIComponent(hit.record.id)}/`)).join("")}</ol>`;
+      const structureBase = root.dataset.structureBase || "";
+      results.innerHTML = `<ol class="cat-list" start="${start + 1}">${slice.map((hit) => renderCard(hit, `${productBase}${encodeURIComponent(hit.record.id)}/`, structureBase)).join("")}</ol>`;
     }
     pager.innerHTML = renderPager(state.page, pages);
     const noun = total === 1 ? "product" : "products";
@@ -1042,14 +1167,28 @@ function boot(root) {
   sort?.addEventListener("change", () => patch({ sort: sort.value, page: state.page }, "push"));
   form?.addEventListener("submit", (event) => {
     event.preventDefault();
+    rememberSearch(input.value);
     patch({ q: input.value }, "replace");
+  });
+  root.addEventListener("click", (event) => {
+    const correction = event.target.closest("[data-did-you-mean]");
+    if (correction) {
+      rememberSearch(correction.dataset.didYouMean);
+      if (input) input.value = correction.dataset.didYouMean;
+      patch({ q: correction.dataset.didYouMean }, "push");
+      return;
+    }
+    const option = event.target.closest("#cat-suggest [data-suggest-id]");
+    if (!option) return;
+    rememberSearch(state.q || option.dataset.suggestQ || "");
+    window.location.href = `${productBase}${encodeURIComponent(option.dataset.suggestId)}/`;
   });
 
   filters.addEventListener("change", (event) => {
     const target = event.target;
     if (!(target instanceof HTMLInputElement)) return;
-    if (target.dataset.facet === "family" || target.dataset.facet === "sub" || target.dataset.facet === "purity" || target.dataset.facet === "pack") {
-      const key = target.dataset.facet === "family" ? "family" : target.dataset.facet === "sub" ? "sub" : target.dataset.facet === "purity" ? "purity" : "pack";
+    if (target.dataset.facet === "family" || target.dataset.facet === "sub" || target.dataset.facet === "type" || target.dataset.facet === "purity" || target.dataset.facet === "pack") {
+      const key = target.dataset.facet;
       const current = new Set(state[key]);
       const value = key === "pack" ? normSize(target.value) : target.value;
       if (target.checked) current.add(value);
@@ -1165,6 +1304,7 @@ function boot(root) {
     return Boolean(value.q)
       || value.family.length
       || value.sub.length
+      || value.type.length
       || value.cas !== "any"
       || value.mwMin != null
       || value.mwMax != null
@@ -1212,6 +1352,276 @@ function boot(root) {
   if (needsIndex(state)) renderWhenReady();
 }
 
+const RECENT_KEY = "amt-recent-searches";
+let nameCounts = null;
+let nameCountRecords = null;
+
+function dictionaryFor(records) {
+  if (nameCountRecords === records && nameCounts) return nameCounts;
+  const counts = new Map();
+  for (const record of records) {
+    const prepared = record.tokenSet ? record : hydrate(record);
+    for (const token of prepared.nameTokens) {
+      if (token.length < 5 || /\d/.test(token)) continue;
+      counts.set(token, (counts.get(token) || 0) + 1);
+    }
+  }
+  nameCounts = counts;
+  nameCountRecords = records;
+  return counts;
+}
+
+function didYouMean(records, query) {
+  const source = String(query || "");
+  if (source.trim().length < 5) return "";
+  const counts = dictionaryFor(records);
+  let next = source;
+  let changed = false;
+  for (const token of queryTokens(source)) {
+    if (token.length < 5 || /\d/.test(token) || counts.has(token)) continue;
+    const limit = token.length >= 9 ? 2 : 1;
+    let best = "";
+    let bestCount = 0;
+    for (const [candidate, count] of counts) {
+      if (candidate[0] !== token[0]) continue;
+      if (Math.abs(candidate.length - token.length) > limit) continue;
+      if (damerau(token, candidate, limit) <= limit && count > bestCount) {
+        best = candidate;
+        bestCount = count;
+      }
+    }
+    if (!best) continue;
+    const re = new RegExp(escReg(token), "i");
+    if (!re.test(next)) continue;
+    next = next.replace(re, best);
+    changed = true;
+  }
+  return changed && next.trim().toLowerCase() !== source.trim().toLowerCase() ? next : "";
+}
+
+function mwNote(records) {
+  const published = records.some((record) => typeof record.mw === "number");
+  const pubchem = records.some((record) => typeof record.mw !== "number" && typeof record.mwExternal === "number");
+  if (!published && !pubchem) {
+    return "No molecular weights are in this extract. A range matches nothing until AMT or PubChem supplies one. A PubChem weight is labelled PubChem.";
+  }
+  if (pubchem) {
+    return "The range uses the published weight. When AMT did not print one, it uses the PubChem weight, labelled PubChem.";
+  }
+  return "";
+}
+
+function suggestionOption(hit, id) {
+  const record = hit.record;
+  const title = record.name || record.sku;
+  const weight = weightLabel(record);
+  return `<li role="option" id="${esc(id)}" data-suggest-id="${esc(record.id)}" data-suggest-q="${esc(title)}"><span>${highlight(title, hit.needles)}</span><span class="sku">${esc(record.sku)}${weight ? ` · ${esc(weight)}` : ""}</span></li>`;
+}
+
+function storageOf(storage) {
+  if (storage) return storage;
+  try {
+    return globalThis.localStorage || null;
+  } catch {
+    return null;
+  }
+}
+
+function readRecent(storage) {
+  const box = storageOf(storage);
+  if (!box) return [];
+  try {
+    const parsed = JSON.parse(box.getItem(RECENT_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.filter((item) => typeof item === "string" && item.trim()) : [];
+  } catch {
+    return [];
+  }
+}
+
+function rememberSearch(query, storage) {
+  const box = storageOf(storage);
+  const q = String(query || "").trim();
+  const current = readRecent(box);
+  if (!box || q.length < 2) return current;
+  const next = [q, ...current.filter((item) => item.toLowerCase() !== q.toLowerCase())].slice(0, 8);
+  box.setItem(RECENT_KEY, JSON.stringify(next));
+  return next;
+}
+
+function catalogueUrl() {
+  const action = document.querySelector("form.search")?.getAttribute("action");
+  return new URL(action || "/amt/redesign/catalogue/", document.baseURI).href;
+}
+
+function sharedIndexUrl() {
+  const app = document.querySelector("[data-catalogue-app]");
+  if (app?.dataset.index) return new URL(app.dataset.index, document.baseURI).href;
+  return new URL("index.json", catalogueUrl()).href;
+}
+
+function productHref(id) {
+  const base = document.querySelector("[data-catalogue-app]")?.dataset.productBase;
+  if (base) return `${base}${encodeURIComponent(id)}/`;
+  return new URL(`../products/${encodeURIComponent(id)}/`, catalogueUrl()).href;
+}
+
+let sharedRecords = null;
+let sharedIndexPromise = null;
+
+function loadSharedIndex() {
+  if (sharedRecords) return Promise.resolve(sharedRecords);
+  if (sharedIndexPromise) return sharedIndexPromise;
+  sharedIndexPromise = fetch(sharedIndexUrl())
+    .then((response) => {
+      if (!response.ok) throw new Error(String(response.status));
+      return response.json();
+    })
+    .then((payload) => {
+      const items = Array.isArray(payload) ? payload : payload.items;
+      sharedRecords = items.map(hydrate);
+      return sharedRecords;
+    })
+    .catch((error) => {
+      sharedIndexPromise = null;
+      throw error;
+    });
+  return sharedIndexPromise;
+}
+
+function bootPalette() {
+  if (document.getElementById("amt-palette")) return;
+  const root = document.createElement("div");
+  root.id = "amt-palette";
+  root.className = "amt-palette";
+  root.hidden = true;
+  root.innerHTML = `<div class="amt-palette-panel" role="dialog" aria-modal="true" aria-labelledby="amt-palette-title">
+    <form class="form" role="search">
+      <label class="field" id="amt-palette-title">Search the catalogue
+        <input id="amt-palette-q" type="search" autocomplete="off" spellcheck="false" placeholder="Name, CAS, SKU, formula" aria-autocomplete="list" aria-controls="amt-palette-list" aria-expanded="false" aria-keyshortcuts="Control+K Meta+K">
+      </label>
+      <p id="amt-palette-did" class="cat-did" hidden></p>
+      <ul id="amt-palette-list" class="amt-suggest" role="listbox"></ul>
+      <p class="hint">Enter opens a product. Esc closes. Recent searches stay in this browser.</p>
+    </form>
+  </div>`;
+  document.body.append(root);
+  const input = root.querySelector("#amt-palette-q");
+  const list = root.querySelector("#amt-palette-list");
+  const did = root.querySelector("#amt-palette-did");
+  let records = [];
+  let active = -1;
+
+  function close() {
+    root.hidden = true;
+    document.body.classList.remove("cat-lock");
+  }
+  function open(preset) {
+    root.hidden = false;
+    document.body.classList.add("cat-lock");
+    if (preset != null) input.value = preset;
+    input.focus();
+    input.select();
+    loadSharedIndex().then((loaded) => {
+      records = loaded;
+      paint();
+    }).catch(() => {
+      list.innerHTML = `<li class="hint">The search index did not load.</li>`;
+    });
+  }
+  function paint() {
+    const q = input.value.trim();
+    const correction = q ? didYouMean(records, q) : "";
+    did.hidden = !correction;
+    did.innerHTML = correction
+      ? `Did you mean <button type="button" data-palette-q="${esc(correction)}">${esc(correction)}</button>?`
+      : "";
+    let html = "";
+    if (q.length >= 2 && records.length) {
+      const hits = runSearch(records, { ...emptyState(), q }).hits.slice(0, 8);
+      html = hits.map((hit, index) => suggestionOption(hit, `amt-opt-${index}`)).join("");
+    } else if (!q) {
+      html = readRecent().map((item) => `<li role="option" data-palette-q="${esc(item)}"><span>${esc(item)}</span><span class="hint">Recent</span></li>`).join("");
+    }
+    list.innerHTML = html;
+    active = html ? 0 : -1;
+    markActive();
+    input.setAttribute("aria-expanded", html ? "true" : "false");
+  }
+  function markActive() {
+    const options = [...list.querySelectorAll("[role=option]")];
+    options.forEach((option, index) => {
+      option.setAttribute("aria-selected", index === active ? "true" : "false");
+    });
+    if (options[active]) input.setAttribute("aria-activedescendant", options[active].id || "");
+    else input.removeAttribute("aria-activedescendant");
+  }
+  function choose(option) {
+    if (!option) return;
+    if (option.dataset.suggestId) {
+      rememberSearch(input.value.trim() || option.dataset.suggestQ || "");
+      window.location.href = productHref(option.dataset.suggestId);
+      return;
+    }
+    const next = option.dataset.paletteQ || "";
+    if (!next) return;
+    input.value = next;
+    rememberSearch(next);
+    paint();
+  }
+  input.addEventListener("input", paint);
+  input.addEventListener("keydown", (event) => {
+    const options = [...list.querySelectorAll("[role=option]")];
+    if (event.key === "ArrowDown" && options.length) {
+      event.preventDefault();
+      active = Math.min(options.length - 1, active + 1);
+      markActive();
+    } else if (event.key === "ArrowUp" && options.length) {
+      event.preventDefault();
+      active = Math.max(0, active - 1);
+      markActive();
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      if (options[active]) choose(options[active]);
+      else if (input.value.trim()) {
+        rememberSearch(input.value);
+        window.location.href = `${catalogueUrl()}?q=${encodeURIComponent(input.value.trim())}`;
+      }
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      close();
+    }
+  });
+  list.addEventListener("click", (event) => {
+    const option = event.target.closest("[role=option], [data-palette-q]");
+    if (option) choose(option.closest("[role=option]") || option);
+  });
+  did.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-palette-q]");
+    if (!button) return;
+    input.value = button.dataset.paletteQ;
+    rememberSearch(input.value);
+    paint();
+  });
+  root.addEventListener("click", (event) => {
+    if (event.target === root) close();
+  });
+  document.addEventListener("keydown", (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault();
+      if (root.hidden) open("");
+      else close();
+    } else if (event.key === "Escape" && !root.hidden) {
+      close();
+    }
+  });
+  document.querySelector("#site-search")?.addEventListener("focus", () => {
+    open(document.querySelector("#site-search").value);
+  });
+  document.querySelector("form.search")?.addEventListener("submit", (event) => {
+    if (document.getElementById("amt-palette") && !root.hidden) event.preventDefault();
+  });
+}
+
 function onQuoteClick(event) {
   const button = event.target.closest?.("[data-add-quote]");
   if (!button) return;
@@ -1229,6 +1639,7 @@ function onQuoteClick(event) {
 if (typeof document !== "undefined") {
   const app = document.querySelector("[data-catalogue-app]");
   if (app) boot(app);
+  bootPalette();
   document.addEventListener("click", onQuoteClick);
 }
 
@@ -1249,4 +1660,8 @@ export {
   stateFromParams,
   stateToQuery,
   toCompact,
+  didYouMean,
+  rememberSearch,
+  readRecent,
+  weightLabel,
 };

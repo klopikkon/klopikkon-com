@@ -17,6 +17,10 @@ import {
   stateFromParams,
   stateToQuery,
   toCompact,
+  didYouMean,
+  rememberSearch,
+  readRecent,
+  weightLabel,
 } from "../js/search.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -40,6 +44,7 @@ function search(q, extra = {}, pool = records) {
     q,
     family: [],
     sub: [],
+    type: [],
     cas: "any",
     mwMin: null,
     mwMax: null,
@@ -68,6 +73,10 @@ const roundTrip = products.map((product) => prepareRecord(toCompact(product)));
 assert(roundTrip.length === products.length, "compact index keeps every product");
 const alcRound = roundTrip.find((record) => record.sku === "AMTGC903-AL21");
 assert(alcRound?.id === "amtgc903-al21" && alcRound.packs[1]?.price === 430 && alcRound.packs[1]?.priceText === "$430.00", "compact ALC-0315 keeps id and the published 1 g price");
+const saltRound = roundTrip.find((record) => record.sku === "AMTGC1455-HA25");
+assert(saltRound?.formulaExternal === "C45H90INO5" && saltRound?.mwExternal === 852.1 && saltRound?.structureCid === 172871935 && saltRound?.types.length === 0, "compact SM-102 salt keeps the PubChem formula, weight, and structure");
+const amtImage = roundTrip.find((record) => record.sku === "AMTGC187-AC16");
+assert(amtImage && !amtImage.structureCid, "a published AMT structure is not replaced by the PubChem drawing");
 
 const peg2k = extractPeg("mPEG 2k");
 assert(peg2k && peg2k.mw === 2000 && peg2k.methoxy === true, "mPEG 2k is methoxy PEG mass 2000");
@@ -153,10 +162,48 @@ const facets = search("phenyl").facets;
 assert(facets.family.some(([family]) => family === "organoborons"), "family facet is present");
 assert(facets.family.every(([, count]) => count > 0), "facet counts are positive");
 
+const salt = records.find((record) => record.sku === "AMTGC1455-HA25");
+assert(salt && salt.mw == null && salt.mwExternal === 852.1, "SM-102 salt has a PubChem weight and no published weight");
+assert(weightLabel(salt) === "852.1 Da · PubChem", "the SM-102 salt weight is labelled PubChem");
+const saltRange = search("", { mwMin: 852, mwMax: 852.2 });
+assert(saltRange.hits.some((hit) => hit.record.sku === "AMTGC1455-HA25"), "MW 852–852.2 includes the PubChem weight");
+assert(!saltRange.hits.some((hit) => hit.record.sku === "AMTGC903-AL21"), "MW 852–852.2 excludes ALC-0315, which has no weight");
+assert(top(search("C45H90INO5"))?.sku === "AMTGC1455-HA25", "formulaExternal C45H90INO5 matches the SM-102 salt");
+
+const pinacol = search("", { type: ["pinacol ester"] });
+assert(pinacol.hits.length === 648 && pinacol.hits.every((hit) => hit.record.types.includes("pinacol ester")), "type pinacol ester keeps those 648 products");
+assert(pinacol.hits.some((hit) => hit.record.sku === "AMTB001-B06"), "type pinacol ester includes the benzo oxadiazole pinacol ester");
+assert(!pinacol.hits.some((hit) => hit.record.sku === "AMTB008-P06"), "type pinacol ester excludes phenylboronic acid");
+assert(!pinacol.hits.some((hit) => hit.record.types.length === 0), "type filter omits products with no derived class");
+const acid = records.find((record) => record.sku === "AMTB008-P06");
+assert(acid?.types.length === 1 && acid.types[0] === "boronic acid", "phenylboronic acid is type boronic acid");
+const amine = search("", { type: ["amine"] });
+assert(amine.hits.some((hit) => hit.record.sku === "AMTGC1000-DE22") && amine.hits.every((hit) => hit.record.types.includes("amine")), "type amine matches the dimethylethyl carbamate");
+
+const expectedTypes = {
+  "boronic acid": 135,
+  "pinacol ester": 648,
+  trifluoroborate: 123,
+  BODIPY: 6,
+  mPEG: 2,
+  heterobifunctional: 17,
+  azide: 65,
+  amine: 74,
+  acid: 5,
+};
+const typeFacet = search("").facets.type;
+assert(typeFacet.length === Object.keys(expectedTypes).length, "type facet omits classes with no products");
+for (const [token, count] of typeFacet) {
+  assert(expectedTypes[token] === count, `type ${token} counts ${expectedTypes[token]} (got ${count})`);
+  assert(token && token !== "null", "type facet has no null bucket");
+}
+assert(records.filter((record) => record.types.length === 0).length === 306, "306 products have no derived type");
+
 const round = stateFromParams(new URLSearchParams(stateToQuery({
   q: "phenyl",
   family: ["organoborons"],
-  sub: ["pinacol ester"],
+  sub: ["pegylated lipid"],
+  type: ["pinacol ester", "amine"],
   cas: "yes",
   mwMin: 100,
   mwMax: 400,
@@ -171,6 +218,7 @@ const round = stateFromParams(new URLSearchParams(stateToQuery({
 assert(round.q === "phenyl" && round.family[0] === "organoborons" && round.mwMin === 100 && round.mwMax === 400, "mw range survives the URL");
 assert(round.priceMin === 10 && round.priceMax === 80 && round.quote === true && round.sort === "mw" && round.page === 2, "price, quote, sort and page survive the URL");
 assert(round.cas === "yes" && round.pack[0] === "1 g" && round.purity[0] === "≥ 98%", "CAS, pack and purity survive the URL");
+assert(round.type[0] === "pinacol ester" && round.type[1] === "amine" && round.sub[0] === "pegylated lipid", "type and the older subfamily param survive the URL");
 
 const synthetic = [
   ...records,
@@ -221,6 +269,31 @@ assert(top(search("C6H7BO2", {}, synthetic))?.sku === "ENGINE-FORMULA", "formula
 const mwHits = search("", { mwMin: 100, mwMax: 150 }, synthetic);
 assert(mwHits.hits.some((hit) => hit.record.sku === "ENGINE-FORMULA"), "MW range matches a published-style numeric mw");
 assert(!mwHits.hits.some((hit) => hit.record.sku === "AMTGC903-AL21"), "MW range skips products with no published mw");
+const pubchem = prepareRecord({
+  id: "engine-pubchem",
+  sku: "ENGINE-PUBCHEM",
+  name: "PubChem weight row",
+  synonyms: [],
+  family: "other",
+  subfamily: "",
+  cas: "",
+  formula: null,
+  formulaExternal: "C10H14N2",
+  mw: null,
+  mwExternal: 162.23,
+  purity: "",
+  packs: [{ size: "1g", price: null, currency: "USD", priceText: "quote" }],
+});
+const pubchemHits = search("", { mwMin: 160, mwMax: 170 }, [...records, pubchem]);
+assert(pubchemHits.hits.some((hit) => hit.record.sku === "ENGINE-PUBCHEM"), "MW range uses PubChem mwExternal when AMT published none");
+assert(weightLabel(pubchem) === "162.23 Da · PubChem", "PubChem weight is labelled PubChem");
+assert(top(search("C10H14N2", {}, [...records, pubchem]))?.sku === "ENGINE-PUBCHEM", "formulaExternal matches and stays labelled as PubChem");
+assert(/phenylboronic/i.test(didYouMean(records, "phenylbornoic acid")), "did you mean corrects phenylbornoic");
+assert(didYouMean(records, "ALC-0315") === "", "an exact name is not rewritten");
+const memory = { store: {}, getItem(key) { return this.store[key] ?? null; }, setItem(key, value) { this.store[key] = value; } };
+assert(rememberSearch("ALC-0315", memory)[0] === "ALC-0315", "a search is remembered");
+assert(rememberSearch("SM-102", memory)[0] === "SM-102" && readRecent(memory)[1] === "ALC-0315", "recent searches keep the newest first");
+assert(rememberSearch("SM-102", memory).filter((item) => item === "SM-102").length === 1, "repeating a search does not duplicate it");
 
 console.log(`${passed} passed, ${failed} failed`);
 if (failed) process.exitCode = 1;

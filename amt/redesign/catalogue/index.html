@@ -44,7 +44,7 @@
   </div>
   <div class="wrap brand-bar">
     <a class="brand" href="/amt/redesign/">
-      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" width="183" height="99" alt=""></span>
+      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" srcset="/amt/redesign/assets/amt-logo.png 183w, /amt/redesign/assets/amt-logo@2x.png 464w" sizes="(min-width: 56rem) 6.25rem, 5.5rem" width="183" height="99" alt=""></span>
       <span class="brand-name">Advanced Molecular Technologies</span>
     </a>
     <form class="search" role="search" action="/amt/redesign/catalogue/" method="get">
@@ -64,7 +64,7 @@
   </nav>
 </header>
   <main id="main" tabindex="-1">
-    <div class="wrap catalogue" id="catalogue" data-catalogue-app data-index="/amt/redesign/catalogue/index.json" data-has-mw="0" data-product-base="/amt/redesign/products/">
+    <div class="wrap catalogue" id="catalogue" data-catalogue-app data-index="/amt/redesign/catalogue/index.json" data-has-mw="1" data-product-base="/amt/redesign/products/" data-structure-base="/amt/redesign/assets/structures/pubchem/">
   <header class="page-intro">
     <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/amt/redesign/">Home</a></li><li aria-current="page">Catalogue</li></ol></nav>
     <h1>Catalogue</h1>
@@ -86,11 +86,13 @@
       </label>
       <button type="button" class="btn btn-secondary cat-filter-open" aria-expanded="false" aria-controls="cat-filters">Filters</button>
     </div>
-    <p id="cat-hint" class="hint">CAS works with or without hyphens. PEG3 is an oligomer length; PEG2000 and mPEG 2k are a nominal mass. Arrow keys move through results. <kbd>/</kbd> focuses search.</p>
+    <p id="cat-hint" class="hint">CAS works with or without hyphens. PEG3 is an oligomer length; PEG2000 and mPEG 2k are a nominal mass. <kbd>Ctrl</kbd>+<kbd>K</kbd> opens search on this page. <kbd>/</kbd> focuses this box.</p>
+    <div id="cat-did-you-mean" class="cat-did" hidden></div>
+    <ul id="cat-suggest" class="amt-suggest" role="listbox" hidden></ul>
     <div class="cat-layout">
       <aside id="cat-filters" class="cat-filters" aria-labelledby="cat-filter-title">
         <h2 id="cat-filter-title">Filters</h2>
-        <p class="hint">Family, CAS, pack size, purity, and price load when you search.</p>
+        <p class="hint">Family, type, CAS, molecular weight, pack size, purity, and price load when you search.</p>
       </aside>
       <div>
         <p id="cat-live" class="cat-live" aria-live="polite">1,347 products. Search, or browse by family.</p>
@@ -159,5 +161,6 @@
   </div>
 </footer>
   <script type="module" src="/amt/redesign/js/theme.js"></script>
+  <script type="module" src="/amt/redesign/js/sw-register.js"></script>
 </body>
 </html>
