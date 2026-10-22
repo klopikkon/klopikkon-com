@@ -109,6 +109,12 @@ for (const product of products) {
 
   if (product.subfamily !== null && typeof product.subfamily !== "string") fail(`${label}: subfamily must be a string or null`);
   if (product.cas !== null && typeof product.cas !== "string") fail(`${label}: cas must be a string or null`);
+  if (product.cas === "No CAS#") fail(`${label}: a printed No CAS# belongs in casRaw, not cas`);
+  if (product.casRaw != null) {
+    if (product.casRaw !== "No CAS#") fail(`${label}: casRaw must be the printed No CAS# text`);
+    if (product.cas != null) fail(`${label}: cas must be null when casRaw is set`);
+    if (product.catalogueNote !== "No CAS#") fail(`${label}: catalogueNote must keep the printed No CAS# text`);
+  }
   if (product.formula !== null && typeof product.formula !== "string") fail(`${label}: formula must be a string or null`);
   if (product.mw !== null && typeof product.mw !== "number") fail(`${label}: mw must be a number or null`);
   if (product.purity !== null && typeof product.purity !== "string") fail(`${label}: purity must be a string or null`);

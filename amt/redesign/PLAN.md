@@ -77,7 +77,7 @@ Paths below are under `/amt/redesign/`. Each HTML page carries `noindex,nofollow
 | `family` | `lipids` \| `peg` \| `fluorophores` \| `organoborons` \| `other` |
 | `subfamily` | The heading AMT prints above the product, verbatim. `subfamilySource` records the PDF running header or the homepage card. The brochures are flat lists, so this is the catalogue title except three cards labelled `Ionisable Lipid` |
 | `classDerived` | Browsing class read from the printed name by `data/class-rules.json`. Not an AMT label. `classDerivedSource` is `"name"` when a rule matches, and both are null when none does |
-| `cas` | Printed CAS, or a string such as `No CAS#`. `null` if absent |
+| `cas` | A printed CAS number, or `null`. A cell that prints `No CAS#` is `null`, with that text kept on `casRaw` and `catalogueNote` |
 | `formula` | `null`. No formula column, and structure drawings are not OCR'd |
 | `mw` | `null` (number when a future source actually prints one) |
 | `purity` | Exact published string, including the space in `≥ 98%`. `null` when the row prints none, or when two listings disagree |

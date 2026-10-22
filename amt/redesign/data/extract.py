@@ -732,18 +732,29 @@ def parse_homepage(path: Path):
 
 
 def listing_from(row):
-    return {
+    cas = row["cas"]
+    note = row.get("note")
+    cas_raw = None
+    if cas == "No CAS#":
+        cas_raw = cas
+        cas = None
+        if not note:
+            note = cas_raw
+    listing = {
         "sourceId": row["sourceId"],
         "pdf": row["pdf"],
         "page": row["page"],
         "alsoPages": row["alsoPages"],
         "listNo": row["listNo"],
         "name": row["name"],
-        "cas": row["cas"],
+        "cas": cas,
         "purity": row["purity"],
         "packs": row["packs"],
-        "note": row.get("note"),
+        "note": note,
     }
+    if cas_raw:
+        listing["casRaw"] = cas_raw
+    return listing
 
 
 def canonical_packs(listings):
@@ -857,7 +868,13 @@ def merge_products(catalogue_rows, flyer_rows, homepage):
                 discrepancies.append({"sku": sku, "kind": "homepage-name-differs", "canonical": name, "homepage": home["name"]})
             if home.get("image"):
                 product["homepageImageUrl"] = home["image"]
+        if cas == "No CAS#":
+            product["casRaw"] = cas
+            product["cas"] = None
+            cas = None
         notes = [r.get("note") for r in winning if r.get("note")]
+        if product.get("casRaw") and product["casRaw"] not in notes:
+            notes.insert(0, product["casRaw"])
         if notes:
             product["catalogueNote"] = notes[0]
         products.append(product)
