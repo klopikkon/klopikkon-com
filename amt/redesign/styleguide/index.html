@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Styleguide - Advanced Molecular Technologies</title>
+  <meta name="description" content="Design system specimens for the AMT concept redesign: colour, type, buttons, badges, cards, tables, tabs and forms.">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://klopikkon.com/amt/redesign/styleguide/">
+  <meta name="theme-color" content="#f3f0e8">
+  <link rel="icon" href="/amt/redesign/assets/amt-logo.png" type="image/png">
+  <script>
+(function () {
+  var theme = "light";
+  try {
+    var stored = localStorage.getItem("amt-theme");
+    if (stored === "light" || stored === "dark") theme = stored;
+    else if (window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+  } catch (e) {}
+  document.documentElement.setAttribute("data-theme", theme);
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", theme === "dark" ? "#0e141c" : "#f3f0e8");
+})();
+</script>
+  <link rel="stylesheet" href="/amt/redesign/css/tokens.css">
+  <link rel="stylesheet" href="/amt/redesign/css/base.css">
+  <link rel="stylesheet" href="/amt/redesign/css/components.css">
+  
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap utility">
+    <p class="utility-contact">
+      <a href="tel:+61397649220">03 9764 9220</a>
+      <span aria-hidden="true">·</span>
+      <a href="mailto:enquiries@amtechpl.com">enquiries@amtechpl.com</a>
+    </p>
+    <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme">
+      <span class="when-light">Dark theme</span>
+      <span class="when-dark">Light theme</span>
+    </button>
+  </div>
+  <div class="wrap brand-bar">
+    <a class="brand" href="/amt/redesign/">
+      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" width="183" height="99" alt=""></span>
+      <span class="brand-name">Advanced Molecular Technologies</span>
+    </a>
+    <form class="search" role="search" action="/amt/redesign/catalogue/" method="get">
+      <label class="visually-hidden" for="site-search">Search catalogue</label>
+      <input id="site-search" name="q" type="search" placeholder="Name / Formula / CAS" enterkeyhint="search" autocomplete="off">
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+  </div>
+  <div class="wrap menu-bar">
+    <input class="nav-toggle" type="checkbox" id="nav-toggle">
+    <label class="nav-toggle-label" for="nav-toggle"><span class="menu-open">Menu</span><span class="menu-close">Close</span></label>
+  </div>
+  <nav class="site-nav" aria-label="Primary">
+    <div class="wrap">
+      <ul class="nav-list"><li><a href="/amt/redesign/">Home</a></li><li><a href="/amt/redesign/catalogue/">Catalogue</a></li><li class="nav-sub"><details><summary>Products</summary><ul><li><a href="/amt/redesign/families/lipids/">Lipids</a></li><li><a href="/amt/redesign/families/other/#general-chemicals">General Chemicals</a></li><li><a href="/amt/redesign/families/organoborons/">Organoborons</a></li><li><a href="/amt/redesign/families/other/#organosilicons">Organosilicons</a></li><li><a href="/amt/redesign/families/other/#nucleosides">Nucleosides</a></li><li><a href="/amt/redesign/families/other/#halogenated-organics">Halogenated Organics</a></li><li><a href="/amt/redesign/families/other/#diaryls">Diaryls</a></li><li><a href="/amt/redesign/families/other/#catalysts">Catalysts</a></li><li><a href="/amt/redesign/families/other/#bioactives">Bioactives</a></li><li><a href="/amt/redesign/families/peg/">PEG Reagents and Linkers</a></li><li><a href="/amt/redesign/families/fluorophores/">Fluorophores and Dyes</a></li></ul></details></li><li><a href="/amt/redesign/about/">About</a></li><li><a href="/amt/redesign/contact/">Contact</a></li></ul>
+    </div>
+  </nav>
+</header>
+  <main id="main" tabindex="-1">
+    <div class="wrap page-intro">
+  <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/amt/redesign/">Home</a></li><li aria-current="page">Styleguide</li></ol></nav>
+  <h1>Styleguide</h1>
+  <p class="lede">Component specimens for this concept redesign. Use the theme control in the header to check light and dark. Nothing in the specimen blocks is an AMT product claim.</p>
+
+  <section class="section" id="type">
+    <h2>Type</h2>
+    <ul class="scale-list">
+      <li><span class="eyebrow">Eyebrow</span></li>
+      <li><h1>Heading one</h1></li>
+      <li><h2>Heading two</h2></li>
+      <li><h3>Heading three</h3></li>
+      <li><p>Body text for catalogue prose, set in the system sans at 1rem.</p></li>
+      <li><p class="sku">AMTGC000-SKU00 · catalogue number</p></li>
+      <li><p class="fine">Secondary note, still at least 13px.</p></li>
+    </ul>
+  </section>
+
+  <section class="section" id="colour">
+    <h2>Colour</h2>
+    <div class="swatch-grid"><figure class="swatch">
+      <div class="swatch-chip" style="background: var(--bg)"></div>
+      <figcaption><span class="sku">--bg</span><br>Background</figcaption>
+    </figure><figure class="swatch">
+      <div class="swatch-chip" style="background: var(--surface)"></div>
+      <figcaption><span class="sku">--surface</span><br>Surface</figcaption>
+    </figure><figure class="swatch">
+      <div class="swatch-chip" style="background: var(--ink)"></div>
+      <figcaption><span class="sku">--ink</span><br>Ink</figcaption>
+    </figure><figure class="swatch">
+      <div class="swatch-chip" style="background: var(--muted)"></div>
+      <figcaption><span class="sku">--muted</span><br>Muted</figcaption>
+    </figure><figure class="swatch">
+      <div class="swatch-chip" style="background: var(--accent)"></div>
+      <figcaption><span class="sku">--accent</span><br>Accent</figcaption>
+    </figure><figure class="swatch">
+      <div class="swatch-chip" style="background: var(--copper)"></div>
+      <figcaption><span class="sku">--copper</span><br>Copper</figcaption>
+    </figure><figure class="swatch">
+      <div class="swatch-chip" style="background: var(--green-bg)"></div>
+      <figcaption><span class="sku">--green-bg</span><br>Price lower</figcaption>
+    </figure><figure class="swatch">
+      <div class="swatch-chip" style="background: var(--amber-bg)"></div>
+      <figcaption><span class="sku">--amber-bg</span><br>Price split</figcaption>
+    </figure><figure class="swatch">
+      <div class="swatch-chip" style="background: var(--red-bg)"></div>
+      <figcaption><span class="sku">--red-bg</span><br>Price higher</figcaption>
+    </figure></div>
+  </section>
+
+  <section class="section" id="buttons">
+    <h2>Buttons</h2>
+    <p>
+      <button class="btn btn-primary" type="button">Primary</button>
+      <a class="btn btn-secondary" href="#buttons">Secondary</a>
+      <a class="btn btn-ghost" href="#buttons">Ghost</a>
+    </p>
+  </section>
+
+  <section class="section" id="badges">
+    <h2>Badges</h2>
+    <p>Price-position badges keep a text label as well as colour. Green: AMT has the lowest published list on a matched pack. Amber: the result depends on pack size, an analogue, or a currency gap within 25%. Red: a competitor prints a lower list.</p>
+    <p>
+      <span class="badge badge-green">Price: lower</span>
+      <span class="badge badge-amber">Price: split</span>
+      <span class="badge badge-red">Price: higher</span>
+      <span class="badge">Neutral</span>
+    </p>
+  </section>
+
+  <section class="section" id="cards">
+    <h2>Cards</h2>
+    <div class="card-grid"><article class="card product-card">
+    <p class="kicker">Component</p>
+    <h3><a href="/amt/redesign/catalogue/?q=SPECIMEN">Specimen card</a></h3>
+    <p class="sku">SPECIMEN</p>
+    <p><span class="badge">Sample label</span></p>
+    <ul class="pack-list"><li><span>100 mg</span> <span>quote</span></li><li><span>1 g</span> <span>$80</span></li></ul>
+  </article></div>
+  </section>
+
+  <section class="section" id="chips">
+    <h2>Chips</h2>
+    <ul class="chip-row">
+      <li><a class="chip" href="/amt/redesign/families/lipids/">Lipids</a></li>
+      <li><a class="chip" href="/amt/redesign/families/peg/" aria-current="page">PEG linkers</a></li>
+      <li><span class="chip">Static chip</span></li>
+    </ul>
+  </section>
+
+  <section class="section" id="breadcrumbs">
+    <h2>Breadcrumbs</h2>
+    <p class="fine">The trail at the top of this page is the live component.</p>
+  </section>
+
+  <section class="section" id="table">
+    <h2>Table</h2>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Price position legend">
+      <table>
+        <caption>Price position legend</caption>
+        <thead>
+          <tr>
+            <th scope="col">Badge</th>
+            <th scope="col">Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-green">Price: lower</span></td>
+            <td>AMT cheapest published list on a matched pack.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-amber">Price: split</span></td>
+            <td>Pack-size split, analogue-only peer, or currency split within 25%.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-red">Price: higher</span></td>
+            <td>A competitor prints a lower list.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="tabs">
+    <h2>Tabs</h2>
+    <p class="fine">Radio tabs work from the keyboard without JavaScript. Arrow keys move the selected tab once a tab has focus.</p>
+    <div class="tabs">
+      <input class="tab-radio" type="radio" name="specimen-tabs" id="tab-packs" checked>
+      <input class="tab-radio" type="radio" name="specimen-tabs" id="tab-docs">
+      <input class="tab-radio" type="radio" name="specimen-tabs" id="tab-notes">
+      <div class="tablist">
+        <label class="tab" for="tab-packs">Packs</label>
+        <label class="tab" for="tab-docs">Documents</label>
+        <label class="tab" for="tab-notes">Notes</label>
+      </div>
+      <div class="panels">
+        <div class="panel" id="panel-packs"><p>Specimen panel for pack sizes. Unpublished prices read “quote”.</p></div>
+        <div class="panel" id="panel-docs"><p>Specimen panel for SDS, CoA and datasheet links.</p></div>
+        <div class="panel" id="panel-notes"><p>Specimen panel for handling notes. No handling advice is invented here.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="forms">
+    <h2>Forms</h2>
+    <form class="form" action="#forms">
+      <div class="field">
+        <label for="sg-name">Label</label>
+        <input id="sg-name" name="sg-name" type="text" placeholder="Name / Formula / CAS" autocomplete="off">
+        <p class="hint">Hint text sits under the field.</p>
+      </div>
+      <div class="field">
+        <label for="sg-email">Email</label>
+        <input id="sg-email" name="sg-email" type="email" autocomplete="email" aria-describedby="sg-email-error" aria-invalid="true">
+        <p class="field-error" id="sg-email-error">Specimen error: enter an email address.</p>
+      </div>
+      <div class="field">
+        <label for="sg-topic">Select</label>
+        <select id="sg-topic" name="sg-topic">
+          <option>Lipids</option>
+          <option>PEG reagents</option>
+          <option>Fluorophores</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="sg-notes">Message</label>
+        <textarea id="sg-notes" name="sg-notes"></textarea>
+      </div>
+      <label class="check"><input type="checkbox" name="sg-copy"> Specimen checkbox</label>
+      <button class="btn btn-primary" type="submit">Submit specimen</button>
+    </form>
+  </section>
+</div>
+  </main>
+  <footer class="site-footer">
+  <div class="wrap">
+    <p class="concept-note">Concept redesign, not the official AMT site. <a href="https://www.amtechpl.com/" rel="noopener noreferrer">Official AMT site</a></p>
+    <div class="footer-grid">
+      <div>
+        <p class="footer-name">Advanced Molecular Technologies Pty Ltd</p>
+        <address>
+          Unit 1/7-11<br>
+          Rocco drive<br>
+          Scoresby VIC 3179
+        </address>
+        <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Unit%201%2F7-11%20Rocco%20drive%20Scoresby%20VIC%203179" rel="noopener noreferrer">Locate us</a></p>
+      </div>
+      <div>
+        <p><span class="footer-label">Within Australia</span><br><a href="tel:+61397649220">03 9764 9220</a></p>
+        <p><span class="footer-label">International</span><br><a href="tel:+61397649220">+61 3 9764 9220</a></p>
+        <p><span class="footer-label">Email</span><br>
+          <a href="mailto:enquiries@amtechpl.com">enquiries@amtechpl.com</a><br>
+          <a href="mailto:sales@amtechpl.com">sales@amtechpl.com</a>
+        </p>
+      </div>
+      <nav aria-label="Footer">
+        <ul class="footer-links"><li><a href="/amt/redesign/">Home</a></li><li><a href="/amt/redesign/catalogue/">Catalogue</a></li><li><a href="/amt/redesign/about/">About</a></li><li><a href="/amt/redesign/about/#contract-research">Contract research</a></li><li><a href="/amt/redesign/about/#analytical-services">Analytical services</a></li><li><a href="/amt/redesign/families/other/#organosilicons">Literature</a></li><li><a href="/amt/redesign/contact/">Contact</a></li><li><a href="/amt/redesign/styleguide/" aria-current="page">Styleguide</a></li><li><a href="https://www.amtechpl.com/structure-search/" rel="noopener noreferrer">Structure search</a></li></ul>
+      </nav>
+    </div>
+    <p class="copyright">Copyright 2026 Advanced Molecular Technologies Pty Ltd</p>
+  </div>
+</footer>
+  <script type="module" src="/amt/redesign/js/theme.js"></script>
+</body>
+</html>

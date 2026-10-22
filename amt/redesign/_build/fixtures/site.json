@@ -1,0 +1,545 @@
+{
+  "name": "Advanced Molecular Technologies",
+  "legalName": "Advanced Molecular Technologies Pty Ltd",
+  "conceptNote": "Concept redesign, not the official AMT site.",
+  "officialUrl": "https://www.amtechpl.com/",
+  "copyright": "Copyright 2026 Advanced Molecular Technologies Pty Ltd",
+  "contact": {
+    "street": ["Unit 1/7-11", "Rocco drive", "Scoresby VIC 3179"],
+    "phoneAu": "03 9764 9220",
+    "phoneIntl": "+61 3 9764 9220",
+    "phoneTel": "+61397649220",
+    "emailEnquiries": "enquiries@amtechpl.com",
+    "emailSales": "sales@amtechpl.com",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Unit%201%2F7-11%20Rocco%20drive%20Scoresby%20VIC%203179"
+  },
+  "company": [
+    "Advanced Molecular Technologies (AMT) is a contract research organisation specialising in medicinal chemistry and custom organic synthesis. We synthesise target molecules, manufacture chemicals (small- and large-scale) and supply specialist chemicals around the world.",
+    "We further offer chemical method development, drug discovery, synthetic intermediates, building-blocks and finished-products to the pharmaceutical, biotech and chemical markets."
+  ],
+  "nav": [
+    { "label": "Home", "path": "" },
+    { "label": "Catalogue", "path": "catalogue/" },
+    {
+      "label": "Products",
+      "children": [
+        { "label": "Lipids", "path": "families/lipids/" },
+        { "label": "General Chemicals", "path": "families/other/#general-chemicals" },
+        { "label": "Organoborons", "path": "families/organoborons/" },
+        { "label": "Organosilicons", "path": "families/other/#organosilicons" },
+        { "label": "Nucleosides", "path": "families/other/#nucleosides" },
+        { "label": "Halogenated Organics", "path": "families/other/#halogenated-organics" },
+        { "label": "Diaryls", "path": "families/other/#diaryls" },
+        { "label": "Catalysts", "path": "families/other/#catalysts" },
+        { "label": "Bioactives", "path": "families/other/#bioactives" },
+        { "label": "PEG Reagents and Linkers", "path": "families/peg/" },
+        { "label": "Fluorophores and Dyes", "path": "families/fluorophores/" }
+      ]
+    },
+    { "label": "About", "path": "about/" },
+    { "label": "Contact", "path": "contact/" }
+  ],
+  "footerNav": [
+    { "label": "Home", "path": "" },
+    { "label": "Catalogue", "path": "catalogue/" },
+    { "label": "About", "path": "about/" },
+    { "label": "Contract research", "path": "about/#contract-research" },
+    { "label": "Analytical services", "path": "about/#analytical-services" },
+    { "label": "Literature", "path": "families/other/#organosilicons" },
+    { "label": "Contact", "path": "contact/" },
+    { "label": "Styleguide", "path": "styleguide/" },
+    { "label": "Structure search", "href": "https://www.amtechpl.com/structure-search/" }
+  ],
+  "hero": {
+    "eyebrow": "Custom organic synthesis",
+    "title": "Welcome to Advanced Molecular Technologies",
+    "lede": "Biotech Incubator and CRO",
+    "categories": [
+      { "label": "General Chemicals", "path": "families/other/#general-chemicals" },
+      { "label": "Organoborons", "path": "families/organoborons/" },
+      { "label": "Organosilicons", "path": "families/other/#organosilicons" },
+      { "label": "PEG Linkers", "path": "families/peg/" },
+      { "label": "Fluorophores", "path": "families/fluorophores/" },
+      { "label": "Bioactives", "path": "families/other/#bioactives" },
+      { "label": "Nucleosides", "path": "families/other/#nucleosides" }
+    ]
+  },
+  "facts": [
+    "Next day dispatch for in-stock items shipping within Australia! *Ordered before 12-noon!",
+    "For PEG Linkers in the US see our partner [Frontier Specialty Chemicals](https://frontierspecialtychemicals.com/product-category/functionalized-pegs-polyethylene-glycols-bioconjugation-linkers/).",
+    "Minimum order value of USD $150 for international shipping"
+  ],
+  "offers": {
+    "heading": "Advanced Molecular Technologies is proud to supply Australian clients with the following exclusive offers:",
+    "items": [
+      "Free delivery for all orders over $250.00 AUD.",
+      "Next day dispatch for all orders ordered before 12-noon for in-stock items.",
+      "Local Product Storage for any regular chemicals or specialised products."
+    ],
+    "close": "Please get in touch for more details!"
+  },
+  "brochures": [
+    {
+      "label": "AMT Lipid Products – 2026",
+      "href": "https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf"
+    },
+    {
+      "label": "AMT PEG Reagents & Linkers Catalogue Selection – 2026",
+      "href": "https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf"
+    },
+    {
+      "label": "AMT Fluorophores & Dyes Catalogue Selection – 2026",
+      "href": "https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf"
+    },
+    {
+      "label": "AMT Organoborons Catalogue Selection – 2026",
+      "href": "https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf"
+    },
+    {
+      "label": "NEW PRODUCTS LIST",
+      "href": "https://www.amtechpl.com/wp-content/uploads/2025/05/New_Products_20250516.pdf"
+    }
+  ],
+  "familyCards": [
+    {
+      "name": "Lipids",
+      "path": "families/lipids/",
+      "detail": "AMT Lipid Products – 2026",
+      "detailHref": "https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf"
+    },
+    {
+      "name": "Organoborons",
+      "path": "families/organoborons/",
+      "detail": "AMT Organoborons Catalogue Selection – 2026",
+      "detailHref": "https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf"
+    },
+    {
+      "name": "Organosilicons",
+      "path": "families/other/#organosilicons"
+    },
+    {
+      "name": "PEG Reagents and Linkers",
+      "path": "families/peg/",
+      "detail": "AMT PEG Reagents & Linkers Catalogue Selection – 2026",
+      "detailHref": "https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf"
+    },
+    {
+      "name": "Fluorophores and Dyes",
+      "path": "families/fluorophores/",
+      "detail": "AMT Fluorophores & Dyes Catalogue Selection – 2026",
+      "detailHref": "https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf"
+    },
+    { "name": "General Chemicals", "path": "families/other/#general-chemicals" },
+    { "name": "Nucleosides", "path": "families/other/#nucleosides" },
+    { "name": "Halogenated Organics", "path": "families/other/#halogenated-organics" },
+    { "name": "Diaryls", "path": "families/other/#diaryls" },
+    { "name": "Catalysts", "path": "families/other/#catalysts" },
+    { "name": "Bioactives", "path": "families/other/#bioactives" }
+  ],
+  "featured": [
+    {
+      "name": "Lipid 5",
+      "sku": "AMTGC1533-LP25",
+      "familyLabel": "Lipids",
+      "familyPath": "families/lipids/",
+      "note": "Ionisable Lipid",
+      "packs": [
+        { "size": "500mg", "price": 390, "currency": null, "priceText": "$390.00" },
+        { "size": "1g", "price": 595, "currency": null, "priceText": "$595.00" }
+      ]
+    },
+    {
+      "name": "ALC-0315",
+      "sku": "AMTGC903-AL21",
+      "familyLabel": "Lipids",
+      "familyPath": "families/lipids/",
+      "note": "Ionisable Lipid",
+      "packs": [
+        { "size": "500 mg", "price": 310, "currency": null, "priceText": "$310" },
+        { "size": "1 g", "price": 470, "currency": null, "priceText": "$470" }
+      ]
+    },
+    {
+      "name": "Pomalidomide 4'-PEG3-azide",
+      "sku": "AMTGC1223-PL23",
+      "familyLabel": "PEG Reagents and Linkers",
+      "familyPath": "families/peg/",
+      "packs": [
+        { "size": "100 mg", "price": 120, "currency": null, "priceText": "$120.00" },
+        { "size": "500 mg", "price": 360, "currency": null, "priceText": "$360.00" }
+      ]
+    },
+    {
+      "name": "N3-PEG23-CH2CH2NH2",
+      "sku": "AMTGC1264-AH24",
+      "familyLabel": "PEG Reagents and Linkers",
+      "familyPath": "families/peg/",
+      "packs": [
+        { "size": "100 mg", "price": 250, "currency": null, "priceText": "$250" },
+        { "size": "1 g", "price": 780, "currency": null, "priceText": "$780" }
+      ]
+    },
+    {
+      "name": "17-Azido-5-oxo-6-aza-3,9,12,15-tetraoxaheptadecanoic acid",
+      "sku": "AMTGC1266-AO24",
+      "familyLabel": "PEG Reagents and Linkers",
+      "familyPath": "families/peg/",
+      "packs": [
+        { "size": "1 g", "price": 120, "currency": null, "priceText": "$120" },
+        { "size": "5 g", "price": 360, "currency": null, "priceText": "$360" }
+      ]
+    },
+    {
+      "name": "3-((2-(2-(2-(2-Azidoethoxy)ethoxy)ethoxy)ethyl)amino)-4-ethoxycyclobut-3-ene-1,2-dione",
+      "sku": "AMTGC1269-CB24",
+      "familyLabel": "PEG Reagents and Linkers",
+      "familyPath": "families/peg/",
+      "packs": [
+        { "size": "1 g", "price": 120, "currency": null, "priceText": "$120" },
+        { "size": "5 g", "price": 360, "currency": null, "priceText": "$360" }
+      ]
+    },
+    {
+      "name": "4-(N,N-Dimethylaminosulfonyl)-7-fluoro-2,1,3-benzoxadiazole [DBD-F]",
+      "sku": "AMTH390-DF24",
+      "familyLabel": "Fluorophores and Dyes",
+      "familyPath": "families/fluorophores/",
+      "packs": [
+        { "size": "250 mg", "price": 195, "currency": null, "priceText": "$195" },
+        { "size": "1 g", "price": 595, "currency": null, "priceText": "$595" }
+      ]
+    },
+    {
+      "name": "SM-102",
+      "sku": "AMTGC936-SM21",
+      "familyLabel": "Lipids",
+      "familyPath": "families/lipids/",
+      "note": "Ionisable Lipid",
+      "packs": [
+        { "size": "500 mg", "price": 420, "currency": null, "priceText": "$420" },
+        { "size": "1 g", "price": 680, "currency": null, "priceText": "$680" }
+      ]
+    },
+    {
+      "name": "11-Azido-3,6,9-trioxaundecan-1-amine",
+      "sku": "AMTGC125-AT15",
+      "familyLabel": "PEG Reagents and Linkers",
+      "familyPath": "families/peg/",
+      "packs": [
+        { "size": "5 g", "price": 80, "currency": null, "priceText": "$80" },
+        { "size": "25 g", "price": 202, "currency": null, "priceText": "$202" }
+      ]
+    },
+    {
+      "name": "2-(2-(2-Azidoethoxy)ethoxy)-N-methylethanamine",
+      "sku": "AMTGC807-AM21",
+      "familyLabel": "PEG Reagents and Linkers",
+      "familyPath": "families/peg/",
+      "packs": [
+        { "size": "1 g", "price": 80, "currency": null, "priceText": "$80" },
+        { "size": "5 g", "price": 240, "currency": null, "priceText": "$240" }
+      ]
+    },
+    {
+      "name": "Desthiobiotin-PEG3-Azide",
+      "sku": "AMTGC1441-DB25",
+      "familyLabel": "PEG Reagents and Linkers",
+      "familyPath": "families/peg/",
+      "packs": [
+        { "size": "10 mg", "price": 120, "currency": null, "priceText": "$120" },
+        { "size": "25 mg", "price": 210, "currency": null, "priceText": "$210" }
+      ]
+    },
+    {
+      "name": "tert-Butyl (2-(2-(2-(2-azidoethoxy)ethoxy)ethoxy)ethyl)carbamate",
+      "sku": "AMTGC187-AC16",
+      "familyLabel": "PEG Reagents and Linkers",
+      "familyPath": "families/peg/",
+      "packs": [
+        { "size": "1 g", "price": 80, "currency": null, "priceText": "$80" },
+        { "size": "5 g", "price": 240, "currency": null, "priceText": "$240" }
+      ]
+    }
+  ],
+  "services": {
+    "heading": "Contract Synthesis & Analytical Services:",
+    "paragraphs": [
+      "AMT offers both Contract Synthesis and a range of Analytical Services.",
+      "[Contact us](/amt/redesign/contact/) for more information."
+    ],
+    "equipment": "Analytical Equipment Available for Service: NMR (¹H, ¹³C, ¹⁰B, ¹⁵N, ¹⁹F, ²⁹Si and ³¹P) | HPLC (NP/RP, chiral & achiral) | GC | FT-IR | UV-Vis | Karl Fischer | Polarimetry | Thermogravimetric Analysis"
+  },
+  "partners": [
+    { "name": "Scaled Organics", "href": "https://www.scaledorganics.com/" },
+    { "name": "AK Scientific", "href": "https://aksci.com/" },
+    { "name": "Key Organics", "href": "https://www.keyorganics.net/" },
+    {
+      "name": "Frontier Specialty Chemicals",
+      "href": "https://frontierspecialtychemicals.com/product-category/functionalized-pegs-polyethylene-glycols-bioconjugation-linkers/"
+    }
+  ],
+  "quote": {
+    "heading": "Contact us today to request a custom synthesis quote!",
+    "line": "Proudly Australian owned & operated"
+  },
+  "news": [
+    {
+      "id": "news-frontier",
+      "title": "AMT Expands Customer Reach Through PEG Distribution Partnership with Frontier Specialty Chemicals",
+      "date": "November 20, 2025",
+      "paragraphs": [
+        "Advanced Molecular Technologies (AMT) is pleased to announce a distribution partnership with Frontier Specialty Chemicals to enhance customer access to AMT’s portfolio of high-purity functionalized PEGs for customers across the US.",
+        "Under this arrangement, Frontier Specialty Chemicals will serve as a distribution and customer support partner, providing local sales, order management, and customer service to researchers and organizations seeking access to AMT products. This partnership strengthens AMT’s ability to deliver responsive customer support and efficient product distribution while maintaining the high standards of quality and reliability that customers expect.",
+        "With inventory located in the US to avoid customs delays, US customers can access AMT’s high purity compounds and support quicker and easier than before. These high-purity PEGS are available in catalogue and bulk quantities, as well as GMP quality materials to support reliable results from early research through scale-up.",
+        "AMT looks forward to working closely with Frontier Specialty Chemicals to provide an improved customer experience and broaden access to our extensive range of PEG compounds and research products."
+      ]
+    },
+    {
+      "id": "news-idt",
+      "title": "AMT and IDT Australia Collaborate to Deliver GMP PEG Linkers",
+      "date": "22 December 2023",
+      "paragraphs": [
+        "Advanced Molecular Technologies (AMT) is pleased to announce a collaboration with IDT Australia to provide customers with a streamlined pathway for the development and GMP manufacturing of polyethylene glycol (PEG) linkers. This collaboration was inspired by the increasing requests from AMT customers for GMP grade material.",
+        "The collaboration reflects AMT’s ongoing commitment to providing innovative chemistry solutions and expanding access to Australian-developed technologies in international markets. By combining technical expertise, manufacturing capability, and established commercial networks, AMT and IDT Australia able to support the growing requirements of customers across North America, Japan, and other global pharmaceutical markets.",
+        "PEG linkers play a critical role in a growing range of advanced therapeutic modalities, including antibody-drug conjugates (ADCs), targeted drug delivery systems, peptide conjugates, and other bioconjugate technologies. As demand for these highly specialised materials continues to grow, the ability to transition seamlessly from research-scale development to GMP-compliant manufacture is increasingly important for pharmaceutical and biotechnology companies.",
+        "Through this collaboration, AMT will leverage its extensive expertise in linker chemistry, custom synthesis, process development, and scale-up to support the development of PEG linker technologies from early-stage research through to manufacturing readiness. IDT Australia will provide GMP manufacturing capabilities, analytical testing, quality systems, and regulatory support required for clinical and commercial supply.",
+        "For further information regarding PEG linkers, custom synthesis, process development, or GMP manufacturing services, please contact the AMT team."
+      ]
+    },
+    {
+      "id": "news-key-organics",
+      "title": "Key Organics and Advanced Molecular Technologies enter into an exclusive European supply & marketing agreement",
+      "date": "September 2, 2013",
+      "paragraphs": [
+        "Advanced Molecular Technologies Pty Ltd (AMT) and Key Organics Limited (Key Organics) today announced that they have entered into an exclusive European supply & marketing agreement.",
+        "Within its BIONET brand, Key Organics offers an extensive range of over 65,000 screening compounds, intermediates, building blocks and biochemicals to the international pharmaceutical, biotechnology and agrochemical industries together with the provision of contract chemistry R&D services, process scale-up and manufacture. Key Organics has access to further commercial scale manufacturing through its sister companies within The Tennant Group.",
+        "Both companies are embarked on a strategy to increase their range of new and exciting products and technologies such that this partnership makes good strategic sense. Key Organics has access to a global customer base within the global life sciences sector and excellent customer service and compound handling infrastructure that ensures that products are dispatched on the same day.",
+        "The agreement between the parties provides for the exclusive, European supply of AMT products by Key Organics. In addition, both companies wish to collaborate in order to further grow their differentiated technology and service offerings within the life sciences sector."
+      ]
+    }
+  ],
+  "about": {
+    "aims": "Advanced Molecular Technologies aims to be a biotech incubator and contract research organization specializing in medicinal chemistry and custom organic synthesis. Our services involve the design and synthesis of target molecules, structure activity correlations (SAR), the production of compounds under GLP suitable for in vivo studies, and analytical chemistry.",
+    "incubating": "AMT is currently incubating organoboron pharmaceuticals and diagnostics, PEG linkers for antibody drug conjugates (ADCs) and AMPK activators.",
+    "services": [
+      "Custom Synthesis",
+      "Contract Research",
+      "Analytical Services",
+      "Organic Synthesis",
+      "Chemical Supplier"
+    ],
+    "cro": {
+      "heading": "Contract Research Organization",
+      "bullets": [
+        "Route design & synthesis for new target molecules",
+        "Traditional synthesis of complex molecules",
+        "Synthesis of pharmacologically active reference compounds or positive controls",
+        "Structure-Based Drug Design",
+        "Synthesis of scaffolds, building blocks & lead optimisation",
+        "Synthesis of metabolites, impurities & reference compounds"
+      ],
+      "paragraphs": [
+        "Advanced Molecular Technologies focuses on custom synthesis of target molecules through extensive organic and medicinal chemistry experience. Our dedicated team of chemists utilize a wide-range of synthetic chemistry techniques to obtain high-purity materials with very quick turnaround times.",
+        "Our contract research organization (CRO) service is involved with many leading pharmaceutical, biotech, agricultural and institutional organization both within and outside of Australia.",
+        "Our contract research organisation (CRO) service is involved in projects with many leading pharmaceutical, biotech, agricultural and academic institutions, both within Australia and internationally."
+      ],
+      "tags": ["Target Synthesis", "Drug Discovery", "Synthetic Intermediates", "Building-Blocks"]
+    },
+    "contactLine": "Contact us for more information.",
+    "analyticalSummary": {
+      "heading": "Analytical Services",
+      "paragraph": "Our services extend towards the available use of laboratory-space, fume cupboards, equipment and analytical services. Analytical chemistry services include; Nuclear Magnetic Resonance (NMR), High Pressure Liquid Chromatography (HPLC), Gas Chromatography (GC), Infra-red (FT-IR), Flash Point, Optical Rotation, Dynamic Scanning Calorimetry (DSC), UV-Vis and Biotage Flash Chromatography. Expert analytical chemists are also available to interpret results, and consultation is offered upon request.",
+      "items": [
+        "NMR Analysis",
+        "HPLC Analysis",
+        "GC Analysis",
+        "FT-Infrared Analysis",
+        "& Much More!"
+      ],
+      "more": "Click here to [see more of our analytical services](/amt/redesign/about/#analytical-equipment), or simply [get in touch](/amt/redesign/contact/)!"
+    }
+  },
+  "analytical": {
+    "banner": "NMR | HPLC | GC | FT-IR | UV-Vis | Karl Fischer | Polarimetry | Thermogravimetic Analysis | Closed Cup Flash Point Tester | Biotage SP4 Flash Purification",
+    "instruments": [
+      {
+        "name": "Bruker Avance III 400 MHz NMR",
+        "items": [
+          "Ability to run NMR spectra on nuclei such as: ¹H, ¹³C, and ³¹P",
+          "Automatic Sample Changer (B-ACS 60)",
+          "Samples (1-9) – From $25.00 (AUD) per sample / ¹H NMR (raw data).",
+          "Samples (10+) – Reduced rates available.",
+          "Processing, interpretation and additional NMR analytical services are available."
+        ],
+        "note": "[Contact us](/amt/redesign/contact/) to schedule analytical testing!"
+      },
+      {
+        "name": "Waters Alliance HPLC",
+        "items": [
+          "Waters 2998 PDA detector with a detection range from 190-790 nm",
+          "Waters e2695 separations module"
+        ]
+      },
+      {
+        "name": "PerkinElmer Clarus 580 Gas Chromatograph",
+        "items": [
+          "Phenomenex Zebron ZB-5 column with operating temperatures up to 360 °C",
+          "Flame Ionisation Detector (FID)"
+        ]
+      },
+      {
+        "name": "Agilent Cary 630 FTIR Spectrometer",
+        "items": [
+          "Highly-Sensitive Attenuated Total Reflection (ATR) cell",
+          "Quantitative and qualitative information for routine analysis of solids, liquids, and gases"
+        ]
+      },
+      {
+        "name": "John Morris 6850 UV-Vis",
+        "items": [
+          "Glass and quartz cuvette cells available",
+          "Variable spectral bandwidths provide flexibility in your qualitative and quantitative analysis"
+        ]
+      },
+      {
+        "name": "851 Titrando Coulometric Karl Fischer System",
+        "items": [
+          "Analysis with HydranalTM – Coulomat AK Anolyte for Karl Fischer titrations",
+          "Recommended measuring range: 10 µg – 200 mg absolute water"
+        ]
+      },
+      {
+        "name": "Rudolph Research Analytical Autopol I Automatic Polarimeter",
+        "items": [
+          "0.01° Arc accuracy with fixed 589 nm wavelength",
+          "Built-in thermoprobe for temperature measurement"
+        ]
+      },
+      {
+        "name": "Mettler Toledo Differential Scanning Calorimetry (DSC) – DSC3",
+        "items": [
+          "Rugged MultiSTAR sensor with 56 thermocouples",
+          "Measurement of enthalpy changes in samples due to changes in their physical and chemical properties"
+        ]
+      },
+      {
+        "name": "Setaflash Series 3 Closed Cup Flash Point Tester",
+        "items": [
+          "Small sample size of only 5 mL required",
+          "Flash point of a sample within a temperature range of 0° to 300°C"
+        ]
+      },
+      {
+        "name": "Biotage SP4 Flash Purification",
+        "items": [
+          "Four-column sequential flash purification system with expanded fraction bed, designed for multi-sample purification.",
+          "SP4 variable dual wavelength detector"
+        ]
+      }
+    ]
+  },
+  "families": [
+    {
+      "id": "lipids",
+      "title": "Lipids",
+      "path": "families/lipids/",
+      "description": "AMT Lipid Products – 2026. Featured ionisable lipids from the Advanced Molecular Technologies homepage.",
+      "paragraphs": [],
+      "brochure": {
+        "label": "AMT Lipid Products – 2026",
+        "href": "https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf"
+      },
+      "sourceLabel": "AMT Lipid Products – 2026",
+      "sourceHref": "https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf"
+    },
+    {
+      "id": "peg",
+      "title": "PEG Reagents and Linkers",
+      "path": "families/peg/",
+      "description": "PEG reagents and linkers from Advanced Molecular Technologies, including the 2026 catalogue selection.",
+      "paragraphs": [
+        "For PEG Linkers in the US see our partner [Frontier Specialty Chemicals](https://frontierspecialtychemicals.com/product-category/functionalized-pegs-polyethylene-glycols-bioconjugation-linkers/)."
+      ],
+      "quote": "AMT is currently incubating organoboron pharmaceuticals and diagnostics, PEG linkers for antibody drug conjugates (ADCs) and AMPK activators.",
+      "brochure": {
+        "label": "AMT PEG Reagents & Linkers Catalogue Selection – 2026",
+        "href": "https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf"
+      },
+      "sourceLabel": "amtechpl.com/peg-reagents-and-linkers",
+      "sourceHref": "https://www.amtechpl.com/peg-reagents-and-linkers/"
+    },
+    {
+      "id": "fluorophores",
+      "title": "Fluorophores and Dyes",
+      "path": "families/fluorophores/",
+      "description": "AMT Fluorophores & Dyes Catalogue Selection – 2026 from Advanced Molecular Technologies.",
+      "paragraphs": [],
+      "brochure": {
+        "label": "AMT Fluorophores & Dyes Catalogue Selection – 2026",
+        "href": "https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf"
+      },
+      "sourceLabel": "amtechpl.com/fluorophores-and-dyes",
+      "sourceHref": "https://www.amtechpl.com/fluorophores-and-dyes/"
+    },
+    {
+      "id": "organoborons",
+      "title": "Organoborons",
+      "path": "families/organoborons/",
+      "description": "AMT Organoborons Catalogue Selection – 2026 from Advanced Molecular Technologies.",
+      "paragraphs": [],
+      "quote": "AMT is currently incubating organoboron pharmaceuticals and diagnostics, PEG linkers for antibody drug conjugates (ADCs) and AMPK activators.",
+      "brochure": {
+        "label": "AMT Organoborons Catalogue Selection – 2026",
+        "href": "https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf"
+      },
+      "sourceLabel": "amtechpl.com/organoborons",
+      "sourceHref": "https://www.amtechpl.com/organoborons/"
+    }
+  ],
+  "otherGroups": [
+    { "id": "general-chemicals", "name": "General Chemicals" },
+    { "id": "organosilicons", "name": "Organosilicons" },
+    { "id": "nucleosides", "name": "Nucleosides" },
+    { "id": "halogenated-organics", "name": "Halogenated Organics" },
+    { "id": "diaryls", "name": "Diaryls" },
+    { "id": "catalysts", "name": "Catalysts" },
+    { "id": "bioactives", "name": "Bioactives" }
+  ],
+  "literature": {
+    "heading": "Organosilicon Reagents",
+    "items": [
+      {
+        "title": "HOMSi Reagents and Hiyama Cross-Coupling",
+        "lines": [],
+        "link": {
+          "label": "HOMSi reagent fact sheet",
+          "href": "https://aksci.com/forms/AMT_Hiyama_HOMSi_Fact_Sheet_V2.1_201203S.pdf"
+        }
+      },
+      {
+        "title": "Corey’s Disilane:",
+        "lines": [
+          "2-Methoxyphenyl)dimethylsilyl Lithium and Cuprate Reagents Offer Unique Advantages in Multistep Synthesis",
+          "Thomas W. Lee and E. J. Corey",
+          "Org. Lett.; 2001; 3(21) pp 3337 – 3339; (Letter)"
+        ],
+        "link": {
+          "label": "DOI: 10.1021/ol0165746",
+          "href": "https://doi.org/10.1021/ol0165746"
+        }
+      },
+      {
+        "title": "Dondoni’s Reagent:",
+        "lines": [
+          "Thiazole-Mediated Synthetic Methodology",
+          "Alessandro Dondoni and Alberto Marra",
+          "Chem. Rev.; 2004; 104(5) pp 2557-2600; (Review)"
+        ],
+        "link": {
+          "label": "DOI: 10.1021/cr020079l",
+          "href": "https://doi.org/10.1021/cr020079l"
+        }
+      }
+    ]
+  }
+}
