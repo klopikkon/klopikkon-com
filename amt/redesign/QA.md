@@ -56,7 +56,7 @@ Product pages are everything under `products/` except `products/index.html`, whi
 
 ### What `check-counts` compares
 
-Visible text, with `script` and `style` removed. For each pack, `priceText` must appear that many times (`quote` is matched as a word). A numeric `price` must be contained in its `priceText` when both are set. An empty `cas` fails the page if the visible text has a labeled CAS (`CAS 12345-67-8`). A non-empty `cas` must appear exactly.
+Visible text, with `script` and `style` removed. For each pack, `priceText` must appear that many times (`quote` is matched as a word). A numeric `price` must be contained in its `priceText` when both are set. Thousands separators count: `$1,750.00` contains `1750`. The product CAS is the spec-table cell (`th` CAS / `td`), not an analogue number in a price note. An empty `cas` fails the page when that cell shows a CAS number. A non-empty `cas` must appear in that cell (`&amp;` is read as `&`).
 
 `data/COUNTS.md` may use either shape:
 
@@ -113,7 +113,7 @@ axe is the WCAG AA gate for serious and critical issues. The Lighthouse accessib
 - Keep the robots meta and the footer sentence exactly as `check-meta` describes them. The footer copy is “Concept redesign, not the official AMT site.”
 - Keep the theme contract the accessibility check drives: storage key `amt-theme` (`light` or `dark`) and `data-theme` on `<html>`, set before first paint.
 - Keep absolute `/amt/redesign/` URLs so the local server and GitHub Pages share one tree. Do not link this tree from `/`, `/hello`, or `/amt/` outside `amt/redesign/`.
-- The shell already links to `/catalogue/` and `products/<id>/`. Those 404s fail `check-links` until the catalogue and product pages exist. Leave the links in place; they are the integration contract, not a shell defect to delete.
+- The shell links to `/catalogue/` and `products/<id>/`. Those URLs return 200 on current main. Leave the links in place.
 - Footer label “Literature” currently lands on `#organosilicons`, whose heading is “Organosilicons”. The literature list is an `h3` inside that section. Give the literature block its own id and point the footer at that id so the accessible name matches the target heading.
 - At 375px the primary nav is `display: none` until the menu checkbox is checked (it becomes visible at `56rem`). Keep the checkbox programmatically labeled, and don’t `display: none` the desktop nav.
 - The logo is 2KB with width and height set. Keep width and height on every later image, including structure drawings and compare shots. Serve them at the rendered size.
@@ -131,7 +131,7 @@ axe is the WCAG AA gate for serious and critical issues. The Lighthouse accessib
 - One directory per product: `products/<id>/index.html`, id taken from `products.json`.
 - Render sku, pack size, and `priceText` in the HTML, not only in a client-side template. The count check ignores `script` and `style`.
 - When `cas` is null, don’t print a CAS number. When it is set, print that exact string.
-- When `structureImage` is set, render that file with width, height, and a text alternative. `amtgc903-al21` already has `assets/structures/AMTGC903-AL21.png` in the tree and the page still shows the “No structure image published by AMT” placeholder.
+- When `structureImage` is set, render that file with width, height, and a text alternative. `amtgc903-al21` now does this for `assets/structures/AMTGC903-AL21.png`.
 - `quote/index.html` is a Lighthouse and accessibility target. Link it from the header or from the product quote control. No other redesign page points at `/amt/redesign/quote/` today, so `check-links` reports it as an orphan. The quote action stays a `mailto:` to the published AMT address. No payment step, no invented price.
 
 ### Compare
@@ -145,38 +145,56 @@ axe is the WCAG AA gate for serious and critical issues. The Lighthouse accessib
 - Re-run `amt/redesign/_qa/run-all --live` after Pages publishes a new `main`. Lighthouse always tries the live origin. A 404 there is a skip. `check-links` and `check-a11y` crawl it only with `--live`.
 - Moderate axe findings are listed in the result block and in `_qa/results/check-a11y.json`. They do not fail CI-style, but they are still worth clearing before sign-off.
 
-## Findings (2026-10-22)
+## Findings (2026-10-22, current main)
 
-Two trees were checked. The blocks under “Latest results” are the current branch, which already contains merged `main` (shell PR #73, the data files, and the product/quote pages) plus this harness. PR #73’s shell-only tree was checked separately and is written up here so a later `run-all` does not erase it.
-
-### Current tree
+`amt/redesign/_qa/run-all --live` against this branch rebased onto current `main`, and against `https://klopikkon.com/amt/redesign/`. Exit code 1. Chrome for Lighthouse and axe was `/opt/google/chrome/chrome` (the `/usr/local/bin/google-chrome` wrapper is unwrapped). There is no `compare/index.html`, so that Lighthouse and axe slot was skipped. Family compare pages from merged PR #81 are in the link crawl.
 
 | Check | Result |
 | --- | --- |
-| `check-meta` | Pass. 22 HTML pages have `noindex,nofollow` and the footer note. No page outside `amt/redesign/` links to it. |
-| `check-links` | Fail. `/amt/redesign/catalogue/` is HTTP 404. Search forms on about, contact, fluorophores, and lipids already post there. `/amt/redesign/quote/` exists but nothing else in the redesign links to it (orphan note, not a failure). 44 internal URLs were checked. |
-| `check-counts` | Fail. 12 rendered product pages, `data/products.json` has 1347, and `data/COUNTS.md` “Total unique SKUs” is 1347. Family totals in COUNTS.md match the JSON. Six of the twelve pages do not show the catalogue CAS, pack size strings, or `priceText`. 1335 products have no page. |
-| `check-a11y` | Pass. 0 serious or critical on home, about, contact, quote, styleguide, lipids, and one product page, light and dark, 375px and 1440px. Lipids at 1440px (light and dark) has an incomplete `color-contrast` check. That is a note, not a failure. Catalogue and compare were not scanned; those directories are not in the tree. |
-| `lighthouse` | Pass against the budget. Median of 3, mobile and desktop, local and live, for home, quote, and `products/amtgc1223-pl23/`. Catalogue and compare were not measured. SEO is 66 on every row because `is-crawlable` is 0; that column is not a gate. |
+| `check-meta` | Pass. 1431 HTML pages. Nothing outside `amt/redesign/` links in. |
+| `check-links` | Pass. 2314 internal URLs, local and live, all HTTP 200. |
+| `check-counts` | Fail. 1347 pages, 1347 JSON rows, `COUNTS.md` agrees, family totals agree. Ten `cas` values are the sentinel `No CAS#`. |
+| `check-a11y` | Pass. 0 serious or critical. Incomplete `color-contrast` on home and lipids. |
+| `lighthouse` | Fail. One gate: local quote mobile LCP 2.55s. SEO 66 on every row, reported separately. |
 
-`products/price-match.md` says this product build read `_build/fixtures/products.json` (12 rows), not `data/products.json`. Six of those twelve pages match `products.json` on sku, CAS, pack size, and `priceText`: `amtgc1223-pl23`, `amtgc1264-ah24`, `amtgc1266-ao24`, `amtgc1269-cb24`, `amtgc1441-db25`, and `amth390-df24`. The other six do not. `amtgc903-al21` is CAS `2036272-55-4` in the JSON with packs `500mg` `$250.00`, `1g` `$430.00`, and `2g` `$790.00`; the rendered page shows none of those strings. The same gap is on `amtgc1533-lp25`, `amtgc936-sm21`, `amtgc187-ac16`, and `amtgc807-am21` (CAS present in data and missing on the page; pack size strings such as `100mg` or `5g` missing; `priceText` such as `$140.00` not on the page). `amtgc125-at15` is two catalogue rows (standard and high purity, pack sizes `5g` and `25g` on each) and neither price set (`$65.00` / `$240.00` and `$150.00` / `$450.00`) is on the page. `amtgc903-al21` has `structureImage` `assets/structures/AMTGC903-AL21.png` and that file is in the tree. The rendered page still uses a placeholder captioned “No structure image published by AMT”.
+`products/amtgc903-al21/` shows CAS `2036272-55-4` and `$250.00` / `$430.00` / `$790.00`, and the structure PNG. The count check agrees.
 
-Live product best-practices is 96, local is 100. The live audit that scored 0 is `image-size-responsive` (an image served below the resolution of its displayed size). 96 is still inside the 90 gate. Give structure and content images width, height, and a file at least as large as the CSS box.
+## Open issues
 
-The live origin `https://klopikkon.com/amt/redesign/` answered HTTP 200, so the live half ran. It is the shell that is already on `main`. Quote and the sample product page are published there too. Catalogue is not.
+### data — `cas` is `No CAS#` on ten products
 
-`run-all` will stay red until `catalogue/index.html` returns 200 and every product page matches `products.json`. That is the integrator signal.
+Owner: **data**.
 
-### PR #73 shell only (`43204b1`)
+`data/products.json` stores the string `No CAS#` instead of null. The spec cell on each page says “Not published”. The other seven products with `cas: null` pass. Set these ten to null.
 
-Checked with `--root` pointed at that worktree, before product pages and `data/products.json` were on this branch.
-
-| Check | Result |
+| id | Live URL |
 | --- | --- |
-| `check-meta` | Pass. 9 HTML pages. |
-| `check-links` | Fail. `/amt/redesign/catalogue/` 404, plus 12 product URLs from the family tables (`amth390-df24`, `amtgc1533-lp25`, `amtgc903-al21`, `amtgc936-sm21`, `amtgc1223-pl23`, `amtgc1264-ah24`, `amtgc1266-ao24`, `amtgc1269-cb24`, `amtgc125-at15`, `amtgc807-am21`, `amtgc1441-db25`, `amtgc187-ac16`). Those product files exist on current `main`; the catalogue file still does not. |
-| `check-counts` | Skip. No `data/products.json`, `data/COUNTS.md`, or `products/` directory. The shell fixture has 12 rows and is not the source of record. |
-| `check-a11y`, `lighthouse` | Not re-run on the shell-only commit. Current `main` already includes those pages, and the tables below are that tree. |
+| `amtgc1487-il25` | https://klopikkon.com/amt/redesign/products/amtgc1487-il25/ |
+| `amtgc1583-nm26` | https://klopikkon.com/amt/redesign/products/amtgc1583-nm26/ |
+| `amtb1369-ae21` | https://klopikkon.com/amt/redesign/products/amtb1369-ae21/ |
+| `amtgc941-to21` | https://klopikkon.com/amt/redesign/products/amtgc941-to21/ |
+| `amtgc942-ob21` | https://klopikkon.com/amt/redesign/products/amtgc942-ob21/ |
+| `amtgc948-da21` | https://klopikkon.com/amt/redesign/products/amtgc948-da21/ |
+| `amtgc994-ee22` | https://klopikkon.com/amt/redesign/products/amtgc994-ee22/ |
+| `amtgc998-aa22` | https://klopikkon.com/amt/redesign/products/amtgc998-aa22/ |
+| `amtgc999-di22` | https://klopikkon.com/amt/redesign/products/amtgc999-di22/ |
+| `amtb1406-ba24` | https://klopikkon.com/amt/redesign/products/amtb1406-ba24/ |
+
+Evidence: `check-counts` line `page CAS Not published != data No CAS#` for each id. Same HTML locally and on the live URLs.
+
+### product — quote page misses the local mobile LCP budget
+
+Owner: **product**.
+
+Page: https://klopikkon.com/amt/redesign/quote/ (`quote/index.html`).
+
+Local mobile, median of 3, LCP 2.55s (runs 2554 ms, 2579 ms, 2553 ms). Budget is ≤ 2.5s. Performance score is 94, which is inside the score gate. Local desktop LCP is 0.57s. Live mobile LCP is 1.08s and passes. The failure is the throttled local lab run only.
+
+### Notes that do not fail the run
+
+- **shell.** `/amt/redesign/quote/` is an orphan: no other redesign HTML links to it. `js/cart.js` names `QUOTE_PATH`. `/amt/redesign/404.html` is also unlinked, which is expected for a 404 page. Both local and live crawls checked 2314 URLs and got HTTP 200.
+- **shell.** axe `color-contrast` was incomplete, not a violation, on home and lipids, light and dark, 375px and 1440px, local and live. 0 serious or critical on home, about, contact, catalogue, quote, styleguide, lipids, and `products/amtb001-b06/`.
+- **compare.** No open PR adds `compare/index.html`. Merged PR #81 shipped `families/<family>/compare/`. Those five pages were in the link crawl. Lighthouse did not measure a top-level compare URL because the file is absent.
 
 ## Latest results
 
@@ -187,80 +205,70 @@ The blocks below are rewritten by `run-all` and `lighthouse`. The findings above
 <!-- harness-main:start -->
 ### main
 
-Scanned `/workspace/amt/redesign` (`cursor/amt-redesign-qa-ac08` @ `390d609`) at 2026-10-22T04:02:19.475Z.
+Scanned `/workspace/amt/redesign` (`cursor/amt-redesign-qa-ac08` @ `3ffcc2b9`) at 2026-10-22T04:18:15.902Z.
 
 | Check | Result |
 | --- | --- |
 | check-meta | pass |
-| check-links | fail |
+| check-links | pass |
 | check-counts | fail |
 | check-a11y | pass |
-| lighthouse | pass |
+| lighthouse | fail |
 
 **check-meta**
-- 22 HTML page(s) carry noindex,nofollow and the footer note
+- 1431 HTML page(s) carry noindex,nofollow and the footer note
 - no page outside amt/redesign links to it
 
 **check-links**
-- local server http://127.0.0.1:33417
+- local server http://127.0.0.1:41639
+- [local] orphan HTML (not linked from another redesign page): /amt/redesign/404.html
 - [local] orphan HTML (not linked from another redesign page): /amt/redesign/quote/
-- [local] checked 44 internal URL(s)
-- [local] HTTP 404 /amt/redesign/catalogue/ (/amt/redesign/about/ form[action], /amt/redesign/contact/ form[action], /amt/redesign/families/fluorophores/ form[action], /amt/redesign/families/lipids/ form[action])
+- [local] checked 2314 internal URL(s)
+- [live] orphan HTML (not linked from another redesign page): /amt/redesign/404.html
+- [live] orphan HTML (not linked from another redesign page): /amt/redesign/quote/
+- [live] checked 2314 internal URL(s)
 
 **check-counts**
-- 12 rendered product page(s)
+- 1347 rendered product page(s)
 - data/products.json has 1347 product(s)
 - COUNTS.md products matches products.json (1347)
-- amtgc1533-lp25: page does not show CAS 2089251-33-0
-- amtgc1533-lp25: page does not show pack size "100mg"
-- amtgc1533-lp25: expected "$140.00" 1 time(s) on the page, found 0
-- amtgc903-al21: page does not show CAS 2036272-55-4
-- amtgc903-al21: page does not show pack size "500mg"
-- amtgc903-al21: page does not show pack size "1g"
-- amtgc903-al21: page does not show pack size "2g"
-- amtgc903-al21: expected "$250.00" 1 time(s) on the page, found 0
-- amtgc903-al21: expected "$430.00" 1 time(s) on the page, found 0
-- amtgc903-al21: expected "$790.00" 1 time(s) on the page, found 0
-- amtgc936-sm21: page does not show CAS 2089251-47-6
-- amtgc936-sm21: page does not show pack size "100mg"
-- amtgc936-sm21: page does not show pack size "500mg"
-- amtgc936-sm21: page does not show pack size "1g"
-- amtgc936-sm21: expected "$150.00" 1 time(s) on the page, found 0
-- amtgc936-sm21: expected "$410.00" 1 time(s) on the page, found 0
-- amtgc936-sm21: expected "$690.00" 1 time(s) on the page, found 0
-- amtgc125-at15: page does not show CAS 134179-38-7
-- amtgc125-at15: page does not show pack size "5g"
-- amtgc125-at15: page does not show pack size "25g"
-- amtgc125-at15: page does not show pack size "5g"
-- amtgc125-at15: page does not show pack size "25g"
-- amtgc125-at15: expected "$65.00" 1 time(s) on the page, found 0
-- amtgc125-at15: expected "$240.00" 1 time(s) on the page, found 0
-- amtgc125-at15: expected "$150.00" 1 time(s) on the page, found 0
-- amtgc125-at15: expected "$450.00" 1 time(s) on the page, found 0
-- amtgc187-ac16: page does not show CAS 642091-68-7
-- amtgc187-ac16: page does not show pack size "1g"
-- amtgc187-ac16: page does not show pack size "5g"
-- amtgc187-ac16: expected "$90.00" 1 time(s) on the page, found 0
-- amtgc187-ac16: expected "$270.00" 1 time(s) on the page, found 0
-- amtgc807-am21: page does not show CAS 1072920-62-7
-- amtgc807-am21: page does not show pack size "1g"
-- amtgc807-am21: page does not show pack size "5g"
-- amtgc807-am21: expected "$80.00" 1 time(s) on the page, found 0
-- amtgc807-am21: expected "$240.00" 1 time(s) on the page, found 0
-- 1335 products have no page at products/<id>/index.html (first: amtgc1044-ad22, amtgc1179-al23, amtgc1297-do24, amtgc1444-dm25, amtgc1455-ha25, amtgc1461-sm25, amtgc1487-il25, amtgc1505-bh25)
-- product page count 12 != products.json count 1347
-- product page count 12 != COUNTS.md products 1347
+- amtgc1487-il25: page CAS Not published != data No CAS#
+- amtgc1583-nm26: page CAS Not published != data No CAS#
+- amtb1369-ae21: page CAS Not published != data No CAS#
+- amtgc941-to21: page CAS Not published != data No CAS#
+- amtgc942-ob21: page CAS Not published != data No CAS#
+- amtgc948-da21: page CAS Not published != data No CAS#
+- amtgc994-ee22: page CAS Not published != data No CAS#
+- amtgc998-aa22: page CAS Not published != data No CAS#
+- amtgc999-di22: page CAS Not published != data No CAS#
+- amtb1406-ba24: page CAS Not published != data No CAS#
 
 **check-a11y**
-- local server http://127.0.0.1:39737
-- local pages: home, about, contact, quote, styleguide, lipids, product; themes light/dark; widths 375 and 1440
+- local server http://127.0.0.1:38373
+- local pages: home, about, contact, catalogue, quote, styleguide, lipids, product; themes light/dark; widths 375 and 1440
+- [local] home light 375px: incomplete color-contrast
+- [local] home light 1440px: incomplete color-contrast
+- [local] home dark 375px: incomplete color-contrast
+- [local] home dark 1440px: incomplete color-contrast
+- [local] lipids light 375px: incomplete color-contrast
 - [local] lipids light 1440px: incomplete color-contrast
+- [local] lipids dark 375px: incomplete color-contrast
 - [local] lipids dark 1440px: incomplete color-contrast
-- axe WCAG AA: 0 serious/critical across 7 page(s)
+- [live] home light 375px: incomplete color-contrast
+- [live] home light 1440px: incomplete color-contrast
+- [live] home dark 375px: incomplete color-contrast
+- [live] home dark 1440px: incomplete color-contrast
+- [live] lipids light 375px: incomplete color-contrast
+- [live] lipids light 1440px: incomplete color-contrast
+- [live] lipids dark 375px: incomplete color-contrast
+- [live] lipids dark 1440px: incomplete color-contrast
+- axe WCAG AA: 0 serious/critical across 8 page(s)
 
 **lighthouse**
-- 12 page/form median(s) from 3 run(s)
-- local server http://127.0.0.1:41069
+- 16 page/form median(s) from 3 run(s)
+- chrome /opt/google/chrome/chrome
+- local server http://127.0.0.1:37169
+- [local] quote mobile: LCP ms 2554 > 2500
 <!-- harness-main:end -->
 
 <!-- lighthouse-main:start -->
@@ -272,17 +280,21 @@ On the local HTTP server, best-practices ignores `is-on-https` and `redirects-ht
 | Target | Page | Form | Perf | A11y | BP | SEO | LCP | CLS | TBT | Gate |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | local | home | mobile | 100 | 100 | 100 | 66 | 1.35s | 0.000 | 0ms | pass |
-| local | home | desktop | 100 | 100 | 100 | 66 | 0.33s | 0.000 | 0ms | pass |
-| local | quote | mobile | 100 | 100 | 100 | 66 | 1.20s | 0.000 | 0ms | pass |
-| local | quote | desktop | 100 | 100 | 100 | 66 | 0.33s | 0.000 | 0ms | pass |
-| local | product | mobile | 100 | 100 | 100 | 66 | 1.20s | 0.000 | 0ms | pass |
-| local | product | desktop | 100 | 100 | 100 | 66 | 0.33s | 0.000 | 0ms | pass |
-| live | home | mobile | 100 | 100 | 100 | 66 | 0.91s | 0.000 | 0ms | pass |
-| live | home | desktop | 100 | 100 | 100 | 66 | 0.24s | 0.000 | 0ms | pass |
-| live | quote | mobile | 100 | 100 | 100 | 66 | 1.05s | 0.000 | 0ms | pass |
+| local | home | desktop | 100 | 100 | 100 | 66 | 0.37s | 0.000 | 0ms | pass |
+| local | catalogue | mobile | 99 | 100 | 100 | 66 | 1.65s | 0.000 | 0ms | pass |
+| local | catalogue | desktop | 100 | 100 | 100 | 66 | 0.36s | 0.000 | 0ms | pass |
+| local | quote | mobile | 94 | 100 | 100 | 66 | 2.55s | 0.000 | 0ms | fail |
+| local | quote | desktop | 100 | 100 | 100 | 66 | 0.57s | 0.000 | 0ms | pass |
+| local | product | mobile | 100 | 100 | 100 | 66 | 1.35s | 0.000 | 0ms | pass |
+| local | product | desktop | 100 | 100 | 100 | 66 | 0.32s | 0.000 | 0ms | pass |
+| live | home | mobile | 100 | 100 | 100 | 66 | 0.92s | 0.000 | 0ms | pass |
+| live | home | desktop | 100 | 100 | 100 | 66 | 0.25s | 0.000 | 0ms | pass |
+| live | catalogue | mobile | 100 | 100 | 100 | 66 | 1.06s | 0.000 | 0ms | pass |
+| live | catalogue | desktop | 100 | 100 | 100 | 66 | 0.29s | 0.000 | 0ms | pass |
+| live | quote | mobile | 100 | 100 | 100 | 66 | 1.08s | 0.000 | 0ms | pass |
 | live | quote | desktop | 100 | 100 | 100 | 66 | 0.29s | 0.000 | 0ms | pass |
-| live | product | mobile | 100 | 100 | 96 | 66 | 1.06s | 0.000 | 0ms | pass |
-| live | product | desktop | 100 | 100 | 96 | 66 | 0.25s | 0.000 | 0ms | pass |
+| live | product | mobile | 100 | 100 | 100 | 66 | 1.06s | 0.000 | 0ms | pass |
+| live | product | desktop | 100 | 100 | 100 | 66 | 0.24s | 0.000 | 0ms | pass |
 
 SEO `is-crawlable` score is 0 on every measured page because robots noindex is required.
 <!-- lighthouse-main:end -->

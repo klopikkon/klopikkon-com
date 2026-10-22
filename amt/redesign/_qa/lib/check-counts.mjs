@@ -93,6 +93,24 @@ function labeledCas(text) {
   return match ? match[1] : null;
 }
 
+/** Identity CAS is the spec-table cell. Analogue numbers in a price note are not that cell. */
+function specCasCell(html) {
+  const match = String(html).match(/<th\b[^>]*>\s*CAS\s*<\/th>\s*<td\b[^>]*>([\s\S]*?)<\/td>/i);
+  if (!match) return "";
+  return visibleText(match[1]).replace(/\s+copy$/i, "").trim();
+}
+
+function priceInPriceText(priceText, price) {
+  const plain = String(price);
+  const fixed = price.toFixed(2);
+  const group = (value) => {
+    const [whole, frac = ""] = value.split(".");
+    const withCommas = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return frac ? `${withCommas}.${frac}` : withCommas;
+  };
+  return [plain, fixed, group(plain), group(fixed)].some((form) => priceText.includes(form));
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
@@ -252,16 +270,24 @@ async function main() {
 }
 
 function checkPage(id, product, file, failures) {
-  const text = visibleText(fs.readFileSync(file, "utf8"));
+  const html = fs.readFileSync(file, "utf8");
+  const text = visibleText(html);
   const sku = String(product.sku);
   if (!text.includes(sku)) failures.push(`${id}: page does not show sku ${sku}`);
   const cas = product.cas == null ? "" : String(product.cas).trim();
-  const shown = labeledCas(text);
+  const cell = specCasCell(html);
   if (cas) {
-    if (!text.includes(cas)) failures.push(`${id}: page does not show CAS ${cas}`);
-    if (shown && shown !== cas) failures.push(`${id}: page CAS ${shown} != data ${cas}`);
-  } else if (shown) {
-    failures.push(`${id}: data CAS is empty but the page shows CAS ${shown}`);
+    const shown = cell || labeledCas(text) || "";
+    if (cell) {
+      if (!cell.includes(cas)) failures.push(`${id}: page CAS ${cell} != data ${cas}`);
+    } else if (!text.includes(cas)) {
+      failures.push(`${id}: page does not show CAS ${cas}`);
+    } else if (shown && shown !== cas && !cas.includes(shown)) {
+      failures.push(`${id}: page CAS ${shown} != data ${cas}`);
+    }
+  } else if (cell && !/^not published$/i.test(cell)) {
+    const shown = labeledCas(cell);
+    if (shown) failures.push(`${id}: data CAS is empty but the page shows CAS ${shown}`);
   }
   const packs = Array.isArray(product.packs) ? product.packs : null;
   if (!packs) {
@@ -282,9 +308,8 @@ function checkPage(id, product, file, failures) {
       if (!text.includes(size)) failures.push(`${id}: page does not show pack size ${JSON.stringify(size)}`);
     }
     if (pack && typeof pack.price === "number" && priceText && !/^quote$/i.test(priceText)) {
-      const digits = String(pack.price);
-      if (!priceText.includes(digits) && !priceText.includes(pack.price.toFixed(2))) {
-        failures.push(`${id}: priceText ${JSON.stringify(priceText)} does not contain price ${digits}`);
+      if (!priceInPriceText(priceText, pack.price)) {
+        failures.push(`${id}: priceText ${JSON.stringify(priceText)} does not contain price ${pack.price}`);
       }
     }
   }
