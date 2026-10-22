@@ -443,8 +443,11 @@
       "id": "lipids",
       "title": "Lipids",
       "path": "families/lipids/",
-      "description": "AMT Lipid Products – 2026. Featured ionisable lipids from the Advanced Molecular Technologies homepage.",
-      "paragraphs": [],
+      "description": "Lipids from Advanced Molecular Technologies. Catalogue dated 26 August 2026, prices in US dollars.",
+      "paragraphs": [
+        "Lipids from Advanced Molecular Technologies.",
+        "Date: 26 August 2026. Currency: US Dollars."
+      ],
       "brochure": {
         "label": "AMT Lipid Products – 2026",
         "href": "https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf"
@@ -458,6 +461,8 @@
       "path": "families/peg/",
       "description": "PEG reagents and linkers from Advanced Molecular Technologies, including the 2026 catalogue selection.",
       "paragraphs": [
+        "PEG Reagents and Linkers. Advanced Molecular Technologies Catalogue.",
+        "All prices are in US Dollars.",
         "For PEG Linkers in the US see our partner [Frontier Specialty Chemicals](https://frontierspecialtychemicals.com/product-category/functionalized-pegs-polyethylene-glycols-bioconjugation-linkers/)."
       ],
       "quote": "AMT is currently incubating organoboron pharmaceuticals and diagnostics, PEG linkers for antibody drug conjugates (ADCs) and AMPK activators.",
@@ -472,8 +477,11 @@
       "id": "fluorophores",
       "title": "Fluorophores and Dyes",
       "path": "families/fluorophores/",
-      "description": "AMT Fluorophores & Dyes Catalogue Selection – 2026 from Advanced Molecular Technologies.",
-      "paragraphs": [],
+      "description": "Fluorophores and Dyes catalogue from Advanced Molecular Technologies. Prices in US dollars.",
+      "paragraphs": [
+        "Fluorophores and Dyes.",
+        "All prices are in US Dollars."
+      ],
       "brochure": {
         "label": "AMT Fluorophores & Dyes Catalogue Selection – 2026",
         "href": "https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf"
@@ -485,8 +493,11 @@
       "id": "organoborons",
       "title": "Organoborons",
       "path": "families/organoborons/",
-      "description": "AMT Organoborons Catalogue Selection – 2026 from Advanced Molecular Technologies.",
-      "paragraphs": [],
+      "description": "AMT Organoboron Catalogue List. Prices in US dollars.",
+      "paragraphs": [
+        "AMT Organoboron Catalogue List.",
+        "All prices are in US Dollars."
+      ],
       "quote": "AMT is currently incubating organoboron pharmaceuticals and diagnostics, PEG linkers for antibody drug conjugates (ADCs) and AMPK activators.",
       "brochure": {
         "label": "AMT Organoborons Catalogue Selection – 2026",

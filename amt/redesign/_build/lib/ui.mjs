@@ -1,6 +1,32 @@
 import { esc, rich } from "./html.mjs";
 import { url } from "./paths.mjs";
 
+/** Decorative lattice. Not a catalogue structure. */
+export function motif(id = "lattice") {
+  return `<div class="hero-motif" aria-hidden="true">
+    <svg viewBox="0 0 720 320" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="${esc(id)}" width="36" height="62.35" patternUnits="userSpaceOnUse">
+          <path d="M18 1.5 L34 11 L34 30 L18 39.5 L2 30 L2 11 Z" fill="none" stroke="currentColor" stroke-width="0.7"/>
+        </pattern>
+      </defs>
+      <rect width="720" height="320" fill="url(#${esc(id)})"/>
+      <g class="motif-molecule" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M470 78 H530 L575 48 H650"/>
+        <path d="M530 78 L555 118 H620"/>
+        <path d="M575 48 L600 88"/>
+        <circle cx="470" cy="78" r="5" fill="currentColor" stroke="none"/>
+        <circle cx="530" cy="78" r="4" fill="currentColor" stroke="none"/>
+        <circle cx="575" cy="48" r="4" fill="currentColor" stroke="none"/>
+        <circle cx="650" cy="48" r="5" fill="currentColor" stroke="none"/>
+        <circle cx="555" cy="118" r="4" fill="currentColor" stroke="none"/>
+        <circle cx="620" cy="118" r="5" fill="currentColor" stroke="none"/>
+        <circle cx="600" cy="88" r="3.5" fill="currentColor" stroke="none"/>
+      </g>
+    </svg>
+  </div>`;
+}
+
 export function breadcrumbs(items) {
   const parts = items.map((item, index) => {
     const last = index === items.length - 1;
@@ -54,11 +80,11 @@ export function featuredCard(item) {
   </article>`;
 }
 
-export function productTable(products, caption) {
+export function productTable(products, caption, options = {}) {
   const rows = Array.isArray(products) ? products : [];
   const showCas = rows.some((row) => row.cas);
   const showPurity = rows.some((row) => row.purity);
-  const showSub = rows.some((row) => row.subfamily);
+  const showSub = !options.hideSubfamily && rows.some((row) => row.subfamily);
   const head = [
     "<th scope=\"col\">Name</th>",
     "<th scope=\"col\">Catalogue number</th>",
