@@ -39,9 +39,13 @@
   document.querySelectorAll("[data-look-set]").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var next = btn.getAttribute("data-look-set");
+      var theme = next === "b" ? "dark" : "light";
       root.setAttribute("data-look", next);
-      try { localStorage.setItem("amt-look", next); } catch (e) {}
-      paint(root.getAttribute("data-theme") || "light");
+      try {
+        localStorage.setItem("amt-look", next);
+        localStorage.setItem("amt-theme", theme);
+      } catch (e) {}
+      paint(theme);
     });
   });
 

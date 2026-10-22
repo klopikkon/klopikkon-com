@@ -129,7 +129,7 @@ button.theme-toggle,
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--step--1);
+  font-size: 0.875rem;
 }
 
 caption {
@@ -146,7 +146,7 @@ th, td {
   overflow-wrap: anywhere;
 }
 
-.sku { font-family: var(--font-mono); font-size: 0.85em; }
+.sku { font-family: var(--font-mono); font-size: 0.875rem; }
 
 .site-footer {
   margin-top: 3rem;

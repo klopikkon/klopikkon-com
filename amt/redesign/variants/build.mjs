@@ -309,7 +309,7 @@ function structureFigure(row) {
 
 function platesHtml(lipids) {
   const truck = `<figure>
-      <img src="${ASSET}/assets/logos/Delivery-Truck-e1599703368301.png" width="256" height="171" alt="">
+      <img class="drawing" src="${ASSET}/assets/logos/Delivery-Truck-e1599703368301.png" width="256" height="171" alt="">
       <figcaption>Delivery drawing published with AMT's Australian offers.</figcaption>
     </figure>`;
   const structures = lipids.filter((row) => row.structureImage).map((row) => structureFigure(row));
@@ -650,13 +650,14 @@ function familyPage(model, look) {
   const current = `${ASSET}/variants/${look}/lipids/`;
   return `${header(site, look, current)}
 <main id="main">
-  <section class="${look === "a" ? "hero" : look === "b" ? "deck" : "spread"}">
-    ${look === "a" ? `<p class="idx">01</p><div>` : ""}
-    <p class="eyebrow">26 August 2026</p>
-    <h1>${esc(family.title)}</h1>
-    ${intro}
+  <section class="family-open">
+    ${look === "a" ? `<p class="idx">01</p>` : ""}
+    <div class="family-copy">
+      <p class="eyebrow">26 August 2026</p>
+      <h1>${esc(family.title)}</h1>
+      ${intro}
+    </div>
     ${structurePlates}
-    ${look === "a" ? `</div>` : ""}
   </section>
   <section class="section block" id="catalogue">
     ${look === "a" ? `<p class="idx">02</p><div>` : ""}
@@ -673,7 +674,7 @@ function shotFigure(manifest, key, caption) {
   const shot = manifest[key];
   if (!shot) return "";
   return `<figure>
-      <img src="${ASSET}/variants/shots/${esc(key)}.webp" width="${Number(shot.w)}" height="${Number(shot.h)}" alt="${esc(caption)}" loading="lazy">
+      <img src="${ASSET}/variants/shots/${esc(key)}.webp" width="${Number(shot.w)}" height="${Number(shot.h)}" alt="" loading="lazy">
       <figcaption>${esc(caption)}</figcaption>
     </figure>`;
 }

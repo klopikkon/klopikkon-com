@@ -4,7 +4,7 @@ body { font-weight: 430; }
 
 .site-header { border-bottom: 1px solid var(--line); }
 
-.utility, .brand-row, .nav-list, .hero, .block, .site-footer .wrap {
+.utility, .brand-row, .nav-list, .hero, .block, .family-open, .site-footer .wrap {
   width: min(100% - 2rem, var(--page));
   margin-inline: auto;
 }
@@ -63,7 +63,7 @@ body { font-weight: 430; }
 
 .nav-list a[aria-current="page"] { border-bottom-color: var(--line); }
 
-.hero, .block {
+.hero, .block, .family-open {
   display: grid;
   grid-template-columns: 2.5rem minmax(0, 1fr);
   gap: 0.75rem 1rem;
@@ -169,7 +169,7 @@ h2 {
 
 .catalogue table { font-variant-numeric: tabular-nums; }
 
-.catalogue th { font-weight: 550; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.72rem; }
+.catalogue th { font-weight: 550; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.8125rem; }
 
 @media (min-width: 52rem) {
   .brand-row { grid-template-columns: minmax(0, 16rem) minmax(0, 1fr) auto; align-items: end; }

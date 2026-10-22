@@ -83,6 +83,11 @@ body::before {
   border-bottom: 1px solid var(--line);
 }
 
+.family-open {
+  padding: 1rem 0 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
 .status, .direction, .eyebrow {
   margin: 0;
   font-family: var(--font-mono);
@@ -196,7 +201,7 @@ h2 {
 
 .catalogue table { background: var(--surface); font-family: var(--font-mono); }
 
-.catalogue th { color: var(--viz); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.72rem; }
+.catalogue th { color: var(--viz); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8125rem; }
 
 .catalogue tbody th { box-shadow: inset 3px 0 0 var(--accent); }
 

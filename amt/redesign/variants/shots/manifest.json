@@ -1,0 +1,50 @@
+{
+  "a-home-desktop": {
+    "w": 880,
+    "h": 550
+  },
+  "a-home-mobile": {
+    "w": 320,
+    "h": 693
+  },
+  "a-lipids-desktop": {
+    "w": 880,
+    "h": 550
+  },
+  "a-lipids-mobile": {
+    "w": 320,
+    "h": 693
+  },
+  "b-home-desktop": {
+    "w": 880,
+    "h": 550
+  },
+  "b-home-mobile": {
+    "w": 320,
+    "h": 693
+  },
+  "b-lipids-desktop": {
+    "w": 880,
+    "h": 550
+  },
+  "b-lipids-mobile": {
+    "w": 320,
+    "h": 693
+  },
+  "c-home-desktop": {
+    "w": 880,
+    "h": 550
+  },
+  "c-home-mobile": {
+    "w": 320,
+    "h": 693
+  },
+  "c-lipids-desktop": {
+    "w": 880,
+    "h": 550
+  },
+  "c-lipids-mobile": {
+    "w": 320,
+    "h": 693
+  }
+}
