@@ -296,22 +296,35 @@ const AmtQuoteCount = class extends HTMLElement {
     const link = this.shadowRoot.querySelector("a");
     badge.textContent = String(count);
     badge.dataset.show = count > 0 ? "true" : "false";
-    const label =
-      count === 0 ? "Quote list, no items yet" : count === 1 ? "Quote list, 1 item" : `Quote list, ${count} items`;
-    link.setAttribute("aria-label", label);
+    link.setAttribute("aria-label", quoteCountLabel(count));
   }
 }
 
+function quoteCountLabel(count) {
+  if (count === 0) return "Quote list, no items yet";
+  if (count === 1) return "Quote list, 1 item";
+  return `Quote list, ${count} items`;
+}
+
+function paintShellQuoteCount() {
+  const link = document.querySelector("[data-quote-count]");
+  if (!link) return false;
+  const count = totalQty(readCart());
+  link.textContent = `Quote (${count})`;
+  link.setAttribute("aria-label", quoteCountLabel(count));
+  return true;
+}
+
 function ensureCount() {
-  if (document.querySelector("amt-quote-count")) return;
+  paintShellQuoteCount();
+  if (document.querySelector("[data-quote-count]") || document.querySelector("amt-quote-count")) return;
   const el = document.createElement("amt-quote-count");
-  const utility = document.querySelector("header .utility");
-  const toggle = utility?.querySelector("[data-theme-toggle]");
-  if (utility && toggle) {
-    utility.insertBefore(el, toggle);
+  const toggle = document.querySelector("header [data-theme-toggle]");
+  if (toggle?.parentElement) {
+    toggle.parentElement.insertBefore(el, toggle);
     return;
   }
-  const host = document.querySelector("header nav") || document.querySelector("header");
+  const host = document.querySelector("header .utility") || document.querySelector("header");
   if (!host) return;
   host.appendChild(el);
 }
@@ -600,6 +613,8 @@ function init() {
     customElements.define("amt-quote-count", AmtQuoteCount);
   }
   ensureCount();
+  window.addEventListener("amt:quote-changed", paintShellQuoteCount);
+  window.addEventListener("storage", paintShellQuoteCount);
   document.addEventListener("submit", (event) => {
     const form = event.target?.closest?.("[data-quote-form]");
     if (!form) return;
