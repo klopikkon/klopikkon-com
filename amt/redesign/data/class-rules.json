@@ -1,0 +1,124 @@
+{
+  "derivedFrom": "name",
+  "rules": "data/class-rules.json",
+  "unknown": null,
+  "note": "Browsing classes read from the printed product name. Not an AMT heading, not a PubChem annotation, and not a family guess. A product with no matching rule has classDerived null. Rules apply only inside the family AMT already assigned.",
+  "families": {
+    "organoborons": {
+      "kind": "single",
+      "field": "boronClass",
+      "select": "first-match",
+      "rules": [
+        {
+          "value": "MIDA ester",
+          "pattern": "\\bMIDA\\b|iminodiacetic",
+          "flags": "i"
+        },
+        {
+          "value": "trifluoroborate",
+          "pattern": "trifluoro\\s*borate",
+          "flags": "i"
+        },
+        {
+          "value": "pinacol ester",
+          "pattern": "pinacol|(?=.*tetramethyl)(?=.*dioxaborolan).",
+          "flags": "i",
+          "note": "Pinacol, or both tetramethyl and dioxaborolan in the name. A bare dioxaborolane is not a pinacol ester."
+        },
+        {
+          "value": "boronic acid",
+          "pattern": "boronic acid\\b",
+          "unless": "\\bester\\b",
+          "flags": "i",
+          "note": "Skipped when the name also says ester, so a neopentyl glycol ester is not labelled as the free acid. Pinacol esters are caught by the earlier rule."
+        }
+      ]
+    },
+    "peg": {
+      "kind": "peg",
+      "reactiveGroups": [
+        {
+          "value": "NHS",
+          "pattern": "\\bNHS\\b|N-hydroxysuccinimide|succinimidyl",
+          "flags": "i"
+        },
+        {
+          "value": "maleimide",
+          "pattern": "maleimide",
+          "flags": "i"
+        },
+        {
+          "value": "azide",
+          "pattern": "azido|azide|\\bN3\\b",
+          "flags": "i"
+        },
+        {
+          "value": "DBCO",
+          "pattern": "\\bDBCO\\b|dibenzocyclooctyne",
+          "flags": "i"
+        },
+        {
+          "value": "amine",
+          "pattern": "amine\\b|amino|\\bNH2\\b",
+          "flags": "i",
+          "note": "The IUPAC prefix amino and the suffix amine are both the amine token. A protected name that still says amino matches."
+        },
+        {
+          "value": "acid",
+          "pattern": "\\bacid\\b",
+          "unless": "\\bester\\b",
+          "flags": "i",
+          "note": "A name that says both acid and ester, such as a tert-butyl ester of a carbamic acid, is not labelled acid."
+        }
+      ],
+      "architecture": [
+        {
+          "value": "multi-arm",
+          "pattern": "\\bmulti-arm\\b|\\b\\d+\\s*-?\\s*arm\\b",
+          "flags": "i"
+        },
+        {
+          "value": "mPEG",
+          "pattern": "\\bmPEG\\b|\\bMe-PEG|methoxy-PEG|methoxy\\s+PEG",
+          "flags": "i",
+          "note": "Only those tokens. A methoxyethoxy chain without mPEG or Me-PEG is not labelled mPEG."
+        },
+        {
+          "value": "heterobifunctional",
+          "pattern": "heterobifunctional",
+          "distinctReactiveGroupsAtLeast": 2,
+          "flags": "i",
+          "note": "The word heterobifunctional, or two different reactive groups from the list above. Two copies of one group, such as N3-PEG-N3, stay a single group and do not set this architecture."
+        }
+      ]
+    },
+    "fluorophores": {
+      "kind": "single",
+      "field": "dyeCore",
+      "select": "first-match",
+      "rules": [
+        {
+          "value": "Cy3",
+          "pattern": "(?<![A-Za-z0-9])Cy3(?![0-9])",
+          "flags": "i"
+        },
+        {
+          "value": "Cy5",
+          "pattern": "(?<![A-Za-z0-9])Cy5(?![0-9])",
+          "flags": "i"
+        },
+        {
+          "value": "FITC",
+          "pattern": "\\bFITC\\b|fluorescein\\s+isothiocyanate",
+          "flags": "i"
+        },
+        {
+          "value": "BODIPY",
+          "pattern": "BODIPY|diazaborinin",
+          "flags": "i",
+          "note": "The token BODIPY, or the printed IUPAC fragment diazaborinin. The missing syllable in diazaborinin-4-ium-5-uide is the PDF text layer and is not corrected. Fluorescein, rhodamine and coumarin names that do not use these tokens stay null."
+        }
+      ]
+    }
+  }
+}

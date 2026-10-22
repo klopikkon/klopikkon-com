@@ -4,9 +4,10 @@
  * Zero dependencies. Run: node amt/redesign/scripts/validate-data.mjs
  */
 
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { classCounts, deriveClass, loadClassRules } from "../data/class-derived.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dataDir = join(root, "data");
@@ -21,6 +22,7 @@ const products = JSON.parse(readFileSync(join(dataDir, "products.json"), "utf8")
 const counts = JSON.parse(readFileSync(join(dataDir, "counts.json"), "utf8"));
 const countsMd = readFileSync(join(dataDir, "COUNTS.md"), "utf8");
 
+const classRules = loadClassRules();
 const itemSchema = schema.items;
 const required = itemSchema.required;
 const families = new Set(itemSchema.properties.family.enum);
@@ -70,6 +72,22 @@ for (const product of products) {
   if (!families.has(product.family)) fail(`${label}: family ${product.family} is not in the schema enum`);
   else byFamily[product.family] = (byFamily[product.family] || 0) + 1;
 
+  if (typeof product.subfamily !== "string" || product.subfamily.length === 0) {
+    fail(`${label}: subfamily must be a non-empty string`);
+  }
+  const subSource = product.subfamilySource;
+  if (!subSource || subSource.heading !== product.subfamily) {
+    fail(`${label}: subfamilySource.heading must match subfamily`);
+  } else {
+    if (typeof subSource.url !== "string" || subSource.url.length === 0) fail(`${label}: subfamilySource.url missing`);
+    if (typeof subSource.location !== "string" || subSource.location.length === 0) fail(`${label}: subfamilySource.location missing`);
+    if (subSource.page !== null && !Number.isInteger(subSource.page)) fail(`${label}: subfamilySource.page must be an integer or null`);
+  }
+  if (product.subfamily === "Ionisable Lipid") {
+    const labels = product.homepageLabels || [];
+    if (!labels.includes("Ionisable Lipid")) fail(`${label}: Ionisable Lipid subfamily without that homepage label`);
+  }
+
   if (product.subfamily !== null && typeof product.subfamily !== "string") fail(`${label}: subfamily must be a string or null`);
   if (product.cas !== null && typeof product.cas !== "string") fail(`${label}: cas must be a string or null`);
   if (product.formula !== null && typeof product.formula !== "string") fail(`${label}: formula must be a string or null`);
@@ -115,6 +133,77 @@ for (const product of products) {
     }
   }
 
+  const pegNominal = /(?:^|[^A-Za-z0-9])m?PEG\s*(?:\(\s*(\d{3,})\s*\)|[\s-]?(\d{3,}))(?!\d)/gi;
+  if (!Object.prototype.hasOwnProperty.call(product, "formulaExternal")) fail(`${label}: missing formulaExternal`);
+  if (!Object.prototype.hasOwnProperty.call(product, "mwExternal")) fail(`${label}: missing mwExternal`);
+  if (!Object.prototype.hasOwnProperty.call(product, "structureImageExternal")) fail(`${label}: missing structureImageExternal`);
+  if (!Object.prototype.hasOwnProperty.call(product, "externalSource")) fail(`${label}: missing externalSource`);
+  if (!Object.prototype.hasOwnProperty.call(product, "mwNominal")) fail(`${label}: missing mwNominal`);
+  if (!Object.prototype.hasOwnProperty.call(product, "mwNominalSource")) fail(`${label}: missing mwNominalSource`);
+
+  const external = product.externalSource;
+  if (external == null) {
+    if (product.formulaExternal != null || product.mwExternal != null || product.structureImageExternal != null) {
+      fail(`${label}: external fields are set without externalSource`);
+    }
+  } else {
+    if (external.name !== "PubChem" || !Number.isInteger(external.cid) || external.cid < 1) {
+      fail(`${label}: externalSource must be PubChem with an integer cid`);
+    }
+    if (external.url !== `https://pubchem.ncbi.nlm.nih.gov/compound/${external.cid}`) {
+      fail(`${label}: externalSource.url does not match the CID`);
+    }
+    if (typeof product.formulaExternal !== "string" || product.formulaExternal.length === 0) {
+      fail(`${label}: formulaExternal must be a non-empty string when PubChem matched`);
+    }
+    if (typeof product.mwExternal !== "number" || product.mwExternal <= 0) {
+      fail(`${label}: mwExternal must be a positive number when PubChem matched`);
+    }
+    if (product.structureImageExternal != null) {
+      const expected = `assets/structures/pubchem/${external.cid}.svg`;
+      if (product.structureImageExternal !== expected) {
+        fail(`${label}: structureImageExternal must be ${expected}`);
+      } else if (!existsSync(join(root, product.structureImageExternal))) {
+        fail(`${label}: structure image file is missing`);
+      } else {
+        const svg = readFileSync(join(root, product.structureImageExternal), "utf8");
+        if (!svg.startsWith("<svg") || !svg.includes("</svg>")) {
+          fail(`${label}: structure image is not an SVG`);
+        } else if (svg.length > 40000) {
+          fail(`${label}: structure SVG is ${svg.length} bytes`);
+        }
+      }
+    }
+  }
+
+  if (product.mwNominal == null) {
+    if (product.mwNominalSource != null) fail(`${label}: mwNominalSource set without mwNominal`);
+  } else {
+    if (typeof product.mwNominal !== "number" || product.mwNominal < 200) {
+      fail(`${label}: mwNominal must be a number of at least 200`);
+    }
+    if (product.mwNominalSource !== "name") fail(`${label}: mwNominalSource must be "name"`);
+    const found = new Set();
+    for (const match of String(product.name || "").matchAll(pegNominal)) {
+      found.add(Number(match[1] || match[2]));
+    }
+    if (found.size !== 1 || !found.has(product.mwNominal)) {
+      fail(`${label}: mwNominal ${product.mwNominal} is not the single PEG mass in the name`);
+    }
+  }
+
+  if (!Object.prototype.hasOwnProperty.call(product, "classDerived")) fail(`${label}: missing classDerived`);
+  if (!Object.prototype.hasOwnProperty.call(product, "classDerivedSource")) fail(`${label}: missing classDerivedSource`);
+  const derived = deriveClass(product.name, product.family, classRules);
+  if (JSON.stringify(product.classDerived) !== JSON.stringify(derived)) {
+    fail(`${label}: classDerived does not match data/class-rules.json`);
+  }
+  if (derived == null) {
+    if (product.classDerivedSource != null) fail(`${label}: classDerivedSource set without a class`);
+  } else if (product.classDerivedSource !== "name") {
+    fail(`${label}: classDerivedSource must be "name"`);
+  }
+
   const source = product.source;
   if (!source || typeof source !== "object") {
     fail(`${label}: source must be an object`);
@@ -133,6 +222,29 @@ for (const family of families) {
   const expected = counts.byFamily[family] || 0;
   if (actual !== expected) fail(`family ${family}: products.json has ${actual}, counts.json has ${expected}`);
 }
+const bySubfamily = {};
+for (const product of products) {
+  if (product && product.subfamily) bySubfamily[product.subfamily] = (bySubfamily[product.subfamily] || 0) + 1;
+}
+const expectedSubfamily = counts.bySubfamily || {};
+const subKeys = new Set([...Object.keys(bySubfamily), ...Object.keys(expectedSubfamily)]);
+for (const heading of subKeys) {
+  if ((bySubfamily[heading] || 0) !== (expectedSubfamily[heading] || 0)) {
+    fail(`subfamily ${JSON.stringify(heading)}: products.json has ${bySubfamily[heading] || 0}, counts.json has ${expectedSubfamily[heading] || 0}`);
+  }
+}
+if (!countsMd.includes("## Subfamily")) fail("COUNTS.md is missing the Subfamily section");
+if (!countsMd.includes("## Name-derived class")) fail("COUNTS.md is missing the Name-derived class section");
+const expectedClass = classCounts(products, classRules);
+if (JSON.stringify(counts.classDerived) !== JSON.stringify(expectedClass)) {
+  fail("counts.json classDerived does not match the name rules");
+}
+const pubchemDir = join(root, "assets/structures/pubchem");
+if (existsSync(pubchemDir)) {
+  const pngs = readdirSync(pubchemDir).filter((name) => name.endsWith(".png"));
+  if (pngs.length) fail(`PubChem PNG assets still present (${pngs.length})`);
+}
+
 const sourceSum = Object.values(counts.byPrimarySource).reduce((sum, n) => sum + n, 0);
 if (sourceSum !== products.length) {
   fail(`byPrimarySource sums to ${sourceSum}, products.json has ${products.length}`);

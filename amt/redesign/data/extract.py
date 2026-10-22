@@ -831,7 +831,7 @@ def merge_products(catalogue_rows, flyer_rows, homepage):
             "name": name,
             "synonyms": [],
             "family": family,
-            "subfamily": None,
+            "subfamily": None,  # filled by assign_subfamily
             "cas": cas,
             "formula": None,
             "mw": None,
@@ -873,7 +873,7 @@ def merge_products(catalogue_rows, flyer_rows, homepage):
                 "name": item["name"],
                 "synonyms": [],
                 "family": "other",
-                "subfamily": None,
+                "subfamily": None,  # filled by assign_subfamily
                 "cas": None,
                 "formula": None,
                 "mw": None,
@@ -1234,6 +1234,148 @@ def source_counts(products):
     return dict(counts)
 
 
+PDF_HEADINGS = (
+    ("AMT-Lipids-20260826.pdf", "Lipids from Advanced Molecular Technologies"),
+    ("AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf", "PEG Reagents and Linkers"),
+    ("AMT-FluorophoresDyes-Catalogue-List-2026.pdf", "Fluorophores and Dyes"),
+    ("AMT-Organoboron-Compounds-List-20260421.pdf", "AMT Organoboron Catalogue List"),
+    ("New_Products_20250516.pdf", "NEW PRODUCTS MAY 2025"),
+)
+
+
+def catalogue_heading(product):
+    pdf = (product.get("source") or {}).get("pdf") or ""
+    for filename, heading in PDF_HEADINGS:
+        if pdf.endswith(filename):
+            return heading, pdf, product["source"].get("page"), "running header on the catalogue page"
+    return "Featured Products:", "https://www.amtechpl.com/", None, "homepage h2 above the card"
+
+
+def assign_subfamily(products):
+    """Set subfamily from the AMT heading the row is printed under.
+
+    The current brochures are flat lists. They do not print finer section
+    titles (no boronic-acid block, no mPEG-NHS block). The page title is the
+    heading. Homepage cards that print Ionisable Lipid use that label, which
+    is the only finer wording AMT publishes.
+    """
+    for product in products:
+        heading, url, page, location = catalogue_heading(product)
+        labels = product.get("homepageLabels") or []
+        if labels == ["Ionisable Lipid"]:
+            product["subfamily"] = "Ionisable Lipid"
+            product["subfamilySource"] = {
+                "heading": "Ionisable Lipid",
+                "url": "https://www.amtechpl.com/",
+                "page": None,
+                "location": "homepage card under Featured Products:",
+                "catalogueHeading": heading,
+            }
+        else:
+            product["subfamily"] = heading
+            product["subfamilySource"] = {
+                "heading": heading,
+                "url": url,
+                "page": page,
+                "location": location,
+            }
+
+
+def subfamily_counts(products):
+    order = [heading for _, heading in PDF_HEADINGS] + ["Featured Products:", "Ionisable Lipid"]
+    counts = {heading: 0 for heading in order}
+    for product in products:
+        counts[product["subfamily"]] = counts.get(product["subfamily"], 0) + 1
+    return {heading: count for heading, count in counts.items() if count}
+
+
+def subfamily_lines(by_subfamily):
+    lines = [
+        "## Subfamily",
+        "",
+        "Each `subfamily` is the heading AMT prints above that product, copied verbatim. `subfamilySource` records where it was read. The 2026 brochures are flat lists: the running header is the only heading on the page. The site adds one finer label, `Ionisable Lipid`, on three homepage cards. Headings such as helper lipids, mPEG-NHS, Cy dyes, or boronic acid versus pinacol ester are not printed in these PDFs or on the crawled pages, so they are not assigned.",
+        "",
+        "| Subfamily | Products |",
+        "| --- | ---: |",
+    ]
+    for heading, count in by_subfamily.items():
+        lines.append(f"| {heading} | {count} |")
+    lines.append("")
+    return lines
+
+
+def class_lines(block):
+    families = ["lipids", "peg", "fluorophores", "organoborons", "other", "total"]
+    lines = [
+        "## Name-derived class",
+        "",
+        "`classDerived` is a browsing facet read from the printed product name with `data/class-rules.json`. It is not an AMT heading and it is not a PubChem field. `classDerivedSource` is `\"name\"` when a rule matches and null otherwise. Rules run only inside the family AMT already assigned, so lipids and `other` stay null. A PEG product can carry an architecture (`mPEG`, `heterobifunctional`, `multi-arm`) and the reactive groups the name states (`NHS`, `maleimide`, `azide`, `DBCO`, `amine`, `acid`). Unknowns are null.",
+        "",
+        "| Family | Products | Matched | Null |",
+        "| --- | ---: | ---: | ---: |",
+    ]
+    for family in families:
+        row = block["byFamily"][family]
+        lines.append(f"| {family} | {row['products']} | {row['matched']} | {row['null']} |")
+    lines.extend(["", "Organoboron class, first matching rule:", "", "| Class | Products |", "| --- | ---: |"])
+    for label, count in block["byFamily"]["organoborons"]["boronClass"].items():
+        lines.append(f"| {label} | {count} |")
+    lines.extend(["", "PEG architecture. A product is counted once. Null architecture is not listed.", "", "| Architecture | Products |", "| --- | ---: |"])
+    for label, count in block["byFamily"]["peg"]["architecture"].items():
+        lines.append(f"| {label} | {count} |")
+    lines.extend(["", "PEG reactive groups. A product with two groups is counted under each.", "", "| Reactive group | Products |", "| --- | ---: |"])
+    for label, count in block["byFamily"]["peg"]["reactiveGroups"].items():
+        lines.append(f"| {label} | {count} |")
+    lines.extend(["", "Fluorophore dye core:", "", "| Dye core | Products |", "| --- | ---: |"])
+    for label, count in block["byFamily"]["fluorophores"]["dyeCore"].items():
+        lines.append(f"| {label} | {count} |")
+    lines.append("")
+    return lines
+
+
+def pubchem_lines(stats):
+    lines = [
+        "## External reference data",
+        "",
+        "`formula` and `mw` are only what AMT published, and both stay null because the catalogues have no such columns. `structureImage` stays the AMT file when one was published. PubChem formula, molecular weight and the 2D depiction are `formulaExternal`, `mwExternal` and `structureImageExternal`, with `externalSource` `{name: PubChem, cid, url}`. A CAS is accepted only when PubChem returns exactly one CID. PubChem does not serve SVG. Each `structureImageExternal` file is an SVG drawn from that CID's 2D coordinates and bond annotations, one file per CID, so a page can lazy-load it. `mwNominal` is a nominal PEG mass read from the printed name (PEG2000 or PEG(400)); a short token such as PEG3 is an oligomer length and is not used.",
+        "",
+        "| Family | Products | Single CAS | One CID | Formula and MW | Structure image | Nominal PEG mass |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for family in ["lipids", "peg", "fluorophores", "organoborons", "other", "total"]:
+        row = stats["byFamily"][family]
+        lines.append(
+            f"| {family} | {row['products']} | {row['singleCas']} | {row['oneCid']} | {row['formulaAndMw']} | {row['structureImage']} | {row['mwNominal']} |"
+        )
+    lines.append("")
+    return lines
+
+
+def carry_external(products):
+    """Keep PubChem and nominal-mass fields when the catalogue extract is re-run."""
+    path = ROOT / "data" / "products.json"
+    if not path.exists():
+        return
+    previous = {row["sku"]: row for row in json.loads(path.read_text())}
+    keys = (
+        "formulaExternal",
+        "mwExternal",
+        "structureImageExternal",
+        "externalSource",
+        "mwNominal",
+        "mwNominalSource",
+        "classDerived",
+        "classDerivedSource",
+    )
+    for product in products:
+        old = previous.get(product["sku"])
+        if not old:
+            continue
+        for key in keys:
+            if key in old:
+                product[key] = old[key]
+
+
 def write_counts(products, row_counts, collapse_notes, discrepancies, anomalies, flyer_only):
     by_family = family_counts(products)
     by_source = source_counts(products)
@@ -1247,7 +1389,15 @@ def write_counts(products, row_counts, collapse_notes, discrepancies, anomalies,
         "skusWithMultipleListings": len(multi),
         "parseAnomalies": len(anomalies),
         "discrepancies": len(discrepancies),
+        "bySubfamily": subfamily_counts(products),
     }
+    counts_path = ROOT / "data" / "counts.json"
+    if counts_path.exists():
+        previous_counts = json.loads(counts_path.read_text())
+        if "pubchem" in previous_counts:
+            payload["pubchem"] = previous_counts["pubchem"]
+        if "classDerived" in previous_counts:
+            payload["classDerived"] = previous_counts["classDerived"]
     (ROOT / "data" / "counts.json").write_text(json.dumps(payload, indent=2) + "\n")
     lines = []
     lines.append("# Catalogue counts")
@@ -1343,10 +1493,14 @@ def write_counts(products, row_counts, collapse_notes, discrepancies, anomalies,
     lines.append("- Three organoboron packs have size `\"25\"` with no unit: AMTB1060-MP14, AMTB1062-IP14, AMTB1249-IB18. The unit glyph is not in the text layer, so the size is the digits that are. AMTGC1460-DH25 on the flyer prints `5mg` at $315; that token is stored as printed.")
     lines.append("- `purity` is null when the source row does not print one. The PEG, fluorophore and organoboron tables have no purity column. The lipids table prints one, copied with its spacing (for example `≥ 98%`). Four PEG rows add a `High Purity 99%` or `High purity 98%` line; that string is stored on the listing.")
     lines.append("- `documents.sds`, `documents.coa` and `documents.datasheet` are null. The crawled pages and current PDFs do not link SDS, COA or datasheet files.")
-    lines.append("- `subfamily` is null. The current PDFs are flat lists; the homepage tag `Ionisable Lipid` is on `homepageLabels`, not promoted to a subfamily.")
     lines.append("- `synonyms` is an empty array. Parentheticals such as `(Exoria)` and `(PEG2000)` stay inside `name`.")
     lines.append("- Unpublished prices use `price` null and `priceText` `\"quote\"`. `priceRaw` keeps the printed token (`POA`, `Price on application`, or a masked `########`).")
     lines.append("")
+    lines.extend(subfamily_lines(payload["bySubfamily"]))
+    if payload.get("classDerived"):
+        lines.extend(class_lines(payload["classDerived"]))
+    if payload.get("pubchem"):
+        lines.extend(pubchem_lines(payload["pubchem"]))
     lines.append("## Not extracted")
     lines.append("")
     lines.append("- Older PDFs in the WordPress media library (2020–2025 catalogues and earlier new-product flyers) are not linked from the live pages. They are listed in `data/sources.json` and were not parsed, so superseded prices are not mixed into `products.json`.")
@@ -1396,10 +1550,16 @@ def main():
     flyer_skus = {r["sku"] for r in flyer}
     catalogue_skus = {r["sku"] for r in all_rows}
     flyer_only = sorted(flyer_skus - catalogue_skus)
-    # drop helper-only large fields? keep listings
+    carry_external(products)
+    assign_subfamily(products)
+    prior_manifest = []
+    manifest_path = ASSETS / "manifest.json"
+    if manifest_path.exists():
+        prior_manifest = [row for row in json.loads(manifest_path.read_text()) if row.get("kind") == "structure-external"]
     (ROOT / "data" / "products.json").write_text(json.dumps(products, indent=2, ensure_ascii=False) + "\n")
     (ROOT / "data" / "discrepancies.json").write_text(json.dumps(discrepancies, indent=2, ensure_ascii=False) + "\n")
     (ROOT / "data" / "anomalies.json").write_text(json.dumps(all_anomalies, indent=2, ensure_ascii=False) + "\n")
+    manifest.extend(prior_manifest)
     (ASSETS / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     site = build_site(len(homepage))
     site["logos"] = [m for m in manifest if m.get("kind") in {"logo", "favicon", "apple-touch", "partner-logo", "icon"}]

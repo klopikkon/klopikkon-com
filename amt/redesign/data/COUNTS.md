@@ -76,9 +76,88 @@ Cross-source pack differences: 4. See `data/discrepancies.json`.
 - Three organoboron packs have size `"25"` with no unit: AMTB1060-MP14, AMTB1062-IP14, AMTB1249-IB18. The unit glyph is not in the text layer, so the size is the digits that are. AMTGC1460-DH25 on the flyer prints `5mg` at $315; that token is stored as printed.
 - `purity` is null when the source row does not print one. The PEG, fluorophore and organoboron tables have no purity column. The lipids table prints one, copied with its spacing (for example `≥ 98%`). Four PEG rows add a `High Purity 99%` or `High purity 98%` line; that string is stored on the listing.
 - `documents.sds`, `documents.coa` and `documents.datasheet` are null. The crawled pages and current PDFs do not link SDS, COA or datasheet files.
-- `subfamily` is null. The current PDFs are flat lists; the homepage tag `Ionisable Lipid` is on `homepageLabels`, not promoted to a subfamily.
 - `synonyms` is an empty array. Parentheticals such as `(Exoria)` and `(PEG2000)` stay inside `name`.
 - Unpublished prices use `price` null and `priceText` `"quote"`. `priceRaw` keeps the printed token (`POA`, `Price on application`, or a masked `########`).
+
+## Subfamily
+
+Each `subfamily` is the heading AMT prints above that product, copied verbatim. `subfamilySource` records where it was read. The 2026 brochures are flat lists: the running header is the only heading on the page. The site adds one finer label, `Ionisable Lipid`, on three homepage cards. Headings such as helper lipids, mPEG-NHS, Cy dyes, or boronic acid versus pinacol ester are not printed in these PDFs or on the crawled pages, so they are not assigned.
+
+| Subfamily | Products |
+| --- | ---: |
+| Lipids from Advanced Molecular Technologies | 33 |
+| PEG Reagents and Linkers | 212 |
+| Fluorophores and Dyes | 40 |
+| AMT Organoboron Catalogue List | 1046 |
+| NEW PRODUCTS MAY 2025 | 7 |
+| Featured Products: | 6 |
+| Ionisable Lipid | 3 |
+
+
+## Name-derived class
+
+`classDerived` is a browsing facet read from the printed product name with `data/class-rules.json`. It is not an AMT heading and it is not a PubChem field. `classDerivedSource` is `"name"` when a rule matches and null otherwise. Rules run only inside the family AMT already assigned, so lipids and `other` stay null. A PEG product can carry an architecture (`mPEG`, `heterobifunctional`, `multi-arm`) and the reactive groups the name states (`NHS`, `maleimide`, `azide`, `DBCO`, `amine`, `acid`). Unknowns are null.
+
+| Family | Products | Matched | Null |
+| --- | ---: | ---: | ---: |
+| lipids | 36 | 0 | 36 |
+| peg | 212 | 129 | 83 |
+| fluorophores | 40 | 6 | 34 |
+| organoborons | 1046 | 906 | 140 |
+| other | 13 | 0 | 13 |
+| total | 1347 | 1041 | 306 |
+
+Organoboron class, first matching rule:
+
+| Class | Products |
+| --- | ---: |
+| MIDA ester | 0 |
+| trifluoroborate | 123 |
+| pinacol ester | 648 |
+| boronic acid | 135 |
+
+PEG architecture. A product is counted once. Null architecture is not listed.
+
+| Architecture | Products |
+| --- | ---: |
+| multi-arm | 0 |
+| mPEG | 2 |
+| heterobifunctional | 17 |
+
+PEG reactive groups. A product with two groups is counted under each.
+
+| Reactive group | Products |
+| --- | ---: |
+| NHS | 0 |
+| maleimide | 0 |
+| azide | 65 |
+| DBCO | 0 |
+| amine | 74 |
+| acid | 5 |
+
+Fluorophore dye core:
+
+| Dye core | Products |
+| --- | ---: |
+| Cy3 | 0 |
+| Cy5 | 0 |
+| FITC | 0 |
+| BODIPY | 6 |
+
+
+## External reference data
+
+`formula` and `mw` are only what AMT published, and both stay null because the catalogues have no such columns. `structureImage` stays the AMT file when one was published. PubChem formula, molecular weight and the 2D depiction are `formulaExternal`, `mwExternal` and `structureImageExternal`, with `externalSource` `{name: PubChem, cid, url}`. A CAS is accepted only when PubChem returns exactly one CID. PubChem does not serve SVG. Each `structureImageExternal` file is an SVG drawn from that CID's 2D coordinates and bond annotations, one file per CID, so a page can lazy-load it. `mwNominal` is a nominal PEG mass read from the printed name (PEG2000 or PEG(400)); a short token such as PEG3 is an oligomer length and is not used.
+
+| Family | Products | Single CAS | One CID | Formula and MW | Structure image | Nominal PEG mass |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| lipids | 36 | 33 | 6 | 6 | 6 | 2 |
+| peg | 212 | 205 | 108 | 108 | 108 | 2 |
+| fluorophores | 40 | 40 | 24 | 24 | 24 | 0 |
+| organoborons | 1046 | 1044 | 530 | 530 | 530 | 0 |
+| other | 13 | 7 | 4 | 4 | 4 | 0 |
+| total | 1347 | 1329 | 672 | 672 | 672 | 4 |
+
 
 ## Not extracted
 
@@ -115,6 +194,129 @@ Cross-source pack differences: 4. See `data/discrepancies.json`.
   "identicalRowsCollapsed": 3,
   "skusWithMultipleListings": 4,
   "parseAnomalies": 0,
-  "discrepancies": 21
+  "discrepancies": 21,
+  "pubchem": {
+    "byFamily": {
+      "lipids": {
+        "products": 36,
+        "singleCas": 33,
+        "oneCid": 6,
+        "formulaAndMw": 6,
+        "structureImage": 6,
+        "mwNominal": 2
+      },
+      "peg": {
+        "products": 212,
+        "singleCas": 205,
+        "oneCid": 108,
+        "formulaAndMw": 108,
+        "structureImage": 108,
+        "mwNominal": 2
+      },
+      "fluorophores": {
+        "products": 40,
+        "singleCas": 40,
+        "oneCid": 24,
+        "formulaAndMw": 24,
+        "structureImage": 24,
+        "mwNominal": 0
+      },
+      "organoborons": {
+        "products": 1046,
+        "singleCas": 1044,
+        "oneCid": 530,
+        "formulaAndMw": 530,
+        "structureImage": 530,
+        "mwNominal": 0
+      },
+      "other": {
+        "products": 13,
+        "singleCas": 7,
+        "oneCid": 4,
+        "formulaAndMw": 4,
+        "structureImage": 4,
+        "mwNominal": 0
+      },
+      "total": {
+        "products": 1347,
+        "singleCas": 1329,
+        "oneCid": 672,
+        "formulaAndMw": 672,
+        "structureImage": 672,
+        "mwNominal": 4
+      }
+    }
+  },
+  "bySubfamily": {
+    "Lipids from Advanced Molecular Technologies": 33,
+    "PEG Reagents and Linkers": 212,
+    "Fluorophores and Dyes": 40,
+    "AMT Organoboron Catalogue List": 1046,
+    "NEW PRODUCTS MAY 2025": 7,
+    "Featured Products:": 6,
+    "Ionisable Lipid": 3
+  },
+  "classDerived": {
+    "derivedFrom": "name",
+    "rules": "data/class-rules.json",
+    "note": "Not an AMT heading. Counted from the printed name with data/class-rules.json. Null means no rule matched. PEG reactive-group counts are products that include that group, so one heterobifunctional product is counted under each group it names.",
+    "byFamily": {
+      "lipids": {
+        "products": 36,
+        "matched": 0,
+        "null": 36
+      },
+      "peg": {
+        "products": 212,
+        "matched": 129,
+        "null": 83,
+        "architecture": {
+          "multi-arm": 0,
+          "mPEG": 2,
+          "heterobifunctional": 17
+        },
+        "reactiveGroups": {
+          "NHS": 0,
+          "maleimide": 0,
+          "azide": 65,
+          "DBCO": 0,
+          "amine": 74,
+          "acid": 5
+        }
+      },
+      "fluorophores": {
+        "products": 40,
+        "matched": 6,
+        "null": 34,
+        "dyeCore": {
+          "Cy3": 0,
+          "Cy5": 0,
+          "FITC": 0,
+          "BODIPY": 6
+        }
+      },
+      "organoborons": {
+        "products": 1046,
+        "matched": 906,
+        "null": 140,
+        "boronClass": {
+          "MIDA ester": 0,
+          "trifluoroborate": 123,
+          "pinacol ester": 648,
+          "boronic acid": 135
+        }
+      },
+      "other": {
+        "products": 13,
+        "matched": 0,
+        "null": 13
+      },
+      "total": {
+        "products": 1347,
+        "matched": 1041,
+        "null": 306
+      }
+    }
+  }
 }
 -->

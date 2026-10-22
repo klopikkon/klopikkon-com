@@ -75,7 +75,8 @@ Paths below are under `/amt/redesign/`. Each HTML page carries `noindex,nofollow
 | `name` | Printed name. `null` for the seven flyer-only SKUs (structures and CAS, no name) |
 | `synonyms` | Always `[]`. Parentheticals such as `(Exoria)` stay inside `name` |
 | `family` | `lipids` \| `peg` \| `fluorophores` \| `organoborons` \| `other` |
-| `subfamily` | `null`. The homepage tag `Ionisable Lipid` is on `homepageLabels` |
+| `subfamily` | The heading AMT prints above the product, verbatim. `subfamilySource` records the PDF running header or the homepage card. The brochures are flat lists, so this is the catalogue title except three cards labelled `Ionisable Lipid` |
+| `classDerived` | Browsing class read from the printed name by `data/class-rules.json`. Not an AMT label. `classDerivedSource` is `"name"` when a rule matches, and both are null when none does |
 | `cas` | Printed CAS, or a string such as `No CAS#`. `null` if absent |
 | `formula` | `null`. No formula column, and structure drawings are not OCR'd |
 | `mw` | `null` (number when a future source actually prints one) |
@@ -106,7 +107,11 @@ Check the data with:
 node amt/redesign/scripts/validate-data.mjs
 ```
 
-`data/extract.py` rebuilds the JSON from a local crawl cache. It is not part of the site build.
+`data/extract.py` rebuilds the JSON from a local crawl cache. It is not part of the site build. A re-run keeps `formulaExternal`, `mwExternal`, `structureImageExternal`, `externalSource`, `mwNominal`, `mwNominalSource`, `classDerived` and `classDerivedSource`.
+
+PubChem values are never copied into `formula`, `mw` or `structureImage`. `data/enrich_pubchem.py` looks up a single CAS at PubChem PUG REST and keeps the result only when that CAS maps to exactly one CID. Cached responses live in `data/raw/pubchem/`. PUG REST does not serve SVG. `structureImageExternal` is an SVG drawn from that CID's 2D coordinates and bond annotations, one file under `assets/structures/pubchem/{cid}.svg`. The file is not inlined, so a product page can lazy-load it. `mwNominal` is only a number printed in the name as a PEG mass (`PEG2000`, `PEG(400)`). `PEG3` is an oligomer length and is not a nominal mass.
+
+`classDerived` is separate from `subfamily`. The brochures do not print boronic acid, pinacol ester, mPEG or dye-core headings, so those are not copied into `subfamily`. `data/apply-class.mjs` applies `data/class-rules.json` to the printed name. Organoboron values are `boronic acid`, `pinacol ester`, `MIDA ester` and `trifluoroborate`, first match wins. PEG can set an architecture (`mPEG`, `heterobifunctional`, `multi-arm`) and reactive groups (`NHS`, `maleimide`, `azide`, `DBCO`, `amine`, `acid`). Fluorophore dye cores are `Cy3`, `Cy5`, `FITC` and `BODIPY` (the printed fragment `diazaborinin` counts as BODIPY). Lipids and `other` have no rules. A name that matches nothing is null.
 
 ## How a SKU was chosen
 

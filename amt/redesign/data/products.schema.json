@@ -14,6 +14,7 @@
       "synonyms",
       "family",
       "subfamily",
+      "subfamilySource",
       "cas",
       "formula",
       "mw",
@@ -21,7 +22,15 @@
       "packs",
       "structureImage",
       "documents",
-      "source"
+      "source",
+      "formulaExternal",
+      "mwExternal",
+      "structureImageExternal",
+      "externalSource",
+      "mwNominal",
+      "mwNominalSource",
+      "classDerived",
+      "classDerivedSource"
     ],
     "properties": {
       "id": {
@@ -45,10 +54,106 @@
         "type": "string",
         "enum": ["lipids", "peg", "fluorophores", "organoborons", "other"]
       },
-      "subfamily": { "type": ["string", "null"] },
+      "subfamily": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Heading AMT prints above the product, copied verbatim."
+      },
+      "subfamilySource": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["heading", "url", "page", "location"],
+        "properties": {
+          "heading": { "type": "string" },
+          "url": { "type": "string" },
+          "page": { "type": ["integer", "null"] },
+          "location": { "type": "string" },
+          "catalogueHeading": { "type": "string" }
+        }
+      },
       "cas": { "type": ["string", "null"] },
-      "formula": { "type": ["string", "null"] },
-      "mw": { "type": ["number", "null"] },
+      "formula": {
+        "type": ["string", "null"],
+        "description": "AMT-published formula only. Null when the catalogue has no formula column."
+      },
+      "mw": {
+        "type": ["number", "null"],
+        "description": "AMT-published molecular weight only. Null when the catalogue has no MW column."
+      },
+      "formulaExternal": { "type": ["string", "null"] },
+      "mwExternal": { "type": ["number", "null"] },
+      "structureImageExternal": { "type": ["string", "null"] },
+      "externalSource": {
+        "anyOf": [
+          { "type": "null" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "cid", "url"],
+            "properties": {
+              "name": { "const": "PubChem" },
+              "cid": { "type": "integer", "minimum": 1 },
+              "url": { "type": "string" }
+            }
+          }
+        ]
+      },
+      "mwNominal": {
+        "type": ["number", "null"],
+        "description": "Nominal PEG mass read from the printed name, such as PEG2000. Not an AMT measurement and not a PubChem value."
+      },
+      "mwNominalSource": {
+        "anyOf": [{ "type": "null" }, { "const": "name" }]
+      },
+      "classDerived": {
+        "description": "Browsing class read from the printed product name with data/class-rules.json. Not an AMT heading. Null when no rule matches.",
+        "anyOf": [
+          { "type": "null" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["derivedFrom", "rules", "boronClass"],
+            "properties": {
+              "derivedFrom": { "const": "name" },
+              "rules": { "const": "data/class-rules.json" },
+              "boronClass": { "enum": ["boronic acid", "pinacol ester", "MIDA ester", "trifluoroborate"] }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["derivedFrom", "rules", "architecture", "reactiveGroups"],
+            "properties": {
+              "derivedFrom": { "const": "name" },
+              "rules": { "const": "data/class-rules.json" },
+              "architecture": { "anyOf": [{ "type": "null" }, { "enum": ["mPEG", "heterobifunctional", "multi-arm"] }] },
+              "reactiveGroups": {
+                "anyOf": [
+                  { "type": "null" },
+                  {
+                    "type": "array",
+                    "items": { "enum": ["NHS", "maleimide", "azide", "DBCO", "amine", "acid"] }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["derivedFrom", "rules", "dyeCore"],
+            "properties": {
+              "derivedFrom": { "const": "name" },
+              "rules": { "const": "data/class-rules.json" },
+              "dyeCore": { "enum": ["Cy3", "Cy5", "FITC", "BODIPY"] }
+            }
+          }
+        ]
+      },
+      "classDerivedSource": {
+        "description": "\"name\" when classDerived was read from the printed product name. Null when classDerived is null.",
+        "anyOf": [{ "type": "null" }, { "const": "name" }]
+      },
       "purity": {
         "type": ["string", "null"],
         "description": "Exactly as published, including spacing. Null when the row prints no purity, or when two listings of the same SKU disagree (see listings[].purity)."

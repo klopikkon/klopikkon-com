@@ -25,5 +25,128 @@
   "identicalRowsCollapsed": 3,
   "skusWithMultipleListings": 4,
   "parseAnomalies": 0,
-  "discrepancies": 21
+  "discrepancies": 21,
+  "pubchem": {
+    "byFamily": {
+      "lipids": {
+        "products": 36,
+        "singleCas": 33,
+        "oneCid": 6,
+        "formulaAndMw": 6,
+        "structureImage": 6,
+        "mwNominal": 2
+      },
+      "peg": {
+        "products": 212,
+        "singleCas": 205,
+        "oneCid": 108,
+        "formulaAndMw": 108,
+        "structureImage": 108,
+        "mwNominal": 2
+      },
+      "fluorophores": {
+        "products": 40,
+        "singleCas": 40,
+        "oneCid": 24,
+        "formulaAndMw": 24,
+        "structureImage": 24,
+        "mwNominal": 0
+      },
+      "organoborons": {
+        "products": 1046,
+        "singleCas": 1044,
+        "oneCid": 530,
+        "formulaAndMw": 530,
+        "structureImage": 530,
+        "mwNominal": 0
+      },
+      "other": {
+        "products": 13,
+        "singleCas": 7,
+        "oneCid": 4,
+        "formulaAndMw": 4,
+        "structureImage": 4,
+        "mwNominal": 0
+      },
+      "total": {
+        "products": 1347,
+        "singleCas": 1329,
+        "oneCid": 672,
+        "formulaAndMw": 672,
+        "structureImage": 672,
+        "mwNominal": 4
+      }
+    }
+  },
+  "bySubfamily": {
+    "Lipids from Advanced Molecular Technologies": 33,
+    "PEG Reagents and Linkers": 212,
+    "Fluorophores and Dyes": 40,
+    "AMT Organoboron Catalogue List": 1046,
+    "NEW PRODUCTS MAY 2025": 7,
+    "Featured Products:": 6,
+    "Ionisable Lipid": 3
+  },
+  "classDerived": {
+    "derivedFrom": "name",
+    "rules": "data/class-rules.json",
+    "note": "Not an AMT heading. Counted from the printed name with data/class-rules.json. Null means no rule matched. PEG reactive-group counts are products that include that group, so one heterobifunctional product is counted under each group it names.",
+    "byFamily": {
+      "lipids": {
+        "products": 36,
+        "matched": 0,
+        "null": 36
+      },
+      "peg": {
+        "products": 212,
+        "matched": 129,
+        "null": 83,
+        "architecture": {
+          "multi-arm": 0,
+          "mPEG": 2,
+          "heterobifunctional": 17
+        },
+        "reactiveGroups": {
+          "NHS": 0,
+          "maleimide": 0,
+          "azide": 65,
+          "DBCO": 0,
+          "amine": 74,
+          "acid": 5
+        }
+      },
+      "fluorophores": {
+        "products": 40,
+        "matched": 6,
+        "null": 34,
+        "dyeCore": {
+          "Cy3": 0,
+          "Cy5": 0,
+          "FITC": 0,
+          "BODIPY": 6
+        }
+      },
+      "organoborons": {
+        "products": 1046,
+        "matched": 906,
+        "null": 140,
+        "boronClass": {
+          "MIDA ester": 0,
+          "trifluoroborate": 123,
+          "pinacol ester": 648,
+          "boronic acid": 135
+        }
+      },
+      "other": {
+        "products": 13,
+        "matched": 0,
+        "null": 13
+      },
+      "total": {
+        "products": 1347,
+        "matched": 1041,
+        "null": 306
+      }
+    }
+  }
 }
