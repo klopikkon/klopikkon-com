@@ -296,7 +296,9 @@ const AmtQuoteCount = class extends HTMLElement {
     const link = this.shadowRoot.querySelector("a");
     badge.textContent = String(count);
     badge.dataset.show = count > 0 ? "true" : "false";
-    link.setAttribute("aria-label", count === 1 ? "Quote, 1 item" : `Quote, ${count} items`);
+    const label =
+      count === 0 ? "Quote list, no items yet" : count === 1 ? "Quote list, 1 item" : `Quote list, ${count} items`;
+    link.setAttribute("aria-label", label);
   }
 }
 
@@ -339,7 +341,18 @@ function renderQuotePage() {
     const meta = document.createElement("p");
     meta.className = "quote-line-meta";
     const price = linePrice(line, catalog);
-    meta.textContent = [line.sku, line.pack, price].filter(Boolean).join(" · ");
+    const bits = [line.sku, line.pack].filter(Boolean);
+    meta.append(document.createTextNode(bits.join(" · ")));
+    if (price) {
+      meta.append(document.createTextNode(bits.length ? " · " : ""));
+      meta.append(document.createTextNode(price));
+      if (/^quote$/i.test(price)) {
+        const note = document.createElement("span");
+        note.className = "visually-hidden";
+        note.textContent = " means the price is not published.";
+        meta.append(note);
+      }
+    }
     const qtyLabel = document.createElement("label");
     qtyLabel.className = "quote-qty";
     const qtyText = document.createElement("span");
@@ -385,7 +398,18 @@ function renderSummary(page, catalog) {
       name.textContent = `${line.name} · ${line.pack} · qty ${line.qty}`;
       const amount = document.createElement("span");
       amount.className = "quote-summary-amount";
-      amount.textContent = line.lineTotal == null ? "Quote, not included" : formatMoney(line.lineTotal, line.symbol);
+      if (line.lineTotal == null) {
+        amount.textContent = "Quote, not included.";
+        const note = document.createElement("span");
+        note.className = "visually-hidden";
+        note.textContent = "The price is not published.";
+        amount.append(note);
+      } else {
+        const note = document.createElement("span");
+        note.className = "visually-hidden";
+        note.textContent = "Line total";
+        amount.append(note, document.createTextNode(formatMoney(line.lineTotal, line.symbol)));
+      }
       item.append(name, amount);
       list.append(item);
     }
