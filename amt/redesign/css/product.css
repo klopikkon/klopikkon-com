@@ -127,6 +127,26 @@
   font-weight: 600;
 }
 
+.pubchem {
+  margin-top: var(--space-6);
+}
+
+.pubchem-tag {
+  display: inline-block;
+  margin-left: var(--space-2);
+  padding: 0.05rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  color: var(--muted);
+  font-size: var(--step--1);
+  font-weight: 700;
+}
+
+.pubchem-structure {
+  max-width: 22rem;
+  margin-top: var(--space-4);
+}
+
 .recent {
   margin-top: var(--space-6);
 }
