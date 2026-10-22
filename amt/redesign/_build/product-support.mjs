@@ -447,3 +447,62 @@ export function packLabel(pack) {
 export function isQuotedPack(pack) {
   return packLabel(pack) === "Quote";
 }
+
+const MASS_IN_MG = {
+  mg: 1,
+  g: 1000,
+  kg: 1000000,
+  ug: 0.001,
+  µg: 0.001,
+  mcg: 0.001,
+};
+
+/** Pack size as milligrams, only when the whole label is a mass. */
+export function packMassMg(size) {
+  const text = String(size || "")
+    .trim()
+    .toLowerCase()
+    .replace(/μ/g, "µ");
+  const match = text.match(/^(\d+(?:\.\d+)?)\s*(kg|mg|g|µg|ug|mcg)$/);
+  if (!match) return null;
+  const amount = Number(match[1]);
+  const factor = MASS_IN_MG[match[2]];
+  if (!Number.isFinite(amount) || amount <= 0 || factor == null) return null;
+  return amount * factor;
+}
+
+/** Numeric published price. Quote labels and missing prices stay null. */
+export function publishedAmount(pack) {
+  if (!pack || isQuotedPack(pack)) return null;
+  if (typeof pack.price === "number" && Number.isFinite(pack.price) && pack.price > 0) return pack.price;
+  const text = publishedText(pack.priceText);
+  if (!text) return null;
+  const match = text.replace(/,/g, "").match(/^(?:USD|US\$|A\$|AU\$|\$|€|£)\s*(\d+(?:\.\d+)?)$/i);
+  if (!match) return null;
+  const amount = Number(match[1]);
+  return Number.isFinite(amount) && amount > 0 ? amount : null;
+}
+
+export function pricePerMg(pack) {
+  const amount = publishedAmount(pack);
+  const mg = packMassMg(pack?.size);
+  if (amount == null || mg == null) return null;
+  return amount / mg;
+}
+
+function formatPerMgNumber(value) {
+  const rounded = Math.round(value * 10000) / 10000;
+  const [whole, fracRaw] = rounded.toFixed(4).split(".");
+  let frac = fracRaw.replace(/0+$/, "");
+  if (frac.length < 2) frac = frac.padEnd(2, "0");
+  return `${whole}.${frac}`;
+}
+
+/** "$0.62/mg" from a published price and a mass pack size. Otherwise null. */
+export function formatPerMg(pack) {
+  const per = pricePerMg(pack);
+  if (per == null) return null;
+  const text = publishedText(pack?.priceText) || "";
+  const symbol = (text.match(/^[^\d\s-]+/) || [""])[0];
+  return `${symbol}${formatPerMgNumber(per)}/mg`;
+}

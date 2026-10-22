@@ -5,13 +5,14 @@
 import { mkdir, readdir, readFile, rm, writeFile as fsWriteFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { url } from "../lib/paths.mjs";
+import { canonical, url } from "../lib/paths.mjs";
 import { breadcrumbs, priceBadge } from "../lib/ui.mjs";
 import {
   absoluteUrl,
   casNumbers,
   escapeHtml,
   familyLabel,
+  formatPerMg,
   isQuotedPack,
   loadRanking,
   matchProduct,
@@ -38,11 +39,16 @@ function synonymsOf(product) {
   return (Array.isArray(product.synonyms) ? product.synonyms : []).map((item) => publishedText(item)).filter(Boolean);
 }
 
+function displayName(product) {
+  return publishedText(product.name) || publishedText(product.sku) || String(product.id || "");
+}
+
 function structureUrl(product) {
   const src = publishedText(product.structureImage);
-  if (!src) return null;
-  if (!/^https?:\/\//i.test(src) && !src.startsWith("/")) return null;
-  return src;
+  if (!src || src.includes("..")) return null;
+  if (/^https?:\/\//i.test(src)) return src;
+  if (src.startsWith("/")) return src;
+  return url(src);
 }
 
 function familyTitle(site, family) {
@@ -105,14 +111,14 @@ function jsonLd(product, pagePath) {
   const data = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: product.name,
+    name: displayName(product),
     sku: product.sku,
     url: pageUrl,
     brand: { "@type": "Brand", name: "Advanced Molecular Technologies" },
   };
   if (product.family) data.category = familyLabel(product.family);
   const image = structureUrl(product);
-  if (image) data.image = /^https?:\/\//i.test(image) ? image : `https://klopikkon.com${image}`;
+  if (image) data.image = /^https?:\/\//i.test(image) ? image : `https://klopikkon.com${image.startsWith("/") ? image : `/${image}`}`;
   const props = [];
   const cas = publishedText(product.cas);
   if (cas && casNumbers(cas).length) props.push({ "@type": "PropertyValue", name: "CAS", value: cas });
@@ -143,11 +149,38 @@ function renderPosition(match) {
   </aside>`;
 }
 
+function renderPackCompare(product) {
+  const rows = packsOf(product)
+    .map((pack) => {
+      const per = formatPerMg(pack);
+      if (!per) return "";
+      const size = publishedText(pack.size) || "Pack";
+      return `<tr><th scope="row">${escapeHtml(size)}</th><td>${escapeHtml(packLabel(pack))}</td><td>${escapeHtml(per)}</td></tr>`;
+    })
+    .filter(Boolean);
+  if (!rows.length) return "";
+  return `<section class="pack-compare" aria-labelledby="compare-${escapeHtml(safeId(product.id))}">
+    <h2 id="compare-${escapeHtml(safeId(product.id))}">Price per mg</h2>
+    <p class="fine">Each figure is that pack’s published price divided by its published mass. Packs without a published price, or without a mass, are left out.</p>
+    <div class="table-scroll">
+      <table>
+        <caption>Published price per milligram</caption>
+        <thead><tr><th scope="col">Pack</th><th scope="col">Published price</th><th scope="col">Per mg</th></tr></thead>
+        <tbody>${rows.join("")}</tbody>
+      </table>
+    </div>
+  </section>`;
+}
+
 function renderPacks(product) {
   const packs = packsOf(product);
   if (!packs.length) {
     return `<p class="pack-missing">Pack sizes are not published for this catalogue row.</p>`;
   }
+  const quoteOnly = packs.every((pack) => isQuotedPack(pack));
+  const quoteNote = quoteOnly
+    ? `<p class="pack-quote-only">No price is published for this item. Choose a pack and add it to the quote list. The email asks AMT to price it. Nothing is sent until you send that email.</p>`
+    : "";
   const options = packs
     .map((pack, index) => {
       const size = publishedText(pack.size) || "Pack";
@@ -159,14 +192,15 @@ function renderPacks(product) {
       </label>`;
     })
     .join("");
-  return `<form class="pack-form" data-quote-form data-id="${escapeHtml(product.id)}" data-sku="${escapeHtml(product.sku || "")}" data-name="${escapeHtml(product.name || "")}">
+  return `${quoteNote}<form class="pack-form" data-quote-form data-id="${escapeHtml(product.id)}" data-sku="${escapeHtml(product.sku || "")}" data-name="${escapeHtml(product.name || "")}">
     <fieldset>
       <legend>Pack size</legend>
       <div class="pack-options">${options}</div>
     </fieldset>
     <button class="btn btn-primary" type="submit">Add to quote</button>
     <p class="quote-status" data-quote-status role="status" aria-live="polite"></p>
-  </form>`;
+  </form>
+  ${renderPackCompare(product)}`;
 }
 
 function renderProduct(product, all, match, site) {
@@ -179,7 +213,7 @@ function renderProduct(product, all, match, site) {
   const image = structureUrl(product);
   const figure = image
     ? `<figure class="structure">
-        <img src="${escapeHtml(image)}" alt="Structure of ${escapeHtml(product.name)} published by Advanced Molecular Technologies" width="480" height="360">
+        <img src="${escapeHtml(image)}" alt="Structure of ${escapeHtml(displayName(product))} published by Advanced Molecular Technologies" width="480" height="360">
       </figure>`
     : `<figure class="structure structure-placeholder">
         <svg viewBox="0 0 160 100" aria-hidden="true" focusable="false">
@@ -212,7 +246,7 @@ function renderProduct(product, all, match, site) {
         <ul>${related
           .map(
             (item) =>
-              `<li><a href="${url(`products/${safeId(item.id)}/`)}"><span class="related-name">${escapeHtml(item.name)}</span> <span class="related-sku">${escapeHtml(item.sku || "")}</span></a></li>`,
+              `<li><a href="${url(`products/${safeId(item.id)}/`)}"><span class="related-name">${escapeHtml(displayName(item))}</span> <span class="related-sku">${escapeHtml(item.sku || "")}</span></a></li>`,
           )
           .join("")}</ul>
       </section>`
@@ -230,7 +264,7 @@ function renderProduct(product, all, match, site) {
   const crumbs = breadcrumbs([
     { label: "Home", href: url("") },
     { label: familyText, href: url(`families/${family}/`) },
-    { label: product.name },
+    { label: displayName(product) },
   ]);
   return `<div class="wrap page-intro">
     ${crumbs}
@@ -239,8 +273,17 @@ function renderProduct(product, all, match, site) {
       ${figure}
       <div class="product-summary">
         <p class="kicker"><a href="${url(`families/${family}/`)}">${escapeHtml(familyText)}</a>${showSub ? ` <span class="subfamily">${escapeHtml(sub)}</span>` : ""}</p>
-        <h1>${escapeHtml(product.name)}</h1>
-        <p class="sku"><span class="sku-label">Catalogue number</span> <span class="sku-value">${escapeHtml(product.sku || "Not published")}</span></p>
+        <h1>${escapeHtml(displayName(product))}</h1>
+        ${publishedText(product.name) ? "" : `<p class="name-missing">AMT has not published a name for this catalogue number.</p>`}
+        <p class="sku"><span class="sku-label">Catalogue number</span> <span class="sku-value">${escapeHtml(product.sku || "Not published")}</span>${
+          product.sku
+            ? ` <button type="button" class="btn btn-secondary copy-cas" data-copy="${escapeHtml(product.sku)}" aria-label="Copy catalogue number ${escapeHtml(product.sku)}">Copy</button>`
+            : ""
+        }</p>
+        <p class="product-actions">
+          <button type="button" class="btn btn-secondary" data-copy="${escapeHtml(canonical(pagePath))}" data-share>Copy link</button>
+          <button type="button" class="btn btn-secondary" data-print-spec>Print spec sheet</button>
+        </p>
         ${synonymHtml}
         ${renderPosition(match)}
         ${renderPacks(product)}
@@ -258,6 +301,10 @@ function renderProduct(product, all, match, site) {
     </section>
     ${documents}
     ${relatedHtml}
+    <section class="recent" data-recent hidden>
+      <h2>Recently viewed</h2>
+      <ul data-recent-list></ul>
+    </section>
     <script type="application/ld+json">${jsonLd(product, pagePath)}</script>
     <script type="module" src="${url("js/cart.js")}"></script>
     </article>
@@ -313,16 +360,16 @@ export async function build(ctx) {
   await mkdir(productsDir, { recursive: true });
   const ids = new Set();
   for (const product of products) {
-    if (!product || !product.id || !product.name) {
-      throw new Error("Each product needs an id and a name");
+    if (!product || !product.id || !displayName(product)) {
+      throw new Error("Each product needs an id and a name or catalogue number");
     }
     const id = safeId(product.id);
     ids.add(id);
     const match = matchProduct(product, ranking);
     const pagePath = `products/${id}/`;
-    const description = `${product.name} (${product.sku || "catalogue"}). Concept redesign of an Advanced Molecular Technologies catalogue page.`;
+    const description = `${displayName(product)} (${product.sku || "catalogue"}). Concept redesign of an Advanced Molecular Technologies catalogue page.`;
     const html = render({
-      title: `${product.name} · ${product.sku || "AMT"}`,
+      title: publishedText(product.name) ? `${product.name} · ${product.sku || "AMT"}` : displayName(product),
       description,
       path: pagePath,
       head: `<link rel="stylesheet" href="${url("css/product.css")}">`,

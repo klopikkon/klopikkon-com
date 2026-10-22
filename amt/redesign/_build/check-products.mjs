@@ -4,10 +4,10 @@
  * Run: node amt/redesign/_build/check-products.mjs
  */
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildRankingIndex, loadProducts, loadRanking, matchProduct } from "./product-support.mjs";
+import { buildRankingIndex, formatPerMg, isQuotedPack, loadProducts, loadRanking, matchProduct, packMassMg, pricePerMg } from "./product-support.mjs";
 import { addLine, buildMailto, emptyCart, totalQty } from "../js/cart.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -56,6 +56,19 @@ assert(
   matchProduct({ id: "c", sku: "MISSING-1", name: "Shared label", cas: "99-99-9", synonyms: [] }, conflict).row === null,
   "name match must not cross CAS numbers",
 );
+
+assert(packMassMg("500 mg") === 500, "500 mg");
+assert(packMassMg("500mg") === 500, "500mg");
+assert(packMassMg("1 g") === 1000, "1 g");
+assert(packMassMg("1g") === 1000, "1g");
+assert(packMassMg("kit") === null, "unparsed size has no mass");
+assert(pricePerMg({ size: "500 mg", price: 310, priceText: "$310" }) === 0.62, "310 per 500 mg");
+assert(pricePerMg({ size: "1 g", price: 470, priceText: "$470" }) === 0.47, "470 per 1 g");
+assert(pricePerMg({ size: "100mg", price: null, priceText: "quote" }) === null, "quote pack has no per-mg price");
+assert(pricePerMg({ size: "100mg", price: null, priceText: "Quote" }) === null, "Quote label has no per-mg price");
+assert(pricePerMg({ size: "pack", price: 10, priceText: "$10" }) === null, "non-mass pack has no per-mg price");
+assert(formatPerMg({ size: "500 mg", price: 310, priceText: "$310" }) === "$0.62/mg", "formatted per mg");
+assert(formatPerMg({ size: "1 g", price: 595, priceText: "$595.00" }) === "$0.595/mg", "keeps the third decimal");
 
 let cart = addLine(emptyCart(), { id: "alc-0315", sku: "AMTGC903-AL21", pack: "1g", name: "ALC-0315" });
 cart = addLine(cart, { id: "alc-0315", sku: "AMTGC903-AL21", pack: "1g", name: "ALC-0315" });
@@ -166,7 +179,7 @@ for (const [id, html] of pages) {
   if (blocks.length) {
     const data = JSON.parse(blocks[0]);
     assert(data["@type"] === "Product", `${id} JSON-LD type`);
-    assert(data.name === product.name, `${id} JSON-LD name`);
+    assert(data.name === (product.name || product.sku), `${id} JSON-LD name`);
     assert(data.sku === product.sku, `${id} JSON-LD sku`);
     assert(!data.review && !data.aggregateRating && !data.award, `${id} JSON-LD has a fabricated claim`);
     const offers = data.offers ? (Array.isArray(data.offers) ? data.offers : [data.offers]) : [];
@@ -200,10 +213,105 @@ for (const [id, html] of pages) {
     const label = pack.price == null || String(pack.priceText || "").toLowerCase() === "quote" ? "Quote" : pack.priceText;
     assert(html.includes(label), `${id} missing pack label ${label}`);
   }
+  const compare = html.match(/<section class="pack-compare"[\s\S]*?<\/section>/);
+  const comparable = (product.packs || []).map((pack) => formatPerMg(pack)).filter(Boolean);
+  if (!comparable.length) {
+    assert(!compare, `${id} shows a per-mg table without a published mass price`);
+  } else {
+    assert(compare, `${id} missing price-per-mg table`);
+    for (const label of comparable) assert(compare[0].includes(label), `${id} missing ${label}`);
+  }
+  const packs = product.packs || [];
+  const quoteOnly = packs.length > 0 && packs.every((pack) => isQuotedPack(pack));
+  if (quoteOnly) assert(html.includes("pack-quote-only"), `${id} missing quote-only empty state`);
+  else assert(!html.includes("pack-quote-only"), `${id} shows a quote-only note beside published prices`);
+  if (!product.name) assert(html.includes("has not published a name"), `${id} missing unpublished-name note`);
+  if (product.sku) assert(html.includes(`data-copy="${product.sku}"`), `${id} missing copy-SKU button`);
+  assert(html.includes("data-print-spec"), `${id} missing print spec sheet`);
+  assert(html.includes("data-recent"), `${id} missing recently viewed`);
+  assert(html.includes(`data-copy="https://klopikkon.com/amt/redesign/products/${id}/"`), `${id} missing share link`);
 }
 
 for (const href of extractHrefs(quoteHtml)) {
   if (!linkOk(href)) fail(`quote broken link ${href}`);
+}
+
+function runBuild() {
+  const result = spawnSync(process.execPath, [path.join(here, "build.mjs")], {
+    cwd: repo,
+    encoding: "utf8",
+  });
+  if (result.status !== 0) {
+    fail(result.stderr || result.stdout || "rebuild failed");
+  }
+  return result;
+}
+
+const dataFile = path.join(redesign, "data", "products.json");
+if (!existsSync(dataFile)) {
+  const sample = [
+    {
+      id: "regen-check-row",
+      sku: "AMTREGEN-1",
+      name: "Regen Check Row",
+      synonyms: [],
+      family: "other",
+      subfamily: null,
+      cas: null,
+      formula: null,
+      mw: null,
+      purity: null,
+      packs: [{ size: "100mg", price: null, currency: null, priceText: "quote" }],
+      structureImage: null,
+      documents: { sds: null, coa: null, datasheet: null },
+      source: { url: "https://www.amtechpl.com/", pdf: null, page: "check" },
+    },
+    {
+      id: "regen-priced-row",
+      sku: "AMTREGEN-2",
+      name: "Regen Priced Row",
+      synonyms: [],
+      family: "other",
+      subfamily: null,
+      cas: null,
+      formula: null,
+      mw: null,
+      purity: null,
+      packs: [
+        { size: "200 mg", price: 50, currency: "USD", priceText: "$50.00" },
+        { size: "1 g", price: 180, currency: "USD", priceText: "$180.00" },
+      ],
+      structureImage: null,
+      documents: { sds: null, coa: null, datasheet: null },
+      source: { url: "https://www.amtechpl.com/", pdf: null, page: "check" },
+    },
+  ];
+  mkdirSync(path.dirname(dataFile), { recursive: true });
+  try {
+    writeFileSync(dataFile, JSON.stringify(sample));
+    const regen = runBuild();
+    if (regen.status === 0) {
+      const quoteOnly = readFileSync(path.join(redesign, "products/regen-check-row/index.html"), "utf8");
+      const priced = readFileSync(path.join(redesign, "products/regen-priced-row/index.html"), "utf8");
+      assert(quoteOnly.includes("pack-quote-only"), "data/products.json quote row missing empty state");
+      assert(!quoteOnly.includes("pack-compare"), "data/products.json quote row invented a per-mg price");
+      assert(!quoteOnly.includes("/mg"), "data/products.json quote row contains a per-mg figure");
+      assert(priced.includes("$0.25/mg"), "data/products.json priced row missing $0.25/mg");
+      assert(priced.includes("$0.18/mg"), "data/products.json priced row missing $0.18/mg");
+      assert(priced.includes('"priceCurrency":"USD"'), "data/products.json offer dropped published currency");
+      assert(priced.includes("Regen Priced Row"), "data/products.json name was not regenerated");
+    }
+  } finally {
+    rmSync(dataFile, { force: true });
+    try {
+      rmSync(path.dirname(dataFile));
+    } catch {
+      // The data directory is kept when it still holds the data agent's files.
+    }
+    runBuild();
+    assert(!existsSync(path.join(redesign, "products/regen-check-row/index.html")), "temporary data row was left on disk");
+    assert(existsSync(path.join(redesign, "products", products[0].id, "index.html")), "fixture pages were not restored");
+  }
 }
 
 if (failures.length) {

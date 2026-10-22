@@ -30,21 +30,537 @@ The ranking pill or note is appended when it adds a fact (for example a competit
 
 ## This build
 
-- Catalogue source: `_build/fixtures/products.json`
+- Catalogue source: `data/products.json`
 - Ranking rows parsed: 831
-- Products: 12
-- Matched: 12 (100.0%)
-- By SKU: 12
-- By CAS: 0
+- Products: 1347
+- Matched: 832 (61.8%)
+- By SKU: 829
+- By CAS: 3
 - By name: 0
-- Unmatched: 0
+- Unmatched: 515
 - Ambiguous (no badge): 0
 
-### Fixture until data/products.json lands
+### Unmatched
 
-Pages are built from `_build/fixtures/products.json` when `data/products.json` is absent. That fixture copies the homepage cards. CAS, formula, molecular weight, purity, structure image, and pack currency are unpublished on those rows, so the product page leaves them blank and JSON-LD omits offers.
+- amtgc945-dd21 · AMTGC945-DD21 · 1,8-Diamino-3,6-dioxaoctane
+- amtb1000-ma14 · AMTB1000-MA14 · N-(2-Morpholinoethyl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1002-td14 · AMTB1002-TD14 · 5,5-Dimethyl-2-(o-tolyl)-1,3,2-dioxaborinane
+- amtb1005-na14 · AMTB1005-NA14 · 5,5-Dimethyl-2-(naphthalen-2-yl)-1,3,2-dioxaborinane
+- amtb1007-di14 · AMTB1007-DI14 · 2-(4-Methoxyphenyl)-5,5-dimethyl-1,3,2-dioxaborinane
+- amtb1008-ey14 · AMTB1008-EY14 · N-Ethyl-N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)ethanamine
+- amtb1011-me14 · AMTB1011-ME14 · 2-(2-Methoxyphenyl)-5,5-dimethyl-1,3,2-dioxaborinane
+- amtb1012-mb14 · AMTB1012-MB14 · N-Methyl-N-(2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)butan-1-amine
+- amtb1013-ep14 · AMTB1013-EP14 · 3-Ethylphenylboronic acid pinacol ester
+- amtb1014-dn14 · AMTB1014-DN14 · 5,5-Dimethyl-2-(naphthalen-1-yl)-1,3,2-dioxaborinane
+- amtb1017-da14 · AMTB1017-DA14 · 2-(Dimethylaminomethyl)phenylboronic acid pinacol ester
+- amtb1018-td14 · AMTB1018-TD14 · 4,4,5,5-Tetramethyl-2-(5-(4,4,5,5-tetramethyl-1,3-dioxolan-2-yl)thiophen-2-yl)-1,3,2-dioxaborolane
+- amtb1019-po14 · AMTB1019-PO14 · 2-Propyloxy-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzonitrile
+- amtb1021-bp14 · AMTB1021-BP14 · 4,4,5,5-Tetramethyl-2-(4-(4,4,5,5-tetramethyl-1,3-dioxolan-2-yl)phenyl)-1,3,2-dioxaborolane
+- amtb1023-mn14 · AMTB1023-MN14 · 2-(4-Methoxynaphthalen-1-yl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1026-sh14 · AMTB1026-SH14 · (E)-4-Methyl-N'-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzylidene)benzenesulfonohydrazide
+- amtb1027-df14 · AMTB1027-DF14 · 2,4-Difluorophenylboronic acid
+- amtb1028-of14 · AMTB1028-OF14 · 2,6-Difluorophenylboronic acid
+- amtb1029-mf14 · AMTB1029-MF14 · 3,5-Difluorophenylboronic acid
+- amtb1030-mp14 · AMTB1030-MP14 · N-(3-Morpholinopropyl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1031-tm14 · AMTB1031-TM14 · 4-(5-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-yl)thiomorpholine
+- amtb1032-me14 · AMTB1032-ME14 · 2-Methoxy-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenol
+- amtb1033-pp14 · AMTB1033-PP14 · 2-(Pyrrolidin-1-yl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridine
+- amtb1034-mp14 · AMTB1034-MP14 · N-(2-(4-Methylpiperazin-1-yl)ethyl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1035-ch14 · AMTB1035-CH14 · N-Cycloheptyl-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1036-bm14 · AMTB1036-BM14 · N,N-bis(2-methoxyethyl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1037-tf14 · AMTB1037-TF14 · N-((tetrahydrofuran-2-yl)methyl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1039-dm14 · AMTB1039-DM14 · 3,4-Dimethoxyphenylboronic acid
+- amtb1041-ms14 · AMTB1041-MS14 · (E)-4-Methyl-N'-(3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzylidene)benzenesulfonohydrazide
+- amtb1042-db14 · AMTB1042-DB14 · 4,4,5,5-Tetramethyl-2-(3-(4,4,5,5-tetramethyl-1,3-dioxolan-2-yl)phenyl)-1,3,2-dioxaborolane
+- amtb1043-bo14 · AMTB1043-BO14 · 2,2'-(4,5-Dimethoxy-1,2-phenylene)bis(4,4,5,5-tetramethyl-1,3,2-dioxaborolane)
+- amtb1044-ta14 · AMTB1044-TA14 · 2,2,2-Trifluoro-N-(3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)acetamide
+- amtb1046-ip14 · AMTB1046-IP14 · 4-Isopropylphenylboronic acid Pinacol Ester
+- amtb1047-mb14 · AMTB1047-MB14 · Methyl 2'-methoxy-5'-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)-[1,1'-biphenyl]-3-carboxylate
+- amtb1048-cp14 · AMTB1048-CP14 · 4-(2,2,4-Trimethyl-6-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)chroman-4-yl)phenol
+- amtb1052-co14 · AMTB1052-CO14 · 6-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)-2H-chromen-2-one
+- amtb1055-ep14 · AMTB1055-EP14 · 2-(4-(5-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-yl)piperazin-1-yl)ethanamine
+- amtb1056-dc14 · AMTB1056-DC14 · 1,7-dicarbadodecaborane
+- amtb1057-ta14 · AMTB1057-TA14 · 4-(2,2,4-Trimethyl-6-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)chroman-4-yl)phenyl acetate
+- amtb1058-cb14 · AMTB1058-CB14 · 2-Chloropyridine-3-boronic acid
+- amtb1059-mp14 · AMTB1059-MP14 · N-Methyl-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1060-mp14 · AMTB1060-MP14 · Isobutylboronic acid
+- amtb1061-m014 · AMTB1061-M014 · 2-(Morpholino)pyridine-3-boronic acid pinacol ester
+- amtb1062-ip14 · AMTB1062-IP14 · Isobutylboronic acid Pinacol Ester
+- amtb1063-cp14 · AMTB1063-CP14 · 2-Chloropyridine-3-boronic acid pinacol ester
+- amtb1065-ip14 · AMTB1065-IP14 · (3aS,4S,6S,7aR)-2-Isobutyl-3a,5,5-trimethylhexahydro-4,6-methanobenzo[d][1,3,2]dioxaborole
+- amtb1067-bp14 · AMTB1067-BP14 · N-Benzyl-N-methyl-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1068-ap14 · AMTB1068-AP14 · 4-Acetamidophenylboronic acid
+- amtb1069-pi14 · AMTB1069-PI14 · 1-Benzyl-4-(5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-yl)piperazine
+- amtb1070-id14 · AMTB1070-ID14 · 2-Isobutyl-5,5-dimethyl-1,3,2-dioxaborinane
+- amtb1071-me14 · AMTB1071-ME14 · N-(1-Methoxypropan-2-yl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1072-pp14 · AMTB1072-PP14 · 2-(Pyrrolidin-1-yl)-3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridine
+- amtb1073-ba14 · AMTB1073-BA14 · N-Butyl-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1077-ib14 · AMTB1077-IB14 · N-Isobutyl-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1078-bt14 · AMTB1078-BT14 · Benzo[b]thiophene-2-boronic acid
+- amtb1079-ia14 · AMTB1079-IA14 · 2-(4-Isocyanophenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1080-bp14 · AMTB1080-BP14 · 1-Benzyl-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2(1H)-one
+- amtb1081-df14 · AMTB1081-DF14 · 2,8-Bis(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)dibenzo[b,d]furan
+- amtb1082-hb14 · AMTB1082-HB14 · methyl 2-hydroxy-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzoate
+- amtb1083-bn14 · AMTB1083-BN14 · 2-(6-(Benzyloxy)naphthalen-2-yl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1085-sp14 · AMTB1085-SP14 · 1-Methyl-4-((4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)sulfonyl)piperazine
+- amtb1088-ib15 · AMTB1088-IB15 · 2-(2-Isobutylphenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1089-mb15 · AMTB1089-MB15 · 4-(4-Chlorobenzyl)phenylboronic acid pinacol ester
+- amtb1090-pb15 · AMTB1090-PB15 · 4-Propoxyphenylboronic acid pinacol ester
+- amtb1091-eo15 · AMTB1091-EO15 · 3-Ethoxyphenylboronic acid pinacol ester
+- amtb1092-ip15 · AMTB1092-IP15 · 2-iso-Propoxyphenylboronic acid pinacol ester
+- amtb1093-bu15 · AMTB1093-BU15 · 3-Butoxyphenylboronic acid pinacol ester
+- amtb1094-ep15 · AMTB1094-EP15 · 2-Ethoxyphenylboronic acid pinacol ester
+- amtb1095-pp15 · AMTB1095-PP15 · 3-Propoxyphenylboronic acid pinacol ester
+- amtb1096-na15 · AMTB1096-NA15 · 6-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)naphthalen-2-yl acetate
+- amtb1097-ec15 · AMTB1097-EC15 · [4-(4-Ethylpiperazine-1-carbonyl)phenyl]boronic acid pinacol ester
+- amtb1098-hn15 · AMTB1098-HN15 · 6-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)naphthalen-2-ol
+- amtb1099-po15 · AMTB1099-PO15 · 4,4,5,5-Tetramethyl-2-(4-(pentyloxy)phenyl)-1,3,2-dioxaborolane
+- amtb1100-ip15 · AMTB1100-IP15 · 4-iso-Propoxyphenylboronic acid pinacol ester
+- amtb1101-ho15 · AMTB1101-HO15 · 2-(4-(Hexyloxy)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1103-pp15 · AMTB1103-PP15 · 4,4,5,5-Tetramethyl-2-(3-(pentyloxy)phenyl)-1,3,2-dioxaborolane
+- amtb1106-ho15 · AMTB1106-HO15 · 2-(3-(Hexyloxy)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1109-ep15 · AMTB1109-EP15 · [3-(4-Ethylpiperazine-1-carbonyl)phenyl]boronic acid pinacol ester
+- amtb1110-df15 · AMTB1110-DF15 · 2-(3,5-Difluoro-4-nitrophenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1111-mp15 · AMTB1111-MP15 · 2-Methyl-3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridine
+- amtb1113-db15 · AMTB1113-DB15 · (3,5-Dimethylphenyl)boronic acid
+- amtb1114-iq15 · AMTB1114-IQ15 · Isoquinoline-4-boronic acid pinacol ester
+- amtb1115-dm15 · AMTB1115-DM15 · 3,4-Dimethylphenylboronic acid
+- amtb1116-tf15 · AMTB1116-TF15 · 4,4,5,5-Tetramethyl-2-(2,3,5-trifluorophenyl)-1,3,2-dioxaborolane
+- amtb1117-dm15 · AMTB1117-DM15 · (3,5-Dimethylphenyl)boronic acid pinacol ester
+- amtb1118-pb15 · AMTB1118-PB15 · (3,4-Dimethylphenyl)boronic acid pinacol ester
+- amtb1119-ep15 · AMTB1119-EP15 · 1-Ethyl-4-(5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-yl)piperazine
+- amtb1120-pp15 · AMTB1120-PP15 · N-(2-(Pyrrolidin-1-yl)propyl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1123-ce15 · AMTB1123-CE15 · (2-Chloro-6-fluorophenyl)boronic acid pinacol ester
+- amtb1124-cf15 · AMTB1124-CF15 · (2-Chloro-6-fluorophenyl)boronic acid
+- amtb1126-im15 · AMTB1126-IM15 · 2-(5-(Methoxy)-2-iodophenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1127-ap15 · AMTB1127-AP15 · 3-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)propyl acetate
+- amtb1128-pe15 · AMTB1128-PE15 · 2-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)ethanol
+- amtb1130-pp15 · AMTB1130-PP15 · 3-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenoxy)propan-1-ol
+- amtb1131-me15 · AMTB1131-ME15 · 1-Morpholino-2-(3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)ethanone
+- amtb1132-mb15 · AMTB1132-MB15 · Methyl 2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzoate
+- amtb1134-df15 · AMTB1134-DF15 · 2-(3,5-Difluorophenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1136-pa15 · AMTB1136-PA15 · N-Propyl-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1137-ba15 · AMTB1137-BA15 · (S)-Benzyl (3-methyl-1-oxo-1-((3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)amino)butan-2-yl)carbamate
+- amtb1138-pb16 · AMTB1138-PB16 · (E)-N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzylidene)propan-1-amine
+- amtb1139-ba16 · AMTB1139-BA16 · (E)-N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzylidene)butan-1-amine
+- amtb1146-me16 · AMTB1146-ME16 · 1-(4-Methoxybenzyl)-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)-1H-pyrazole
+- amtb1147-ma16 · AMTB1147-MA16 · Methyl 2-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)-1H-pyrazol-1-yl)acetate
+- amtb1150-tt16 · AMTB1150-TT16 · 2,4,6-Triisobutyl-1,3,5,2,4,6-trioxatriborinane
+- amtb1151-ea16 · AMTB1151-EA16 · 4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenethyl acetate
+- amtb1152-mb16 · AMTB1152-MB16 · Methyl 2,6-difluoro-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzoate
+- amtb1153-fa16 · AMTB1153-FA16 · 3-Fluoro-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl acetate
+- amtb1155-be16 · AMTB1155-BE16 · 1,2-bis(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)ethane
+- amtb1156-mm16 · AMTB1156-MM16 · 5-Methoxycarbonyl-3-methylphenylboronic acid pinacol ester
+- amtb1157-qp16 · AMTB1157-QP16 · 8-((3aS,4S,6S,7aR)-3a,5,5-trimethylhexahydro-4,6-methanobenzo[d][1,3,2]dioxaborol-2-yl)quinoline
+- amtb1158-bo16 · AMTB1158-BO16 · 4'-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)-[1,1'-biphenyl]-2-ol
+- amtb1160-qp16 · AMTB1160-QP16 · 8-((3aR,4R,6R,7aS)-3a,5,5-trimethylhexahydro-4,6-methanobenzo[d][1,3,2]dioxaborol-2-yl)quinoline
+- amtb1161-bi16 · AMTB1161-BI16 · tert-butyl (2,6-difluoro-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)biscarbamate
+- amtb1162-ma16 · AMTB1162-MA16 · 4-Methoxy-2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl acetate
+- amtb1163-da16 · AMTB1163-DA16 · 3-(5,5-Dimethyl-1,3,2-dioxaborinan-2-yl)aniline
+- amtb1193-fa16 · AMTB1193-FA16 · 2,6-Difluoro-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)aniline
+- amtb1196-ps16 · AMTB1196-PS16 · 4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)polystyrene
+- amtb1201-ma17 · AMTB1201-MA17 · 4-methoxy-N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)aniline
+- amtb1202-em17 · AMTB1202-EM17 · 3'-Methoxybiphenyl-4-boronic acid pinacol ester
+- amtb1203-cb17 · AMTB1203-CB17 · 3'-Chlorobiphenyl-4-boronic acid pinacol ester
+- amtb1204-be17 · AMTB1204-BE17 · 2'-Chlorobiphenyl-4-boronic acid pinacol ester
+- amtb1207-ah17 · AMTB1207-AH17 · 2-Aminophenylboronic acid hydrochloride
+- amtb1209-ba17 · AMTB1209-BA17 · 4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl acetate
+- amtb1210-ep17 · AMTB1210-EP17 · N-(3-Ethoxypropyl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1211-bp17 · AMTB1211-BP17 · N-(3-butoxypropyl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb1212-pm17 · AMTB1212-PM17 · 4-(3-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenoxy)propyl)morpholine
+- amtb1213-mp17 · AMTB1213-MP17 · 1-(2-Methoxyethyl)-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)-1H-pyrazole
+- amtb1214-fb17 · AMTB1214-FB17 · 2-Fluoro-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzonitrile
+- amtb1215-ea17 · AMTB1215-EA17 · 1-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)ethanamine
+- amtb1217-fp17 · AMTB1217-FP17 · 2-Fluoropyridin-5-boronic acid
+- amtb1218-dm17 · AMTB1218-DM17 · 2-(2,5-Dimethoxyphenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1219-at17 · AMTB1219-AT17 · 4-Methyl-3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl acetate
+- amtb1220-po17 · AMTB1220-PO17 · 4-Methyl-3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenol
+- amtb1221-de17 · AMTB1221-DE17 · Diethyl 3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzylphosphonate
+- amtb1222-de17 · AMTB1222-DE17 · Diethyl 4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzylphosphonate
+- amtb1223-et17 · AMTB1223-ET17 · S-4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl ethanethioate
+- amtb1226-cm17 · AMTB1226-CM17 · 4-Chloromethylphenylboronic acid pinacol ester
+- amtb1229-pf18 · AMTB1229-PF18 · 2-Fluoro-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridine
+- amtb1231-cl18 · AMTB1231-CL18 · 3-Chloromethylphenylboronic acid pinacol ester
+- amtb1232-mt18 · AMTB1232-MT18 · 2-(m-tolyl)-1,3,2-dioxaborolane
+- amtb1236-co18 · AMTB1236-CO18 · 6-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)chroman-2-one
+- amtb1239-ur18 · AMTB1239-UR18 · 1-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)urea
+- amtb1243-ea18 · AMTB1243-EA18 · 2-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)ethanamine
+- amtb1245-pu18 · AMTB1245-PU18 · 1-(3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)urea
+- amtb1246-bu18 · AMTB1246-BU18 · 1-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)urea
+- amtb1247-ur18 · AMTB1247-UR18 · 1-(3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)urea
+- amtb1248-ft18 · AMTB1248-FT18 · 3-Formyl-2-thiopheneboronic acid pinacol ester
+- amtb1249-ib18 · AMTB1249-IB18 · 2-Isobutyl-4,4,6-trimethyl-1,3,2-dioxaborinane
+- amtb1250-bu18 · AMTB1250-BU18 · 1-(2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)urea
+- amtb1251-bc18 · AMTB1251-BC18 · tert-Butyl ((5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)thiophen-2-yl)methyl)carbamate
+- amtb1252-ea18 · AMTB1252-EA18 · 2-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenoxy)ethanamine
+- amtb1253-fd18 · AMTB1253-FD18 · 2-(4-Fluorophenyl)-5,5-dimethyl-1,3,2-dioxaborinane
+- amtb1255-bc18 · AMTB1255-BC18 · tert-Butyl ((4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)thiophen-2-yl)methyl)carbamate
+- amtb1256-ur18 · AMTB1256-UR18 · (3-Ureidophenyl)boronic acid
+- amtb1262-ff18 · AMTB1262-FF18 · 2-Formylfuran-5-boronic acid
+- amtb1266-ep19 · AMTB1266-EP19 · 4,4,5,5-Tetramethyl-2-(4-(oxiran-2-ylmethoxy)phenyl)-1,3,2-dioxaborolane
+- amtb1267-mo19 · AMTB1267-MO19 · 1-Morpholino-3-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenoxy)propan-2-ol
+- amtb1269-ca19 · AMTB1269-CA19 · Methyl (4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)carbamate
+- amtb1270-ic19 · AMTB1270-IC19 · Isobutyl (4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)carbamate
+- amtb1271-ep19 · AMTB1271-EP19 · Ethyl (4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)carbamate
+- amtb1273-mn19 · AMTB1273-MN19 · 4-Methylnaphthalene-1-boronic acid pinacol ester
+- amtb1274-mb19 · AMTB1274-MB19 · 4-Methyl-1-naphthaleneboronic acid
+- amtb1282-hb19 · AMTB1282-HB19 · 1-Hydroxy-1,3-dihydrobenzo[c][1,2]oxaborole-5-carboxylic acid
+- amtb1292-te19 · AMTB1292-TE19 · 4,4,5,5-Tetramethyl-2-[4-(3,6,9,12-tetraoxatridec-1-yloxy)phenyl]-1,3,2-dioxaborolane
+- amtb1297-ha19 · AMTB1297-HA19 · Benzamide, 2-hydroxy-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)-
+- amtb1298-mc19 · AMTB1298-MC19 · 2-Methyl-5-cyanophenylboronic acid pinacol ester
+- amtb1304-cp19 · AMTB1304-CP19 · 2-Chloropyrimidine-5-boronic acid
+- amtb1305-ce19 · AMTB1305-CE19 · 2-Chloropyrimidine-5-boronic acid pinacol ester
+- amtb1306-mp19 · AMTB1306-MP19 · 2-(4-Morpholino)pyrimidine-5-boronic acid pinacol ester
+- amtb1312-ta19 · AMTB1312-TA19 · 3-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenethyl acetate
+- amtb1313-to19 · AMTB1313-TO19 · 2-(3-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)ethan-1-ol
+- amtb1326-md20 · AMTB1326-MD20 · 1-Methyl-4-(5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyrimidin-2-yl)-1,4-diazepane
+- amtb1328-ba20 · AMTB1328-BA20 · 4-Fluoro-2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzaldehyde
+- amtb1330-fa20 · AMTB1330-FA20 · 5-Fluoro-2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl acetate
+- amtb1331-fd20 · AMTB1331-FD20 · 4-Fluoro-2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl acetate
+- amtb1332-mb20 · AMTB1332-MB20 · 2-Methoxy-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzamide
+- amtb1334-bb20 · AMTB1334-BB20 · Biphenyl-4-boronic acid
+- amtb1335-fl20 · AMTB1335-FL20 · 2-Fluorophenylboronic acid
+- amtb1340-mm20 · AMTB1340-MM20 · 4-{[2-Methoxy-4-(tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl]carbonyl}morpholine
+- amtb1341-mp20 · AMTB1341-MP20 · (2-methoxy-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)(pyrrolidin-1-yl)methanone
+- amtb1344-tt21 · AMTB1344-TT21 · 4,4,5,5-Tetramethyl-2-(5′-phenyl[1,1′:3′,1′′-terphenyl]-4-yl)-1,3,2-dioxaborolane
+- amtb1347-dm21 · AMTB1347-DM21 · 4-(2-Dimethylamino-4-ylethoxy) benzeneboronic acid pinacol ester
+- amtb1348-py21 · AMTB1348-PY21 · 4-(2-Pyrrolidine-4-ylethoxy) benzeneboronic acid pinacol ester
+- amtb1349-pe21 · AMTB1349-PE21 · 4-(2-Piperidine-4-ylethoxy) benzeneboronic acid pinacol ester
+- amtb1350-bu21 · AMTB1350-BU21 · tert-Butyl 4-(2-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenoxy)ethyl)piperazine-1-carboxylate
+- amtb1351-hp21 · AMTB1351-HP21 · 4-(2-Hydroxy-3-pyrrolidinopropoxy)phenylboronic acid pinacol ester
+- amtb1354-pp21 · AMTB1354-PP21 · 1-methyl-4-{2-[4-(tetramethyl-1,3,2-dioxaborolan-2-yl)phenoxy]ethyl}piperazine
+- amtb1355-ba21 · AMTB1355-BA21 · 3-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl acetate
+- amtb1358-mo21 · AMTB1358-MO21 · 4-(3-(3-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenoxy)propyl)morpholine
+- amtb1360-pe21 · AMTB1360-PE21 · 4,4,5,5-Tetramethyl-2-(4-phenethylphenyl)-1,3,2-dioxaborolane
+- amtb1361-bu21 · AMTB1361-BU21 · 4-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)but-3-yn-1-ol
+- amtb1362-mc21 · AMTB1362-MC21 · Methyl (3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)carbamate
+- amtb1364-bo21 · AMTB1364-BO21 · 2-([2,2'-Binaphthalen]-6-yl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1365-te21 · AMTB1365-TE21 · [1,1':3',1''-Terphenyl]-5'-ylboronic acid
+- amtb1366-di21 · AMTB1366-DI21 · 2-([1,1':3',1''-Terphenyl]-5'-yl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb1367-br21 · AMTB1367-BR21 · 2-Bromophenylboronic acid pinacol ester
+- amtb1368-tf21 · AMTB1368-TF21 · 2,2,2-Trifluoro-N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)acetamide
+- amtb1371-mb22 · AMTB1371-MB22 · Methyl 3-methyl-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzoate
+- amtb1374-th22 · AMTB1374-TH22 · (3aS,4S,6S,7aR)-2-(furan-2-yl)-3a,5,5-Trimethylhexahydro-4,6-methanobenzo[d][1,3,2]dioxaborole
+- amtb1394-bn23 · AMTB1394-BN23 · 4-(Bromomethyl)naphthalene-1-boronic acid pinacol ester
+- amtb1395-cy23 · AMTB1395-CY23 · 2-Cyano-4-methylphenylboronic acid pinacol ester
+- amtb1399-ff23 · AMTB1399-FF23 · 2-Fluoro-4-formylphenylboronic acid pinacol ester
+- amtb1400-fh23 · AMTB1400-FH23 · 2-Fluoro-4-(hydroxymethyl)phenylboronic acid pinacol ester
+- amtb1415-hb24 · AMTB1415-HB24 · 5-Hydroxy-2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzaldehyde
+- amtb1475-ph26 · AMTB1475-PH26 · 5,5-Diethyl-2-phenyl-1,3,2-dioxaborinane
+- amtb1476-to26 · AMTB1476-TO26 · 5,5-Diethyl-2-(p-tolyl)-1,3,2-dioxaborinane
+- amtb1477-fl26 · AMTB1477-FL26 · 5,5-Diethyl-2-(4-fluorophenyl)-1,3,2-dioxaborinane
+- amtb232-bp09 · AMTB232-BP09 · 2-[4-(2-Benzyloxy-ethoxy)-phenyl]-4,4,5,5-tetramethyl-[1,3,2]dioxaborolane
+- amtb269-pc10 · AMTB269-PC10 · [4-(Piperidine-1-carbonyl)phenyl] boronic acid
+- amtb337-fb10 · AMTB337-FB10 · 9H-Fluorene-2-boronic acid
+- amtb385-hp10 · AMTB385-HP10 · (3-hydroxyphenyl)boronic acid
+- amtb386-bp10 · AMTB386-BP10 · (4-butylphenyl)boronic acid
+- amtb387-th10 · AMTB387-TH10 · (3-hydroxyphenyl)boronic acid pinacol ester
+- amtb388-tn10 · AMTB388-TN10 · 4,4,5,5-tetramethyl-2-(3-(4-nitrophenoxy)phenyl)-1,3,2-dioxaborolane
+- amtb389-ts10 · AMTB389-TS10 · trimethyl(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenethyl)silane
+- amtb393-dt10 · AMTB393-DT10 · 2-(2,3-dimethylphenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb394-dt10 · AMTB394-DT10 · (2,3-dimethylphenyl)boronic acid
+- amtb396-eh10 · AMTB396-EH10 · 2-[4-(2-Ethyl-hexyloxy)-phenyl]-4,4,5,5-tetramethyl-[1,3,2]dioxaborolane
+- amtb403-tm10 · AMTB403-TM10 · (5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)thiophen-2-yl)methanol
+- amtb407-tb10 · AMTB407-TB10 · 4-(3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenoxy)benzonitrile
+- amtb408-tm10 · AMTB408-TM10 · 4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzylamine
+- amtb410-tm10 · AMTB410-TM10 · 2-(4-((2-methoxyethoxy)methyl)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb411-me10 · AMTB411-ME10 · 2-(4-((2-(2-methoxyethoxy)ethoxy)methyl)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb412-to10 · AMTB412-TO10 · 2-(4-(2,5,8,11-tetraoxadodecyl)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb413-po10 · AMTB413-PO10 · 2-(4-(2,5,8,11,14-pentaoxapentadecyl)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb415-ch10 · AMTB415-CH10 · N-(Cyclohexylmethyl)-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzamide
+- amtb416-td10 · AMTB416-TD10 · N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)methanesulfonamide
+- amtb418-tb10 · AMTB418-TB10 · 3-Tolylboronic acid pinacol ester
+- amtb419-tf10 · AMTB419-TF10 · (4-(trifluoromethyl)phenyl)boronic acid
+- amtb420-tm10 · AMTB420-TM10 · (4-(trifluoromethoxy)phenyl)boronic acid
+- amtb421-ch10 · AMTB421-CH10 · 4-Chlorophenylboronic acid pinacol ester
+- amtb422-tb10 · AMTB422-TB10 · 3-Tolylboronic acid
+- amtb423-cp10 · AMTB423-CP10 · 3-chlorophenyl boronic acid
+- amtb424-tb10 · AMTB424-TB10 · 2-tolylboronic acid
+- amtb425-fp10 · AMTB425-FP10 · 2-Formylphenylboronic acid
+- amtb426-bp10 · AMTB426-BP10 · 4-Bromophenylboronic acid pinacol ester
+- amtb427-tm10 · AMTB427-TM10 · (4-(trifluoromethoxy)phenyl) boronic acid pinacol ester
+- amtb428-tp10 · AMTB428-TP10 · 2-tolylboronic acid pinacol ester
+- amtb436-as10 · AMTB436-AS10 · 4-(Aminosulfonyl)phenylboronic acid pinacol ester
+- amtb440-ms10 · AMTB440-MS10 · 4-(Methylsulfonyl)phenylboronic acid
+- amtb444-mm11 · AMTB444-MM11 · methyl 2-methyl-2-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)propanoate
+- amtb445-id11 · AMTB445-ID11 · 2-[3-(4,4,5,5-Tetramethyl-[1,3,2]dioxaborolan-2-yl)-benzyl]-isoindole-1,3-dione
+- amtb446-pd11 · AMTB446-PD11 · 1-[3-(4,4,5,5-Tetramethyl-[1,3,2]dioxaborolan-2-yl)-benzyl]-pyrrolidine-2,5-dione
+- amtb447-bp11 · AMTB447-BP11 · 1-[3-(4,4,5,5-Tetramethyl-[1,3,2]dioxaborolan-2-yl)-benzyl]-1H-pyrazole
+- amtb448-mm11 · AMTB448-MM11 · 2-(4-(Methoxymethyl)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb449-ht11 · AMTB449-HT11 · 3-Hexyl-2-thiopheneboronic acid pinacol ester
+- amtb450-tp11 · AMTB450-TP11 · 1-(3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)-1H-pyrrole-2,5-dione
+- amtb472-nt11 · AMTB472-NT11 · 3-Nonyl-2-thiopheneboronic acid pinacol ester
+- amtb491-dp14 · AMTB491-DP14 · 2-(2-{Dimethyl-[4-(4,4,5,5-tetramethyl-[1,3,2]dioxaborolan-2-yl)-phenyl]-silanyl}-benzyloxy)-tetrahydro-pyran
+- amtb492-dd14 · AMTB492-DD14 · (2-{Dimethyl-[4-(4,4,5,5-tetramethyl-[1,3,2]dioxaborolan-2-yl)-phenyl]-silanyl}-phenyl)-methanol
+- amtb493-as14 · AMTB493-AS14 · Acetic acid 2-{dimethyl-[4-(4,4,5,5-tetramethyl-[1,3,2]dioxaborolan-2-yl)-phenyl]-silanyl}-benzyl ester
+- amtb500-to11 · AMTB500-TO11 · 4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzaldehyde oxime
+- amtb504-tp11 · AMTB504-TP11 · 2-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)-2,3-dihydro-1H-perimidine
+- amtb510-qb11 · AMTB510-QB11 · 8-Quinolineboronic acid
+- amtb512-ba11 · AMTB512-BA11 · 1,2-bis(3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)ethyne
+- amtb516-fm11 · AMTB516-FM11 · 2-Fluoro-4-(methoxycarbonyl)phenylboronic acid pinacol ester
+- amtb518-mc11 · AMTB518-MC11 · 5-Methoxycarbonyl-2-methylphenylboronic acid pinacol ester
+- amtb519-am11 · AMTB519-AM11 · 4-Amino-2-methylphenylboronic acid pinacol ester
+- amtb522-tb11 · AMTB522-TB11 · 2-Thiopheneboronic acid pinacol ester
+- amtb528-tm12 · AMTB528-TM12 · 4-((Thiomorpholino)methyl)phenyl boronic acid pinacol ester
+- amtb529-tb12 · AMTB529-TB12 · 4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzylamine hydrochloride
+- amtb530-mh12 · AMTB530-MH12 · 4-((morpholino)methyl)phenylboronic acid pinacol ester hydrochloride
+- amtb532-da12 · AMTB532-DA12 · 4-((Dimethylaminomethyl)phenylboronic acid pinacol ester
+- amtb534-ah12 · AMTB534-AH12 · 4-((Dimethylaminomethyl)phenylboronic acid pinacol ester hydrochloride
+- amtb535-bh12 · AMTB535-BH12 · (3-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)methanamine hydrochloride
+- amtb537-dm12 · AMTB537-DM12 · 2-(3,5-dimethoxyphenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb538-br12 · AMTB538-BR12 · 2-(3,5-dibromophenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb539-bp12 · AMTB539-BP12 · 2-bromo-6-methoxy-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridine
+- amtb540-mp12 · AMTB540-MP12 · 2-(3-bromo-5-methoxyphenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb541-ep12 · AMTB541-EP12 · 2-(4-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)piperazin-1-yl)ethanol
+- amtb542-mo12 · AMTB542-MO12 · 4-Methoxyphenylboronic acid pinacol ester
+- amtb543-bm12 · AMTB543-BM12 · 2-Bromomethylphenylboronic acid
+- amtb544-me12 · AMTB544-ME12 · 2-Methoxyphenylboronic acid pinacol ester
+- amtb566-cp12 · AMTB566-CP12 · 3-Cyanophenylboronic acid
+- amtb567-fb12 · AMTB567-FB12 · 3-Fluorophenylboronic acid
+- amtb568-pa12 · AMTB568-PA12 · 3-Pyridylboronic acid
+- amtb569-cp12 · AMTB569-CP12 · 2-Chlorophenylboronic acid
+- amtb570-fa12 · AMTB570-FA12 · 2-Fluorophenylboronic acid
+- amtb571-pb12 · AMTB571-PB12 · 4-Pyridylboronic acid
+- amtb575-di12 · AMTB575-DI12 · 2,6-Diisopropylphenylboronic acid
+- amtb576-cp12 · AMTB576-CP12 · 2-Chlorophenylboronic acid pinacol ester
+- amtb577-mb12 · AMTB577-MB12 · 2'-Methoxybiphenyl-4-boronic acid pinacol ester alternative name: 2-(2'-Methoxy-biphenyl-4-yl)-4,4,5,5-tetramethyl-[1,3,2]dioxaborolane
+- amtb578-mm12 · AMTB578-MM12 · 2-(3-(methoxymethyl)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb579-pm12 · AMTB579-PM12 · 3-((Piperidine)methyl) phenylboronic acid pinacol ester hydrochloride
+- amtb580-tm12 · AMTB580-TM12 · 2-(4-(2-methoxyethoxy)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb581-me12 · AMTB581-ME12 · 2-(4-(2-(2-methoxyethoxy)ethoxy)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb582-to12 · AMTB582-TO12 · 2-(4-(2-(2-(2-methoxyethoxy)ethoxy)ethoxy)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb583-dp12 · AMTB583-DP12 · 2,6-dimethoxy-3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridine
+- amtb584-aa12 · AMTB584-AA12 · N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)acetamide
+- amtb585-br12 · AMTB585-BR12 · 2-bromo-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridine
+- amtb586-tm12 · AMTB586-TM12 · 3,4,5-Trimethoxyphenylboronic acid pinacol ester
+- amtb587-dm12 · AMTB587-DM12 · 2,4-Dimethoxyphenylboronic acid pinacol ester
+- amtb588-an12 · AMTB588-AN12 · 4-Aminophenylboronic acid pinacol ester
+- amtb589-ho12 · AMTB589-HO12 · 4-Hydroxyphenylboronic acid pinacol ester
+- amtb590-py12 · AMTB590-PY12 · 4-Pyrazoleboronic acid pinacol ester
+- amtb593-at12 · AMTB593-AT12 · N-(3-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)acetamide
+- amtb595-fa12 · AMTB595-FA12 · N-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)formamide
+- amtb596-db12 · AMTB596-DB12 · 3,5-Dibromophenylboronic acid
+- amtb597-bt12 · AMTB597-BT12 · 5-Bromo-2-thiopheneboronic acid
+- amtb598-bc12 · AMTB598-BC12 · 4-(tert-Butoxycarbonylamino)phenyl-boronic acid pinacol ester
+- amtb601-bc12 · AMTB601-BC12 · N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)cyclopropanamine
+- amtb603-mh13 · AMTB603-MH13 · 3-((morpholino)methyl)phenylboronic acid pinacol ester hydrochloride
+- amtb604-hp13 · AMTB604-HP13 · 4-(Homopiperidine)methyl) phenylboronic acid pinacol ester hydrochloride
+- amtb609-bh13 · AMTB609-BH13 · 2-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)benzylamine hydrochloride
+- amtb610-ba13 · AMTB610-BA13 · 2-Benzyloxyphenylboronic acid
+- amtb612-bp13 · AMTB612-BP13 · 2-Benzyloxyphenylboronic acid pinacol ester
+- amtb615-nb13 · AMTB615-NB13 · Naphthalen-2-boronic acid
+- amtb616-fb13 · AMTB616-FB13 · 3-Fluorophenylboronic acid pinacol ester
+- amtb617-cb13 · AMTB617-CB13 · 3-Chlorophenylboronic acid pinacol ester
+- amtb618-bb13 · AMTB618-BB13 · 3-Bromophenylboronic acid pinacol ester
+- amtb619-dm13 · AMTB619-DM13 · 4-((Diethylamino)methyl)phenylboronic acid pinacol ester hydrochloride
+- amtb621-dp13 · AMTB621-DP13 · 4-((Di-n-propylamino)methyl)phenyl boronic acid pinacol ester hydrochloride
+- amtb624-tt13 · AMTB624-TT13 · 4,4,5,5-tetramethyl-2-(thieno[3,2-b]thiophen-2-yl)-1,3,2-dioxaborolane
+- amtb626-mt13 · AMTB626-MT13 · 4-(Methylthio)phenylboronic acid
+- amtb627-fm13 · AMTB627-FM13 · 5-Fluoro-2-methoxyphenylboronic acid
+- amtb628-fl13 · AMTB628-FL13 · 4-Fluoro-3-methylphenylboronic acid
+- amtb629-bf13 · AMTB629-BF13 · Benzofuran-2-boronic acid
+- amtb630-eb13 · AMTB630-EB13 · 4-Ethylphenylboronic acid
+- amtb631-tp13 · AMTB631-TP13 · 4-(Methylthio)phenylboronic acid pinacol ester
+- amtb632-fm13 · AMTB632-FM13 · 5-Fluoro-2-methoxyphenylboronic acid pinacol ester
+- amtb633-fp13 · AMTB633-FP13 · 4-Fluoro-3-methylphenylboronic acid pinacol ester
+- amtb634-bf13 · AMTB634-BF13 · Benzofuran-2-boronic acid pinacol ester
+- amtb635-cb13 · AMTB635-CB13 · 4'-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)-[1,1'-biphenyl]-4-carbaldehyde
+- amtb637-bm13 · AMTB637-BM13 · N-Benzyl-N-methyl-1-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)methanamine hydrochloride
+- amtb641-ep13 · AMTB641-EP13 · 4-Ethylphenylboronic acid pinacol ester
+- amtb648-cp13 · AMTB648-CP13 · 3'-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)-[1,1'-biphenyl]-4-carbaldehyde
+- amtb649-bb13 · AMTB649-BB13 · 2-(2'-(Benzyloxy)-[1,1'-biphenyl]-4-yl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb650-be13 · AMTB650-BE13 · 2-(4-(1-Bromoethyl)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb652-cb13 · AMTB652-CB13 · 5-Carboxybenzoboroxole
+- amtb654-mc13 · AMTB654-MC13 · Methyl 4'-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)-[1,1'-biphenyl]-3-carboxylate
+- amtb655-em13 · AMTB655-EM13 · 4-(1-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)ethyl)morpholine
+- amtb656-cp13 · AMTB656-CP13 · 2-Carboxyphenylboronic acid pinacol ester
+- amtb657-nm13 · AMTB657-NM13 · N-Methyl-N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)aniline
+- amtb658-ac13 · AMTB658-AC13 · 9-Anthraceneboronic acid
+- amtb661-be13 · AMTB661-BE13 · Methyl 3-(5,5-dimethyl-1,3,2-dioxaborinan-2-yl)-4-methylbenzoate
+- amtb667-cd13 · AMTB667-CD13 · 2-(Chroman-6-yl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb668-np13 · AMTB668-NP13 · 2-Naphthaleneboronic acid pinacol ester
+- amtb671-nb13 · AMTB671-NB13 · 1-Naphthaleneboronic acid pinacol ester
+- amtb673-fb13 · AMTB673-FB13 · 4-Fluorophenylboronic acid pinacol ester
+- amtb674-na13 · AMTB674-NA13 · 1-Naphthaleneboronic acid
+- amtb675-bp13 · AMTB675-BP13 · 4-Butylphenylboronic acid pinacol ester
+- amtb676-tf13 · AMTB676-TF13 · (3-(trifluoromethyl)phenyl)boronic acid
+- amtb677-mt13 · AMTB677-MT13 · 5-Methyl-2-Thiopheneboronic acid pinacol ester
+- amtb678-ia13 · AMTB678-IA13 · 4-Isopropylamino-benzene boronic acid pinacol ester
+- amtb680-tp13 · AMTB680-TP13 · 3-(Trifluoromethyl)phenylboronic acid pinacol ester
+- amtb681-th13 · AMTB681-TH13 · 3-Thiopheneboronic acid pinacol ester
+- amtb682-ac13 · AMTB682-AC13 · 4-Acetylphenylboronic acid pinacol ester
+- amtb684-me13 · AMTB684-ME13 · 2-Methoxy-N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)ethanamine
+- amtb685-be13 · AMTB685-BE13 · 1-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)ethanol
+- amtb686-pc13 · AMTB686-PC13 · [3-(Piperazine-1-carbonyl)phenyl] boronic acid pinacol ester
+- amtb687-ei13 · AMTB687-EI13 · N-Ethyl-N-isopropyl-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)aniline
+- amtb690-ap13 · AMTB690-AP13 · 9-Anthraceneboronic acid pinacol ester
+- amtb691-fm13 · AMTB691-FM13 · 3-Formyl-4-methoxyphenylboronic acid
+- amtb692-ba13 · AMTB692-BA13 · 4-sec-Butylamino-benzene boronic acid pinacol ester
+- amtb693-py13 · AMTB693-PY13 · 3-Pyridineboronic acid pinacol ester
+- amtb694-fp13 · AMTB694-FP13 · 3-Formyl-4-methoxyphenylboronic acid Pinacol ester
+- amtb695-cp13 · AMTB695-CP13 · 4-N-cyclopentylamino-benzene boronic acid pinacol ester
+- amtb696-ph13 · AMTB696-PH13 · [3-(Piperazine-1-carbonyl)phenyl] boronic acid pinacol ester hydrochloride
+- amtb697-mp13 · AMTB697-MP13 · 1-Methyl-4-(1-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)ethyl)piperazine
+- amtb699-cp13 · AMTB699-CP13 · 2-Chloropyridine-5-boronic acid
+- amtb702-pc13 · AMTB702-PC13 · [4-(Piperazine-1-carbonyl)phenyl] boronic acid pinacol ester hydrochloride
+- amtb706-ad13 · AMTB706-AD13 · (Z)-1-acetyl-3-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzylidene)piperazine-2,5-dione
+- amtb708-ip10 · AMTB708-IP10 · 4-Iodo-3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenol
+- amtb721-cp13 · AMTB721-CP13 · 2-Cyanophenylboronic acid
+- amtb731-nb13 · AMTB731-NB13 · 3-nitrophenylboronic acid
+- amtb740-bd13 · AMTB740-BD13 · Benzo[c][1,2,5]oxadiazole-5-boronic acid
+- amtb741-ip13 · AMTB741-IP13 · 4-Iodo-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenol
+- amtb742-cb13 · AMTB742-CB13 · 2-Cyanophenylboronic acid pinacol ester
+- amtb743-me13 · AMTB743-ME13 · N-(2-Methoxyethyl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb744-im13 · AMTB744-IM13 · 2-Iodo-5-methoxyphenylboronic acid
+- amtb746-ab13 · AMTB746-AB13 · 4-((4-Acetylpiperazine)methyl) phenylboronic acid pinacol ester
+- amtb747-cp13 · AMTB747-CP13 · 3-Cyanophenylboronic acid pinacol ester
+- amtb748-db14 · AMTB748-DB14 · N,N-Dimethyl-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzamide
+- amtb750-pp13 · AMTB750-PP13 · 1-Methyl-4-(5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-yl)piperazine
+- amtb753-bp13 · AMTB753-BP13 · N-Benzyl-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb754-ct13 · AMTB754-CT13 · 3-Chloro-2-thiopheneboronic acid
+- amtb755-ct13 · AMTB755-CT13 · N-Cyclohexyl-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb756-br13 · AMTB756-BR13 · 4-Bromomethylphenylboronic acid
+- amtb759-np13 · AMTB759-NP13 · 3-Nitrophenylboronic acid pinacol ester
+- amtb760-ms13 · AMTB760-MS13 · 4-(Methylsulfonyl)phenylboronic acid pinacol ester
+- amtb763-pp13 · AMTB763-PP13 · 6-(Piperidin-1-yl)pyridine-3-boronic acid pinacol ester
+- amtb764-da13 · AMTB764-DA13 · 3-((Dimethylaminomethyl)phenylboronic acid pinacol ester
+- amtb765-pe13 · AMTB765-PE13 · (Z)-1,2-Bis(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)ethene
+- amtb766-dh13 · AMTB766-DH13 · 3-((Diethylamino)methyl)phenylboronic acid pinacol ester Hydrochloride
+- amtb767-dp13 · AMTB767-DP13 · 3-((Di-n-propylamino)methyl)phenylboronic acid pinacol ester
+- amtb768-ti13 · AMTB768-TI13 · tert-Butyl 5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)-1H-indole-1-carboxylate
+- amtb769-pp13 · AMTB769-PP13 · 3-((Pyrrolidine)methyl)phenylboronic acid pinacol ester
+- amtb770-de13 · AMTB770-DE13 · 3-((Diethylaminomethyl)phenylboronic acid pinacol ester
+- amtb771-pe13 · AMTB771-PE13 · 3-((Piperidine)methyl) phenylboronic acid pinacol ester
+- amtb772-mc13 · AMTB772-MC13 · (4-Methoxycarbonylmethyl)phenylboronic acid pinacol ester
+- amtb773-mn13 · AMTB773-MN13 · 1-Methylnaphthalene-2-boronic acid
+- amtb775-ms13 · AMTB775-MS13 · 4-(Morpholinosulfonyl)phenylboronic acid pinacol ester
+- amtb776-bi13 · AMTB776-BI13 · tert-Butyl 5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)indoline-1-carboxylate
+- amtb777-tt13 · AMTB777-TT13 · 6-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)-1-tosyl-1H-indole
+- amtb778-bp13 · AMTB778-BP13 · 1-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)piperazine
+- amtb783-tm13 · AMTB783-TM13 · 2-(3-(2-methoxyethoxy)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb787-ms13 · AMTB787-MS13 · 1-(Methylsulfonyl)-4-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)piperazine
+- amtb788-ap13 · AMTB788-AP13 · 3-Acetamidophenylboronic acid
+- amtb789-bm13 · AMTB789-BM13 · (5-Bromo-2-methoxyphenyl)boronic acid
+- amtb791-pa13 · AMTB791-PA13 · 4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl acetate
+- amtb792-ac13 · AMTB792-AC13 · 3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl acetate
+- amtb795-ma13 · AMTB795-MA13 · 3-(N-Methylaminocarbonyl) phenylboronic acid pinacol ester
+- amtb796-po13 · AMTB796-PO13 · 4-Phenoxyphenylboronic Acid
+- amtb797-ms13 · AMTB797-MS13 · tert-Butyl 4-((4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)sulfonyl)piperazine-1-carboxylate
+- amtb798-cf13 · AMTB798-CF13 · 3-Chloro-4-fluorophenylboronic acid
+- amtb799-ct13 · AMTB799-CT13 · 5-Chlorothiophene-2-boronic acid
+- amtb800-ft13 · AMTB800-FT13 · 3-Formylthiophene-2-boronic acid
+- amtb802-mn14 · AMTB802-MN14 · Methyl 6-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)-2-naphthoate
+- amtb803-to14 · AMTB803-TO14 · 5-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)isobenzofuran-1(3H)-one
+- amtb806-de14 · AMTB806-DE14 · 4-(N,N-diethylsulfonyl)phenylboronic acid pinacol ester
+- amtb812-fn14 · AMTB812-FN14 · 2-Fluoro-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzonitrile
+- amtb814-dm14 · AMTB814-DM14 · 3,4-Dimethoxyphenylboronic acid pinacol ester
+- amtb819-am14 · AMTB819-AM14 · 3-Acetoxy-4-methoxyphenylboronic acid pinacol ester
+- amtb821-mo14 · AMTB821-MO14 · Methyl 2-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenoxy)acetate
+- amtb826-ft14 · AMTB826-FT14 · 2-Formylthiophene-4-boronic acid pinacol ester
+- amtb828-mp14 · AMTB828-MP14 · N-(3-Methoxypropyl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb830-bm14 · AMTB830-BM14 · 5-Bromo-2-methoxyphenylboronic acid pinacol ester
+- amtb831-mn14 · AMTB831-MN14 · 2-Methoxy-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzonitrile
+- amtb832-me14 · AMTB832-ME14 · N-(3-(2-methoxyethoxy)propyl)-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-amine
+- amtb834-mt14 · AMTB834-MT14 · 4-((4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)thiophen-2-yl)methyl)morpholine
+- amtb836-ts14 · AMTB836-TS14 · N-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)stearamide
+- amtb839-me14 · AMTB839-ME14 · 2-Bromo-5-methoxyphenylboronic acid pinacol ester
+- amtb841-bm14 · AMTB841-BM14 · (2-Bromo-5-methoxyphenyl)boronic acid
+- amtb842-me14 · AMTB842-ME14 · 4-(2-Morpholin-4-ylethoxy) benzeneboronic acid pinacol ester
+- amtb845-ps14 · AMTB845-PS14 · 4-(piperidinylsulfonyl)phenylboronic acid pinacol ester
+- amtb856-mp14 · AMTB856-MP14 · N-(3-Methoxypropyl)-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzamide
+- amtb857-eo14 · AMTB857-EO14 · 4-Ethoxyphenylboronic acid pinacol ester
+- amtb860-pa14 · AMTB860-PA14 · 3-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenoxy)propyl acetate
+- amtb865-di14 · AMTB865-DI14 · N,N-Dipropyl-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzamide
+- amtb868-bo14 · AMTB868-BO14 · 4'-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)-[1,1'-biphenyl]-4-ol
+- amtb872-bu14 · AMTB872-BU14 · 4-Butoxyphenylboronic acid pinacol ester
+- amtb874-dp14 · AMTB874-DP14 · N1,N1-Dimethyl-N2-(5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-yl)ethane-1,2-diamine
+- amtb876-en14 · AMTB876-EN14 · 2-(4-Ethoxy-3-nitrophenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb877-mp14 · AMTB877-MP14 · (3aS,4S,6S,7aR)-2-(4-Methoxyphenyl)-3a,5,5-trimethylhexahydro-4,6-methanobenzo[d][1,3,2]dioxaborole
+- amtb880-bb14 · AMTB880-BB14 · N-Butyl-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzamide
+- amtb883-mn14 · AMTB883-MN14 · 2-(4-Methoxy-3-nitrophenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb885-me14 · AMTB885-ME14 · 2-(4-(2-methoxyethoxy)-3-nitrophenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb886-dm14 · AMTB886-DM14 · Potassium 3,4-dimethoxyphenyltifluoroborate
+- amtb888-pa14 · AMTB888-PA14 · Potassium 4-acetamidophenyltifluoroborate
+- amtb889-en14 · AMTB889-EN14 · 2-Ethoxy-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzonitrile
+- amtb891-bb14 · AMTB891-BB14 · 2-Benzyloxy-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzonitrile
+- amtb892-pa14 · AMTB892-PA14 · N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)propionamide
+- amtb894-ib14 · AMTB894-IB14 · N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)isobutyramide
+- amtb895-mb14 · AMTB895-MB14 · 2-(4-((4-Methoxybenzyl)oxy)phenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb896-mt14 · AMTB896-MT14 · 2-Mesityl-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb897-pr14 · AMTB897-PR14 · N-(3-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)propionamide
+- amtb898-bb14 · AMTB898-BB14 · Butylboronic acid
+- amtb899-eb14 · AMTB899-EB14 · Ethylboronic acid
+- amtb901-pa14 · AMTB901-PA14 · N-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)isobutyramide
+- amtb903-ba14 · AMTB903-BA14 · N-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)butyramide
+- amtb904-pp14 · AMTB904-PP14 · (3aS,4S,6S,7aR)-3a,5,5-Trimethyl-2-phenylhexahydro-4,6-methanobenzo[d][1,3,2]dioxaborole
+- amtb905-po14 · AMTB905-PO14 · 4-(4-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenoxy)benzaldehyde
+- amtb907-no14 · AMTB907-NO14 · 2-Nitrophenylboronic acid
+- amtb908-bd14 · AMTB908-BD14 · 1,4-Benzodioxane-6-boronic acid, pinacol ester
+- amtb909-cp14 · AMTB909-CP14 · 4-(3-Carboxypropanamido)phenylboronic acid pinacol ester
+- amtb910-hd14 · AMTB910-HD14 · 2-(3-Hydroxy-2,2-dimethylpropoxy)-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzonitrile
+- amtb912-ph14 · AMTB912-PH14 · 4-Phenoxyphenylboronic acid pinacol ester
+- amtb914-cy14 · AMTB914-CY14 · 2-(cyclohexylmethoxy)-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzonitrile
+- amtb915-cc14 · AMTB915-CC14 · 2-cyclopentyl-1-oxo-3-(4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)-1,2,3,4-tetrahydroisoquinoline-4-carboxylic acid
+- amtb916-np14 · AMTB916-NP14 · 2-Nitrophenylboronic acid pinacol ester
+- amtb919-me14 · AMTB919-ME14 · 2-(2-methoxyethoxy)-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzonitrile
+- amtb920-pn14 · AMTB920-PN14 · 4,4,5,5-tetramethyl-2-(3-nitro-4-phenoxyphenyl)-1,3,2-dioxaborolane
+- amtb921-bp14 · AMTB921-BP14 · tert-Butyl 4-(5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)pyridin-2-yl)piperazine-1-carboxylate
+- amtb923-an14 · AMTB923-AN14 · 2-Aminophenylboronic acid pinacol ester
+- amtb924-hy14 · AMTB924-HY14 · 2-Hydroxyphenylboronic acid
+- amtb925-st14 · AMTB925-ST14 · N-(3-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)stearamide
+- amtb926-bp14 · AMTB926-BP14 · tert-Butyl 4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)-1H-pyrazole-1-carboxylate
+- amtb929-ho14 · AMTB929-HO14 · 2-Hydroxyphenylboronic acid pinacol ester
+- amtb932-pb14 · AMTB932-PB14 · N-Propyl-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzamide
+- amtb937-mp14 · AMTB937-MP14 · 1-Methyl-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)-1H-pyrazole
+- amtb940-bc14 · AMTB940-BC14 · tert-Butyl (2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl) carbonate
+- amtb941-di14 · AMTB941-DI14 · 2,6-Diisopropyl-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl acetate
+- amtb943-ap14 · AMTB943-AP14 · 4-Aminophenylboronic acid pinacol ester hydrochloride
+- amtb944-ab14 · AMTB944-AB14 · 4-Acetylphenylboronic acid
+- amtb945-pe14 · AMTB945-PE14 · 2-Pentyloxy-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzonitrile
+- amtb946-ah14 · AMTB946-AH14 · 3-Aminophenylboronic acid pinacol ester hydrochloride
+- amtb947-ab14 · AMTB947-AB14 · 2-Aminophenylboronic acid
+- amtb948-ft14 · AMTB948-FT14 · 5-Formyl-3-thiopheneboronic acid
+- amtb949-tb14 · AMTB949-TB14 · 2-Thiopheneboronic acid
+- amtb950-ab14 · AMTB950-AB14 · 2-Aminophenylboronic acid pinacol ester hydrochloride
+- amtb951-th14 · AMTB951-TH14 · 3-Thiopheneboronic acid
+- amtb952-te14 · AMTB952-TE14 · 1-(4-((3aS,4S,6S,7aR)-3a,5,5-Trimethylhexahydro-4,6-methanobenzo[d][1,3,2]dioxaborol-2-yl)phenyl)ethanone
+- amtb953-mp14 · AMTB953-MP14 · 2-Methoxy-5-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenol
+- amtb959-ma14 · AMTB959-MA14 · 4-Acetoxy-3-methoxyphenylboronic acid pinacol ester
+- amtb963-ip14 · AMTB963-IP14 · (3aS,4S,6S,7aR)-2-(4-Iodophenyl)-3a,5,5-trimethylhexahydro-4,6-methanobenzo[d][1,3,2]dioxaborole
+- amtb964-ap14 · AMTB964-AP14 · N-(2-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)acetamide
+- amtb965-bb14 · AMTB965-BB14 · 3-Biphenylboronic acid
+- amtb968-dp14 · AMTB968-DP14 · 5,5-Dimethyl-2-phenyl-1,3,2-dioxaborinane
+- amtb969-pm14 · AMTB969-PM14 · 1-(2-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)pyrrolidine
+- amtb970-tp14 · AMTB970-TP14 · 4,4,6-Trimethyl-2-phenyl-1,3,2-dioxaborinane
+- amtb971-fd14 · AMTB971-FD14 · 2-(4-Fluorophenyl)-5,5-dimethyl-1,3,2-dioxaborinane
+- amtb972-ct14 · AMTB972-CT14 · 4-(4,4,6-Trimethyl-1,3,2-dioxaborinan-2-yl)benzonitrile
+- amtb973-dt14 · AMTB973-DT14 · 5,5-Dimethyl-2-(p-tolyl)-1,3,2-dioxaborinane
+- amtb974-me14 · AMTB974-ME14 · 2-(2-Methoxyphenyl)-4,4,6-trimethyl-1,3,2-dioxaborinane
+- amtb976-bp14 · AMTB976-BP14 · 2-(4-Bromophenyl)-4,4,6-trimethyl-1,3,2-dioxaborinane
+- amtb977-mt14 · AMTB977-MT14 · 2-(2-Methylphenyl)-4,4,6-trimethyl-1,3,2-dioxaborinane
+- amtb978-et14 · AMTB978-ET14 · 1-(4-(4,4,6-Trimethyl-1,3,2-dioxaborinan-2-yl)phenyl)ethanone
+- amtb979-bp14 · AMTB979-BP14 · 2-(4-Fluoroophenyl)-4,4,6-trimethyl-1,3,2-dioxaborinane
+- amtb980-bd14 · AMTB980-BD14 · 2-(4-Bromophenyl)-5,5-dimethyl-1,3,2-dioxaborinane
+- amtb981-tc14 · AMTB981-TC14 · 3-(4,4,6-Trimethyl-1,3,2-dioxaborinan-2-yl)benzonitrile
+- amtb982-tm14 · AMTB982-TM14 · 2-(3-Methylphenyl)-4,4,6-trimethyl-1,3,2-dioxaborinane
+- amtb984-nm14 · AMTB984-NM14 · 4-(2-Nitro-4-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)phenyl)morpholine
+- amtb985-ee14 · AMTB985-EE14 · N-Ethyl-N-(2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)ethanamine
+- amtb986-mt14 · AMTB986-MT14 · 2-(4-Methylphenyl)-4,4,6-trimethyl-1,3,2-dioxaborinane
+- amtb987-it14 · AMTB987-IT14 · 2-(4-iodophenyl)-4,4,6-trimethyl-1,3,2-dioxaborinane
+- amtb988-tn14 · AMTB988-TN14 · 4,4,6-trimethyl-2-(naphthalen-2-yl)-1,3,2-dioxaborinane
+- amtb989-np14 · AMTB989-NP14 · 4,4,6-trimethyl-2-(naphthalen-1-yl)-1,3,2-dioxaborinane
+- amtb991-pp14 · AMTB991-PP14 · N-Propyl-N-(2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)propan-1-amine
+- amtb993-ta14 · AMTB993-TA14 · N-(2-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)butan-1-amine
+- amtb994-dt14 · AMTB994-DT14 · 5,5-Dimethyl-2-(m-tolyl)-1,3,2-dioxaborinane
+- amtb995-ba14 · AMTB995-BA14 · 2-Methyl-N-(2-(4,4,5,5-tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)propan-2-amine
+- amtb996-ib14 · AMTB996-IB14 · 2-(5-(Benzyloxy)-2-iodophenyl)-4,4,5,5-tetramethyl-1,3,2-dioxaborolane
+- amtb997-di14 · AMTB997-DI14 · 2-(4-Iodophenyl)-5,5-dimethyl-1,3,2-dioxaborinane
+- amtb998-ca14 · AMTB998-CA14 · N-(2-(4,4,5,5-Tetramethyl-1,3,2-dioxaborolan-2-yl)benzyl)cyclopentanamine
+- amtb999-me14 · AMTB999-ME14 · 2-(4-Methoxyphenyl)-4,4,6-trimethyl-1,3,2-dioxaborinane
 
-A numeric price with no published currency is shown as the homepage price text. It is not given a currency.
+### One breakdown, more than one catalogue row
 
-Homepage cards and catalogue PDFs disagree for some SKUs (ALC-0315, SM-102, Lipid 5, AMTGC125-AT15, AMTGC187-AC16). This fixture follows the homepage card and does not blend a PDF price onto the same row.
+- /amt/ranking-on-price/2-boc-aminophenylboronic-acid/ · amtb072-b07, amtb942-ba14
+- /amt/ranking-on-price/dimethyl-3-bpin-benzylidene-barbiturate/ · amtb1205-dt17, amtb193-d09
+- /amt/ranking-on-price/dimethyl-3-bpin-benzyl-barbiturate/ · amtb1206-to17, amtb195-d09
 
