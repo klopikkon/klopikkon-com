@@ -18,12 +18,23 @@ body {
   text-rendering: auto;
 }
 
+@view-transition {
+  navigation: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  @view-transition {
+    navigation: none;
+  }
   *,
   *::before,
-  *::after {
+  *::after,
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
     animation: none !important;
+    animation-duration: 0s !important;
     transition: none !important;
   }
 }

@@ -2,7 +2,66 @@ import { esc, paragraphs, rich } from "../lib/html.mjs";
 import { url } from "../lib/paths.mjs";
 import { featuredCard, motif } from "../lib/ui.mjs";
 
-export async function build({ site, renderPage, writeFile }) {
+const FLYER_ID = "new-products-20250516";
+
+function flyerEntries(products) {
+  const rows = [];
+  for (const product of products || []) {
+    if (!product || !product.id) continue;
+    const bags = [...(product.listings || []), ...(product.alsoListedIn || [])];
+    const flyer = bags.find((item) => item && item.sourceId === FLYER_ID);
+    if (!flyer) continue;
+    rows.push({ product, flyer });
+  }
+  rows.sort((a, b) => String(a.product.sku || "").localeCompare(String(b.product.sku || ""), "en"));
+  return rows;
+}
+
+function flyerPacks(packs) {
+  if (!Array.isArray(packs) || !packs.length) {
+    return `<li><span>Pack</span> <span>quote</span></li>`;
+  }
+  return packs
+    .map((pack) => {
+      const size = pack.size ? esc(pack.size) : "Pack";
+      const price = pack.priceText || "quote";
+      return `<li><span>${size}</span> <span>${esc(price)}</span></li>`;
+    })
+    .join("");
+}
+
+function whatsNew(products) {
+  const rows = flyerEntries(products);
+  if (!rows.length) return "";
+  const pdf = rows[0].flyer.pdf || "https://www.amtechpl.com/wp-content/uploads/2025/05/New_Products_20250516.pdf";
+  const cards = rows.map(({ product, flyer }) => {
+    const publishedName = String(product.name || "").trim();
+    const href = url(`products/${encodeURIComponent(product.id)}/`);
+    const heading = publishedName || product.sku || product.id;
+    const cas = flyer.cas || product.cas || "";
+    const missing = publishedName
+      ? ""
+      : `<p class="fine">AMT has not published a name for this catalogue number.</p>`;
+    const casLine = cas ? `<p>CAS ${esc(cas)}</p>` : "";
+    return `<article class="card product-card">
+      <h3><a href="${href}">${esc(heading)}</a></h3>
+      <p class="sku">${esc(product.sku || "")}</p>
+      ${missing}
+      ${casLine}
+      <ul class="pack-list">${flyerPacks(flyer.packs)}</ul>
+    </article>`;
+  }).join("");
+  return `<section class="section" id="whats-new">
+    <p class="eyebrow">16 May 2025</p>
+    <h2>What's new</h2>
+    <p class="lede">NEW PRODUCTS MAY 2025</p>
+    <p class="fine">Prices in US dollars, from the 16 May 2025 new-products list.</p>
+    <div class="card-grid cards-wide">${cards}</div>
+    <p class="source-line">Published rows from <a href="${esc(pdf)}" rel="noopener noreferrer">New_Products_20250516.pdf</a>.</p>
+  </section>`;
+}
+
+export async function build({ site, products, renderPage, writeFile }) {
   const heroLinks = (site.hero.categories || [])
     .map((item) => `<li><a href="${url(item.path)}">${esc(item.label)}</a></li>`)
     .join("");
@@ -65,6 +124,7 @@ export async function build({ site, renderPage, writeFile }) {
     <h2>Recent AMT Brochures</h2>
     <ul>${brochures}</ul>
   </section>
+  ${whatsNew(products)}
   <section class="section" id="families">
     <h2>Product families</h2>
     <div class="card-grid">${cards}</div>

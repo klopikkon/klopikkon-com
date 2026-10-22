@@ -117,9 +117,9 @@ export function productTable(products, caption, options = {}) {
   </div>`;
 }
 
-export function familyCatalogueLink(familyId, label) {
+export function familyCatalogueLink(familyId) {
   const href = url(`catalogue/?family=${encodeURIComponent(familyId)}`);
-  return `<p><a class="btn btn-secondary" href="${href}">${esc(label)}</a></p>`;
+  return `<p><a class="btn btn-secondary" href="${href}">Search and filter this family</a></p>`;
 }
 
 export function sourceLine(label, href) {

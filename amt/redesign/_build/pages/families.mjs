@@ -1,9 +1,10 @@
+import { rm } from "node:fs/promises";
+import { join } from "node:path";
 import { esc, paragraphs } from "../lib/html.mjs";
 import { url } from "../lib/paths.mjs";
 import { breadcrumbs, familyCatalogueLink, motif, productTable, sourceLine } from "../lib/ui.mjs";
 
-const PER_GROUP = 24;
-const SHOW_ALL_AT = 48;
+const PAGE_SIZE = 40;
 
 function anchorId(value) {
   let slug = String(value || "")
@@ -78,39 +79,123 @@ function catalogueUrl(familyId, subfamily) {
   return url(`catalogue/?${params.toString()}`);
 }
 
-function visibleRows(rows, total) {
-  if (total <= SHOW_ALL_AT) return rows;
-  return rows.slice(0, PER_GROUP);
+function pagePath(base, page) {
+  const root = String(base || "").endsWith("/") ? String(base || "") : `${base}/`;
+  if (page <= 1) return root;
+  return `${root}page/${page}/`;
 }
 
-function groupBlock({ rows, caption, familyId, subfamily, total, headingId, hideSubfamily }) {
-  const heading = headingId ? `<h2 id="${esc(headingId)}">${esc(caption)}</h2>` : "";
-  const browse = subfamily
-    ? `<p><a class="btn btn-secondary" href="${catalogueUrl(familyId, subfamily)}">Browse ${esc(subfamily)} in the catalogue</a></p>`
+function pageWindow(page, pages) {
+  if (pages <= 7) return Array.from({ length: pages }, (_, index) => index + 1);
+  const keep = new Set([1, pages, page, page - 1, page + 1]);
+  const nums = [];
+  let previous = 0;
+  for (let n = 1; n <= pages; n += 1) {
+    if (!keep.has(n)) continue;
+    if (previous && n - previous > 1) nums.push("gap");
+    nums.push(n);
+    previous = n;
+  }
+  return nums;
+}
+
+function pager(base, page, pages) {
+  if (pages <= 1) return "";
+  const href = (n) => url(pagePath(base, n));
+  const prev = page > 1
+    ? `<a rel="prev" href="${href(page - 1)}">Previous</a>`
+    : `<span aria-disabled="true">Previous</span>`;
+  const next = page < pages
+    ? `<a rel="next" href="${href(page + 1)}">Next</a>`
+    : `<span aria-disabled="true">Next</span>`;
+  const nums = pageWindow(page, pages).map((item) => {
+    if (item === "gap") return `<li><span class="pager-gap" aria-hidden="true">…</span></li>`;
+    if (item === page) return `<li><span aria-current="page">${item}</span></li>`;
+    return `<li><a href="${href(item)}">${item}</a></li>`;
+  }).join("");
+  return `<nav class="pager" aria-label="Pagination">${prev}<ol>${nums}</ol>${next}<p class="fine">Page ${page} of ${pages}</p></nav>`;
+}
+
+function buildPages(groups) {
+  const rowItems = [];
+  const empties = [];
+  for (const group of groups) {
+    if (!group.rows.length) {
+      empties.push(group);
+      continue;
+    }
+    group.rows.forEach((row, index) => {
+      rowItems.push({ group, row, first: index === 0 });
+    });
+  }
+  const slices = [];
+  if (!rowItems.length) slices.push([]);
+  for (let index = 0; index < rowItems.length; index += PAGE_SIZE) {
+    slices.push(rowItems.slice(index, index + PAGE_SIZE));
+  }
+  const starts = new Map();
+  for (const group of groups) {
+    const at = rowItems.findIndex((item) => item.group === group);
+    starts.set(group.id, at === -1 ? 1 : Math.floor(at / PAGE_SIZE) + 1);
+  }
+  const pages = slices.map((slice, index) => {
+    const sections = [];
+    for (const item of slice) {
+      let section = sections[sections.length - 1];
+      if (!section || section.group !== item.group) {
+        section = {
+          group: item.group,
+          rows: [],
+          continued: !item.first,
+          showId: item.first,
+        };
+        sections.push(section);
+      }
+      section.rows.push(item.row);
+    }
+    return {
+      page: index + 1,
+      pages: slices.length,
+      sections,
+      empties: index === 0 ? empties : [],
+    };
+  });
+  return { pages, starts };
+}
+
+function sectionHtml(section) {
+  const { group, rows, continued, showId } = section;
+  const caption = continued ? `${group.name}, continued` : group.name;
+  const id = showId && group.headingId ? ` id="${esc(group.headingId)}"` : "";
+  const heading = group.headingId || continued ? `<h2${id}>${esc(caption)}</h2>` : "";
+  const browse = showId && group.subfamily
+    ? `<p><a class="btn btn-secondary" href="${catalogueUrl(group.familyId, group.subfamily)}">Browse ${esc(group.subfamily)} in the catalogue</a></p>`
     : "";
+  const extra = showId && group.extra ? group.extra : "";
   if (!rows.length) {
     return `<section class="family-group">
       ${heading}
       <p>No rows for this heading are in the catalogue file yet.</p>
       ${browse}
+      ${extra}
     </section>`;
   }
-  const shown = visibleRows(rows, total);
-  const note = shown.length < rows.length
-    ? `<p class="fine">Showing ${shown.length} of ${rows.length}.</p>`
-    : "";
   return `<section class="family-group">
     ${heading}
-    ${note}
     ${browse}
-    ${productTable(shown, caption, { hideSubfamily })}
+    ${productTable(rows, caption, { hideSubfamily: group.hideSubfamily })}
+    ${extra}
   </section>`;
 }
 
-function chips(groups) {
+function chips(groups, starts, base) {
   if (!groups.length) return "";
   const items = groups
-    .map((group) => `<li><a class="chip" href="#${esc(group.id)}">${esc(group.name)} (${group.rows.length})</a></li>`)
+    .map((group) => {
+      const page = starts.get(group.id) || 1;
+      const href = url(`${pagePath(base, page)}#${group.headingId || group.id}`);
+      return `<li><a class="chip" href="${href}">${esc(group.name)} (${group.rows.length})</a></li>`;
+    })
     .join("");
   return `<ul class="chip-row">${items}</ul>`;
 }
@@ -120,75 +205,92 @@ function brochureLine(brochure) {
   return `<p><a href="${esc(brochure.href)}" rel="noopener noreferrer">${esc(brochure.label)}</a></p>`;
 }
 
-function familyListings(family, rows) {
+function catalogueGroups(family, rows) {
   const { named, rest } = groupFamily(rows, family);
   if (!named.length) {
     return {
       named,
-      html: groupBlock({
+      groups: [{
+        id: "all",
+        name: family.title,
+        headingId: "",
         rows,
-        caption: family.title,
         familyId: family.id,
         subfamily: "",
-        total: rows.length,
-        headingId: "",
         hideSubfamily: false,
-      }),
+        extra: "",
+      }],
     };
   }
-  const sections = named.map((group) => groupBlock({
+  const groups = named.map((group) => ({
+    id: group.id,
+    name: group.name,
+    headingId: group.id,
     rows: group.rows,
-    caption: group.name,
     familyId: family.id,
     subfamily: group.name,
-    total: rows.length,
-    headingId: group.id,
     hideSubfamily: true,
+    extra: "",
   }));
   if (rest.length) {
-    sections.push(groupBlock({
+    groups.push({
+      id: "rest",
+      name: family.title,
+      headingId: "rest",
       rows: rest,
-      caption: family.title,
       familyId: family.id,
       subfamily: "",
-      total: rows.length,
-      headingId: "rest",
       hideSubfamily: true,
-    }));
+      extra: "",
+    });
   }
-  return { named, html: sections.join("\n") };
+  return { named, groups };
 }
 
-function familyPage({ family, products }) {
-  const rows = listable(products.filter((product) => product && product.family === family.id));
-  const { named, html } = familyListings(family, rows);
+function familyPage({ family, pageModel, named, starts }) {
   const quote = family.quote
     ? `<blockquote><p>${esc(family.quote)}</p></blockquote><p class="fine"><a href="${url("about/#incubating")}">About Us</a></p>`
     : "";
+  const intro = pageModel.page === 1
+    ? `${paragraphs(family.paragraphs)}
+    ${quote}
+    ${brochureLine(family.brochure)}
+    ${chips(named, starts, family.path)}`
+    : `<p class="fine">Page ${pageModel.page} of ${pageModel.pages}</p>`;
+  const crumbs = [
+    { label: "Home", href: url("") },
+    { label: "Products", href: url("#families") },
+    pageModel.page === 1
+      ? { label: family.title }
+      : { label: family.title, href: url(family.path) },
+  ];
+  if (pageModel.page > 1) crumbs.push({ label: `Page ${pageModel.page}` });
+  const listings = [
+    ...pageModel.empties.map((group) => sectionHtml({ group, rows: [], continued: false, showId: true })),
+    ...pageModel.sections.map((section) => sectionHtml(section)),
+  ].join("\n");
+  const nav = pager(family.path, pageModel.page, pageModel.pages);
   return `<section class="family-hero">
   ${motif(`motif-${family.id}`)}
   <div class="wrap page-intro prose">
-    ${breadcrumbs([
-      { label: "Home", href: url("") },
-      { label: "Products", href: url("#families") },
-      { label: family.title },
-    ])}
+    ${breadcrumbs(crumbs)}
     <h1>${esc(family.title)}</h1>
-    ${paragraphs(family.paragraphs)}
-    ${quote}
-    ${brochureLine(family.brochure)}
-    ${chips(named)}
-    ${familyCatalogueLink(family.id, `Browse ${family.title} in the catalogue`)}
+    ${intro}
+    ${familyCatalogueLink(family.id)}
   </div>
 </section>
 <div class="wrap prose">
-  ${html}
+  ${nav}
+  ${listings}
+  ${nav}
   ${sourceLine(family.sourceLabel, family.sourceHref)}
 </div>`;
 }
 
 function listable(rows) {
-  return rows.filter((product) => product && product.id && String(product.name || "").trim());
+  return rows
+    .filter((product) => product && product.id && (String(product.name || "").trim() || String(product.sku || "").trim()))
+    .map((product) => (String(product.name || "").trim() ? product : { ...product, name: product.sku }));
 }
 
 function rowsForGroup(products, group) {
@@ -216,15 +318,33 @@ function literatureBlock(literature) {
   </section>`;
 }
 
-export async function build({ site, products, renderPage, writeFile }) {
+function pageLinks(base, page, pages) {
+  return [
+    page > 1 ? `<link rel="prev" href="${url(pagePath(base, page - 1))}">` : "",
+    page < pages ? `<link rel="next" href="${url(pagePath(base, page + 1))}">` : "",
+  ].join("\n");
+}
+
+export async function build({ site, products, renderPage, writeFile, outDir }) {
   for (const family of site.families) {
-    const html = renderPage({
-      title: `${family.title} - Advanced Molecular Technologies`,
-      description: family.description,
-      path: family.path,
-      body: familyPage({ family, products }),
-    });
-    await writeFile(`${family.path}index.html`, html);
+    if (outDir) await rm(join(outDir, family.path, "page"), { recursive: true, force: true });
+    const rows = listable(products.filter((product) => product && product.family === family.id));
+    const { named, groups } = catalogueGroups(family, rows);
+    const { pages, starts } = buildPages(groups);
+    for (const pageModel of pages) {
+      const path = pagePath(family.path, pageModel.page);
+      const title = pageModel.pages > 1
+        ? `${family.title} (page ${pageModel.page} of ${pageModel.pages}) - Advanced Molecular Technologies`
+        : `${family.title} - Advanced Molecular Technologies`;
+      const html = renderPage({
+        title,
+        description: family.description,
+        path,
+        head: pageLinks(family.path, pageModel.page, pageModel.pages),
+        body: familyPage({ family, pageModel, named, starts }),
+      });
+      await writeFile(`${path}index.html`, html);
+    }
   }
 
   const otherGroups = site.otherGroups || [];
@@ -237,15 +357,7 @@ export async function build({ site, products, renderPage, writeFile }) {
     ? `<section id="rest">
         <h2>Without a catalogue heading</h2>
         <p class="fine">These rows are filed as other and have no subfamily in the catalogue file.</p>
-        ${groupBlock({
-          rows: unfiled,
-          caption: "Other catalogues",
-          familyId: "other",
-          subfamily: "",
-          total: unfiled.length,
-          headingId: "",
-          hideSubfamily: true,
-        })}
+        ${productTable(unfiled, "Other catalogues", { hideSubfamily: true })}
       </section>`
     : "";
 
@@ -253,12 +365,8 @@ export async function build({ site, products, renderPage, writeFile }) {
     .map((group) => {
       const rows = rowsForGroup(products, group);
       const lit = group.id === "organosilicons" ? literatureBlock(site.literature) : "";
-      const shown = visibleRows(rows, rows.length);
-      const note = shown.length < rows.length
-        ? `<p class="fine">Showing ${shown.length} of ${rows.length}.</p>`
-        : "";
       const table = rows.length
-        ? `${note}\n${productTable(shown, group.name)}`
+        ? productTable(rows, group.name)
         : `<p>No rows for this heading are in the catalogue file yet.</p>`;
       return `<section id="${esc(group.id)}">
         <h2>${esc(group.name)}</h2>
@@ -283,6 +391,7 @@ export async function build({ site, products, renderPage, writeFile }) {
         ])}
         <h1>Other catalogues</h1>
         <p>These catalogue headings are published on the AMT site, alongside lipids, PEG reagents and linkers, fluorophores and dyes, and organoborons.</p>
+        ${familyCatalogueLink("other")}
       </div>
     </section>
     <div class="wrap prose">

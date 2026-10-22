@@ -43,6 +43,7 @@ export async function build({ site, renderPage, writeFile }) {
     ${paragraphs(about.cro.paragraphs)}
     <ul class="chip-row">${about.cro.tags.map((tag) => `<li><span class="chip">${esc(tag)}</span></li>`).join("")}</ul>
     <p><a href="${url("contact/")}">${esc(about.contactLine)}</a></p>
+    <p class="source-line">Also published at <a href="https://www.amtechpl.com/contract-services/" rel="noopener noreferrer">amtechpl.com/contract-services</a>.</p>
   </section>
   <section id="analytical-services">
     <h2>${esc(about.analyticalSummary.heading)}</h2>
