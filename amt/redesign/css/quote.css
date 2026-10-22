@@ -1,0 +1,119 @@
+/* Quote page. Colours come from the shell tokens. */
+
+.utility amt-quote-count {
+  margin-left: auto;
+}
+
+.quote {
+  max-width: 42rem;
+}
+
+.quote :focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.quote h1 {
+  margin: 0 0 var(--space-2);
+}
+
+.quote .lede,
+.quote .hint {
+  color: var(--muted);
+}
+
+.quote-lines {
+  list-style: none;
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.quote-lines:empty {
+  display: none;
+}
+
+.quote-line {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.quote-line-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.quote-line-meta {
+  margin: 0;
+  color: var(--muted);
+}
+
+.quote-qty {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.quote-qty input {
+  width: 5rem;
+  min-height: var(--tap);
+  font: inherit;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 0.3rem 0.5rem;
+}
+
+.quote-line .btn {
+  justify-self: start;
+}
+
+a.mailto[aria-disabled="true"] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.field {
+  display: grid;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--tap);
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.65rem;
+}
+
+.quote-status:empty {
+  display: none;
+}
+
+@media (min-width: 700px) {
+  .quote-line {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .quote-line-meta {
+    grid-column: 1;
+  }
+
+  .quote-qty,
+  .quote-line .btn {
+    justify-self: end;
+  }
+}
