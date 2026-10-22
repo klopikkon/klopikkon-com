@@ -7,7 +7,8 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildRankingIndex, formatPerMg, isQuotedPack, loadProducts, loadRanking, matchProduct, packMassMg, pricePerMg } from "./product-support.mjs";
+import { compareRecord } from "./pages/family-compare.mjs";
+import { buildRankingIndex, formatPerMg, isQuotedPack, loadProducts, loadRanking, matchProduct, packMassMg, pricePerMg, pubchemFields } from "./product-support.mjs";
 import { addLine, buildMailto, emptyCart, totalQty } from "../js/cart.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -69,6 +70,34 @@ assert(pricePerMg({ size: "100mg", price: null, priceText: "Quote" }) === null, 
 assert(pricePerMg({ size: "pack", price: 10, priceText: "$10" }) === null, "non-mass pack has no per-mg price");
 assert(formatPerMg({ size: "500 mg", price: 310, priceText: "$310" }) === "$0.62/mg", "formatted per mg");
 assert(formatPerMg({ size: "1 g", price: 595, priceText: "$595.00" }) === "$0.595/mg", "keeps the third decimal");
+assert(pubchemFields({ formula: "C2H6", formulaExternal: null }) === null, "AMT formula is not a PubChem field");
+const pubchem = pubchemFields({
+  formula: null,
+  formulaExternal: "C27H51NO2",
+  mwExternal: 421.7,
+  structureImageExternal: "https://pubchem.ncbi.nlm.nih.gov/image/imgsrv.fcgi?cid=1",
+  pubchemCid: 122689,
+});
+assert(pubchem.formula === "C27H51NO2" && pubchem.mw === "421.7", "PubChem formula and mw stay on the external fields");
+assert(pubchem.href === "https://pubchem.ncbi.nlm.nih.gov/compound/122689", "PubChem CID link");
+assert(pubchemFields({ cidExternal: "15" }).cid === "15", "cidExternal is accepted");
+assert(pubchemFields({ pubchemCid: "not-a-cid", formulaExternal: "C" }).href === null, "a non-numeric CID is not linked");
+const compared = compareRecord({
+  id: "sample",
+  sku: "AMT1-A",
+  name: "Sample",
+  cas: "No CAS#",
+  formula: null,
+  mw: null,
+  purity: "≥ 98%",
+  packs: [{ size: "1g", price: 10, priceText: "$10", currency: "USD" }],
+  formulaExternal: "C2H6O",
+  pubchemCid: 702,
+});
+assert(compared.cas === null, "No CAS# is not treated as a CAS in compare");
+assert(compared.formula === null, "compare formula is the AMT field");
+assert(compared.pubchem.formula === "C2H6O", "compare keeps the PubChem formula separate");
+assert(compared.pubchem.href.endsWith("/702"), "compare CID link");
 
 let cart = addLine(emptyCart(), { id: "alc-0315", sku: "AMTGC903-AL21", pack: "1g", name: "ALC-0315" });
 cart = addLine(cart, { id: "alc-0315", sku: "AMTGC903-AL21", pack: "1g", name: "ALC-0315" });
@@ -227,9 +256,35 @@ for (const [id, html] of pages) {
   else assert(!html.includes("pack-quote-only"), `${id} shows a quote-only note beside published prices`);
   if (!product.name) assert(html.includes("has not published a name"), `${id} missing unpublished-name note`);
   if (product.sku) assert(html.includes(`data-copy="${product.sku}"`), `${id} missing copy-SKU button`);
+  if (product.family) assert(html.includes(`/families/${product.family}/compare/?ids=${encodeURIComponent(id)}`), `${id} missing family compare link`);
+  const external = pubchemFields(product);
+  if (external) {
+    assert(html.includes("From PubChem"), `${id} missing PubChem section`);
+    assert(html.includes("from PubChem"), `${id} missing PubChem label`);
+    if (external.href) assert(html.includes(external.href), `${id} missing PubChem CID link`);
+    if (!product.formula) {
+      const dataBlock = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+      if (dataBlock) assert(!JSON.parse(dataBlock[1]).additionalProperty?.some((item) => item.name === "Formula"), `${id} JSON-LD used a PubChem formula`);
+    }
+  } else {
+    assert(!html.includes("From PubChem"), `${id} shows PubChem without external fields`);
+  }
   assert(html.includes("data-print-spec"), `${id} missing print spec sheet`);
   assert(html.includes("data-recent"), `${id} missing recently viewed`);
   assert(html.includes(`data-copy="https://klopikkon.com/amt/redesign/products/${id}/"`), `${id} missing share link`);
+}
+
+const families = [...new Set(products.map((product) => product.family).filter(Boolean))];
+for (const family of families) {
+  const file = path.join(redesign, "families", family, "compare", "index.html");
+  assert(existsSync(file), `missing compare page for ${family}`);
+  if (!existsSync(file)) continue;
+  const html = readFileSync(file, "utf8");
+  assert(html.includes('content="noindex,nofollow"'), `${family} compare missing noindex`);
+  assert(html.includes("Select up to 4"), `${family} compare missing the four-product limit`);
+  assert(html.includes("family-compare.js"), `${family} compare missing script`);
+  const sample = products.find((product) => product.family === family);
+  assert(html.includes(`"id":${JSON.stringify(sample.id)}`), `${family} compare data missing ${sample.id}`);
 }
 
 for (const href of extractHrefs(quoteHtml)) {

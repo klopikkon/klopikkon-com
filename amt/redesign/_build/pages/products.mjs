@@ -18,6 +18,7 @@ import {
   matchProduct,
   packLabel,
   pricePositionCopy,
+  pubchemFields,
   publishedText,
   renderPriceMatchMarkdown,
   summariseMatches,
@@ -41,6 +42,37 @@ function synonymsOf(product) {
 
 function displayName(product) {
   return publishedText(product.name) || publishedText(product.sku) || String(product.id || "");
+}
+
+export function renderPubchem(product, id) {
+  const fields = pubchemFields(product);
+  if (!fields) return "";
+  const rows = [];
+  if (fields.formula) {
+    rows.push(`<tr><th scope="row">Formula</th><td>${escapeHtml(fields.formula)} <span class="pubchem-tag">from PubChem</span></td></tr>`);
+  }
+  if (fields.mw) {
+    rows.push(`<tr><th scope="row">Molecular weight</th><td>${escapeHtml(fields.mw)} <span class="pubchem-tag">from PubChem</span></td></tr>`);
+  }
+  const link = fields.href
+    ? `<p><a href="${escapeHtml(fields.href)}" rel="noopener noreferrer">PubChem CID ${escapeHtml(fields.cid)}</a></p>`
+    : "";
+  const image = fields.image
+    ? `<figure class="structure pubchem-structure">
+        <img src="${escapeHtml(structureUrl({ structureImage: fields.image }) || fields.image)}" alt="Structure of ${escapeHtml(displayName(product))} from PubChem" width="480" height="360">
+        <figcaption>Structure from PubChem${fields.cid ? `, CID ${escapeHtml(fields.cid)}` : ""}</figcaption>
+      </figure>`
+    : "";
+  const table = rows.length
+    ? `<div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody>${rows.join("")}</tbody></table></div>`
+    : "";
+  return `<section class="pubchem" aria-labelledby="pubchem-${escapeHtml(id)}">
+    <h2 id="pubchem-${escapeHtml(id)}">From PubChem</h2>
+    <p class="fine">Not printed in the AMT catalogue.</p>
+    ${table}
+    ${image}
+    ${link}
+  </section>`;
 }
 
 function structureUrl(product) {
@@ -283,6 +315,7 @@ function renderProduct(product, all, match, site) {
         <p class="product-actions">
           <button type="button" class="btn btn-secondary" data-copy="${escapeHtml(canonical(pagePath))}" data-share>Copy link</button>
           <button type="button" class="btn btn-secondary" data-print-spec>Print spec sheet</button>
+          <a class="btn btn-secondary" href="${url(`families/${family}/compare/?ids=${encodeURIComponent(id)}`)}">Compare in ${escapeHtml(familyText)}</a>
         </p>
         ${synonymHtml}
         ${renderPosition(match)}
@@ -299,6 +332,7 @@ function renderProduct(product, all, match, site) {
       </table>
       </div>
     </section>
+    ${renderPubchem(product, id)}
     ${documents}
     ${relatedHtml}
     <section class="recent" data-recent hidden>

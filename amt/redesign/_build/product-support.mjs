@@ -506,3 +506,35 @@ export function formatPerMg(pack) {
   const symbol = (text.match(/^[^\d\s-]+/) || [""])[0];
   return `${symbol}${formatPerMgNumber(per)}/mg`;
 }
+
+function digitId(value) {
+  if (typeof value === "number" && Number.isInteger(value) && value > 0) return String(value);
+  if (typeof value === "string" && /^\d+$/.test(value.trim())) return value.trim();
+  return null;
+}
+
+/**
+ * PubChem extras. Shown only when the catalogue row carries them.
+ * They are never copied into the AMT formula, molecular weight, or structure fields.
+ * CID is `pubchemCid` or `cidExternal`.
+ */
+export function pubchemFields(product) {
+  if (!product || typeof product !== "object") return null;
+  const formula = publishedText(product.formulaExternal);
+  const mw =
+    product.mwExternal == null || product.mwExternal === "" ? null : publishedText(String(product.mwExternal));
+  const image = publishedText(product.structureImageExternal);
+  const cid =
+    digitId(product.pubchemCid) ||
+    digitId(product.cidExternal) ||
+    digitId(product.pubchem?.cid) ||
+    digitId(product.pubchem?.CID);
+  if (!formula && !mw && !image && !cid) return null;
+  return {
+    formula,
+    mw,
+    image,
+    cid,
+    href: cid ? `https://pubchem.ncbi.nlm.nih.gov/compound/${cid}` : null,
+  };
+}
