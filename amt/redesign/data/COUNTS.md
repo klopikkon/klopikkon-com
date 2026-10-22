@@ -94,9 +94,60 @@ Each `subfamily` is the heading AMT prints above that product, copied verbatim. 
 | Ionisable Lipid | 3 |
 
 
+## Name-derived class
+
+`classDerived` is a browsing facet read from the printed product name with `data/class-rules.json`. It is not an AMT heading and it is not a PubChem field. `classDerivedSource` is `"name"` when a rule matches and null otherwise. Rules run only inside the family AMT already assigned, so lipids and `other` stay null. A PEG product can carry an architecture (`mPEG`, `heterobifunctional`, `multi-arm`) and the reactive groups the name states (`NHS`, `maleimide`, `azide`, `DBCO`, `amine`, `acid`). Unknowns are null.
+
+| Family | Products | Matched | Null |
+| --- | ---: | ---: | ---: |
+| lipids | 36 | 0 | 36 |
+| peg | 212 | 129 | 83 |
+| fluorophores | 40 | 6 | 34 |
+| organoborons | 1046 | 906 | 140 |
+| other | 13 | 0 | 13 |
+| total | 1347 | 1041 | 306 |
+
+Organoboron class, first matching rule:
+
+| Class | Products |
+| --- | ---: |
+| MIDA ester | 0 |
+| trifluoroborate | 123 |
+| pinacol ester | 648 |
+| boronic acid | 135 |
+
+PEG architecture. A product is counted once. Null architecture is not listed.
+
+| Architecture | Products |
+| --- | ---: |
+| multi-arm | 0 |
+| mPEG | 2 |
+| heterobifunctional | 17 |
+
+PEG reactive groups. A product with two groups is counted under each.
+
+| Reactive group | Products |
+| --- | ---: |
+| NHS | 0 |
+| maleimide | 0 |
+| azide | 65 |
+| DBCO | 0 |
+| amine | 74 |
+| acid | 5 |
+
+Fluorophore dye core:
+
+| Dye core | Products |
+| --- | ---: |
+| Cy3 | 0 |
+| Cy5 | 0 |
+| FITC | 0 |
+| BODIPY | 6 |
+
+
 ## External reference data
 
-`formula` and `mw` are only what AMT published, and both stay null because the catalogues have no such columns. `structureImage` stays the AMT file when one was published. PubChem formula, molecular weight and the 2D depiction are `formulaExternal`, `mwExternal` and `structureImageExternal`, with `externalSource` `{name: PubChem, cid, url}`. A CAS is accepted only when PubChem returns exactly one CID. `mwNominal` is a nominal PEG mass read from the printed name (PEG2000 or PEG(400)); a short token such as PEG3 is an oligomer length and is not used.
+`formula` and `mw` are only what AMT published, and both stay null because the catalogues have no such columns. `structureImage` stays the AMT file when one was published. PubChem formula, molecular weight and the 2D depiction are `formulaExternal`, `mwExternal` and `structureImageExternal`, with `externalSource` `{name: PubChem, cid, url}`. A CAS is accepted only when PubChem returns exactly one CID. PubChem does not serve SVG. Each `structureImageExternal` file is an SVG drawn from that CID's 2D coordinates and bond annotations, one file per CID, so a page can lazy-load it. `mwNominal` is a nominal PEG mass read from the printed name (PEG2000 or PEG(400)); a short token such as PEG3 is an oligomer length and is not used.
 
 | Family | Products | Single CAS | One CID | Formula and MW | Structure image | Nominal PEG mass |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -204,6 +255,68 @@ Each `subfamily` is the heading AMT prints above that product, copied verbatim. 
     "NEW PRODUCTS MAY 2025": 7,
     "Featured Products:": 6,
     "Ionisable Lipid": 3
+  },
+  "classDerived": {
+    "derivedFrom": "name",
+    "rules": "data/class-rules.json",
+    "note": "Not an AMT heading. Counted from the printed name with data/class-rules.json. Null means no rule matched. PEG reactive-group counts are products that include that group, so one heterobifunctional product is counted under each group it names.",
+    "byFamily": {
+      "lipids": {
+        "products": 36,
+        "matched": 0,
+        "null": 36
+      },
+      "peg": {
+        "products": 212,
+        "matched": 129,
+        "null": 83,
+        "architecture": {
+          "multi-arm": 0,
+          "mPEG": 2,
+          "heterobifunctional": 17
+        },
+        "reactiveGroups": {
+          "NHS": 0,
+          "maleimide": 0,
+          "azide": 65,
+          "DBCO": 0,
+          "amine": 74,
+          "acid": 5
+        }
+      },
+      "fluorophores": {
+        "products": 40,
+        "matched": 6,
+        "null": 34,
+        "dyeCore": {
+          "Cy3": 0,
+          "Cy5": 0,
+          "FITC": 0,
+          "BODIPY": 6
+        }
+      },
+      "organoborons": {
+        "products": 1046,
+        "matched": 906,
+        "null": 140,
+        "boronClass": {
+          "MIDA ester": 0,
+          "trifluoroborate": 123,
+          "pinacol ester": 648,
+          "boronic acid": 135
+        }
+      },
+      "other": {
+        "products": 13,
+        "matched": 0,
+        "null": 13
+      },
+      "total": {
+        "products": 1347,
+        "matched": 1041,
+        "null": 306
+      }
+    }
   }
 }
 -->

@@ -1304,11 +1304,40 @@ def subfamily_lines(by_subfamily):
     return lines
 
 
+def class_lines(block):
+    families = ["lipids", "peg", "fluorophores", "organoborons", "other", "total"]
+    lines = [
+        "## Name-derived class",
+        "",
+        "`classDerived` is a browsing facet read from the printed product name with `data/class-rules.json`. It is not an AMT heading and it is not a PubChem field. `classDerivedSource` is `\"name\"` when a rule matches and null otherwise. Rules run only inside the family AMT already assigned, so lipids and `other` stay null. A PEG product can carry an architecture (`mPEG`, `heterobifunctional`, `multi-arm`) and the reactive groups the name states (`NHS`, `maleimide`, `azide`, `DBCO`, `amine`, `acid`). Unknowns are null.",
+        "",
+        "| Family | Products | Matched | Null |",
+        "| --- | ---: | ---: | ---: |",
+    ]
+    for family in families:
+        row = block["byFamily"][family]
+        lines.append(f"| {family} | {row['products']} | {row['matched']} | {row['null']} |")
+    lines.extend(["", "Organoboron class, first matching rule:", "", "| Class | Products |", "| --- | ---: |"])
+    for label, count in block["byFamily"]["organoborons"]["boronClass"].items():
+        lines.append(f"| {label} | {count} |")
+    lines.extend(["", "PEG architecture. A product is counted once. Null architecture is not listed.", "", "| Architecture | Products |", "| --- | ---: |"])
+    for label, count in block["byFamily"]["peg"]["architecture"].items():
+        lines.append(f"| {label} | {count} |")
+    lines.extend(["", "PEG reactive groups. A product with two groups is counted under each.", "", "| Reactive group | Products |", "| --- | ---: |"])
+    for label, count in block["byFamily"]["peg"]["reactiveGroups"].items():
+        lines.append(f"| {label} | {count} |")
+    lines.extend(["", "Fluorophore dye core:", "", "| Dye core | Products |", "| --- | ---: |"])
+    for label, count in block["byFamily"]["fluorophores"]["dyeCore"].items():
+        lines.append(f"| {label} | {count} |")
+    lines.append("")
+    return lines
+
+
 def pubchem_lines(stats):
     lines = [
         "## External reference data",
         "",
-        "`formula` and `mw` are only what AMT published, and both stay null because the catalogues have no such columns. `structureImage` stays the AMT file when one was published. PubChem formula, molecular weight and the 2D depiction are `formulaExternal`, `mwExternal` and `structureImageExternal`, with `externalSource` `{name: PubChem, cid, url}`. A CAS is accepted only when PubChem returns exactly one CID. `mwNominal` is a nominal PEG mass read from the printed name (PEG2000 or PEG(400)); a short token such as PEG3 is an oligomer length and is not used.",
+        "`formula` and `mw` are only what AMT published, and both stay null because the catalogues have no such columns. `structureImage` stays the AMT file when one was published. PubChem formula, molecular weight and the 2D depiction are `formulaExternal`, `mwExternal` and `structureImageExternal`, with `externalSource` `{name: PubChem, cid, url}`. A CAS is accepted only when PubChem returns exactly one CID. PubChem does not serve SVG. Each `structureImageExternal` file is an SVG drawn from that CID's 2D coordinates and bond annotations, one file per CID, so a page can lazy-load it. `mwNominal` is a nominal PEG mass read from the printed name (PEG2000 or PEG(400)); a short token such as PEG3 is an oligomer length and is not used.",
         "",
         "| Family | Products | Single CAS | One CID | Formula and MW | Structure image | Nominal PEG mass |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
@@ -1335,6 +1364,8 @@ def carry_external(products):
         "externalSource",
         "mwNominal",
         "mwNominalSource",
+        "classDerived",
+        "classDerivedSource",
     )
     for product in products:
         old = previous.get(product["sku"])
@@ -1365,6 +1396,8 @@ def write_counts(products, row_counts, collapse_notes, discrepancies, anomalies,
         previous_counts = json.loads(counts_path.read_text())
         if "pubchem" in previous_counts:
             payload["pubchem"] = previous_counts["pubchem"]
+        if "classDerived" in previous_counts:
+            payload["classDerived"] = previous_counts["classDerived"]
     (ROOT / "data" / "counts.json").write_text(json.dumps(payload, indent=2) + "\n")
     lines = []
     lines.append("# Catalogue counts")
@@ -1464,6 +1497,8 @@ def write_counts(products, row_counts, collapse_notes, discrepancies, anomalies,
     lines.append("- Unpublished prices use `price` null and `priceText` `\"quote\"`. `priceRaw` keeps the printed token (`POA`, `Price on application`, or a masked `########`).")
     lines.append("")
     lines.extend(subfamily_lines(payload["bySubfamily"]))
+    if payload.get("classDerived"):
+        lines.extend(class_lines(payload["classDerived"]))
     if payload.get("pubchem"):
         lines.extend(pubchem_lines(payload["pubchem"]))
     lines.append("## Not extracted")

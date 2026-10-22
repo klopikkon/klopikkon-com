@@ -28,7 +28,9 @@
       "structureImageExternal",
       "externalSource",
       "mwNominal",
-      "mwNominalSource"
+      "mwNominalSource",
+      "classDerived",
+      "classDerivedSource"
     ],
     "properties": {
       "id": {
@@ -101,6 +103,55 @@
         "description": "Nominal PEG mass read from the printed name, such as PEG2000. Not an AMT measurement and not a PubChem value."
       },
       "mwNominalSource": {
+        "anyOf": [{ "type": "null" }, { "const": "name" }]
+      },
+      "classDerived": {
+        "description": "Browsing class read from the printed product name with data/class-rules.json. Not an AMT heading. Null when no rule matches.",
+        "anyOf": [
+          { "type": "null" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["derivedFrom", "rules", "boronClass"],
+            "properties": {
+              "derivedFrom": { "const": "name" },
+              "rules": { "const": "data/class-rules.json" },
+              "boronClass": { "enum": ["boronic acid", "pinacol ester", "MIDA ester", "trifluoroborate"] }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["derivedFrom", "rules", "architecture", "reactiveGroups"],
+            "properties": {
+              "derivedFrom": { "const": "name" },
+              "rules": { "const": "data/class-rules.json" },
+              "architecture": { "anyOf": [{ "type": "null" }, { "enum": ["mPEG", "heterobifunctional", "multi-arm"] }] },
+              "reactiveGroups": {
+                "anyOf": [
+                  { "type": "null" },
+                  {
+                    "type": "array",
+                    "items": { "enum": ["NHS", "maleimide", "azide", "DBCO", "amine", "acid"] }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["derivedFrom", "rules", "dyeCore"],
+            "properties": {
+              "derivedFrom": { "const": "name" },
+              "rules": { "const": "data/class-rules.json" },
+              "dyeCore": { "enum": ["Cy3", "Cy5", "FITC", "BODIPY"] }
+            }
+          }
+        ]
+      },
+      "classDerivedSource": {
+        "description": "\"name\" when classDerived was read from the printed product name. Null when classDerived is null.",
         "anyOf": [{ "type": "null" }, { "const": "name" }]
       },
       "purity": {

@@ -6,7 +6,11 @@ PubChem's registry-number lookup returns exactly one CID. Responses are cached
 under data/raw/pubchem/. Nominal PEG masses (PEG2000, PEG(400)) are read from
 the printed name into `mwNominal`.
 
-Re-run safe: cached CAS and CID responses are not fetched again.
+PUG REST serves 2D drawings as PNG, not SVG. The file under
+assets/structures/pubchem/ is an SVG drawn from the 2D record coordinates.
+Each file stands alone, so a page can lazy-load it.
+
+Re-run safe: cached CAS, property and 2D-record responses are not fetched again.
 """
 
 from __future__ import annotations
@@ -20,6 +24,8 @@ import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+
+from depict_pubchem import to_svg, trim_record
 
 ROOT = Path("/workspace/amt/redesign")
 DATA = ROOT / "data"
@@ -113,8 +119,8 @@ def property_path(cid: int) -> Path:
     return RAW / "property" / f"{cid}.json"
 
 
-def png_cache(cid: int) -> Path:
-    return RAW / "png" / f"{cid}.png"
+def record_path(cid: int) -> Path:
+    return RAW / "record2d" / f"{cid}.json"
 
 
 def load_xref(cas: str) -> dict:
@@ -170,20 +176,30 @@ def parse_mw(token: str) -> float | None:
     return round(value, 4)
 
 
-def load_png(cid: int) -> bytes | None:
-    path = png_cache(cid)
-    if path.exists() and path.read_bytes()[:8] == b"\x89PNG\r\n\x1a\n":
-        return path.read_bytes()
-    status, body = fetch(
-        "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/"
-        f"{cid}/PNG?record_type=2d&image_size=300x300",
-        "image/png",
-    )
-    if status == 200 and body[:8] == b"\x89PNG\r\n\x1a\n" and len(body) > 200:
+def load_svg(cid: int) -> str | None:
+    """SVG from the cached 2D record. PubChem is asked only when the cache misses."""
+    path = record_path(cid)
+    if path.exists():
+        trimmed = json.loads(path.read_text())
+    else:
+        status, body = fetch(
+            "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/"
+            f"{cid}/record/JSON?record_type=2d",
+            "application/json",
+        )
+        if status == 200:
+            trimmed = trim_record(json.loads(body))
+            trimmed["httpStatus"] = 200
+        else:
+            trimmed = {"ok": False, "httpStatus": status}
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(body)
-        return body
-    return None
+        path.write_text(json.dumps(trimmed, separators=(",", ":")) + "\n")
+    if not trimmed.get("ok"):
+        return None
+    svg = to_svg(trimmed)
+    if not svg or not svg.startswith("<svg") or "</svg>" not in svg:
+        return None
+    return svg + "\n"
 
 
 def blank_external(product: dict) -> None:
@@ -253,28 +269,30 @@ def main() -> None:
     images = {}
     needed = [cid for cid in cids if cid in properties]
     with ThreadPoolExecutor(max_workers=WORKERS) as pool:
-        futures = {pool.submit(load_png, cid): cid for cid in needed}
+        futures = {pool.submit(load_svg, cid): cid for cid in needed}
         finished = 0
         for future in as_completed(futures):
             cid = futures[future]
-            body = future.result()
+            svg = future.result()
             finished += 1
-            if body:
-                images[cid] = body
+            if svg:
+                images[cid] = svg
             if finished % 100 == 0 or finished == len(needed):
                 print(f"images {finished}/{len(needed)} kept {len(images)}", flush=True)
 
     ASSETS.mkdir(parents=True, exist_ok=True)
     manifest_rows = []
-    for cid, body in images.items():
-        dest = ASSETS / f"{cid}.png"
-        if not dest.exists() or dest.read_bytes() != body:
-            dest.write_bytes(body)
-        rel = f"assets/structures/pubchem/{cid}.png"
+    for cid in sorted(images):
+        svg = images[cid]
+        dest = ASSETS / f"{cid}.svg"
+        if not dest.exists() or dest.read_text() != svg:
+            dest.write_text(svg)
+        rel = f"assets/structures/pubchem/{cid}.svg"
         source = (
             "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/"
-            f"{cid}/PNG?record_type=2d&image_size=300x300"
+            f"{cid}/record/JSON?record_type=2d"
         )
+        payload = svg.encode()
         manifest_rows.append(
             {
                 "path": rel,
@@ -282,7 +300,7 @@ def main() -> None:
                 "kind": "structure-external",
                 "cid": cid,
                 "bytes": dest.stat().st_size,
-                "sha256": hashlib.sha256(body).hexdigest(),
+                "sha256": hashlib.sha256(payload).hexdigest(),
             }
         )
 
@@ -310,7 +328,7 @@ def main() -> None:
             formula, mw = prop
             product["formulaExternal"] = formula
             product["mwExternal"] = mw
-            rel = f"assets/structures/pubchem/{cid}.png" if cid in images else None
+            rel = f"assets/structures/pubchem/{cid}.svg" if cid in images else None
             product["structureImageExternal"] = rel
             product["externalSource"] = {
                 "name": "PubChem",
@@ -354,14 +372,26 @@ def main() -> None:
     existing = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else []
     existing = [row for row in existing if row.get("kind") != "structure-external"]
     MANIFEST.write_text(json.dumps(existing + manifest_rows, indent=2) + "\n")
+    retire_png()
     print(json.dumps(pubchem, indent=2))
+
+
+def retire_png() -> None:
+    """Drop the earlier PubChem PNGs once the SVG files replace them."""
+    for path in ASSETS.glob("*.png"):
+        path.unlink()
+    png_dir = RAW / "png"
+    if png_dir.is_dir():
+        for path in png_dir.glob("*.png"):
+            path.unlink()
+        png_dir.rmdir()
 
 
 def pubchem_section(stats: dict) -> list[str]:
     lines = [
         "## External reference data",
         "",
-        "`formula` and `mw` are only what AMT published, and both stay null because the catalogues have no such columns. `structureImage` stays the AMT file when one was published. PubChem formula, molecular weight and the 2D depiction are `formulaExternal`, `mwExternal` and `structureImageExternal`, with `externalSource` `{name: PubChem, cid, url}`. A CAS is accepted only when PubChem returns exactly one CID. `mwNominal` is a nominal PEG mass read from the printed name (PEG2000 or PEG(400)); a short token such as PEG3 is an oligomer length and is not used.",
+        "`formula` and `mw` are only what AMT published, and both stay null because the catalogues have no such columns. `structureImage` stays the AMT file when one was published. PubChem formula, molecular weight and the 2D depiction are `formulaExternal`, `mwExternal` and `structureImageExternal`, with `externalSource` `{name: PubChem, cid, url}`. A CAS is accepted only when PubChem returns exactly one CID. PubChem does not serve SVG. Each `structureImageExternal` file is an SVG drawn from that CID's 2D coordinates and bond annotations, one file per CID, so a page can lazy-load it. `mwNominal` is a nominal PEG mass read from the printed name (PEG2000 or PEG(400)); a short token such as PEG3 is an oligomer length and is not used.",
         "",
         "| Family | Products | Single CAS | One CID | Formula and MW | Structure image | Nominal PEG mass |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",

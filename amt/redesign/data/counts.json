@@ -86,5 +86,67 @@
     "NEW PRODUCTS MAY 2025": 7,
     "Featured Products:": 6,
     "Ionisable Lipid": 3
+  },
+  "classDerived": {
+    "derivedFrom": "name",
+    "rules": "data/class-rules.json",
+    "note": "Not an AMT heading. Counted from the printed name with data/class-rules.json. Null means no rule matched. PEG reactive-group counts are products that include that group, so one heterobifunctional product is counted under each group it names.",
+    "byFamily": {
+      "lipids": {
+        "products": 36,
+        "matched": 0,
+        "null": 36
+      },
+      "peg": {
+        "products": 212,
+        "matched": 129,
+        "null": 83,
+        "architecture": {
+          "multi-arm": 0,
+          "mPEG": 2,
+          "heterobifunctional": 17
+        },
+        "reactiveGroups": {
+          "NHS": 0,
+          "maleimide": 0,
+          "azide": 65,
+          "DBCO": 0,
+          "amine": 74,
+          "acid": 5
+        }
+      },
+      "fluorophores": {
+        "products": 40,
+        "matched": 6,
+        "null": 34,
+        "dyeCore": {
+          "Cy3": 0,
+          "Cy5": 0,
+          "FITC": 0,
+          "BODIPY": 6
+        }
+      },
+      "organoborons": {
+        "products": 1046,
+        "matched": 906,
+        "null": 140,
+        "boronClass": {
+          "MIDA ester": 0,
+          "trifluoroborate": 123,
+          "pinacol ester": 648,
+          "boronic acid": 135
+        }
+      },
+      "other": {
+        "products": 13,
+        "matched": 0,
+        "null": 13
+      },
+      "total": {
+        "products": 1347,
+        "matched": 1041,
+        "null": 306
+      }
+    }
   }
 }

@@ -4,9 +4,10 @@
  * Zero dependencies. Run: node amt/redesign/scripts/validate-data.mjs
  */
 
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { classCounts, deriveClass, loadClassRules } from "../data/class-derived.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dataDir = join(root, "data");
@@ -21,6 +22,7 @@ const products = JSON.parse(readFileSync(join(dataDir, "products.json"), "utf8")
 const counts = JSON.parse(readFileSync(join(dataDir, "counts.json"), "utf8"));
 const countsMd = readFileSync(join(dataDir, "COUNTS.md"), "utf8");
 
+const classRules = loadClassRules();
 const itemSchema = schema.items;
 const required = itemSchema.required;
 const families = new Set(itemSchema.properties.family.enum);
@@ -158,11 +160,18 @@ for (const product of products) {
       fail(`${label}: mwExternal must be a positive number when PubChem matched`);
     }
     if (product.structureImageExternal != null) {
-      const expected = `assets/structures/pubchem/${external.cid}.png`;
+      const expected = `assets/structures/pubchem/${external.cid}.svg`;
       if (product.structureImageExternal !== expected) {
         fail(`${label}: structureImageExternal must be ${expected}`);
       } else if (!existsSync(join(root, product.structureImageExternal))) {
         fail(`${label}: structure image file is missing`);
+      } else {
+        const svg = readFileSync(join(root, product.structureImageExternal), "utf8");
+        if (!svg.startsWith("<svg") || !svg.includes("</svg>")) {
+          fail(`${label}: structure image is not an SVG`);
+        } else if (svg.length > 40000) {
+          fail(`${label}: structure SVG is ${svg.length} bytes`);
+        }
       }
     }
   }
@@ -181,6 +190,18 @@ for (const product of products) {
     if (found.size !== 1 || !found.has(product.mwNominal)) {
       fail(`${label}: mwNominal ${product.mwNominal} is not the single PEG mass in the name`);
     }
+  }
+
+  if (!Object.prototype.hasOwnProperty.call(product, "classDerived")) fail(`${label}: missing classDerived`);
+  if (!Object.prototype.hasOwnProperty.call(product, "classDerivedSource")) fail(`${label}: missing classDerivedSource`);
+  const derived = deriveClass(product.name, product.family, classRules);
+  if (JSON.stringify(product.classDerived) !== JSON.stringify(derived)) {
+    fail(`${label}: classDerived does not match data/class-rules.json`);
+  }
+  if (derived == null) {
+    if (product.classDerivedSource != null) fail(`${label}: classDerivedSource set without a class`);
+  } else if (product.classDerivedSource !== "name") {
+    fail(`${label}: classDerivedSource must be "name"`);
   }
 
   const source = product.source;
@@ -213,6 +234,16 @@ for (const heading of subKeys) {
   }
 }
 if (!countsMd.includes("## Subfamily")) fail("COUNTS.md is missing the Subfamily section");
+if (!countsMd.includes("## Name-derived class")) fail("COUNTS.md is missing the Name-derived class section");
+const expectedClass = classCounts(products, classRules);
+if (JSON.stringify(counts.classDerived) !== JSON.stringify(expectedClass)) {
+  fail("counts.json classDerived does not match the name rules");
+}
+const pubchemDir = join(root, "assets/structures/pubchem");
+if (existsSync(pubchemDir)) {
+  const pngs = readdirSync(pubchemDir).filter((name) => name.endsWith(".png"));
+  if (pngs.length) fail(`PubChem PNG assets still present (${pngs.length})`);
+}
 
 const sourceSum = Object.values(counts.byPrimarySource).reduce((sum, n) => sum + n, 0);
 if (sourceSum !== products.length) {
