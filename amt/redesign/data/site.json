@@ -3,6 +3,17 @@
   "source": "https://www.amtechpl.com/",
   "publisher": "Advanced Molecular Technologies",
   "contact": {
+    "street": [
+      "Unit 1/7-11",
+      "Rocco drive",
+      "Scoresby VIC 3179"
+    ],
+    "phoneAu": "03 9764 9220",
+    "phoneIntl": "+61 3 9764 9220",
+    "phoneTel": "+61397649220",
+    "emailEnquiries": "enquiries@amtechpl.com",
+    "emailSales": "sales@amtechpl.com",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Unit%201%2F7-11%20Rocco%20drive%20Scoresby%20VIC%203179",
     "streetAddress": "Unit 1/7-11 Rocco drive, Scoresby VIC 3179",
     "postalAddress": "Unit 1/7-11 Rocco drive, Scoresby VIC 3179",
     "streetAddressAsPublishedOnContactPage": [
@@ -29,7 +40,7 @@
     "Minimum order value of USD $150 for international shipping",
     "Free delivery for all orders over $250.00 AUD. (Australian customers page)"
   ],
-  "nav": {
+  "sourceNav": {
     "header": [
       {
         "label": "HOME",
@@ -173,30 +184,35 @@
   },
   "brochures": [
     {
+      "label": "AMT Lipid Products – 2026",
       "title": "AMT Lipid Products – 2026",
       "href": "https://www.amtechpl.com/wp-content/uploads/2026/08/AMT-Lipids-20260826.pdf",
       "family": "lipids",
       "date": "2026-08-26"
     },
     {
+      "label": "AMT PEG Reagents & Linkers Catalogue Selection – 2026",
       "title": "AMT PEG Reagents & Linkers Catalogue Selection – 2026",
       "href": "https://www.amtechpl.com/wp-content/uploads/2026/09/AMT-PEG-Reagents-and-Linkers-Catalogue-List-20260903.pdf",
       "family": "peg",
       "date": "2026-09-03"
     },
     {
+      "label": "AMT Fluorophores & Dyes Catalogue Selection – 2026",
       "title": "AMT Fluorophores & Dyes Catalogue Selection – 2026",
       "href": "https://www.amtechpl.com/wp-content/uploads/2026/01/AMT-FluorophoresDyes-Catalogue-List-2026.pdf",
       "family": "fluorophores",
       "date": "2026-01-09"
     },
     {
+      "label": "AMT Organoborons Catalogue Selection – 2026",
       "title": "AMT Organoborons Catalogue Selection – 2026",
       "href": "https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf",
       "family": "organoborons",
       "date": "2026-04-21"
     },
     {
+      "label": "NEW PRODUCTS LIST",
       "title": "NEW PRODUCTS LIST",
       "href": "https://www.amtechpl.com/wp-content/uploads/2025/05/New_Products_20250516.pdf",
       "family": "other",

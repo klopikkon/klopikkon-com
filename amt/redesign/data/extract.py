@@ -955,6 +955,13 @@ def build_site(homepage_count):
         "source": "https://www.amtechpl.com/",
         "publisher": "Advanced Molecular Technologies",
         "contact": {
+            "street": ["Unit 1/7-11", "Rocco drive", "Scoresby VIC 3179"],
+            "phoneAu": "03 9764 9220",
+            "phoneIntl": "+61 3 9764 9220",
+            "phoneTel": "+61397649220",
+            "emailEnquiries": "enquiries@amtechpl.com",
+            "emailSales": "sales@amtechpl.com",
+            "mapUrl": "https://www.google.com/maps/search/?api=1&query=Unit%201%2F7-11%20Rocco%20drive%20Scoresby%20VIC%203179",
             "streetAddress": "Unit 1/7-11 Rocco drive, Scoresby VIC 3179",
             "postalAddress": "Unit 1/7-11 Rocco drive, Scoresby VIC 3179",
             "streetAddressAsPublishedOnContactPage": ["Unit 1/7-11", "Rocco drive", "Scoresby VIC 3179"],
@@ -977,7 +984,7 @@ def build_site(homepage_count):
             "Minimum order value of USD $150 for international shipping",
             "Free delivery for all orders over $250.00 AUD. (Australian customers page)",
         ],
-        "nav": {
+        "sourceNav": {
             "header": [
                 {"label": "HOME", "href": "https://www.amtechpl.com/"},
                 {"label": "CONTRACT RESEARCH", "href": "https://www.amtechpl.com/contract-services/"},
@@ -1033,11 +1040,12 @@ def build_site(homepage_count):
             "note": "The structure search is a ChemExper iframe. amtechpl.com does not publish a static SKU table on that page. This extract does not query ChemExper.",
         },
         "brochures": [
-            {"title": spec["title"], "href": spec["url"], "family": spec["family"], "date": spec["date"]}
+            {"label": spec["title"], "title": spec["title"], "href": spec["url"], "family": spec["family"], "date": spec["date"]}
             for spec in CATALOGUES
         ]
         + [
             {
+                "label": "NEW PRODUCTS LIST",
                 "title": "NEW PRODUCTS LIST",
                 "href": "https://www.amtechpl.com/wp-content/uploads/2025/05/New_Products_20250516.pdf",
                 "family": "other",
