@@ -1,5 +1,5 @@
 /**
- * Catalogue search checks against the real AMT fixture.
+ * Catalogue search checks against data/products.json.
  * Run: node amt/redesign/catalogue/test-search.mjs
  *
  * A few in-memory rows at the bottom exercise PEG-mass and formula
@@ -16,10 +16,11 @@ import {
   runSearch,
   stateFromParams,
   stateToQuery,
+  toCompact,
 } from "../js/search.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const products = JSON.parse(await readFile(path.join(root, "_build/fixtures/catalogue.json"), "utf8"));
+const products = JSON.parse(await readFile(path.join(root, "data/products.json"), "utf8"));
 const records = products.map(prepareRecord);
 
 let failed = 0;
@@ -60,6 +61,13 @@ function skus(result, n = 8) {
 function top(result) {
   return result.hits[0]?.record;
 }
+
+assert(products.length === 1347, `products.json has 1347 SKUs (${products.length})`);
+assert(new Set(products.map((product) => product.sku)).size === products.length, "SKUs are unique");
+const roundTrip = products.map((product) => prepareRecord(toCompact(product)));
+assert(roundTrip.length === products.length, "compact index keeps every product");
+const alcRound = roundTrip.find((record) => record.sku === "AMTGC903-AL21");
+assert(alcRound?.id === "amtgc903-al21" && alcRound.packs[1]?.price === 430 && alcRound.packs[1]?.priceText === "$430.00", "compact ALC-0315 keeps id and the published 1 g price");
 
 const peg2k = extractPeg("mPEG 2k");
 assert(peg2k && peg2k.mw === 2000 && peg2k.methoxy === true, "mPEG 2k is methoxy PEG mass 2000");
@@ -102,11 +110,12 @@ assert(!skus(search("DSPE-PEG2000"), 10).includes("AMTGC1444-DM25"), "DSPE-PEG20
 assert(search("DSPE-PEG2000").hits.length === 0, "this extract has no DSPE-PEG2000");
 
 const mpeg3 = skus(search("mPEG3"), 12);
-assert(mpeg3.includes("AMTGC223-MA16"), "mPEG3 finds m-PEG3-amine");
-assert(!mpeg3.includes("AMTGC297-AT17"), "mPEG3 does not return m-PEG4-amine");
+assert(top(search("2-(2-(2-Methoxyethoxy)ethoxy) ethanamine"))?.sku === "AMTGC223-MA16", "published name finds AMTGC223-MA16");
+assert(!mpeg3.includes("AMTGC223-MA16"), "mPEG3 is not printed on AMTGC223-MA16");
+assert(!mpeg3.includes("AMTGC297-AT17"), "mPEG3 does not return the tetraoxa amine");
 assert(!mpeg3.includes("AMTGC1444-DM25"), "mPEG3 does not return DMG-PEG 2000");
 const anyPeg3 = skus(search("PEG3"), 20);
-assert(anyPeg3.includes("AMTGC223-MA16"), "PEG3 includes methoxy PEG3");
+assert(top(search("2,5,8,11-Tetraoxatridecan-13-amine"))?.sku === "AMTGC297-AT17", "published name finds AMTGC297-AT17");
 assert(!anyPeg3.includes("AMTGC1179-AL23"), "PEG3 does not include PEG2000 lipid ALC-0159");
 
 const mpeg2k = skus(search("mPEG 2k"), 8);

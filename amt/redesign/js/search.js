@@ -20,6 +20,22 @@ const FAMILY_LABELS = {
 
 const FAMILY_ORDER = ["lipids", "peg", "fluorophores", "organoborons", "other"];
 
+const FAMILY_CODE = {
+  l: "lipids",
+  p: "peg",
+  f: "fluorophores",
+  b: "organoborons",
+  o: "other",
+};
+
+const FAMILY_TO_CODE = {
+  lipids: "l",
+  peg: "p",
+  fluorophores: "f",
+  organoborons: "b",
+  other: "o",
+};
+
 const ANCHORS = {
   dspe: ["dspe", "distearoylphosphatidylethanolamine", "distearoyl phosphoethanolamine"],
   dmg: ["dmg", "dimyristoyl"],
@@ -72,9 +88,55 @@ function sizeMg(size) {
   return n;
 }
 
+function publishedPriceText(price) {
+  if (typeof price !== "number" || !Number.isFinite(price)) return "quote";
+  const formatted = Math.abs(price).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return `${price < 0 ? "-" : ""}$${formatted}`;
+}
+
 function moneyLabel(pack) {
   if (!pack || pack.price == null || pack.priceText === "quote") return "Quote";
-  return pack.priceText || (Number.isInteger(pack.price) ? `$${pack.price}` : `$${Number(pack.price).toFixed(2)}`);
+  return pack.priceText || publishedPriceText(pack.price);
+}
+
+/** Coarse grouping read off the published name when `subfamily` is null. */
+function deriveSub(family, text) {
+  const value = String(text || "").toLowerCase();
+  if (family === "lipids") {
+    if (/peg/.test(value)) return "pegylated lipid";
+    if (/phytan/.test(value)) return "phytanyl lipid";
+    if (/phospho/.test(value)) return "phospholipid";
+    return "lipid";
+  }
+  if (family === "peg") {
+    if (/azid/.test(value) && /amine|amino/.test(value)) return "azide-amine";
+    if (/azid/.test(value)) return "azide";
+    if (/acid/.test(value)) return "acid";
+    if (/amine|amino/.test(value)) return "amine";
+    if (/sulfon/.test(value)) return "sulfonate";
+    if (/alkyne/.test(value)) return "alkyne";
+    if (/bromo|chloro|iodo|fluor/.test(value)) return "halide";
+    if (/alcohol|hydroxy/.test(value)) return "alcohol";
+    if (/peg\s*\(?\s*\d{3,}/.test(value)) return "polymeric";
+    return "linker";
+  }
+  if (family === "fluorophores") {
+    if (/bodipy/.test(value)) return "BODIPY";
+    if (/fluorescein/.test(value)) return "fluorescein";
+    if (/coumarin/.test(value)) return "coumarin";
+    if (/rhodamine/.test(value)) return "rhodamine";
+    return "dye";
+  }
+  if (family === "organoborons") {
+    if (/\bmida\b/.test(value)) return "MIDA boronate";
+    if (/\bbdan\b/.test(value)) return "BDAN";
+    if (/trifluoroborate/.test(value)) return "trifluoroborate";
+    if (/neopentyl/.test(value)) return "neopentyl glycol ester";
+    if (/pinacol|bpin|dioxaborol/.test(value)) return "pinacol ester";
+    if (/boronic acid/.test(value)) return "boronic acid";
+    return "organoboron";
+  }
+  return "";
 }
 
 function looksLikeFormula(value) {
@@ -191,7 +253,7 @@ function indexTokens(text) {
 
 function queryTokens(text) {
   const out = [];
-  for (const chunk of String(text ?? "").toLowerCase().split(/\s+/)) {
+  for (const chunk of String(text ?? "").toLowerCase().split(/[\s,/()+[\]:.;]+/)) {
     const piece = chunk.replace(/^[^\w+]+|[^\w+]+$/g, "");
     if (piece.length < 2) continue;
     if (piece === "peg" || piece === "mpeg" || piece === "k") continue;
@@ -202,60 +264,123 @@ function queryTokens(text) {
   return [...new Set(out)];
 }
 
+function isCompact(product) {
+  return Boolean(product && typeof product.s === "string" && product.sku == null);
+}
+
+function packFrom(pack) {
+  if (Array.isArray(pack)) {
+    const price = typeof pack[1] === "number" ? pack[1] : null;
+    return {
+      size: pack[0] || "",
+      price,
+      currency: "USD",
+      priceText: pack[2] || publishedPriceText(price),
+      sizeNorm: normSize(pack[0] || ""),
+    };
+  }
+  const price = typeof pack.price === "number" ? pack.price : null;
+  return {
+    size: pack.size || "",
+    price,
+    currency: pack.currency || "USD",
+    priceText: pack.priceText || publishedPriceText(price),
+    sizeNorm: normSize(pack.size || ""),
+  };
+}
+
+/**
+ * Short-key record for `catalogue/index.json`.
+ * Empty fields are omitted. `id` is omitted when it is the lowercase SKU.
+ * Price text is omitted when it is the published USD formatting of the number.
+ */
+function toCompact(product) {
+  const row = { s: product.sku };
+  const id = product.id || "";
+  if (id && id !== String(product.sku || "").toLowerCase()) row.i = id;
+  if (product.name) row.n = product.name;
+  row.f = FAMILY_TO_CODE[product.family] || product.family || "o";
+  if (product.cas && !/no\s*cas/i.test(product.cas)) row.c = product.cas;
+  if (product.purity) row.p = product.purity;
+  if (product.formula) row.o = product.formula;
+  if (typeof product.mw === "number") row.m = product.mw;
+  if (product.formulaExternal) row.oe = product.formulaExternal;
+  if (typeof product.mwExternal === "number") row.me = product.mwExternal;
+  if (product.subfamily) row.u = product.subfamily;
+  if (Array.isArray(product.synonyms) && product.synonyms.length) row.y = product.synonyms.filter(Boolean);
+  if (Array.isArray(product.homepageLabels) && product.homepageLabels.length) row.h = product.homepageLabels.filter(Boolean);
+  if (product.catalogueNote) row.t = product.catalogueNote;
+  row.k = (product.packs || []).map((pack) => {
+    const size = pack.size || "";
+    const price = typeof pack.price === "number" ? pack.price : null;
+    const text = pack.priceText || publishedPriceText(price);
+    if (text !== publishedPriceText(price)) return [size, price, text];
+    return [size, price];
+  });
+  return row;
+}
+
 function prepareRecord(product) {
   if (product && product._prepared) return product;
-  const syn = Array.isArray(product.synonyms) ? product.synonyms.filter(Boolean) : (product.syn || []);
-  const packs = (product.packs || []).map((pack) => {
-    if (Array.isArray(pack)) {
-      return {
-        size: pack[0],
-        price: pack[1],
-        currency: pack[2] || "USD",
-        priceText: pack[3] || (pack[1] == null ? "quote" : String(pack[1])),
-        sizeNorm: normSize(pack[0]),
-      };
-    }
-    return {
-      size: pack.size,
-      price: pack.price ?? null,
-      currency: pack.currency || "USD",
-      priceText: pack.priceText || (pack.price == null ? "quote" : String(pack.price)),
-      sizeNorm: normSize(pack.size),
-    };
-  });
+  const row = isCompact(product);
+  const sku = row ? product.s : (product.sku || "");
+  const id = (row ? product.i : product.id) || String(sku).toLowerCase();
+  const name = (row ? product.n : product.name) || "";
+  const fam = row
+    ? (FAMILY_CODE[product.f] || product.f || "other")
+    : (product.family || product.fam || "other");
+  const syn = row
+    ? (Array.isArray(product.y) ? product.y.filter(Boolean) : [])
+    : (Array.isArray(product.synonyms) ? product.synonyms.filter(Boolean) : (product.syn || []));
+  const labels = row
+    ? (Array.isArray(product.h) ? product.h.filter(Boolean) : [])
+    : (Array.isArray(product.homepageLabels) ? product.homepageLabels.filter(Boolean) : []);
+  const note = row ? (product.t || "") : (product.catalogueNote || "");
+  const casInput = row ? (product.c || "") : (product.cas || "");
+  const casRaw = casParts(casInput);
+  const formula = row ? (product.o || "") : (product.formula || "");
+  const formulaExternal = row ? (product.oe || "") : (product.formulaExternal || "");
+  const mwValue = row ? product.m : product.mw;
+  const mwExternalValue = row ? product.me : product.mwExternal;
+  const mw = typeof mwValue === "number" ? mwValue : null;
+  const mwExternal = typeof mwExternalValue === "number" ? mwExternalValue : null;
+  const pur = row ? (product.p || "") : (product.purity || product.pur || "");
+  const subGiven = row ? (product.u || "") : (product.subfamily || product.sub || "");
+  const packs = (row ? (product.k || []) : (product.packs || [])).map(packFrom);
   const priced = packs.map((pack) => pack.price).filter((price) => typeof price === "number");
-  const pegSource = [product.name, ...syn].join(" ");
-  const peg = extractPeg(pegSource) || { n: null, mw: null, methoxy: false };
-  const casRaw = casParts(product.cas);
-  const name = product.name || "";
-  const record = {
+  const peg = extractPeg([name, ...syn, ...labels].join(" ")) || { n: null, mw: null, methoxy: false };
+  const sub = subGiven || deriveSub(fam, [name, ...syn, ...labels, note].join(" "));
+  const searchableCas = casRaw.join(" ");
+  return {
     _prepared: true,
-    id: product.id,
-    sku: product.sku || "",
+    id,
+    sku,
     name,
     syn,
-    fam: product.family || product.fam || "other",
-    sub: product.subfamily || product.sub || "",
-    cas: product.cas || "",
-    formula: product.formula || "",
-    mw: typeof product.mw === "number" ? product.mw : null,
-    pur: product.purity || product.pur || "",
+    labels,
+    note,
+    fam,
+    sub,
+    cas: casRaw.join(" & "),
+    formula,
+    formulaExternal,
+    mw,
+    mwExternal,
+    pur,
     packs,
     pegN: peg.n,
     pegMw: peg.mw,
     pegMe: Boolean(peg.methoxy),
     minPrice: priced.length ? Math.min(...priced) : null,
-    quoteOnly: packs.length === 0 || priced.length === 0,
+    quoteOnly: priced.length === 0,
     casRaw,
     casDigits: casRaw.map((cas) => cas.replace(/\D/g, "")),
-    skuKey: compact(product.sku),
+    skuKey: compact(sku),
     nameKey: compact(name),
-    formulaKey: String(product.formula || "").replace(/\s+/g, ""),
-    tokens: indexTokens([name, ...syn, product.sku, product.cas, product.formula].join(" ")),
+    formulaKey: String(formula || "").replace(/\s+/g, ""),
+    tokens: indexTokens([name, ...syn, ...labels, note, sku, searchableCas, formula, formulaExternal].filter(Boolean).join(" ")),
     nameTokens: indexTokens(name),
-    sourceTitle: product.source?.pdf ? `${product.source.pdf}${product.source.page ? `, page ${product.source.page}` : ""}` : "",
   };
-  return record;
 }
 
 function hydrate(record) {
@@ -525,7 +650,7 @@ function runSearch(records, state) {
 
 function compareHits(a, b, sort, hasQuery) {
   if (sort === "name" || (sort === "relevance" && !hasQuery)) {
-    return a.record.name.localeCompare(b.record.name, "en", { numeric: true, sensitivity: "base" });
+    return (a.record.name || a.record.sku).localeCompare(b.record.name || b.record.sku, "en", { numeric: true, sensitivity: "base" });
   }
   if (sort === "mw") {
     const aw = a.record.mw ?? Number.POSITIVE_INFINITY;
@@ -538,7 +663,7 @@ function compareHits(a, b, sort, hasQuery) {
   } else if (b.score !== a.score) {
     return b.score - a.score;
   }
-  return a.record.name.localeCompare(b.record.name, "en", { numeric: true, sensitivity: "base" });
+  return (a.record.name || a.record.sku).localeCompare(b.record.name || b.record.sku, "en", { numeric: true, sensitivity: "base" });
 }
 
 function facetCounts(records, state) {
@@ -712,33 +837,41 @@ function activeFilterCount(state) {
 function renderCard(hit, href) {
   const record = hit.record;
   const needles = hit.needles || [];
+  const title = record.name || "Name not published";
   const kicker = `${familyLabel(record.fam)}${record.sub ? ` · ${record.sub}` : ""}`;
   const cas = record.cas ? `CAS ${record.cas}` : "No CAS published";
   const syn = record.syn.slice(0, 2).join(" · ");
-  const packItems = record.packs.map((pack) => `<li>${esc(pack.size)} · ${esc(moneyLabel(pack))}</li>`).join("");
-  const options = record.packs.map((pack) => (
-    `<option value="${esc(pack.size)}">${esc(pack.size)} · ${esc(moneyLabel(pack))}</option>`
-  )).join("");
+  const packItems = record.packs.map((pack) => {
+    const size = pack.size || "Pack";
+    return `<li><span>${esc(size)}</span> <span>${esc(moneyLabel(pack))}</span></li>`;
+  }).join("");
+  const options = record.packs.map((pack) => {
+    const size = pack.size || "Pack";
+    return `<option value="${esc(pack.size)}">${esc(size)} · ${esc(moneyLabel(pack))}</option>`;
+  }).join("");
   const price = record.quoteOnly ? "Quote" : `From ${moneyLabel(record.packs.find((pack) => pack.price === record.minPrice) || record.packs[0])}`;
-  const source = record.sourceTitle ? ` title="${esc(record.sourceTitle)}"` : "";
-  return `<li class="cat-card">
-    <div class="cat-card-main">
-      <p class="cat-kicker"${source}>${highlight(kicker, needles)}</p>
-      <h2><a class="cat-name" href="${esc(href)}">${highlight(record.name, needles)}</a></h2>
+  const label = record.labels[0] ? `<p><span class="badge">${esc(record.labels[0])}</span></p>` : "";
+  const note = record.note ? `<p class="hint">${esc(record.note)}</p>` : "";
+  return `<li class="card product-card">
+    <div>
+      <p class="kicker">${highlight(kicker, needles)}</p>
+      <h2><a class="cat-name" href="${esc(href)}">${highlight(title, needles)}</a></h2>
+      <p class="sku">${highlight(record.sku, needles)}</p>
       <p class="cat-meta">
-        <span class="cat-sku">${highlight(record.sku, needles)}</span>
-        <span class="cat-cas">${highlight(cas, needles)}</span>
-        ${record.pur ? `<span class="cat-pur">${highlight(record.pur, needles)}</span>` : ""}
-        ${record.formula ? `<span class="cat-formula">${highlight(record.formula, needles)}</span>` : ""}
-        ${record.mw != null ? `<span class="cat-mw">${esc(record.mw)} Da</span>` : ""}
+        <span>${highlight(cas, needles)}</span>
+        ${record.pur ? `<span>${highlight(record.pur, needles)}</span>` : ""}
+        ${record.formula ? `<span>${highlight(record.formula, needles)}</span>` : ""}
+        ${record.mw != null ? `<span>${esc(record.mw)} Da</span>` : ""}
       </p>
-      ${syn ? `<p class="cat-syn">${highlight(syn, needles)}</p>` : ""}
-      ${packItems ? `<ul class="cat-packs">${packItems}</ul>` : ""}
+      ${label}
+      ${note}
+      ${syn ? `<p class="hint">${highlight(syn, needles)}</p>` : ""}
+      ${packItems ? `<ul class="pack-list">${packItems}</ul>` : ""}
     </div>
     <div class="cat-buy" data-quote-root>
       <p class="cat-price">${esc(price)}</p>
-      ${options ? `<label class="cat-pack-label"><span>Pack</span><select data-pack-select aria-label="Pack size for ${esc(record.name)}">${options}</select></label>` : ""}
-      <button type="button" class="cat-quote" data-add-quote data-id="${esc(record.id)}" data-sku="${esc(record.sku)}" data-pack="${esc(record.packs[0]?.size || "")}">Add to quote</button>
+      ${options ? `<label class="field"><span>Pack</span><select data-pack-select aria-label="Pack size for ${esc(title)}">${options}</select></label>` : ""}
+      <button type="button" class="btn btn-primary" data-add-quote data-id="${esc(record.id)}" data-sku="${esc(record.sku)}" data-pack="${esc(record.packs[0]?.size || "")}">Add to quote</button>
     </div>
   </li>`;
 }
@@ -897,9 +1030,12 @@ function boot(root) {
 
   function patch(partial, mode) {
     state = { ...state, ...partial, page: partial.page ?? 1 };
-    render(mode);
+    renderWhenReady(mode);
   }
 
+  input?.addEventListener("focus", () => {
+    renderWhenReady();
+  });
   input?.addEventListener("input", () => {
     patch({ q: input.value, page: 1 }, "replace");
   });
@@ -935,7 +1071,7 @@ function boot(root) {
       const q = state.q;
       state = { ...emptyState(), q };
       if (input) input.value = q;
-      render("push");
+      renderWhenReady("push");
     }
     if (event.target.closest("[data-close-filters]")) closeFilters();
   });
@@ -948,8 +1084,9 @@ function boot(root) {
     const button = event.target.closest("[data-page]");
     if (!button) return;
     state = { ...state, page: Number(button.dataset.page) };
-    render("push");
-    results.querySelector(".cat-name")?.focus();
+    renderWhenReady("push").then(() => {
+      results.querySelector(".cat-name")?.focus();
+    });
   });
 
   function openFilters() {
@@ -969,7 +1106,9 @@ function boot(root) {
     document.body.classList.remove("cat-lock");
     openButton?.focus();
   }
-  openButton?.addEventListener("click", openFilters);
+  openButton?.addEventListener("click", () => {
+    renderWhenReady().then(() => openFilters());
+  });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && filters.classList.contains("is-open")) closeFilters();
     if (event.key === "/" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA" && document.activeElement?.tagName !== "SELECT") {
@@ -1019,25 +1158,58 @@ function boot(root) {
     }
   });
 
+  let ready = false;
+  let loading = null;
+
+  function needsIndex(value) {
+    return Boolean(value.q)
+      || value.family.length
+      || value.sub.length
+      || value.cas !== "any"
+      || value.mwMin != null
+      || value.mwMax != null
+      || value.purity.length
+      || value.pack.length
+      || value.priceMin != null
+      || value.priceMax != null
+      || value.quote
+      || (value.sort && value.sort !== "relevance")
+      || value.page > 1;
+  }
+
+  function ensureIndex() {
+    if (ready) return Promise.resolve(records);
+    if (loading) return loading;
+    if (live) live.textContent = "Loading the catalogue index.";
+    loading = fetch(new URL(root.dataset.index || "index.json", document.baseURI).href)
+      .then((response) => {
+        if (!response.ok) throw new Error(String(response.status));
+        return response.json();
+      })
+      .then((payload) => {
+        const items = Array.isArray(payload) ? payload : payload.items;
+        records = items.map(hydrate);
+        ready = true;
+        return records;
+      })
+      .catch((error) => {
+        loading = null;
+        if (live) live.textContent = "The search index did not load. The family lists below still work.";
+        throw error;
+      });
+    return loading;
+  }
+
+  function renderWhenReady(mode) {
+    return ensureIndex().then(() => render(mode)).catch(() => {});
+  }
+
   window.addEventListener("popstate", () => {
     state = stateFromParams(new URLSearchParams(location.search));
-    render();
+    if (needsIndex(state) || ready) renderWhenReady();
   });
 
-  live.textContent = "Loading the catalogue index.";
-  fetch(new URL(root.dataset.index || "index.json", document.baseURI).href)
-    .then((response) => {
-      if (!response.ok) throw new Error(String(response.status));
-      return response.json();
-    })
-    .then((payload) => {
-      const items = Array.isArray(payload) ? payload : payload.items;
-      records = items.map(hydrate);
-      render();
-    })
-    .catch(() => {
-      live.textContent = "The search index did not load. The family lists below still work.";
-    });
+  if (needsIndex(state)) renderWhenReady();
 }
 
 function onQuoteClick(event) {
@@ -1076,4 +1248,5 @@ export {
   searchRecords,
   stateFromParams,
   stateToQuery,
+  toCompact,
 };
