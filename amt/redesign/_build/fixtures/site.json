@@ -263,10 +263,10 @@
   ],
   "services": {
     "heading": "Contract Synthesis & Analytical Services:",
-    "paragraphs": [
-      "AMT offers both Contract Synthesis and a range of Analytical Services.",
-      "[Contact us](/amt/redesign/contact/) for more information."
-    ],
+      "paragraphs": [
+        "AMT offers both Contract Synthesis and a range of Analytical Services.",
+        "[Contact Us](/amt/redesign/contact/) for more information."
+      ],
     "equipment": "Analytical Equipment Available for Service: NMR (¹H, ¹³C, ¹⁰B, ¹⁵N, ¹⁹F, ²⁹Si and ³¹P) | HPLC (NP/RP, chiral & achiral) | GC | FT-IR | UV-Vis | Karl Fischer | Polarimetry | Thermogravimetric Analysis"
   },
   "partners": [
@@ -340,6 +340,7 @@
       ],
       "paragraphs": [
         "Advanced Molecular Technologies focuses on custom synthesis of target molecules through extensive organic and medicinal chemistry experience. Our dedicated team of chemists utilize a wide-range of synthetic chemistry techniques to obtain high-purity materials with very quick turnaround times.",
+        "Advanced Molecular Technologies focuses on custom synthesis of target molecules through extensive organic and medicinal chemistry experience. Our dedicated team of chemists utilise a wide-range of synthetic chemistry techniques to obtain high-purity materials with very quick turnaround times.",
         "Our contract research organization (CRO) service is involved with many leading pharmaceutical, biotech, agricultural and institutional organization both within and outside of Australia.",
         "Our contract research organisation (CRO) service is involved in projects with many leading pharmaceutical, biotech, agricultural and academic institutions, both within Australia and internationally."
       ],
@@ -371,7 +372,7 @@
           "Samples (10+) – Reduced rates available.",
           "Processing, interpretation and additional NMR analytical services are available."
         ],
-        "note": "[Contact us](/amt/redesign/contact/) to schedule analytical testing!"
+        "note": "[Contact Us](/amt/redesign/contact/) to schedule analytical testing!"
       },
       {
         "name": "Waters Alliance HPLC",

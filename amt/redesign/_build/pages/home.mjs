@@ -1,6 +1,70 @@
+import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { esc, paragraphs, rich } from "../lib/html.mjs";
 import { url } from "../lib/paths.mjs";
 import { featuredCard, motif } from "../lib/ui.mjs";
+
+const redesignRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+
+/** Drawings the live homepage shows for the featured rows. */
+const FEATURED_IMAGE = {
+  "AMTGC1533-LP25": "assets/structures/Lipid-5.png",
+  "AMTGC903-AL21": "assets/structures/AMTGC903-AL21.png",
+  "AMTGC1223-PL23": "assets/structures/AMTGC1223-PL23.png",
+  "AMTGC1264-AH24": "assets/structures/AMTGC1264-AH24.png",
+  "AMTGC1266-AO24": "assets/structures/AMTGC1266-AO24.png",
+  "AMTGC1269-CB24": "assets/structures/AMTGC1269-CB24.png",
+  "AMTH390-DF24": "assets/structures/AMTH390-DF24.png",
+  "AMTGC936-SM21": "assets/structures/AMTGC936-SM21.png",
+  "AMTGC125-AT15": "assets/structures/AMTGC125-AT15.png",
+  "AMTGC807-AM21": "assets/structures/AMTGC807-AM21.png",
+  "AMTGC1441-DB25": "assets/structures/AMTGC1441-DB25-1.jpg",
+  "AMTGC187-AC16": "assets/structures/AMTGC187-AC16.png",
+};
+
+const SERVICE_PHOTOS = [
+  {
+    file: "Bruker-Avance-III-400-MHz-NMR2.jpg",
+    alt: "Bruker Avance III 400 MHz NMR | Custom Contract Synthesis | Analytical Services | Advanced Molecular Technologies",
+    w: 400,
+    h: 500,
+  },
+  {
+    file: "Waters-Alliance-HPLC2.jpg",
+    alt: "Waters HPLC | Custom Contract Synthesis | Analytical Services | Advanced Molecular Technologies",
+    w: 396,
+    h: 500,
+  },
+];
+
+function photoTag(file, alt, w, h) {
+  const cap = Math.max(1, Math.floor(w / 1.5));
+  return `<img class="photo" src="${url(`assets/photos/${file}`)}" width="${w}" height="${h}" alt="${esc(alt)}" style="--photo-w:${cap}px" loading="lazy" decoding="async">`;
+}
+
+async function imageSize(rel) {
+  const buf = await readFile(join(redesignRoot, rel));
+  if (buf[0] === 0x89 && buf[1] === 0x50) {
+    return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+  }
+  let i = 2;
+  while (i < buf.length - 8) {
+    if (buf[i] !== 0xff) break;
+    const marker = buf[i + 1];
+    if (marker === 0xd8 || marker === 0xd9) {
+      i += 2;
+      continue;
+    }
+    const len = buf.readUInt16BE(i + 2);
+    if (marker >= 0xc0 && marker <= 0xc2) {
+      return { h: buf.readUInt16BE(i + 5), w: buf.readUInt16BE(i + 7) };
+    }
+    i += 2 + len;
+  }
+  throw new Error(`No pixel size in ${rel}`);
+}
 
 const FLYER_ID = "new-products-20250516";
 
@@ -65,7 +129,12 @@ export async function build({ site, products, renderPage, writeFile }) {
   const heroLinks = (site.hero.categories || [])
     .map((item) => `<li><a href="${url(item.path)}">${esc(item.label)}</a></li>`)
     .join("");
-  const facts = (site.facts || []).map((fact) => `<li>${rich(fact)}</li>`).join("");
+  const facts = (site.facts || []).map((fact) => {
+    const truck = String(fact).startsWith("Next day dispatch")
+      ? ` <a href="${url("#australia")}" aria-label="Australian customers"><img class="truck" src="${url("assets/logos/Delivery-Truck-e1599703368301.png")}" width="256" height="171" alt=""></a>`
+      : "";
+    return `<li>${rich(fact)}${truck}</li>`;
+  }).join("");
   const offers = (site.offers.items || []).map((item) => `<li>${rich(item)}</li>`).join("");
   const brochures = (site.brochures || [])
     .map((item) => `<li><a href="${esc(item.href)}" rel="noopener noreferrer">${esc(item.label)}</a></li>`)
@@ -81,9 +150,25 @@ export async function build({ site, products, renderPage, writeFile }) {
       </article>`;
     })
     .join("");
-  const featured = (site.featured || []).map((item) => featuredCard(item)).join("");
+  const featured = [];
+  for (const item of site.featured || []) {
+    const rel = FEATURED_IMAGE[item.sku];
+    let image = null;
+    if (rel && existsSync(join(redesignRoot, rel))) {
+      const size = await imageSize(rel);
+      image = { src: rel, ...size };
+    }
+    featured.push(featuredCard({ ...item, image }));
+  }
   const partners = (site.partners || [])
-    .map((item) => `<li><a href="${esc(item.href)}" rel="noopener noreferrer">${esc(item.name)}</a></li>`)
+    .map((item) => {
+      const file = item.logo ? String(item.logo).split("/").pop() : "";
+      const local = file ? join(redesignRoot, "assets/logos", file) : "";
+      const img = local && existsSync(local)
+        ? `<img src="${url(`assets/logos/${file}`)}" alt="" width="${file.includes("150x150") ? 150 : file.endsWith(".png") ? 200 : 180}" height="${file.includes("150x150") ? 150 : file.endsWith(".png") ? 200 : 100}" style="--photo-w:${file.includes("150x150") ? 100 : 120}px" loading="lazy" decoding="async">`
+        : "";
+      return `<li><a href="${esc(item.href)}" rel="noopener noreferrer">${img}<span>${esc(item.name)}</span></a></li>`;
+    })
     .join("");
   const news = (site.news || [])
     .map((article) => `<article id="${esc(article.id)}">
@@ -112,7 +197,7 @@ export async function build({ site, products, renderPage, writeFile }) {
     <p><a href="${url("contact/")}">${esc(site.offers.close)}</a></p>
   </section>
   <section class="section" id="search">
-    <h2>Catalogue search</h2>
+    <h2>Catalogue Search:</h2>
     <form class="search" role="search" action="${url("catalogue/")}" method="get">
       <label class="visually-hidden" for="catalogue-search">Search catalogue</label>
       <input id="catalogue-search" name="q" type="search" placeholder="Name / Formula / CAS" enterkeyhint="search" autocomplete="off">
@@ -130,13 +215,14 @@ export async function build({ site, products, renderPage, writeFile }) {
     <div class="card-grid">${cards}</div>
   </section>
   <section class="section" id="featured">
-    <h2>Featured Products</h2>
-    <div class="card-grid cards-wide">${featured}</div>
+    <h2>Featured Products:</h2>
+    <div class="card-grid cards-wide">${featured.join("")}</div>
   </section>
   <section class="section prose" id="services">
     <h2>${esc(site.services.heading)}</h2>
     ${paragraphs(site.services.paragraphs)}
     <p>${rich(site.services.equipment)}</p>
+    <div class="photo-row">${SERVICE_PHOTOS.map((item) => photoTag(item.file, item.alt, item.w, item.h)).join("")}</div>
   </section>
   <section class="section" id="partners">
     <h2>Partners</h2>

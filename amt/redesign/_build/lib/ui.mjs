@@ -71,8 +71,12 @@ export function featuredCard(item) {
       : `<p class="kicker">${esc(item.familyLabel)}</p>`
     : "";
   const note = item.note ? `<p><span class="badge">${esc(item.note)}</span></p>` : "";
+  const image = item.image
+    ? `<img class="structure" src="${url(item.image.src)}" width="${item.image.w}" height="${item.image.h}" alt="" style="--photo-w:${Math.floor(item.image.w / 1.5)}px" loading="lazy" decoding="async">`
+    : "";
   return `<article class="card product-card">
     ${family}
+    ${image}
     <h3><a href="${query}">${esc(item.name)}</a></h3>
     <p class="sku">${esc(item.sku || "")}</p>
     ${note}
