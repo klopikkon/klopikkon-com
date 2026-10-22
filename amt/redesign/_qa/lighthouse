@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+DIR="$(cd "$(dirname "$0")" && pwd)"
+export npm_config_update_notifier=false
+export CHROME_PATH="${CHROME_PATH:-/usr/local/bin/google-chrome}"
+exec npx --yes -p lighthouse@13.5.0 node "$DIR/lib/lighthouse.mjs" "$@"
