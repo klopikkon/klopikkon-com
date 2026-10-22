@@ -8,7 +8,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, wri
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { compareRecord } from "./pages/family-compare.mjs";
-import { buildRankingIndex, formatPerMg, isQuotedPack, loadProducts, loadRanking, matchProduct, packMassMg, pricePerMg, pubchemFields } from "./product-support.mjs";
+import { buildRankingIndex, formatPerMg, hasTechnicalTab, isQuotedPack, loadIdentifierCache, loadProducts, loadRanking, matchProduct, packMassMg, pricePerMg, pubchemFields, technicalIdentifiers } from "./product-support.mjs";
 import { addLine, buildMailto, buildQuoteCsv, emptyCart, quoteSummary, requestText, totalQty } from "../js/cart.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -33,6 +33,7 @@ if (build.status !== 0) {
 
 const products = await loadProducts(redesign);
 const ranking = await loadRanking(path.resolve(redesign, "..", "ranking-on-price"));
+const identifierCache = await loadIdentifierCache(path.join(here, "pubchem-identifiers.json"));
 
 function assert(condition, message) {
   if (!condition) fail(message);
@@ -81,7 +82,20 @@ const pubchem = pubchemFields({
 assert(pubchem.formula === "C27H51NO2" && pubchem.mw === "421.7", "PubChem formula and mw stay on the external fields");
 assert(pubchem.href === "https://pubchem.ncbi.nlm.nih.gov/compound/122689", "PubChem CID link");
 assert(pubchemFields({ cidExternal: "15" }).cid === "15", "cidExternal is accepted");
+assert(pubchemFields({ externalSource: { name: "PubChem", cid: 172871935 } }).cid === "172871935", "externalSource.cid is accepted");
 assert(pubchemFields({ pubchemCid: "not-a-cid", formulaExternal: "C" }).href === null, "a non-numeric CID is not linked");
+assert(hasTechnicalTab({ formula: null, mw: null, structureImage: null }) === false, "no technical tab without data");
+assert(hasTechnicalTab({ structureImage: "assets/structures/a.png" }) === true, "AMT structure opens the technical tab");
+assert(hasTechnicalTab({ formulaExternal: "C2H6" }) === true, "PubChem formula opens the technical tab");
+assert(
+  technicalIdentifiers({ externalSource: { cid: 15 } }, { 15: { smiles: "CCO", inchiKey: "LFQSCWFLJHTTHZ-UHFFFAOYSA-N" } }).smiles === "CCO",
+  "cache supplies SMILES",
+);
+assert(technicalIdentifiers({ smilesExternal: "CCO" }).smiles === "CCO", "a later product SMILES field is used");
+assert(
+  technicalIdentifiers({ externalSource: { cid: 1 } }, { 1: { smiles: "C", inchiKey: "nope" } }).inchiKey === null,
+  "invalid InChIKey is dropped",
+);
 const compared = compareRecord({
   id: "sample",
   sku: "AMT1-A",
@@ -201,7 +215,7 @@ assert(worker.includes('"/amt/redesign/catalogue/"'), "service worker precaches 
 assert(worker.includes('url.protocol === "mailto:"'), "service worker does not cache mailto");
 assert(registration.includes('"/amt/redesign/sw.js"'), "register script points at the worker");
 assert(registration.includes('scope: SCOPE') || registration.includes('"/amt/redesign/"'), "register script sets the redesign scope");
-assert(!readFileSync(path.join(here, "lib/layout.mjs"), "utf8").includes("sw-register.js"), "layout.mjs is left for the shell agent");
+assert(quoteHtml.includes('src="/amt/redesign/js/sw-register.js"'), "quote page missing service worker registration");
 
 const report = readFileSync(path.join(redesign, "products/price-match.md"), "utf8");
 assert(report.includes("Match order"), "price-match.md documents the matcher");
@@ -220,6 +234,7 @@ for (const [id, html] of pages) {
   assert(html.includes('id="main"'), `${id} missing main`);
   assert(html.includes("/css/tokens.css"), `${id} missing tokens`);
   assert(html.includes("/css/product.css"), `${id} missing product.css`);
+  assert(html.includes('src="/amt/redesign/js/sw-register.js"'), `${id} missing service worker registration`);
   assert(html.includes('property="og:image"'), `${id} missing Open Graph image`);
   assert(html.includes(`https://klopikkon.com/amt/redesign/og/${id}.png`), `${id} og image path`);
   const ogFile = path.join(redesign, "og", `${id}.png`);
@@ -289,6 +304,11 @@ for (const [id, html] of pages) {
   }
   if (product.structureImage) assert(html.includes(product.structureImage), `${id} missing published structure image`);
   else assert(html.includes("No structure image published by AMT"), `${id} missing structure placeholder`);
+  for (const img of html.matchAll(/<img src="([^"]*\/assets\/structures\/[^"]+)"([^>]*)>/g)) {
+    assert(/\ssrcset="[^"]+\s1x"/.test(img[2]), `${id} structure image missing srcset`);
+    assert(/\swidth="\d+"/.test(img[2]) && /\sheight="\d+"/.test(img[2]), `${id} structure image missing width and height`);
+    assert(!(/width="480"/.test(img[2]) && /height="360"/.test(img[2])), `${id} structure image uses a placeholder box`);
+  }
   for (const pack of product.packs || []) {
     const label = pack.price == null || String(pack.priceText || "").toLowerCase() === "quote" ? "Quote" : pack.priceText;
     assert(html.includes(label), `${id} missing pack label ${label}`);
@@ -309,16 +329,48 @@ for (const [id, html] of pages) {
   if (product.sku) assert(html.includes(`data-copy="${product.sku}"`), `${id} missing copy-SKU button`);
   if (product.family) assert(html.includes(`/families/${product.family}/compare/?ids=${encodeURIComponent(id)}`), `${id} missing family compare link`);
   const external = pubchemFields(product);
-  if (external) {
-    assert(html.includes("From PubChem"), `${id} missing PubChem section`);
+  const identifiers = technicalIdentifiers(product, identifierCache);
+  if (external?.cid) {
+    assert(identifierCache[external.cid]?.smiles && identifierCache[external.cid]?.inchiKey, `${id} CID ${external.cid} is missing cached PubChem identifiers`);
+  }
+  if (hasTechnicalTab(product, identifierCache)) {
+    assert(html.includes("data-detail-tabs"), `${id} missing technical tabs`);
+    assert(html.includes(">Technical<"), `${id} missing Technical tab`);
+    assert(html.includes('role="tablist"'), `${id} missing tab list`);
+  } else {
+    assert(!html.includes("data-detail-tabs"), `${id} shows a technical tab without data`);
+    assert(!html.includes(">Technical<"), `${id} shows a Technical heading without data`);
+    assert(!html.includes("data-technical"), `${id} shows a technical panel without data`);
+  }
+  const showPubchem = Boolean(external && (external.formula || external.mw || external.image));
+  if (showPubchem) {
+    assert(html.includes("From PubChem"), `${id} missing PubChem heading`);
     assert(html.includes("from PubChem"), `${id} missing PubChem label`);
     if (external.href) assert(html.includes(external.href), `${id} missing PubChem CID link`);
+    if (external.formula) assert(html.includes(`${external.formula} <span class="pubchem-tag">from PubChem</span>`), `${id} PubChem formula is unlabelled`);
     if (!product.formula) {
+      const specs = html.match(/<section class="specs-section"[\s\S]*?<\/section>/);
+      assert(specs && specs[0].includes(">Formula</th><td>Not published</td>"), `${id} AMT formula row used a PubChem value`);
       const dataBlock = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
       if (dataBlock) assert(!JSON.parse(dataBlock[1]).additionalProperty?.some((item) => item.name === "Formula"), `${id} JSON-LD used a PubChem formula`);
     }
   } else {
-    assert(!html.includes("From PubChem"), `${id} shows PubChem without external fields`);
+    assert(!html.includes("From PubChem") && !html.includes("from PubChem"), `${id} shows PubChem without external fields`);
+  }
+  const dataBlock = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  if (identifiers.smiles) {
+    assert(html.includes(`data-copy="${identifiers.smiles}"`), `${id} missing SMILES copy value`);
+    assert(html.includes('aria-label="Copy SMILES from PubChem"'), `${id} SMILES button is not labelled from PubChem`);
+    assert(dataBlock && !dataBlock[1].includes(identifiers.smiles) && !dataBlock[1].includes("SMILES"), `${id} JSON-LD includes a PubChem SMILES`);
+  } else {
+    assert(!html.includes("Copy SMILES from PubChem"), `${id} shows a SMILES button without a PubChem value`);
+  }
+  if (identifiers.inchiKey) {
+    assert(html.includes(`data-copy="${identifiers.inchiKey}"`), `${id} missing InChIKey copy value`);
+    assert(html.includes('aria-label="Copy InChIKey from PubChem"'), `${id} InChIKey button is not labelled from PubChem`);
+    assert(dataBlock && !dataBlock[1].includes(identifiers.inchiKey), `${id} JSON-LD includes a PubChem InChIKey`);
+  } else {
+    assert(!html.includes("Copy InChIKey from PubChem"), `${id} shows an InChIKey button without a PubChem value`);
   }
   assert(html.includes("data-print-spec"), `${id} missing print spec sheet`);
   assert(html.includes("data-recent"), `${id} missing recently viewed`);

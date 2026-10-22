@@ -1,0 +1,2666 @@
+{
+  "10469": {
+    "smiles": "CCCCCCCCCCCCCCCCCCCCCCCCCC(=O)O",
+    "inchiKey": "XMHIUKTWLZUKEX-UHFFFAOYSA-N"
+  },
+  "15375": {
+    "smiles": "COCCOC(=O)N",
+    "inchiKey": "QAQJKDRAJZWQCM-UHFFFAOYSA-N"
+  },
+  "17472": {
+    "smiles": "C(COCCOCCOCCOCCOCCO)O",
+    "inchiKey": "IIRDTKBZINWQAW-UHFFFAOYSA-N"
+  },
+  "20479": {
+    "smiles": "B(CCCC)(O)O",
+    "inchiKey": "QPKFVRWIISEVCW-UHFFFAOYSA-N"
+  },
+  "62551": {
+    "smiles": "C(COCCOCCOCCOCCO)O",
+    "inchiKey": "JLFNLZLINWHATN-UHFFFAOYSA-N"
+  },
+  "74348": {
+    "smiles": "CN(C)CCOCCO",
+    "inchiKey": "YSAANLSYLSUVHB-UHFFFAOYSA-N"
+  },
+  "150111": {
+    "smiles": "C(CCN=[N+]=[N-])CN",
+    "inchiKey": "LFMZGBHJJNIRKH-UHFFFAOYSA-N"
+  },
+  "404882": {
+    "smiles": "COC(=O)C1=CC=CC=C1C2=C3C=CC(=O)C=C3OC4=C2C=CC(=C4)O",
+    "inchiKey": "IWMKLWJDGZMNGT-UHFFFAOYSA-N"
+  },
+  "448201": {
+    "smiles": "CC1=C(C=CC(=C1)N(C)C)C2=NC3=C(N2)C=C(C=C3)C4=NC5=C(N4)C=C(C=C5)N6CCN(CC6)C",
+    "inchiKey": "ADKLMOJIJGHCCD-UHFFFAOYSA-N"
+  },
+  "468706": {
+    "smiles": "C[C@@H](CCC[C@@H](C)CCCC(C)CC(=O)O)CCCC(C)C",
+    "inchiKey": "RLCKHJSFHOZMDR-PWCSWUJKSA-N"
+  },
+  "526555": {
+    "smiles": "COCCOCCOCCOCCOCCOCCOCCO",
+    "inchiKey": "AGWKUHGLWHMYTG-UHFFFAOYSA-N"
+  },
+  "547852": {
+    "smiles": "COCCOCCOCCCl",
+    "inchiKey": "WODLURYTHKQUET-UHFFFAOYSA-N"
+  },
+  "567153": {
+    "smiles": "CCCCCCOCCCl",
+    "inchiKey": "FCLSYAXUOPORKQ-UHFFFAOYSA-N"
+  },
+  "933256": {
+    "smiles": "COC(=O)C1=CC2=C(N1)C=CC3=C2C=CC(=O)O3",
+    "inchiKey": "CJJRPHJDGQCFII-UHFFFAOYSA-N"
+  },
+  "2734619": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC(=O)C",
+    "inchiKey": "ANGKVUVZQVUVJO-UHFFFAOYSA-N"
+  },
+  "2737322": {
+    "smiles": "C1=CC=C(C=C1)COCCOCCOCCO",
+    "inchiKey": "KVPHZILZNXDCNH-UHFFFAOYSA-N"
+  },
+  "2758016": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NC3CC3",
+    "inchiKey": "PXTNJXLWXIJJIM-UHFFFAOYSA-N"
+  },
+  "2758503": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NCCN(C)C",
+    "inchiKey": "KTDBEJMIGCLCSU-UHFFFAOYSA-N"
+  },
+  "2758518": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NCCCN(C)C",
+    "inchiKey": "KDABIGMFEYWURZ-UHFFFAOYSA-N"
+  },
+  "2760590": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C#N",
+    "inchiKey": "FIGQEPXOSAFKTA-UHFFFAOYSA-N"
+  },
+  "2760596": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)C",
+    "inchiKey": "BATKIZWNRQGSKE-UHFFFAOYSA-N"
+  },
+  "2762704": {
+    "smiles": "B(C1=C(N=CC=C1)Cl)(O)O",
+    "inchiKey": "VRDAOVQZVXYRNH-UHFFFAOYSA-N"
+  },
+  "2773511": {
+    "smiles": "B(C1=CC=C(C2=CC=CC=C12)C)(O)O",
+    "inchiKey": "JHVQEUGNYSVSDH-UHFFFAOYSA-N"
+  },
+  "2773546": {
+    "smiles": "B(C1=CC=C(C=C1)C(=O)N2CCOCC2)(O)O",
+    "inchiKey": "KMNLIQJXZPBCDU-UHFFFAOYSA-N"
+  },
+  "2773567": {
+    "smiles": "B(C1=CC=C(C=C1)C(=O)N2CCCCC2)(O)O",
+    "inchiKey": "PUXUKRSBJVVKMD-UHFFFAOYSA-N"
+  },
+  "2773571": {
+    "smiles": "B(C1=CC=C(C=C1)C(=O)N2CCCC2)(O)O",
+    "inchiKey": "VKPBESPVHGDDJS-UHFFFAOYSA-N"
+  },
+  "2774580": {
+    "smiles": "B(C1=CC(=C(C=C1)F)C)(O)O",
+    "inchiKey": "JCIJCHSRVPSOML-UHFFFAOYSA-N"
+  },
+  "2783134": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC=C(C=C2)F",
+    "inchiKey": "ARFOLXGRXVAHCE-UHFFFAOYSA-N"
+  },
+  "2795361": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)N3CCOCC3",
+    "inchiKey": "UCPALIMHMYIZPZ-UHFFFAOYSA-N"
+  },
+  "2795502": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3CCOCC3",
+    "inchiKey": "JOIXYIWXEYXHHG-UHFFFAOYSA-N"
+  },
+  "3015553": {
+    "smiles": "CCCCCCCCCCCCCCCCCCNCCO",
+    "inchiKey": "YGCMLNDQGHTAPC-UHFFFAOYSA-N"
+  },
+  "3016250": {
+    "smiles": "COCCOCCOCCNCCOCCOCCOC",
+    "inchiKey": "NBTVYAUPXIBYLV-UHFFFAOYSA-N"
+  },
+  "3018531": {
+    "smiles": "COCCOCCOCCN",
+    "inchiKey": "OKUWOEKJQRUMBW-UHFFFAOYSA-N"
+  },
+  "3021600": {
+    "smiles": "B(C1=CC(=CC=C1)NC(=O)N)(O)O",
+    "inchiKey": "FDZYBPMGFTXHMK-UHFFFAOYSA-N"
+  },
+  "3081505": {
+    "smiles": "C1C(O1)COCCCOCC2CO2",
+    "inchiKey": "VLKXLWGYPOUERV-UHFFFAOYSA-N"
+  },
+  "3549395": {
+    "smiles": "B(C1=C(C=CC=C1Cl)F)(O)O",
+    "inchiKey": "NXSZSZJWZVLHAY-UHFFFAOYSA-N"
+  },
+  "3612333": {
+    "smiles": "C1COCCN1CCOCCOCCO",
+    "inchiKey": "QUKPCKJVRXZGOH-UHFFFAOYSA-N"
+  },
+  "3863347": {
+    "smiles": "C(COCCOCCCl)OCCOCCCl",
+    "inchiKey": "QRLJZCCWUWDJHW-UHFFFAOYSA-N"
+  },
+  "4053372": {
+    "smiles": "CC(=O)OCCOCCOCCCl",
+    "inchiKey": "LMFSCKGZBKAPFM-UHFFFAOYSA-N"
+  },
+  "4172276": {
+    "smiles": "CCCCCCCCCCCCCCCCCCOCCOCCOCCO",
+    "inchiKey": "KPRFGGDCSHOVQB-UHFFFAOYSA-N"
+  },
+  "4396106": {
+    "smiles": "C(CO)NCCOCCO",
+    "inchiKey": "AVUHPLVMRYGTHW-UHFFFAOYSA-N"
+  },
+  "4435488": {
+    "smiles": "C1=CC=C(C=C1)C(C2=CC=CC=C2)(C3=CC=CC=C3)N(CCO)CCO",
+    "inchiKey": "YJLPWJRMZCVURD-UHFFFAOYSA-N"
+  },
+  "4532730": {
+    "smiles": "B(C1=C(C=CC(=C1)Br)OC)(O)O",
+    "inchiKey": "FVRLSHRAYPFXRQ-UHFFFAOYSA-N"
+  },
+  "4645420": {
+    "smiles": "COCC(CN1CCOCC1)O",
+    "inchiKey": "DLSNTVMQVUYYRE-UHFFFAOYSA-N"
+  },
+  "4670884": {
+    "smiles": "CNCCOCCOCCOCCNC",
+    "inchiKey": "DQWNGAQNIKMWBO-UHFFFAOYSA-N"
+  },
+  "4672597": {
+    "smiles": "B(C1=CC2=NON=C2C=C1)(O)O",
+    "inchiKey": "CHYMBQMSEFLESI-UHFFFAOYSA-N"
+  },
+  "4961250": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)N3CCCCC3",
+    "inchiKey": "OTOKWHGMHAAFRM-UHFFFAOYSA-N"
+  },
+  "4982908": {
+    "smiles": "B(C1=CC=C(C=C1)C(=O)NCC2=CC=CO2)(O)O",
+    "inchiKey": "KXSMENBYQORPAK-UHFFFAOYSA-N"
+  },
+  "9970710": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)C(=O)OCC",
+    "inchiKey": "LARSIMPPYZOXGK-UHFFFAOYSA-N"
+  },
+  "9993953": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)Br",
+    "inchiKey": "FHCWGLQDAMYXJS-UHFFFAOYSA-N"
+  },
+  "10012169": {
+    "smiles": "CCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "LNBSTMISALASFG-UHFFFAOYSA-N"
+  },
+  "10057553": {
+    "smiles": "CCOCCOCCN",
+    "inchiKey": "KURRHYKFNUZCSJ-UHFFFAOYSA-N"
+  },
+  "10121147": {
+    "smiles": "B(C1=CC=C(C=C1)C[N+]2=CC=C(C=C2)C3=CC=[N+](C=C3)CC4=CC=C(C=C4)B(O)O)(O)O.[Br-].[Br-]",
+    "inchiKey": "DTORDTSFDZJPJM-UHFFFAOYSA-L"
+  },
+  "10375240": {
+    "smiles": "COCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "ZSSKNHYYIBAWRX-UHFFFAOYSA-N"
+  },
+  "10398127": {
+    "smiles": "B1(OCC(CO1)(C)C)C2=CC=CC=C2F",
+    "inchiKey": "ZNFBLQHZFSLYQB-UHFFFAOYSA-N"
+  },
+  "10400865": {
+    "smiles": "B1(OCC(CO1)(C)C)C2=CC=C(C=C2)Br",
+    "inchiKey": "GUASPWAWPYERCR-UHFFFAOYSA-N"
+  },
+  "10442224": {
+    "smiles": "COCCOCCOCC1CO1",
+    "inchiKey": "DQBPICZFQWJEKL-UHFFFAOYSA-N"
+  },
+  "10516636": {
+    "smiles": "C(COCCOCCOCCOCC(=O)O)N=[N+]=[N-]",
+    "inchiKey": "YHTABJLSZLHRFV-UHFFFAOYSA-N"
+  },
+  "10525359": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CC=C(C=C3)B4OC(C(O4)(C)C)(C)C",
+    "inchiKey": "INNVTCAYPFZCAL-UHFFFAOYSA-N"
+  },
+  "10636020": {
+    "smiles": "COCCOCCOCCI",
+    "inchiKey": "DLGFZOSPWIUMKY-UHFFFAOYSA-N"
+  },
+  "10845034": {
+    "smiles": "CN(C)CCOCCOCCO",
+    "inchiKey": "CCTDPTKERPLATF-UHFFFAOYSA-N"
+  },
+  "11078232": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)N=CC3=CC=C(C=C3)OC",
+    "inchiKey": "OKCWNDNFJLMDKV-UHFFFAOYSA-N"
+  },
+  "11084115": {
+    "smiles": "B(C1=CSC(=C1)C=O)(O)O",
+    "inchiKey": "ZCUFJAORCNFWOF-UHFFFAOYSA-N"
+  },
+  "11230491": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN(N=C2)CCOC",
+    "inchiKey": "NZMICYAXDXTDJV-UHFFFAOYSA-N"
+  },
+  "11269202": {
+    "smiles": "[B-](C1=CC=CC=C1)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "SQRLCDKEHWULQU-UHFFFAOYSA-N"
+  },
+  "11270136": {
+    "smiles": "[B-](C1=CC=C(C=C1)Cl)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "HVZQONCCLXPJGY-UHFFFAOYSA-N"
+  },
+  "11313483": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)I",
+    "inchiKey": "HSHFNMSHDHAHDN-UHFFFAOYSA-N"
+  },
+  "11368533": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=CC=CC=C3O2",
+    "inchiKey": "GVWNFCUCNAWDNO-UHFFFAOYSA-N"
+  },
+  "11400789": {
+    "smiles": "C(COCCO)N=[N+]=[N-]",
+    "inchiKey": "CGJFKQFYZOARRV-UHFFFAOYSA-N"
+  },
+  "11407541": {
+    "smiles": "[B-](C1=CC(=CC=C1)Cl)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "CBZCYMNTHJMIEU-UHFFFAOYSA-N"
+  },
+  "11479119": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)N(C3=CC=C(C=C3)B4OC(C(O4)(C)C)(C)C)C5=CC=C(C=C5)B6OC(C(O6)(C)C)(C)C",
+    "inchiKey": "QNGUSFKMKLSUKS-UHFFFAOYSA-N"
+  },
+  "11602119": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)OC(=C3)C(=O)OCC",
+    "inchiKey": "JHLYLEXOPWVWKK-UHFFFAOYSA-N"
+  },
+  "11688612": {
+    "smiles": "CC(C)(C)OC(=O)NCCOCCOCCOCCOCCN",
+    "inchiKey": "WCNWLERBLMBSOT-UHFFFAOYSA-N"
+  },
+  "11850073": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)N3C4=CC=CC=C4C5=CC=CC=C53",
+    "inchiKey": "AHDSYMVAUJZCOP-UHFFFAOYSA-N"
+  },
+  "11989604": {
+    "smiles": "CC(C)(C)OC(=O)NCCCOCCOCCOCCCN",
+    "inchiKey": "WHHYAYNALHPDGJ-UHFFFAOYSA-N"
+  },
+  "12030205": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)C)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "DCTWGMLLLDCCNZ-UHFFFAOYSA-N"
+  },
+  "12030208": {
+    "smiles": "[B-](C1=CC=C(C=C1)OC)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "AQMZYELHKCCXQS-UHFFFAOYSA-N"
+  },
+  "12158468": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(C3=CC=CC=C3)O",
+    "inchiKey": "KTGUGSQWEASZFS-UHFFFAOYSA-N"
+  },
+  "12158600": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C(C3=CC=CC=C3)O",
+    "inchiKey": "SPSDOGOXXYFZLF-UHFFFAOYSA-N"
+  },
+  "12160764": {
+    "smiles": "CC1=CC=CC=C1C2=C3C=C(C(=O)C=C3OC4=CC(=C(C=C42)F)O)F",
+    "inchiKey": "OLGHTNOAGHLUQB-UHFFFAOYSA-N"
+  },
+  "12160765": {
+    "smiles": "CC1=C(C=CC(=C1)C(=O)O)C2=C3C=C(C(=O)C=C3OC4=CC(=C(C=C42)F)O)F",
+    "inchiKey": "XUNQGAYPSJNQMX-UHFFFAOYSA-N"
+  },
+  "12160772": {
+    "smiles": "CC1=C(C=CC(=C1)C(=O)OC)C2=C3C=C(C(=O)C=C3OC4=CC(=C(C=C42)F)O)F",
+    "inchiKey": "DPZLMQCYZDHMGJ-UHFFFAOYSA-N"
+  },
+  "12170541": {
+    "smiles": "B1(OCC(CO1)(C)C)C2=CC=CC=C2OC",
+    "inchiKey": "BEQHZRSAYLTONI-UHFFFAOYSA-N"
+  },
+  "12436212": {
+    "smiles": "B1(OCCO1)C2=CC(=CC=C2)C",
+    "inchiKey": "GSVGCTFELKEEPC-UHFFFAOYSA-N"
+  },
+  "12621265": {
+    "smiles": "CNCCOCCOCCOC",
+    "inchiKey": "XOTTZADIXWMSNG-UHFFFAOYSA-N"
+  },
+  "12711342": {
+    "smiles": "B1(OCCNCCO1)C2=CC=CC=C2",
+    "inchiKey": "XPIHVYSMTIFCST-UHFFFAOYSA-N"
+  },
+  "12711346": {
+    "smiles": "B1(OCCNCCO1)C2=CC=C(C=C2)OC",
+    "inchiKey": "HFFAIEFIZDVDNK-UHFFFAOYSA-N"
+  },
+  "12838849": {
+    "smiles": "C(COCC(CN)O)OCC(CN)O",
+    "inchiKey": "OFFUSBBVHYQXSX-UHFFFAOYSA-N"
+  },
+  "13070585": {
+    "smiles": "COCCOCCOCCOCC1CO1",
+    "inchiKey": "CBTRJEXEEWVQHL-UHFFFAOYSA-N"
+  },
+  "13072765": {
+    "smiles": "C(COCCOCCOCCCl)OCCOCCOCCOCCCl",
+    "inchiKey": "HSDUHXXBUQXGSR-UHFFFAOYSA-N"
+  },
+  "13157950": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)CC(C)C",
+    "inchiKey": "MWSRDHSNGZYVOY-UHFFFAOYSA-N"
+  },
+  "13347081": {
+    "smiles": "B1(OCC(CO1)(C)C)C2=CC=CC=C2C",
+    "inchiKey": "ZZYGMAWEGWFCCK-UHFFFAOYSA-N"
+  },
+  "13620964": {
+    "smiles": "C(CCN=[N+]=[N-])CN=[N+]=[N-]",
+    "inchiKey": "AZWIJYAGFOFYIL-UHFFFAOYSA-N"
+  },
+  "13828416": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC=CC=C2",
+    "inchiKey": "QTHVGJPLXHEIAZ-UHFFFAOYSA-N"
+  },
+  "14199472": {
+    "smiles": "CCCCCCCCCCCCCCCCCCCCCCOCCOCCO",
+    "inchiKey": "HSTIFWMWLCYDFT-UHFFFAOYSA-N"
+  },
+  "14739363": {
+    "smiles": "B(C1=CC(=CC(=C1)C2=CC=CC=C2)C3=CC=CC=C3)(O)O",
+    "inchiKey": "MRBZYVMZUBUDAX-UHFFFAOYSA-N"
+  },
+  "14763680": {
+    "smiles": "COCCOCCOCCOCCOCCOS(=O)(=O)C",
+    "inchiKey": "GIZXGFFADYUCPD-UHFFFAOYSA-N"
+  },
+  "14765039": {
+    "smiles": "C(COCCOCCI)O",
+    "inchiKey": "TZNNPQMNZJJAJR-UHFFFAOYSA-N"
+  },
+  "14833112": {
+    "smiles": "CC(C)(C)OC(=O)CCOCCOC",
+    "inchiKey": "ZJBXTZCCLOVIGI-UHFFFAOYSA-N"
+  },
+  "15174112": {
+    "smiles": "B1(OCC(CO1)(C)C)CC(C)C",
+    "inchiKey": "XCNHRVKMGMELHW-UHFFFAOYSA-N"
+  },
+  "15198040": {
+    "smiles": "CC1=CC=C(C=C1)S(=O)(=O)OCCOCCOCCOCCOCCO",
+    "inchiKey": "NSODVVYOWINKAG-UHFFFAOYSA-N"
+  },
+  "15488055": {
+    "smiles": "CNCCOCCOCCOCCOCCNC",
+    "inchiKey": "ABBOMYUJVDTGJP-UHFFFAOYSA-N"
+  },
+  "15610191": {
+    "smiles": "C(COCCOCCOCCOCCOCCN)N",
+    "inchiKey": "FOOPZYBJIJNBLQ-UHFFFAOYSA-N"
+  },
+  "15848698": {
+    "smiles": "CCOCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "QCKRVSYHRAABCY-UHFFFAOYSA-N"
+  },
+  "15848699": {
+    "smiles": "CCOCCOCCOCCN",
+    "inchiKey": "WWJVRDMJNJTOBL-UHFFFAOYSA-N"
+  },
+  "15883728": {
+    "smiles": "C1=CC=C2C(=C1)C(=O)N(C23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O)N",
+    "inchiKey": "CHYVTSCIBXXQJT-UHFFFAOYSA-N"
+  },
+  "15906198": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC(=C2)C)C",
+    "inchiKey": "XWCNEQGQJTWRHX-UHFFFAOYSA-N"
+  },
+  "15906200": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC(=C2)Br)OC",
+    "inchiKey": "JDXGYRZLDSSGPW-UHFFFAOYSA-N"
+  },
+  "16069320": {
+    "smiles": "B1(OCC(CO1)(C)C)C2=CC=C(C=C2)C3=CC=C(C=C3)B4OCC(CO4)(C)C",
+    "inchiKey": "NJXUWONHNYJPMY-UHFFFAOYSA-N"
+  },
+  "16217467": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)OCC3=CC=CC=C3",
+    "inchiKey": "CMBBWFXLHUITFS-UHFFFAOYSA-N"
+  },
+  "16217654": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN(N=C2)C(=O)OC(C)(C)C",
+    "inchiKey": "IPISOFJLWYBCAV-UHFFFAOYSA-N"
+  },
+  "16217660": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC(=C2)OC)OC",
+    "inchiKey": "CZYHRTIJLUONKY-UHFFFAOYSA-N"
+  },
+  "16414146": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2CN3CCOCC3",
+    "inchiKey": "WCNXVDLZTGODQW-UHFFFAOYSA-N"
+  },
+  "16723347": {
+    "smiles": "C(COCCOCC(=O)O)N=[N+]=[N-]",
+    "inchiKey": "OCIIYNXOTJRSHW-UHFFFAOYSA-N"
+  },
+  "16750420": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=CC(=C2)OC)O",
+    "inchiKey": "URRPKAAGJYPAPH-UHFFFAOYSA-N"
+  },
+  "16755926": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)[Si](C)(C)C3=CC=CC=C3CO",
+    "inchiKey": "XFFRLNMYZWHOLZ-UHFFFAOYSA-N"
+  },
+  "17155123": {
+    "smiles": "C1=CC=C(C=C1)CNCCOCCO",
+    "inchiKey": "RUWCLYHXAOHIRI-UHFFFAOYSA-N"
+  },
+  "17749915": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC(=O)C(F)(F)F",
+    "inchiKey": "HGZQPOXNGFTPNQ-UHFFFAOYSA-N"
+  },
+  "17749917": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)N3CCN(CC3)C(=O)OC(C)(C)C",
+    "inchiKey": "QPYOLSJFOCIOHK-UHFFFAOYSA-N"
+  },
+  "17749922": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCCC(=O)OCC",
+    "inchiKey": "ULQLSUMGMISQGT-UHFFFAOYSA-N"
+  },
+  "17750216": {
+    "smiles": "B(C1=CN=C(C=C1)OCC2=CC=CC=C2)(O)O",
+    "inchiKey": "CUZOGAUUSKBDAO-UHFFFAOYSA-N"
+  },
+  "17750251": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)OC)O",
+    "inchiKey": "WINSAMQIAMEZIK-UHFFFAOYSA-N"
+  },
+  "17750258": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)COC",
+    "inchiKey": "FDTVLJCTUKZTMS-UHFFFAOYSA-N"
+  },
+  "17750280": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C3C(=CC=C2)C=CC=N3",
+    "inchiKey": "RNTGVJBKPQOGPS-UHFFFAOYSA-N"
+  },
+  "17802672": {
+    "smiles": "CC(C)(C)OC(=O)N(C)CCCCCCO",
+    "inchiKey": "BAXFERRQISNSLD-UHFFFAOYSA-N"
+  },
+  "17968052": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)N3CCN(CC3)CC",
+    "inchiKey": "WTFPPCPYLZHSQU-UHFFFAOYSA-N"
+  },
+  "17998910": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)N(CC)CC",
+    "inchiKey": "GGSTYOBAIUYURJ-UHFFFAOYSA-N"
+  },
+  "17998913": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NCC(OC)OC",
+    "inchiKey": "FQLNWUNLGCBRLM-UHFFFAOYSA-N"
+  },
+  "17998929": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C(=O)N(CC)CC",
+    "inchiKey": "XCMONACECYHFCP-UHFFFAOYSA-N"
+  },
+  "17999151": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C#C[Si](C)(C)C",
+    "inchiKey": "LDKJXCOLGXLWKP-UHFFFAOYSA-N"
+  },
+  "18439275": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC(=O)CCl",
+    "inchiKey": "SDEMCVFPLGEVJY-UHFFFAOYSA-N"
+  },
+  "18533854": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C3C=CC=CC3=CC4=CC=CC=C24",
+    "inchiKey": "GBHRGHJTZFOAKE-UHFFFAOYSA-N"
+  },
+  "18759534": {
+    "smiles": "C(COCCOCCOCCOCCOCCN=[N+]=[N-])N=[N+]=[N-]",
+    "inchiKey": "OQHIMLOZSDFRID-UHFFFAOYSA-N"
+  },
+  "18764651": {
+    "smiles": "COCCOCCOCCOCCOCCOCCOCCN",
+    "inchiKey": "IQQSLHPGFFGOJW-UHFFFAOYSA-N"
+  },
+  "19828627": {
+    "smiles": "CN(CCOCCO)CC1=CC=CC=C1",
+    "inchiKey": "VMCKVGNNQRSYTA-UHFFFAOYSA-N"
+  },
+  "19973405": {
+    "smiles": "COCCOCCOCCOCCOCCOCCN",
+    "inchiKey": "JDTWBXXBTWYNAT-UHFFFAOYSA-N"
+  },
+  "20640927": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C4=C(C3(C)C)C=C(C=C4)B5OC(C(O5)(C)C)(C)C",
+    "inchiKey": "RVFLMSKITNJVRB-UHFFFAOYSA-N"
+  },
+  "20768416": {
+    "smiles": "CNCC(COCCOCC(CNC)O)O",
+    "inchiKey": "XPUZQNOOYRZVMJ-UHFFFAOYSA-N"
+  },
+  "21343479": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)[N+]#[C-]",
+    "inchiKey": "LSAGFQFDWYWSHS-UHFFFAOYSA-N"
+  },
+  "21737107": {
+    "smiles": "COCCOCCOCCOCCI",
+    "inchiKey": "KBOKJZSZVAHUPY-UHFFFAOYSA-N"
+  },
+  "21923963": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C=C(C=C3)O",
+    "inchiKey": "FEOQRVDXBOSJLZ-UHFFFAOYSA-N"
+  },
+  "21939609": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OC(C)C",
+    "inchiKey": "LSMVUNSQZOHKJB-UHFFFAOYSA-N"
+  },
+  "21982074": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C4=C(C3(CCCCCCCC)CCCCCCCC)C=C(C=C4)B5OC(C(O5)(C)C)(C)C",
+    "inchiKey": "FAHIZHKRQQNPLC-UHFFFAOYSA-N"
+  },
+  "21988878": {
+    "smiles": "B(C1=CC2=C(C=C1)C3=CC=CC=C3C2)(O)O",
+    "inchiKey": "OHGJAUSHXQCSQX-UHFFFAOYSA-N"
+  },
+  "22011791": {
+    "smiles": "C1=CC=C(C=C1)CNCCOCCOCCO",
+    "inchiKey": "HTTWSYTYYOPMHH-UHFFFAOYSA-N"
+  },
+  "22027852": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC(=O)OC",
+    "inchiKey": "YIYLUNVPIWRPLJ-UHFFFAOYSA-N"
+  },
+  "22062779": {
+    "smiles": "COCCOCCOCCOCCCl",
+    "inchiKey": "LLYDKJHVBBGLDO-UHFFFAOYSA-N"
+  },
+  "22346741": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CN4C=CC=CC4=N3",
+    "inchiKey": "CEJBXBYHQWDMGV-UHFFFAOYSA-N"
+  },
+  "22348454": {
+    "smiles": "B(C1=CC2=C(C=C1)C3=CC=CC=C3C2(C)C)(O)O",
+    "inchiKey": "DMDPAJOXRYGXCB-UHFFFAOYSA-N"
+  },
+  "23005421": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2Cl",
+    "inchiKey": "CDVCBWQNFHAZRD-UHFFFAOYSA-N"
+  },
+  "23088535": {
+    "smiles": "B(C1=C2C=CC=C3C2=C(C=C1)C4=CC=CC=C43)(O)O",
+    "inchiKey": "LDPCTBXVSGTSNJ-UHFFFAOYSA-N"
+  },
+  "23120827": {
+    "smiles": "B(C1=CC=C(C=C1)N2C3=CC=CC=C3C4=CC=CC=C42)(O)O",
+    "inchiKey": "JGAVTCVHDMOQTJ-UHFFFAOYSA-N"
+  },
+  "23132422": {
+    "smiles": "C(CCCN=[N+]=[N-])CCCO",
+    "inchiKey": "MMZFWZFKVCDRSX-UHFFFAOYSA-N"
+  },
+  "23154502": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)S(=O)(=O)N3CCN(CC3)C",
+    "inchiKey": "TZMSTBRAQGYDJI-UHFFFAOYSA-N"
+  },
+  "23657595": {
+    "smiles": "[B-]1(N2C(=CC(=C2C(=C3[N+]1=C(C=C3C)C)C4=CC=C(C=C4)C#C)C)C)(F)F",
+    "inchiKey": "BWPZDONCASGPRX-UHFFFAOYSA-N"
+  },
+  "23665673": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)C)(F)(F)F.[K+]",
+    "inchiKey": "JRUXIRSHKHCTTK-UHFFFAOYSA-N"
+  },
+  "23668491": {
+    "smiles": "[B-](CC)(F)(F)F.[K+]",
+    "inchiKey": "GIIPADVFWNGSKY-UHFFFAOYSA-N"
+  },
+  "23672565": {
+    "smiles": "[B-](C1=C(C=C(C=C1)Cl)Cl)(F)(F)F.[K+]",
+    "inchiKey": "MASOPVJEJIORDH-UHFFFAOYSA-N"
+  },
+  "23674671": {
+    "smiles": "[B-](C1=CC2=CC=CC=C2O1)(F)(F)F.[K+]",
+    "inchiKey": "UHZFYHWZTXEABO-UHFFFAOYSA-N"
+  },
+  "23674672": {
+    "smiles": "[B-](C1=CC(=CC(=C1)Br)Br)(F)(F)F.[K+]",
+    "inchiKey": "VVJGGBRKFGESKI-UHFFFAOYSA-N"
+  },
+  "23674703": {
+    "smiles": "[B-](C1=CC=CC=C1C)(F)(F)F.[K+]",
+    "inchiKey": "ROMUTKWSUQKVLS-UHFFFAOYSA-N"
+  },
+  "23677741": {
+    "smiles": "[B-](C1=C(C=CC=C1F)F)(F)(F)F.[K+]",
+    "inchiKey": "XUCOCDVVPJFGSH-UHFFFAOYSA-N"
+  },
+  "23680020": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)NC2=CC=CC=C2)(F)(F)F.[K+]",
+    "inchiKey": "KWNGJSAKNIGTLH-UHFFFAOYSA-N"
+  },
+  "23682238": {
+    "smiles": "[B-](C1=CC=C(S1)C)(F)(F)F.[K+]",
+    "inchiKey": "SLHDDEQSKNIZEL-UHFFFAOYSA-N"
+  },
+  "23682740": {
+    "smiles": "[B-](C1=CC(=CC=C1)C(=O)O)(F)(F)F.[K+]",
+    "inchiKey": "LKEMWADDENRLDB-UHFFFAOYSA-N"
+  },
+  "23684966": {
+    "smiles": "[B-](C1=CC=CC=C1OC)(F)(F)F.[K+]",
+    "inchiKey": "IXJPOOXJHKETAZ-UHFFFAOYSA-N"
+  },
+  "23688160": {
+    "smiles": "[B-](C1=CC=C(C=C1)I)(F)(F)F.[K+]",
+    "inchiKey": "WTXNSBOVCAXUGV-UHFFFAOYSA-N"
+  },
+  "23697341": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)O)(F)(F)F.[K+]",
+    "inchiKey": "NMZCPMQLYMSRAD-UHFFFAOYSA-N"
+  },
+  "23697343": {
+    "smiles": "[B-](C1=CC(=CC=C1)C=O)(F)(F)F.[K+]",
+    "inchiKey": "ZUJWOVZZESBYHA-UHFFFAOYSA-N"
+  },
+  "23697344": {
+    "smiles": "[B-](C1=CC=C(C=C1)SC)(F)(F)F.[K+]",
+    "inchiKey": "RXGCQQOLNQOSLX-UHFFFAOYSA-N"
+  },
+  "23697349": {
+    "smiles": "[B-](C1=CC=C(C=C1)CO)(F)(F)F.[K+]",
+    "inchiKey": "HQOSFYRRFPFWTG-UHFFFAOYSA-N"
+  },
+  "23716863": {
+    "smiles": "[B-](C1=CC(=C(C=C1)F)Cl)(F)(F)F.[K+]",
+    "inchiKey": "YIBSBTTVMHWMNU-UHFFFAOYSA-N"
+  },
+  "23716868": {
+    "smiles": "[B-](C1=CC(=CC=C1)C#N)(F)(F)F.[K+]",
+    "inchiKey": "STQLGUGARUCKLI-UHFFFAOYSA-N"
+  },
+  "23716870": {
+    "smiles": "[B-](C1=CC(=CC=C1)C)(F)(F)F.[K+]",
+    "inchiKey": "FRGRQMARQLLUEM-UHFFFAOYSA-N"
+  },
+  "23716871": {
+    "smiles": "[B-](C1=CC=C(C=C1)S(=O)(=O)C)(F)(F)F.[K+]",
+    "inchiKey": "QOZWCMTYKAZMHD-UHFFFAOYSA-N"
+  },
+  "24820467": {
+    "smiles": "B(C1=CC2=C(C=C1)C3=C(C2(C)C)C=C(C=C3)B(O)O)(O)O",
+    "inchiKey": "LUVUGOUOAXADNE-UHFFFAOYSA-N"
+  },
+  "25033550": {
+    "smiles": "CC1=CC=CC=C1C2=C3C=CC(=O)C=C3OC4=C2C=CC(=C4)O",
+    "inchiKey": "KTWLSQSSXLUFNL-UHFFFAOYSA-N"
+  },
+  "26793765": {
+    "smiles": "C(COCCOCCOCCOCCN=[N+]=[N-])N=[N+]=[N-]",
+    "inchiKey": "QTEOEACEOUNLRG-UHFFFAOYSA-N"
+  },
+  "43811034": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)OCCC3",
+    "inchiKey": "NDSHAELUPJMEBM-UHFFFAOYSA-N"
+  },
+  "43811062": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)N3CCCC3",
+    "inchiKey": "HGBBKKWVSQBIMM-UHFFFAOYSA-N"
+  },
+  "43811069": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)B3OC(C(O3)(C)C)(C)C",
+    "inchiKey": "LLQQCDJVSYEQQQ-UHFFFAOYSA-N"
+  },
+  "44118236": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CO",
+    "inchiKey": "ZEWWJJQAFTXUIS-UHFFFAOYSA-N"
+  },
+  "44118745": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC=C(C=C2)OC",
+    "inchiKey": "LXPXXDGLEYPUQK-UHFFFAOYSA-N"
+  },
+  "44118746": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC(=CC=C2)C",
+    "inchiKey": "PYYVQRSUPLUHSL-UHFFFAOYSA-N"
+  },
+  "44118821": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN(C)C.Cl",
+    "inchiKey": "WQRBUTFEVSUAFF-UHFFFAOYSA-N"
+  },
+  "44119331": {
+    "smiles": "B1(OCC(CO1)(C)C)C2=CC(=CC=C2)N",
+    "inchiKey": "CIZWNGWYNHXPFJ-UHFFFAOYSA-N"
+  },
+  "44119763": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C(=O)N(C)OC",
+    "inchiKey": "ATIMPABZLDHDMN-UHFFFAOYSA-N"
+  },
+  "44470411": {
+    "smiles": "[B-](C1=CC=C(C=C1)CN2CCOCC2)(F)(F)F.[K+]",
+    "inchiKey": "HLIJBOGELSTIEW-UHFFFAOYSA-N"
+  },
+  "44542259": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC=C(C=C2)Br",
+    "inchiKey": "ZKMPNCNELZIKDC-UHFFFAOYSA-N"
+  },
+  "44629933": {
+    "smiles": "[B-](C1=CC=CC=C1)(O)(O)O.[Na+]",
+    "inchiKey": "ZNXSFEXRXNJDNK-UHFFFAOYSA-N"
+  },
+  "44630027": {
+    "smiles": "[B-](C1=CC=CS1)(F)(F)F.[K+]",
+    "inchiKey": "LXOCUYMZBWNQQS-UHFFFAOYSA-N"
+  },
+  "44755164": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)NCC3=CC=CC=C3",
+    "inchiKey": "BWIHFPRFKBKWMU-UHFFFAOYSA-N"
+  },
+  "44755167": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)N3CCN(CC3)CC4=CC=CC=C4",
+    "inchiKey": "AFNSMUFYAVDYMJ-UHFFFAOYSA-N"
+  },
+  "45074601": {
+    "smiles": "B(C1=CC=C(C=C1)CC2=CC=CC=C2)(O)O",
+    "inchiKey": "LPXRLRBXBWDOPK-UHFFFAOYSA-N"
+  },
+  "45116893": {
+    "smiles": "B(C1=C(C2=CC=CC=C2C=C1)C)(O)O",
+    "inchiKey": "WRMHOUYVGICNFF-UHFFFAOYSA-N"
+  },
+  "45358694": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C4=CC=CC=C4C3(C)C",
+    "inchiKey": "DAZFRJAIIUPRQZ-UHFFFAOYSA-N"
+  },
+  "45479878": {
+    "smiles": "[B-](C1=CC=C(S1)C=O)(F)(F)F.[K+]",
+    "inchiKey": "XERVPXDMNWPUFB-UHFFFAOYSA-N"
+  },
+  "45790449": {
+    "smiles": "[B-](C1=CC=CC=C1C#N)(F)(F)F.[K+]",
+    "inchiKey": "JGENEVUNRFCCKN-UHFFFAOYSA-N"
+  },
+  "46738067": {
+    "smiles": "[B-](C1=CC(=CC=C1)I)(F)(F)F.[K+]",
+    "inchiKey": "OREURDWJZUTVFM-UHFFFAOYSA-N"
+  },
+  "46738069": {
+    "smiles": "[B-](C1=CC2=NON=C2C=C1)(F)(F)F.[K+]",
+    "inchiKey": "VVXGHNBCIPLVLI-UHFFFAOYSA-N"
+  },
+  "46738071": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)N2CCOCC2)(F)(F)F.[K+]",
+    "inchiKey": "MRPGRGIUSTVBMG-UHFFFAOYSA-N"
+  },
+  "46738073": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)OCC)(F)(F)F.[K+]",
+    "inchiKey": "RRHVYQWNJHNUEQ-UHFFFAOYSA-N"
+  },
+  "46738960": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CCl",
+    "inchiKey": "KWUGBVHPELQIAF-UHFFFAOYSA-N"
+  },
+  "46739013": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CN3CCOCC3.Cl",
+    "inchiKey": "SESGBRITCBGLIH-UHFFFAOYSA-N"
+  },
+  "46739014": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3CCOCC3.Cl",
+    "inchiKey": "XUHPRNOSIRFDFA-UHFFFAOYSA-N"
+  },
+  "46739038": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CC3=CC=CC=C3",
+    "inchiKey": "FPLGWDLJBAAWHO-UHFFFAOYSA-N"
+  },
+  "46739042": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C(=O)N3CCN(CC3)C(=O)OC(C)(C)C",
+    "inchiKey": "MHBAAGYJKTZUKJ-UHFFFAOYSA-N"
+  },
+  "46739046": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(S2)CN3CCOCC3",
+    "inchiKey": "CNLWVADWZRQAFZ-UHFFFAOYSA-N"
+  },
+  "46739048": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C=NC3=CC=CC=C3",
+    "inchiKey": "QOACLCIBJOVFJC-UHFFFAOYSA-N"
+  },
+  "46739065": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)N(C)OC",
+    "inchiKey": "BILGGOPMWGNRQQ-UHFFFAOYSA-N"
+  },
+  "46739067": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(C3=NC=CS3)O",
+    "inchiKey": "WLBDZEXNSNOBAQ-UHFFFAOYSA-N"
+  },
+  "46739070": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C=NC3=CC=C(C=C3)OC",
+    "inchiKey": "FEZZNCDZVGVBHZ-UHFFFAOYSA-N"
+  },
+  "46739231": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2CN(C)C",
+    "inchiKey": "FYNFIFQXALVLHC-UHFFFAOYSA-N"
+  },
+  "46739725": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CN3CCN(CC3)C",
+    "inchiKey": "PESZAXRJFGLGTR-UHFFFAOYSA-N"
+  },
+  "46739736": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C=NC3CCCCC3",
+    "inchiKey": "BAVKTLABAAKQAH-UHFFFAOYSA-N"
+  },
+  "46739747": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C=NCC3=CC=CO3",
+    "inchiKey": "IIAOBOBJQMILAT-UHFFFAOYSA-N"
+  },
+  "46739748": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C=C3C(=O)N(C(=O)N(C3=O)C)C",
+    "inchiKey": "AWWSBYIWDATYAG-UHFFFAOYSA-N"
+  },
+  "46739783": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CSC(=C2)C=O",
+    "inchiKey": "TWTLMECTLHOTSN-UHFFFAOYSA-N"
+  },
+  "46867739": {
+    "smiles": "[B-](C1=CN=C(C=C1)Cl)(F)(F)F.[K+]",
+    "inchiKey": "TVBXAWSXJKYPGJ-UHFFFAOYSA-N"
+  },
+  "46868449": {
+    "smiles": "[B]1NC2=CC=CC3=C2C(=CC=C3)N1",
+    "inchiKey": "WFKIQDVBAUQIBH-UHFFFAOYSA-N"
+  },
+  "46872199": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN=[N+]=[N-]",
+    "inchiKey": "CARNXRHOIGMOQD-UHFFFAOYSA-N"
+  },
+  "46895414": {
+    "smiles": "[B-]1(N2C(=CC(=C2C=C3[N+]1=C(C=C3)CCC(=O)OC)C)C)(F)F",
+    "inchiKey": "YKZNONDRHXQSKM-UHFFFAOYSA-N"
+  },
+  "49834929": {
+    "smiles": "[B-](C1=CC=C(S1)Br)(F)(F)F.[K+]",
+    "inchiKey": "LNJIZRITMDDEGQ-UHFFFAOYSA-N"
+  },
+  "49835700": {
+    "smiles": "[B-](C1=CC(=CC(=C1)Br)OC)(F)(F)F.[K+]",
+    "inchiKey": "WLTLGBRAIPQAQC-UHFFFAOYSA-N"
+  },
+  "50917833": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=CC(=C2)O)I",
+    "inchiKey": "QLZQKMXNNCBLSI-UHFFFAOYSA-N"
+  },
+  "50941170": {
+    "smiles": "B1(OC(CNCC(O1)C)C)B2OC(C(O2)(C)C)(C)C",
+    "inchiKey": "IGLQSAGCEMHFPH-UHFFFAOYSA-N"
+  },
+  "51063724": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCN3CCN(CC3)C(=O)OC(C)(C)C",
+    "inchiKey": "PGZDXKDNXDRWHV-UHFFFAOYSA-N"
+  },
+  "51341045": {
+    "smiles": "C(COCCOCCOCCOCCOCCOCCOCCN=[N+]=[N-])N",
+    "inchiKey": "VZKXLNRXAFTBOW-UHFFFAOYSA-N"
+  },
+  "51358450": {
+    "smiles": "B(C1=CC2=C(C=C1)N(C3=CC=CC=C32)C4=CC=CC=C4)(O)O",
+    "inchiKey": "JWJQEUDGBZMPAX-UHFFFAOYSA-N"
+  },
+  "52953437": {
+    "smiles": "CC(C)(C)OC(=O)NCCOCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "QTZDUJVZYGUSQJ-UHFFFAOYSA-N"
+  },
+  "53216743": {
+    "smiles": "B(C1=C(C=CC(=C1)C#N)C)(O)O",
+    "inchiKey": "IPDZHWUWADJUMR-UHFFFAOYSA-N"
+  },
+  "53216820": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3CCN(CC3)C(=O)OC(C)(C)C",
+    "inchiKey": "AAEYFMAHSYKHGD-UHFFFAOYSA-N"
+  },
+  "53217133": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C=C(C=C3)C(=O)OC",
+    "inchiKey": "WEDOOEMXFXWHAU-UHFFFAOYSA-N"
+  },
+  "53217297": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCC(CN3CCCC3)O",
+    "inchiKey": "IZKOHVNXPYGTPP-UHFFFAOYSA-N"
+  },
+  "53217354": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=CC(=C2)F)C=O",
+    "inchiKey": "DGVLPOACSLDJBC-UHFFFAOYSA-N"
+  },
+  "53235802": {
+    "smiles": "[B-](C1=CC(=CC=C1)C(=O)C)(F)(F)F.[K+]",
+    "inchiKey": "RWGCEATVICIDLL-UHFFFAOYSA-N"
+  },
+  "53360307": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC(=CC=C2)OC",
+    "inchiKey": "BIXVKIPQNJRPKQ-UHFFFAOYSA-N"
+  },
+  "53384411": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=CC=C4Br",
+    "inchiKey": "VHWWJBPYVUEFBM-UHFFFAOYSA-N"
+  },
+  "53384412": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC(=CC=C4)Br",
+    "inchiKey": "RDGOAMRKYXEHHS-UHFFFAOYSA-N"
+  },
+  "53384413": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)Br",
+    "inchiKey": "NKGYQJVDGSWXFR-UHFFFAOYSA-N"
+  },
+  "53440213": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN(N=C2)CC3=CC=C(C=C3)OC",
+    "inchiKey": "RUSNSMNLZWNVHT-UHFFFAOYSA-N"
+  },
+  "53440265": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCN3CCN(CC3)C",
+    "inchiKey": "WSCWCKAPDGWCOS-UHFFFAOYSA-N"
+  },
+  "53487095": {
+    "smiles": "[B-](C1=CC(=CC=C1)CO)(F)(F)F.[K+]",
+    "inchiKey": "PGZQFOMWFWDIFQ-UHFFFAOYSA-N"
+  },
+  "53732807": {
+    "smiles": "B1(OB(OB(O1)CC(C)C)CC(C)C)CC(C)C",
+    "inchiKey": "CPBOZPMHFYVQCP-UHFFFAOYSA-N"
+  },
+  "54483278": {
+    "smiles": "COCCOCCN1C=CN=C1",
+    "inchiKey": "PQPPCJHRQRRHTA-UHFFFAOYSA-N"
+  },
+  "54589773": {
+    "smiles": "C(COCCOCCCl)N=[N+]=[N-]",
+    "inchiKey": "DSRZDURQKUKXQO-UHFFFAOYSA-N"
+  },
+  "55266434": {
+    "smiles": "[B-](C1=CC(=CC=C1)N)(F)(F)F.[K+]",
+    "inchiKey": "GOLZDNNXPDXFRS-UHFFFAOYSA-N"
+  },
+  "56737687": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CNC(C)(C)C",
+    "inchiKey": "QJBWHEPPDGGWLQ-UHFFFAOYSA-N"
+  },
+  "56737701": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN(CC)CC.Cl",
+    "inchiKey": "XWPFYZSWFZZGIT-UHFFFAOYSA-N"
+  },
+  "56737727": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CNC",
+    "inchiKey": "WNKCFPAMQIAINY-UHFFFAOYSA-N"
+  },
+  "56737728": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CNC3CCCC3",
+    "inchiKey": "DZGHHMMOOILENW-UHFFFAOYSA-N"
+  },
+  "56776731": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)NCCCC",
+    "inchiKey": "ILFMZOJLPSGKNP-UHFFFAOYSA-N"
+  },
+  "56776918": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=NC(=C2)Br)OC",
+    "inchiKey": "KMRFECRRFKCUDV-UHFFFAOYSA-N"
+  },
+  "56924967": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)N(C4=CC=CC=C43)C",
+    "inchiKey": "AVCKYKVGQYBADD-UHFFFAOYSA-N"
+  },
+  "56925000": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C4=CC=CC=C4C3",
+    "inchiKey": "WVJQQLZHOADEAF-UHFFFAOYSA-N"
+  },
+  "56951398": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=C(C=C2)CO)F",
+    "inchiKey": "JMJGAHCXMCINOI-UHFFFAOYSA-N"
+  },
+  "56972888": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2CN3C=CN=C3",
+    "inchiKey": "IMZLSJUUDSKWEZ-UHFFFAOYSA-N"
+  },
+  "56973702": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(S4)Br",
+    "inchiKey": "POCAQBXWVHDOHU-UHFFFAOYSA-N"
+  },
+  "57347238": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C(=O)C)O",
+    "inchiKey": "RILMKWXTPLJDAR-UHFFFAOYSA-N"
+  },
+  "57415688": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C(=O)C3=CC=CC=C3",
+    "inchiKey": "LAELVQOXYPYWJZ-UHFFFAOYSA-N"
+  },
+  "57415689": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NC3=CC=CC=C3",
+    "inchiKey": "TWLVUSQQVDJZPI-UHFFFAOYSA-N"
+  },
+  "57415692": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3CCCCCC3",
+    "inchiKey": "UFFAWIHINLIOPX-UHFFFAOYSA-N"
+  },
+  "57415693": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)NC(=O)CNC(=O)OC(C)(C)C",
+    "inchiKey": "IYTPRTWBNLJZLK-UHFFFAOYSA-N"
+  },
+  "57415694": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NC3CCCC3",
+    "inchiKey": "ZEYNCUYCJKNKER-UHFFFAOYSA-N"
+  },
+  "57415696": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NN3CCOCC3",
+    "inchiKey": "RZFBDZSIUFOHQK-UHFFFAOYSA-N"
+  },
+  "57415745": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)S(=O)(=O)N3CCOCC3",
+    "inchiKey": "ZOTKDMJEHZLGRG-UHFFFAOYSA-N"
+  },
+  "57416858": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC(=CC(=C4)Br)Br",
+    "inchiKey": "CXQGDSINLARUOY-UHFFFAOYSA-N"
+  },
+  "57416873": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C#CC3=CC=C(C=C3)Cl",
+    "inchiKey": "JYBZGAZKBBARQP-UHFFFAOYSA-N"
+  },
+  "57416877": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(S2)C=NC3=CC=CC=C3",
+    "inchiKey": "BYXNQKHPQNAKEZ-UHFFFAOYSA-N"
+  },
+  "57416879": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C4=CC=CC=C4C3=O",
+    "inchiKey": "RPEULEQBKDIQDZ-UHFFFAOYSA-N"
+  },
+  "57416880": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C#CC3=CC=CC=C3",
+    "inchiKey": "AAIDERXZGJSORP-UHFFFAOYSA-N"
+  },
+  "57416890": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2CN=[N+]=[N-]",
+    "inchiKey": "DWSJHXRRSHEEOE-UHFFFAOYSA-N"
+  },
+  "57416900": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C#C",
+    "inchiKey": "SJDFLZSEQGKSDJ-UHFFFAOYSA-N"
+  },
+  "57597824": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)OC)C=O",
+    "inchiKey": "SZNYFXSMWMPULL-UHFFFAOYSA-N"
+  },
+  "57655274": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN(CC3=CC=CC=C3)CC4=CC=CC=C4",
+    "inchiKey": "HHXLGAOQEJSMFE-UHFFFAOYSA-N"
+  },
+  "57655492": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)COC3=CC=CC=C3",
+    "inchiKey": "YLEMWKPHWXIWOL-UHFFFAOYSA-N"
+  },
+  "57702455": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CC(=CC(=C3)C4=CC=C(C=C4)B5OC(C(O5)(C)C)(C)C)C6=CC=C(C=C6)B7OC(C(O7)(C)C)(C)C",
+    "inchiKey": "JGVPGDYJFWYBLN-UHFFFAOYSA-N"
+  },
+  "57703574": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CC=C(C=C3)Cl",
+    "inchiKey": "IFONTXWYGMTBMW-UHFFFAOYSA-N"
+  },
+  "57757144": {
+    "smiles": "CC(C)(C)OC(=O)NCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "MEZSEFQCLYODJG-UHFFFAOYSA-N"
+  },
+  "57871083": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(C)(C)C(=O)OC",
+    "inchiKey": "RAGWTXRTMGSMRC-UHFFFAOYSA-N"
+  },
+  "57884351": {
+    "smiles": "C1=CC=C(C=C1)C(C2=CC=CC=C2)(C3=CC=CC=C3)OCCOCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "FSNSDRLQUPIGKJ-UHFFFAOYSA-N"
+  },
+  "57968038": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)OC4=C3C=C(C=C4)B5OC(C(O5)(C)C)(C)C",
+    "inchiKey": "IALWSEKANFQUBL-UHFFFAOYSA-N"
+  },
+  "58012946": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(S2)C=CS3",
+    "inchiKey": "ZOGRODFFPRPMDQ-UHFFFAOYSA-N"
+  },
+  "58073088": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C(=C2)F)C(=O)OC)F",
+    "inchiKey": "DLAZQBFMFDOBGT-UHFFFAOYSA-N"
+  },
+  "58079716": {
+    "smiles": "COCCOCCOCCOCC#C",
+    "inchiKey": "TYHJQPGPBRVOJZ-UHFFFAOYSA-N"
+  },
+  "58169560": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(S2)CNC(=O)OC(C)(C)C",
+    "inchiKey": "NTQQTTMKWCHRCI-UHFFFAOYSA-N"
+  },
+  "58354634": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN(N=C2)CC=C",
+    "inchiKey": "RHFBKZWRCYFZMG-UHFFFAOYSA-N"
+  },
+  "58354649": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCCCCC",
+    "inchiKey": "TXGAKSQNBPROMR-UHFFFAOYSA-N"
+  },
+  "58354759": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCN3C=CN=C3",
+    "inchiKey": "URUDBWABPAPLGQ-UHFFFAOYSA-N"
+  },
+  "58374760": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)N(C=C3)CC4=CC=CC=C4",
+    "inchiKey": "ZJVGZQOSLAZPOI-UHFFFAOYSA-N"
+  },
+  "58407329": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=C(C=C2)C)C#N",
+    "inchiKey": "YPNXTWRHWZOBLW-UHFFFAOYSA-N"
+  },
+  "58461684": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=CC5=CC=CC=C45",
+    "inchiKey": "DOZNKHFPYFIPDY-UHFFFAOYSA-N"
+  },
+  "58560753": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)COC(=O)OC3=CC=C(C=C3)[N+](=O)[O-]",
+    "inchiKey": "OIWFKCRIFFJJMU-UHFFFAOYSA-N"
+  },
+  "58685599": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CCCO",
+    "inchiKey": "MAOHXUOIEOBIJP-UHFFFAOYSA-N"
+  },
+  "58685604": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CCO",
+    "inchiKey": "NJOVPKLUJRKAGP-UHFFFAOYSA-N"
+  },
+  "58876147": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C=C(C=C3)C4=CC5=CC=CC=C5C=C4",
+    "inchiKey": "FNSPLMHDWSEQMJ-UHFFFAOYSA-N"
+  },
+  "59046032": {
+    "smiles": "CC(C)(C)OC(=O)NCCCOCCOCCOCCCNC(=O)OC(C)(C)C",
+    "inchiKey": "SLEOLGDRIBNQDV-UHFFFAOYSA-N"
+  },
+  "59130168": {
+    "smiles": "COCCOCCOCCOCCOCC1CO1",
+    "inchiKey": "YBNLIMPNCMSLBE-UHFFFAOYSA-N"
+  },
+  "59267813": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CC=CC=C3O",
+    "inchiKey": "KHMILAPQGZSSST-UHFFFAOYSA-N"
+  },
+  "59298946": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CN3CCN(CC3)C(=O)OC(C)(C)C",
+    "inchiKey": "KBHWOVSSXKGKLY-UHFFFAOYSA-N"
+  },
+  "59321167": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C(=O)N3CCN(CC3)CC",
+    "inchiKey": "NDFDGLGYGBPOHY-UHFFFAOYSA-N"
+  },
+  "59359610": {
+    "smiles": "COCCOCCOCCOCCOCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "KKPCQLXBYKYWQE-UHFFFAOYSA-N"
+  },
+  "59392624": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C(=O)N3CCOCC3)OC",
+    "inchiKey": "IBZJBGLUGBGSNJ-UHFFFAOYSA-N"
+  },
+  "59446390": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2CC(C)C",
+    "inchiKey": "NHLCBLRYXWICMG-UHFFFAOYSA-N"
+  },
+  "59460047": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C3C=CC=C4C3=C(C=C2)C5=CC=CC=C54",
+    "inchiKey": "GECBKKNKRQJNCX-UHFFFAOYSA-N"
+  },
+  "59465087": {
+    "smiles": "CC(C)(C)OC(=O)COCCOCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "SIOLYQZSIFQODW-UHFFFAOYSA-N"
+  },
+  "59497750": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC(C)CC",
+    "inchiKey": "LTOWMKNMQGHBAU-UHFFFAOYSA-N"
+  },
+  "59535000": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)NCC(C)C",
+    "inchiKey": "NGCDLAIPAUNIQI-UHFFFAOYSA-N"
+  },
+  "59542208": {
+    "smiles": "C(COCCOCCOCCN=[N+]=[N-])C(=O)O",
+    "inchiKey": "VWJGWKZZFZMGGY-UHFFFAOYSA-N"
+  },
+  "59578388": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C#N)OC",
+    "inchiKey": "GRFPVCGUHRGKBA-UHFFFAOYSA-N"
+  },
+  "59594375": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCC3=CC=C(C=C3)OC",
+    "inchiKey": "RRBLILWMILAZJI-UHFFFAOYSA-N"
+  },
+  "59610334": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=C(C=C2)C(=O)OC)CBr",
+    "inchiKey": "IIIKWJORPDUKAI-UHFFFAOYSA-N"
+  },
+  "59757613": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC(=C2)C3=CC=CC=C3)C4=CC=CC=C4",
+    "inchiKey": "DZVYZTRVAYXJNI-UHFFFAOYSA-N"
+  },
+  "59791842": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CCO",
+    "inchiKey": "JPJTXRVZVGVVSY-UHFFFAOYSA-N"
+  },
+  "59882226": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)COC",
+    "inchiKey": "AYKXQFSQDGLWAB-UHFFFAOYSA-N"
+  },
+  "59887697": {
+    "smiles": "CNCCOCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "WPBLXGCJBLFAOH-UHFFFAOYSA-N"
+  },
+  "60041314": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NC3CCOCC3",
+    "inchiKey": "AAMXFCZFHXOARW-UHFFFAOYSA-N"
+  },
+  "60146089": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN(N=C2)CC(=O)OC",
+    "inchiKey": "WNEGZRZFYCBUGX-UHFFFAOYSA-N"
+  },
+  "60146194": {
+    "smiles": "CC(C)(C)OC(=O)NCCOCCOCCOCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "PMTHVVYQUZJIEC-UHFFFAOYSA-N"
+  },
+  "60146239": {
+    "smiles": "CC(=O)SCCOCCOCCO",
+    "inchiKey": "RGQARUNUXUQMFR-UHFFFAOYSA-N"
+  },
+  "60720169": {
+    "smiles": "COCCNCCOCCO",
+    "inchiKey": "FUYAPXMKFYGDSV-UHFFFAOYSA-N"
+  },
+  "63675451": {
+    "smiles": "[B-](C1=C(C(=CC=C1)C)C)(F)(F)F.[K+]",
+    "inchiKey": "BYBSQSLXIANVCV-UHFFFAOYSA-N"
+  },
+  "63675453": {
+    "smiles": "[B-](C1=CC(=CC=C1)OCC)(F)(F)F.[K+]",
+    "inchiKey": "SLMPDCHYZDCWCP-UHFFFAOYSA-N"
+  },
+  "63675813": {
+    "smiles": "[B-](C1=CC=C(C=C1)CC)(F)(F)F.[K+]",
+    "inchiKey": "KFIINFZVJLVXSQ-UHFFFAOYSA-N"
+  },
+  "63676009": {
+    "smiles": "[B-](C1=CC(=C(C=C1)OC)OC)(F)(F)F.[K+]",
+    "inchiKey": "KAMPQVHWSSRNLR-UHFFFAOYSA-N"
+  },
+  "63676588": {
+    "smiles": "[B-](C1=CC=C(C=C1)OC2=CC=CC=C2)(F)(F)F.[K+]",
+    "inchiKey": "BCYOESXWWBSVBY-UHFFFAOYSA-N"
+  },
+  "63676592": {
+    "smiles": "[B-](C1=CC=C(C=C1)OC(F)(F)F)(F)(F)F.[K+]",
+    "inchiKey": "BFEGKJHJOWBGJG-UHFFFAOYSA-N"
+  },
+  "63676789": {
+    "smiles": "[B-](C1=CC2=C(C=C1)OCCO2)(F)(F)F.[K+]",
+    "inchiKey": "FDUUAYPJFVFISM-UHFFFAOYSA-N"
+  },
+  "63676981": {
+    "smiles": "[B-](C1=CC=CC=C1Cl)(F)(F)F.[K+]",
+    "inchiKey": "ZFKMVKXCSCGKHD-UHFFFAOYSA-N"
+  },
+  "63676991": {
+    "smiles": "[B-](C1=CC(=CC(=C1)Cl)Cl)(F)(F)F.[K+]",
+    "inchiKey": "LPAWVDUPJPGETJ-UHFFFAOYSA-N"
+  },
+  "63677202": {
+    "smiles": "[B-](C1=CC=C(C=C1)CCCC)(F)(F)F.[K+]",
+    "inchiKey": "LMRSUMOZYVDMLI-UHFFFAOYSA-N"
+  },
+  "66520914": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN(N=C2)C3=CC=C(C=C3)C#N",
+    "inchiKey": "ZTSAIKWBNYCVCE-UHFFFAOYSA-N"
+  },
+  "66552877": {
+    "smiles": "B1(OCC(CO1)(C)C)C2=CC3=CC=CC=C3C=C2",
+    "inchiKey": "PYUGEXFBFIGNIR-UHFFFAOYSA-N"
+  },
+  "66682275": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C(=O)N)OC",
+    "inchiKey": "ANWHYJWXGHYGKC-UHFFFAOYSA-N"
+  },
+  "67250484": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCCO",
+    "inchiKey": "DHUVCFPERRAPPL-UHFFFAOYSA-N"
+  },
+  "67503426": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC(=O)C(C)C",
+    "inchiKey": "SWFGGNJIVNXPSN-UHFFFAOYSA-N"
+  },
+  "67968775": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3OC(C(O3)(C)C)(C)C",
+    "inchiKey": "DOMGDCPSUQNREF-UHFFFAOYSA-N"
+  },
+  "67973113": {
+    "smiles": "B(C1=C(C=CC(=C1)OC)I)(O)O",
+    "inchiKey": "XQYAEIDOJUNIGY-UHFFFAOYSA-N"
+  },
+  "68006719": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CCC3=CC=C(C=C3)B4OC(C(O4)(C)C)(C)C",
+    "inchiKey": "WSSQQPHRIUYUES-UHFFFAOYSA-N"
+  },
+  "68312641": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC3=CC=CC=C3C=C2",
+    "inchiKey": "IBHKLPUIBULVIU-UHFFFAOYSA-N"
+  },
+  "68465443": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCOC",
+    "inchiKey": "FSGMVMFQGDREIJ-UHFFFAOYSA-N"
+  },
+  "68522131": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CCN",
+    "inchiKey": "BTJCRQZQPAWOFC-UHFFFAOYSA-N"
+  },
+  "68571547": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3CCN(CC3)C(=O)C",
+    "inchiKey": "CXWHYRGVSYINDU-UHFFFAOYSA-N"
+  },
+  "68571784": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN(C)CCO",
+    "inchiKey": "PEMLGAZFFSJSCW-UHFFFAOYSA-N"
+  },
+  "68572493": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(C)N3CCOCC3",
+    "inchiKey": "RIQMSWOLENZXFK-UHFFFAOYSA-N"
+  },
+  "68573076": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)NC(=O)CC",
+    "inchiKey": "JZWCQJQERZDYII-UHFFFAOYSA-N"
+  },
+  "68573289": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3CCSCC3",
+    "inchiKey": "AZSGZVFIGRBNQM-UHFFFAOYSA-N"
+  },
+  "68755227": {
+    "smiles": "B1(OCC(CO1)(C)C)C2=CC=C(C=C2)I",
+    "inchiKey": "JKKCLZFCRZKJEG-UHFFFAOYSA-N"
+  },
+  "69201437": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CC=C(C=C3)O",
+    "inchiKey": "BFQSVDDJLRMXOO-UHFFFAOYSA-N"
+  },
+  "69567756": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CC=CC=C3OC",
+    "inchiKey": "UMZWOISFJWYEGW-UHFFFAOYSA-N"
+  },
+  "70115468": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3C=CN=C3",
+    "inchiKey": "GVBBYQGYCDPTQO-UHFFFAOYSA-N"
+  },
+  "70700649": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=CC(=C2)OC)I",
+    "inchiKey": "WNIUBTIVQXWKEO-UHFFFAOYSA-N"
+  },
+  "70907371": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)OCCCC",
+    "inchiKey": "BXUKKDURIZKNPS-UHFFFAOYSA-N"
+  },
+  "70938364": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC(=CC=C2)O",
+    "inchiKey": "NZNGUMOTSLXTJB-UHFFFAOYSA-N"
+  },
+  "71130039": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCCC",
+    "inchiKey": "VJLYRKSJEHDMPS-UHFFFAOYSA-N"
+  },
+  "71256749": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(C)O",
+    "inchiKey": "XYJVUQXMTOMREX-UHFFFAOYSA-N"
+  },
+  "71280674": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN3C(=NC=C3C(=O)OCC)C=C2",
+    "inchiKey": "UOHSOCKLCAQGPH-UHFFFAOYSA-N"
+  },
+  "71304573": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)NCCC",
+    "inchiKey": "DGCVPSDEHVTWFS-UHFFFAOYSA-N"
+  },
+  "71306487": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C=NC3CCCCCC3",
+    "inchiKey": "DAJPGJQEVFIZDH-UHFFFAOYSA-N"
+  },
+  "71306489": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C=NCC3=CC=CC=C3",
+    "inchiKey": "IOTMQCIVEHNGQC-UHFFFAOYSA-N"
+  },
+  "71306490": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(S2)CN3CCN(CC3)C(=O)OC(C)(C)C",
+    "inchiKey": "GKNGTSJDANUMON-UHFFFAOYSA-N"
+  },
+  "71306491": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CC3C(=O)N(C(=O)N(C3=O)C)C",
+    "inchiKey": "BNRMMTHQRMYNPW-UHFFFAOYSA-N"
+  },
+  "71306492": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CNCC3=CC=CO3",
+    "inchiKey": "QPQNBJAKBHJWPK-UHFFFAOYSA-N"
+  },
+  "71306493": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CNC3CCCCC3",
+    "inchiKey": "QAJAUSMIWXSUEL-UHFFFAOYSA-N"
+  },
+  "71306494": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(C3=NC=CN3C)OC(=O)OC(C)(C)C",
+    "inchiKey": "WHYZYTVZVGORGD-UHFFFAOYSA-N"
+  },
+  "71306495": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C(=O)NCC#C",
+    "inchiKey": "BJJVNRNPHMBKSF-UHFFFAOYSA-N"
+  },
+  "71306496": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C(C3=NC=CS3)O",
+    "inchiKey": "MVAJNJUOLYFDDW-UHFFFAOYSA-N"
+  },
+  "71306498": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)N2CCCCC2)(F)(F)F.[K+]",
+    "inchiKey": "HAQFTXUNHFCQOC-UHFFFAOYSA-N"
+  },
+  "71306500": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)NCC2=CC=CO2)(F)(F)F.[K+]",
+    "inchiKey": "BNXMQAULUCBEPA-UHFFFAOYSA-N"
+  },
+  "71306508": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C=C(C=C3)OCCCC",
+    "inchiKey": "JICBTICLFXGOFE-UHFFFAOYSA-N"
+  },
+  "71306510": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C=C3C(=O)N(C(=O)N(C3=O)C)C",
+    "inchiKey": "VRODNKHKVOXUAU-UHFFFAOYSA-N"
+  },
+  "71306512": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CC3C(=O)N(C(=O)N(C3=O)C)C",
+    "inchiKey": "SSIKHIPCXSOJNG-UHFFFAOYSA-N"
+  },
+  "71306513": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)OCC3=CC=CC=C3)C=O",
+    "inchiKey": "WCYUTUPOLUMDFG-UHFFFAOYSA-N"
+  },
+  "71306514": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(S2)C=C3C(=O)N(C(=O)N(C3=O)C)C",
+    "inchiKey": "ACWASRSLONUFLW-UHFFFAOYSA-N"
+  },
+  "71306515": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C#CC3=CC=C(C=C3)C(=O)OC",
+    "inchiKey": "SGGJQXOMPWFXNR-UHFFFAOYSA-N"
+  },
+  "71306516": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C#CCO",
+    "inchiKey": "SYRFTFKBNBRKRB-UHFFFAOYSA-N"
+  },
+  "71306520": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)NCC2=CC=CC=C2)(F)(F)F.[K+]",
+    "inchiKey": "RDEFKKXMPRJFFH-UHFFFAOYSA-N"
+  },
+  "71306522": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)N(C)OC)(F)(F)F.[K+]",
+    "inchiKey": "BPTJRBANGJZYBR-UHFFFAOYSA-N"
+  },
+  "71306524": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C#CC3=CC=C(C=C3)OC",
+    "inchiKey": "RRYKLXOOBFDYDY-UHFFFAOYSA-N"
+  },
+  "71306526": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CCCCO",
+    "inchiKey": "UWBFIDFOCXXIDF-UHFFFAOYSA-N"
+  },
+  "71306527": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C[P+](C3=CC=CC=C3)(C4=CC=CC=C4)C5=CC=CC=C5.[Br-]",
+    "inchiKey": "YHHKHKMCCPFPNM-UHFFFAOYSA-M"
+  },
+  "71306529": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CC=C(C=C3)OC",
+    "inchiKey": "XIWRWTPGYBTKPL-UHFFFAOYSA-N"
+  },
+  "71306530": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3CCC4=CC=CC=C4C3",
+    "inchiKey": "QPDBXVVQMPYSCO-UHFFFAOYSA-N"
+  },
+  "71306531": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3C(=O)CCC3=O",
+    "inchiKey": "RGQNAHQTQMHHTJ-UHFFFAOYSA-N"
+  },
+  "71306532": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NC3=CC=C(C=C3)Cl",
+    "inchiKey": "VQRALZPLWWICTD-UHFFFAOYSA-N"
+  },
+  "71306534": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN(CCOC)CCOC",
+    "inchiKey": "AFZUICGXJWDQNH-UHFFFAOYSA-N"
+  },
+  "71306535": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3CCN(CC3)C4=CC=CC=C4",
+    "inchiKey": "YIEPQKWTXHUCQJ-UHFFFAOYSA-N"
+  },
+  "71306536": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)N(C4=CC=CC=C43)CC5=CC=CC=C5",
+    "inchiKey": "UMWJZMUSYJMTOI-UHFFFAOYSA-N"
+  },
+  "71306537": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN(C3=C2C=CC=N3)CC4=CC=CC=C4",
+    "inchiKey": "TXYJAQWDYBJALP-UHFFFAOYSA-N"
+  },
+  "71306538": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3C(=O)C=CC3=O",
+    "inchiKey": "DROVAVNVMSFFHB-UHFFFAOYSA-N"
+  },
+  "71306539": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3C=CC=N3",
+    "inchiKey": "QZFKKMAOCJJOCL-UHFFFAOYSA-N"
+  },
+  "71306540": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NOCC3=CC=CC=C3",
+    "inchiKey": "XECXLZBBBRYLFW-UHFFFAOYSA-N"
+  },
+  "71306541": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN(C3=CC=CC=C3)C4=CC=CC=C4",
+    "inchiKey": "JILAXDZBCWOJRT-UHFFFAOYSA-N"
+  },
+  "71306542": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3C4=CC=CC=C4C5=CC=CC=C53",
+    "inchiKey": "AKZHQKVQCWCVBW-UHFFFAOYSA-N"
+  },
+  "71306545": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)OC3=CC=C(C=C3)[N+](=O)[O-]",
+    "inchiKey": "FIHDRLPYZGHGON-UHFFFAOYSA-N"
+  },
+  "71306546": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CC[Si](C)(C)C",
+    "inchiKey": "GQZILDONIWCXMI-UHFFFAOYSA-N"
+  },
+  "71306547": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C(=CC=C2)C)C",
+    "inchiKey": "JKDFOFHMRVPTMO-UHFFFAOYSA-N"
+  },
+  "71306551": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)OC3=CC=C(C=C3)C#N",
+    "inchiKey": "OFGNTCGFKUGJSJ-UHFFFAOYSA-N"
+  },
+  "71306552": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)COCCOC",
+    "inchiKey": "LUXOGZXYNLIHRM-UHFFFAOYSA-N"
+  },
+  "71306553": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)COCCOCCOC",
+    "inchiKey": "BVYKKTHGPBRAFO-UHFFFAOYSA-N"
+  },
+  "71306557": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CSC(=O)C",
+    "inchiKey": "ASHSNMZAFCBVQY-UHFFFAOYSA-N"
+  },
+  "71306559": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CN3C(=O)CCC3=O",
+    "inchiKey": "LQVLWKHCUUWWLG-UHFFFAOYSA-N"
+  },
+  "71306560": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CN3C=CC=N3",
+    "inchiKey": "NUEAUQNGJKTJAV-UHFFFAOYSA-N"
+  },
+  "71306561": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)N3C(=O)C=CC3=O",
+    "inchiKey": "RXUHZBAAKKUFGL-UHFFFAOYSA-N"
+  },
+  "71306562": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)I",
+    "inchiKey": "NQGWFHDECZPRJA-UHFFFAOYSA-N"
+  },
+  "71306563": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=CS4",
+    "inchiKey": "PCOLVTMAEMWQTR-UHFFFAOYSA-N"
+  },
+  "71306564": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)C",
+    "inchiKey": "VPFSXFHFLDYAKY-UHFFFAOYSA-N"
+  },
+  "71306565": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)OC",
+    "inchiKey": "WPAJPIWTDXMCKJ-UHFFFAOYSA-N"
+  },
+  "71306566": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)Cl",
+    "inchiKey": "DTZJYYHPSJQREU-UHFFFAOYSA-N"
+  },
+  "71306567": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC(=CC=C4)I",
+    "inchiKey": "QJXIPDWLWOMOGB-UHFFFAOYSA-N"
+  },
+  "71306568": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC(=CC=C4)C",
+    "inchiKey": "WWOCDJPTCDLFMK-UHFFFAOYSA-N"
+  },
+  "71306569": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC(=CC=C4)OC",
+    "inchiKey": "KQWSJBNQJNULIJ-UHFFFAOYSA-N"
+  },
+  "71306570": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC(=CC(=C4)Cl)Cl",
+    "inchiKey": "PRSDRKSTJNKMJL-UHFFFAOYSA-N"
+  },
+  "71306572": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)C#C",
+    "inchiKey": "TWFRZZNXKJNXLC-UHFFFAOYSA-N"
+  },
+  "71306575": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=CS2)CCCCCCCCC",
+    "inchiKey": "QVSCDOHSRKNJRW-UHFFFAOYSA-N"
+  },
+  "71306579": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)C(=O)O",
+    "inchiKey": "IMYKKAVBNVCLAU-UHFFFAOYSA-N"
+  },
+  "71306580": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3NC4=CC=CC5=C4C(=CC=C5)N3",
+    "inchiKey": "MLPBPXZGDAAUKD-UHFFFAOYSA-N"
+  },
+  "71306584": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C#CC3=CC=CC(=C3)B4OC(C(O4)(C)C)(C)C",
+    "inchiKey": "LCVADPGUUPIJJL-UHFFFAOYSA-N"
+  },
+  "71306585": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CN=[N+]=[N-]",
+    "inchiKey": "KTDQTYXZPDJNDC-UHFFFAOYSA-N"
+  },
+  "71306586": {
+    "smiles": "[B-](C1=CC=C(C=C1)CN=[N+]=[N-])(F)(F)F.[K+]",
+    "inchiKey": "XIWGKBHBLASHCL-UHFFFAOYSA-N"
+  },
+  "71306588": {
+    "smiles": "[B-](C1=CC(=CC=C1)CN=[N+]=[N-])(F)(F)F.[K+]",
+    "inchiKey": "DXQYILZNQINGTI-UHFFFAOYSA-N"
+  },
+  "71306591": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3CCN(CC3)CCO",
+    "inchiKey": "HXHYLUWHFBYAJC-UHFFFAOYSA-N"
+  },
+  "71306592": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)N3C(=O)C4C5CC(C4C3=O)C=C5",
+    "inchiKey": "RMWHXARBVKENMV-UHFFFAOYSA-N"
+  },
+  "71306597": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2CN.Cl",
+    "inchiKey": "GYLCMZOZOWMCPW-UHFFFAOYSA-N"
+  },
+  "71306598": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN(CCC)CCC.Cl",
+    "inchiKey": "LBLBBROUMQVVFY-UHFFFAOYSA-N"
+  },
+  "71306601": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN(C)CC3=CC=CC=C3.Cl",
+    "inchiKey": "MOFRMTWLLFZGKR-UHFFFAOYSA-N"
+  },
+  "71306603": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C3=CC=C(C=C3)C=O",
+    "inchiKey": "BCCMTHLJOIDFNA-UHFFFAOYSA-N"
+  },
+  "71306604": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(C)Br",
+    "inchiKey": "XOUOUAVGBAZRIS-UHFFFAOYSA-N"
+  },
+  "71306606": {
+    "smiles": "CCN(CC)C1=CC2=C(C=C1)C3(C4=C(O2)C=C(C=C4)N(CC)CC)C5=CC=CC=C5C(=O)N3CCN",
+    "inchiKey": "HSABBFJVLMEXKT-UHFFFAOYSA-N"
+  },
+  "71306651": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)[Si](C)(C)C3=CC=CC=C3COC(=O)C",
+    "inchiKey": "BFFCVIFSJQVTOU-UHFFFAOYSA-N"
+  },
+  "71309668": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC=CC=C2C",
+    "inchiKey": "YSHPENZDVGWTJJ-UHFFFAOYSA-N"
+  },
+  "71310575": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC=CC=C2C=O",
+    "inchiKey": "QWSWQNRMPQJHFH-UHFFFAOYSA-N"
+  },
+  "71310614": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC(=CC=C2)[N+](=O)[O-]",
+    "inchiKey": "COEHPTUYNRXODY-UHFFFAOYSA-N"
+  },
+  "71310645": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC(=CC=C2)Br",
+    "inchiKey": "OTMWVBFJNBHZLV-UHFFFAOYSA-N"
+  },
+  "71310647": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC=C(C=C2)C=O",
+    "inchiKey": "ATAFRFKGTAHILE-UHFFFAOYSA-N"
+  },
+  "71310654": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC=CC=C2OC",
+    "inchiKey": "FSOPQDDYDUVKIC-UHFFFAOYSA-N"
+  },
+  "71310656": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC(=CC=C2)C#N",
+    "inchiKey": "RMNLMKOJDVKOHO-UHFFFAOYSA-N"
+  },
+  "71310660": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC=C(C=C2)CO",
+    "inchiKey": "VWETVQJDIKPYID-UHFFFAOYSA-N"
+  },
+  "71310664": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC=C(C=C2)C#N",
+    "inchiKey": "GSZJATWIBFKRFE-UHFFFAOYSA-N"
+  },
+  "71310953": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC(=CC=C2)C",
+    "inchiKey": "SHGWEHYNVYHMLA-UHFFFAOYSA-N"
+  },
+  "71339725": {
+    "smiles": "COCCOCCOCCOCCOCCCl",
+    "inchiKey": "SGGFTROAPISQIT-UHFFFAOYSA-N"
+  },
+  "71421863": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)OCCCCCC",
+    "inchiKey": "DOWXUZRGEFPXCO-UHFFFAOYSA-N"
+  },
+  "71429123": {
+    "smiles": "CNCCOCCOCCOCCO",
+    "inchiKey": "JBLOFIJEJSEJCB-UHFFFAOYSA-N"
+  },
+  "71497258": {
+    "smiles": "[B-](C1=CC(=CC=C1)C(=O)OCC)(F)(F)F.[K+]",
+    "inchiKey": "XRLYCQQUJRHVGM-UHFFFAOYSA-N"
+  },
+  "71551077": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC(=CC=C2)C#N",
+    "inchiKey": "HSTJHADZDZUIFL-UHFFFAOYSA-N"
+  },
+  "71551917": {
+    "smiles": "C(COCCOCCOCCOCCOCCOCCOCCN=[N+]=[N-])N=[N+]=[N-]",
+    "inchiKey": "NVKODTBPHMGJLW-UHFFFAOYSA-N"
+  },
+  "71600490": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)OC(=O)C=C3",
+    "inchiKey": "CSCMMBPRFQZUIQ-UHFFFAOYSA-N"
+  },
+  "72219516": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C(=O)N)O",
+    "inchiKey": "PVONIIMRMAROHL-UHFFFAOYSA-N"
+  },
+  "72219539": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=CC(=C2)O)C=O",
+    "inchiKey": "BOZJXIONILLPKF-UHFFFAOYSA-N"
+  },
+  "72219551": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC(=C2)F)O",
+    "inchiKey": "KBGOBMOAZQOCTA-UHFFFAOYSA-N"
+  },
+  "72220934": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)NCCOC",
+    "inchiKey": "MSJGNHFQRLHXNG-UHFFFAOYSA-N"
+  },
+  "72221204": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC(=C2F)F)F",
+    "inchiKey": "YVQGFNPGCBWGPM-UHFFFAOYSA-N"
+  },
+  "73054407": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(S2)C3OC(C(O3)(C)C)(C)C",
+    "inchiKey": "APJRIRYMKDIYJS-UHFFFAOYSA-N"
+  },
+  "73995225": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)NCCOC)(F)(F)F.[K+]",
+    "inchiKey": "HOIRNIUHFHDIIW-UHFFFAOYSA-N"
+  },
+  "73995273": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)NCC2CCCO2)(F)(F)F.[K+]",
+    "inchiKey": "MASXSLMMFGGBRT-UHFFFAOYSA-N"
+  },
+  "73995281": {
+    "smiles": "[B-](C1=CC=C(C=C1)C(=O)N2CCCC2)(F)(F)F.[K+]",
+    "inchiKey": "HEBRRMDWGHQMOE-UHFFFAOYSA-N"
+  },
+  "74789473": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NCCCO",
+    "inchiKey": "XAUDYZKEEQLKMX-UHFFFAOYSA-N"
+  },
+  "74890421": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN(C)CC3=CC=C(C=C3)B4OC(C(O4)(C)C)(C)C",
+    "inchiKey": "GIAZDDXGJISFCJ-UHFFFAOYSA-N"
+  },
+  "75175996": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C=C(C=C3)OCC(C)C",
+    "inchiKey": "UEDXKTPSWIFJGL-UHFFFAOYSA-N"
+  },
+  "75175998": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3C=NC4=C3N=CN=C4Cl",
+    "inchiKey": "LIJVCAHLBABCLQ-UHFFFAOYSA-N"
+  },
+  "75176000": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN(C)C3=CC=CC=C3",
+    "inchiKey": "BFJBQZUGGMWTPV-UHFFFAOYSA-N"
+  },
+  "75176001": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(C)N=[N+]=[N-]",
+    "inchiKey": "UCSBEGRVQCFRLC-UHFFFAOYSA-N"
+  },
+  "75176002": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CNCCOC",
+    "inchiKey": "UVELOBSBKNXVMQ-UHFFFAOYSA-N"
+  },
+  "75176003": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)N(CC)C(C)C",
+    "inchiKey": "SEHOATOILCJMAG-UHFFFAOYSA-N"
+  },
+  "75176004": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)COCC=C",
+    "inchiKey": "CKLUESWBFOPYJN-UHFFFAOYSA-N"
+  },
+  "75176005": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC3CCCC3",
+    "inchiKey": "XHBREABCMPARRQ-UHFFFAOYSA-N"
+  },
+  "75176006": {
+    "smiles": "[B-](C1=CC(=CC=C1)NC(=O)C)(F)(F)F.[K+]",
+    "inchiKey": "KHOQQBIXVXZEBZ-UHFFFAOYSA-N"
+  },
+  "75176008": {
+    "smiles": "[B-](C1=CC(=C(C=C1)OC)C=O)(F)(F)F.[K+]",
+    "inchiKey": "GZTNAHZGXDZRMT-UHFFFAOYSA-N"
+  },
+  "75176014": {
+    "smiles": "[B-](C1=CC=C(C=C1)C2=CC=C(C=C2)OC)(F)(F)F.[K+]",
+    "inchiKey": "WMWCJVZEGMZXJF-UHFFFAOYSA-N"
+  },
+  "75176016": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CN(CC)CC.Cl",
+    "inchiKey": "YDXFBLRMIWIJSI-UHFFFAOYSA-N"
+  },
+  "75176039": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC(=CC=C2)Cl",
+    "inchiKey": "MFTTTXKHIMZGGS-UHFFFAOYSA-N"
+  },
+  "75176040": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC(=CC(=C2)Br)Br",
+    "inchiKey": "UFQNOMVKTHENHU-UHFFFAOYSA-N"
+  },
+  "75176044": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC=CC=C2Cl",
+    "inchiKey": "MKPIRQIDVUGQOK-UHFFFAOYSA-N"
+  },
+  "75176047": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC3=C(C=C2)C4=CC=CC=C4C3(C)C",
+    "inchiKey": "FHQZFCWJRIYZNO-UHFFFAOYSA-N"
+  },
+  "75176048": {
+    "smiles": "B1(OC(=O)CN(CC(=O)O1)C)C2=CC(=C(C=C2)OC)C=O",
+    "inchiKey": "LCASPDNBROCNET-UHFFFAOYSA-N"
+  },
+  "75176065": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NCCCC",
+    "inchiKey": "JUBAULLCIUKUTR-UHFFFAOYSA-N"
+  },
+  "75176070": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)NCCN(C)C",
+    "inchiKey": "KKVKBXPWSFZAEE-UHFFFAOYSA-N"
+  },
+  "75176071": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)O",
+    "inchiKey": "VGYRSZGDYCOPGK-UHFFFAOYSA-N"
+  },
+  "75176072": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OC3=CC=C(C=C3)C=O",
+    "inchiKey": "IDJVHXFOOPZUEP-UHFFFAOYSA-N"
+  },
+  "75176075": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)OCCOC)[N+](=O)[O-]",
+    "inchiKey": "GWSADQZJYCTBNY-UHFFFAOYSA-N"
+  },
+  "75176076": {
+    "smiles": "[B-](C1=CC=C(C=C1)NC(=O)C)(F)(F)F.[K+]",
+    "inchiKey": "XICGZZIOZHTOEE-UHFFFAOYSA-N"
+  },
+  "75176078": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C#N)OCC",
+    "inchiKey": "YVCZZGVNVNANMV-UHFFFAOYSA-N"
+  },
+  "75176080": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC(=O)CC",
+    "inchiKey": "WTQZLABSDSKGLC-UHFFFAOYSA-N"
+  },
+  "75176084": {
+    "smiles": "[B-](C1=CC=C(C=C1)N2C3=CC=CC=C3C4=CC=CC=C42)(F)(F)F.[K+]",
+    "inchiKey": "NYFSUSNCESHVIN-UHFFFAOYSA-N"
+  },
+  "75176088": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC(=O)CCC",
+    "inchiKey": "PKJOQRNUTCQMHV-UHFFFAOYSA-N"
+  },
+  "75176089": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)NC(=O)CCCCCCCCCCCCCCCCC",
+    "inchiKey": "HYRDNRTXLVSVEB-UHFFFAOYSA-N"
+  },
+  "75176090": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C#N)OCC3CCCCC3",
+    "inchiKey": "VPLNLAWNQSGDAW-UHFFFAOYSA-N"
+  },
+  "75176092": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C#N)OCC(C)(C)CO",
+    "inchiKey": "AEPRNVIJPREAFO-UHFFFAOYSA-N"
+  },
+  "75176097": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3C(C4=CC=CC=C4C(=O)N3C5CCCC5)C(=O)O",
+    "inchiKey": "VPHXWHSUWFDFPM-UHFFFAOYSA-N"
+  },
+  "75412538": {
+    "smiles": "B1(OCC(CO1)(C)C)C2=C(C=CC(=C2)C(=O)OC)C",
+    "inchiKey": "WTIASXRUFYFRKB-UHFFFAOYSA-N"
+  },
+  "75486532": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C(=O)NC)OC",
+    "inchiKey": "PGPSRZASAXJWKV-UHFFFAOYSA-N"
+  },
+  "75486556": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C(=O)N3CCCC3)OC",
+    "inchiKey": "XRXVZUFARRYNBX-UHFFFAOYSA-N"
+  },
+  "75486963": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=CC=C2F)[N+](=O)[O-]",
+    "inchiKey": "XBZCNQOYIGMCGG-UHFFFAOYSA-N"
+  },
+  "75487158": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C(=C2)F)[N+](=O)[O-])F",
+    "inchiKey": "TWEFYYDQOMVAPY-UHFFFAOYSA-N"
+  },
+  "75487403": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=C(C=C2)CO)C(F)(F)F",
+    "inchiKey": "BIZQWCCYLHTYNE-UHFFFAOYSA-N"
+  },
+  "75525803": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)O)C(=O)OC",
+    "inchiKey": "WENZFCWDGSUVBI-UHFFFAOYSA-N"
+  },
+  "77058926": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C#N)OCC3=CC=CC=C3",
+    "inchiKey": "YDEUNLVOYPZMFK-UHFFFAOYSA-N"
+  },
+  "77058927": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C(=C2)C(C)C)OC(=O)C)C(C)C",
+    "inchiKey": "PPXVPPWKBRJTNK-UHFFFAOYSA-N"
+  },
+  "77058931": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)NCCC",
+    "inchiKey": "SLFUENODDJHKRT-UHFFFAOYSA-N"
+  },
+  "77058935": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C#N)OCCOC",
+    "inchiKey": "CTTJISBSQNPWBP-UHFFFAOYSA-N"
+  },
+  "77058943": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC3=CC=CC=C3C=C2",
+    "inchiKey": "PJXUYZILYFNDCI-UHFFFAOYSA-N"
+  },
+  "77058944": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC=CC=C2OC",
+    "inchiKey": "ALOLSCLBNZSAMC-UHFFFAOYSA-N"
+  },
+  "77058945": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC=CC=C2C",
+    "inchiKey": "IXXAHCZZPHENLU-UHFFFAOYSA-N"
+  },
+  "77058946": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC=C(C=C2)C",
+    "inchiKey": "IYTPJHRQJDVFDF-UHFFFAOYSA-N"
+  },
+  "77058947": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC=C(C=C2)C(=O)C",
+    "inchiKey": "RVTCCIACRKFFJV-UHFFFAOYSA-N"
+  },
+  "77058948": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC=C(C=C2)I",
+    "inchiKey": "LTEDPPGGUGAOAC-UHFFFAOYSA-N"
+  },
+  "77058949": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC=C(C=C2)Br",
+    "inchiKey": "PRUASQKAECKLGK-UHFFFAOYSA-N"
+  },
+  "77058950": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2CN(CCC)CCC",
+    "inchiKey": "JAKOABILTPIYRQ-UHFFFAOYSA-N"
+  },
+  "77058951": {
+    "smiles": "B1(OCC(CO1)(C)C)C2=CC(=CC=C2)C",
+    "inchiKey": "FPHZOLPTFFTLBD-UHFFFAOYSA-N"
+  },
+  "77058952": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC=C(C=C2)C#N",
+    "inchiKey": "RLBAAYVYBDCJNP-UHFFFAOYSA-N"
+  },
+  "77058953": {
+    "smiles": "B1(OC(CC(O1)(C)C)C)C2=CC=CC3=CC=CC=C23",
+    "inchiKey": "HNTJWMXILKKAJC-UHFFFAOYSA-N"
+  },
+  "77058954": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)N3CCOCC3)[N+](=O)[O-]",
+    "inchiKey": "QLXDKPRGHKVVMR-UHFFFAOYSA-N"
+  },
+  "77058959": {
+    "smiles": "[B-](C1=CC(=CC=C1)F)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "YNPNZJDQYJSRMH-UHFFFAOYSA-N"
+  },
+  "77058960": {
+    "smiles": "[B-](C1=CC=C(C=C1)F)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "LPZIMKAFBMJDQS-UHFFFAOYSA-N"
+  },
+  "77058961": {
+    "smiles": "[B-](C1=CC=C(C=C1)Br)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "JBNKTVSFRCCYJV-UHFFFAOYSA-N"
+  },
+  "77058962": {
+    "smiles": "[B-](C1=CC=C(C=C1)I)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "NPQNXIMGPHKQKG-UHFFFAOYSA-N"
+  },
+  "77058963": {
+    "smiles": "[B-](C1=CC=C(C=C1)CCCC)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "RNOXDEYZBINQIQ-UHFFFAOYSA-N"
+  },
+  "77058964": {
+    "smiles": "[B-](C1=CC(=CC=C1)Br)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "FRDZLGDXUKNLRS-UHFFFAOYSA-N"
+  },
+  "77058966": {
+    "smiles": "[B-](C1=CC(=CC=C1)OC)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "OHEDPBXLNBHLCD-UHFFFAOYSA-N"
+  },
+  "77058967": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2CNC(C)(C)C",
+    "inchiKey": "VEXKQQNEJFWZKS-UHFFFAOYSA-N"
+  },
+  "77058970": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)C#N)OCCC",
+    "inchiKey": "GXTBCXBFSFHRKY-UHFFFAOYSA-N"
+  },
+  "77058971": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2CN(C)CCCC",
+    "inchiKey": "XDHXMAMMHVNUPX-UHFFFAOYSA-N"
+  },
+  "77078210": {
+    "smiles": "CC(C)(C)OC(=O)NCCOCCOCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "IRLDTXAKTZWNJR-UHFFFAOYSA-N"
+  },
+  "77297137": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(C)N",
+    "inchiKey": "WOWCIGGGXSUZIG-UHFFFAOYSA-N"
+  },
+  "78265134": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)NCCCN3CCOCC3",
+    "inchiKey": "XVYZZCGGTPUUSN-UHFFFAOYSA-N"
+  },
+  "78265135": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C3OC(C(O3)(C)C)(C)C",
+    "inchiKey": "ITNKNQOYJMLNFF-UHFFFAOYSA-N"
+  },
+  "78265136": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)N(CCOC)CCOC",
+    "inchiKey": "LVVDDWCOBIPKCC-UHFFFAOYSA-N"
+  },
+  "78265138": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)NCC3CCCO3",
+    "inchiKey": "PXYGHZWAAXGHNE-UHFFFAOYSA-N"
+  },
+  "78265143": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)NC3CCCCCC3",
+    "inchiKey": "GEGZHXXIZBWGLQ-UHFFFAOYSA-N"
+  },
+  "79661134": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2OC(C)C",
+    "inchiKey": "AFVDJAPEQLXPME-UHFFFAOYSA-N"
+  },
+  "79661720": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)OCC",
+    "inchiKey": "BLICBTUPOVPQMW-UHFFFAOYSA-N"
+  },
+  "79661963": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2OCC",
+    "inchiKey": "WAXZGQJMCLQUDS-UHFFFAOYSA-N"
+  },
+  "79662285": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)OCCC",
+    "inchiKey": "GCWKKLLIVKKVDL-UHFFFAOYSA-N"
+  },
+  "79662506": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C=C(C=C3)OCC4=CC=CC=C4",
+    "inchiKey": "UVJOREZPMMEFQU-UHFFFAOYSA-N"
+  },
+  "79662513": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCCCC",
+    "inchiKey": "IHUBHQWDTIKAGJ-UHFFFAOYSA-N"
+  },
+  "79662533": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)OCCCCC",
+    "inchiKey": "KWHRZZINNARAAO-UHFFFAOYSA-N"
+  },
+  "85894496": {
+    "smiles": "C1=CC=C(C=C1)C2=C3C(=C(N(C3=O)CC(=O)O)C4=CC=CC=C4)C(=O)N2CC(=O)O",
+    "inchiKey": "KOWRWVZFXQEPIL-UHFFFAOYSA-N"
+  },
+  "85982906": {
+    "smiles": "COCCOCCOCCOCCOCCOCCOCCCl",
+    "inchiKey": "ZZDXNYQKOPDFBX-UHFFFAOYSA-N"
+  },
+  "86141788": {
+    "smiles": "CCCCCCCCCCCCCCCCCCCCCCOCCOCCOCCO",
+    "inchiKey": "YRZKBYUVHVPTOG-UHFFFAOYSA-N"
+  },
+  "86291528": {
+    "smiles": "COCCOCCOCCOCCOCC#C",
+    "inchiKey": "QOXHTXZSGABRDF-UHFFFAOYSA-N"
+  },
+  "86767863": {
+    "smiles": "B1(C2=C(CO1)C=C(C=C2)C(=O)O)O",
+    "inchiKey": "MUTBROCBAAOFTH-UHFFFAOYSA-N"
+  },
+  "87214787": {
+    "smiles": "CC(C)(C)OC(=O)COCCOCCOCCN",
+    "inchiKey": "OTTHWLFOQWLZKB-UHFFFAOYSA-N"
+  },
+  "89183461": {
+    "smiles": "C1=CC2=C3C(=C1)C=CC4=C(C=CC(=C43)C=C2)CN=[N+]=[N-]",
+    "inchiKey": "WLKXPQFZTSRGHP-UHFFFAOYSA-N"
+  },
+  "89729501": {
+    "smiles": "CC(C)(C)OC(=O)N(C)CCOCCOCCN",
+    "inchiKey": "CKWNRRXWFGXHQD-UHFFFAOYSA-N"
+  },
+  "89815110": {
+    "smiles": "C1=CC2=C(C=C1NC(=S)NCCOCCOCCOCCN=[N+]=[N-])C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O",
+    "inchiKey": "CLUBBHNFIIDPNO-UHFFFAOYSA-N"
+  },
+  "89962092": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)N(C)CCOC",
+    "inchiKey": "AZLZCIUGEZSLOM-UHFFFAOYSA-N"
+  },
+  "90202530": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(C)(C)C(=O)N",
+    "inchiKey": "PNZQGRXQEYIBCG-UHFFFAOYSA-N"
+  },
+  "90207049": {
+    "smiles": "C(COCC(CN=[N+]=[N-])O)OCC(CN=[N+]=[N-])O",
+    "inchiKey": "FUTUQTMLVJKHHS-UHFFFAOYSA-N"
+  },
+  "90368027": {
+    "smiles": "CNCCOCCOCCOCCOC",
+    "inchiKey": "OCYLGYGLYZJUGM-UHFFFAOYSA-N"
+  },
+  "90393139": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=CC=C4",
+    "inchiKey": "XTWVTOCUUKJRLQ-UHFFFAOYSA-N"
+  },
+  "90489755": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2)OC)C3=CC(=CC=C3)C(=O)OC",
+    "inchiKey": "MZEJLGQGLFPZKN-UHFFFAOYSA-N"
+  },
+  "91641340": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=C(C=C2B3OC(C(O3)(C)C)(C)C)OC)OC",
+    "inchiKey": "DHARUFNTQZNQOZ-UHFFFAOYSA-N"
+  },
+  "91641341": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)NC(=O)C(F)(F)F",
+    "inchiKey": "RSTUPWGORFIMFE-UHFFFAOYSA-N"
+  },
+  "91641346": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCOCCOC",
+    "inchiKey": "VAIZYGOXWWZRDO-UHFFFAOYSA-N"
+  },
+  "91641349": {
+    "smiles": "[B-](C1=CC=C(C=C1)[B-](F)(F)F)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "XSSJOSACTKLRFO-UHFFFAOYSA-N"
+  },
+  "91641353": {
+    "smiles": "[B-](C1=CC(=CC=C1)I)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "XHSBUCCWJNIMOF-UHFFFAOYSA-N"
+  },
+  "91641354": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(C)N3CCN(CC3)C",
+    "inchiKey": "WBQHQUTUAOVLFF-UHFFFAOYSA-N"
+  },
+  "91641355": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CN3C=C[N+](=C3)C.[Br-]",
+    "inchiKey": "VHEKEFJOCJQJTN-UHFFFAOYSA-M"
+  },
+  "91641357": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CN(CCC)CCC",
+    "inchiKey": "MXESWGPVUNLWEC-UHFFFAOYSA-N"
+  },
+  "91658765": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)N3CCN(CC3)CCN",
+    "inchiKey": "ZBSLDTFDJXKHMH-UHFFFAOYSA-N"
+  },
+  "91658766": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)OC(CC3(C)C4=CC=C(C=C4)O)(C)C",
+    "inchiKey": "XQENIDJMBLBULC-UHFFFAOYSA-N"
+  },
+  "91658767": {
+    "smiles": "[B-](C1=CC(=C(C=C1)C#N)F)(F)(F)F.[K+]",
+    "inchiKey": "GFRDMZZAYPPLFF-UHFFFAOYSA-N"
+  },
+  "91691097": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN(C(=O)C=C2)CC3=CC=CC=C3",
+    "inchiKey": "MGLITBRUDMNHJA-UHFFFAOYSA-N"
+  },
+  "91757934": {
+    "smiles": "C1=CC2=C(C=C1NC(=S)NCCOCCOCCN=[N+]=[N-])C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O",
+    "inchiKey": "ZLPFCAHUXVVHPW-UHFFFAOYSA-N"
+  },
+  "91759065": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)OCCCN3CCOCC3",
+    "inchiKey": "UOCSDDWASYGNGC-UHFFFAOYSA-N"
+  },
+  "91759348": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)NC(=O)OC",
+    "inchiKey": "WMAMRUWWLIHMFH-UHFFFAOYSA-N"
+  },
+  "91809668": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C(=O)N(CCC)CCC",
+    "inchiKey": "BXVJEOQXHZUQCB-UHFFFAOYSA-N"
+  },
+  "91809669": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)NC(C)COC",
+    "inchiKey": "HYKDFIFHZBBECC-UHFFFAOYSA-N"
+  },
+  "91809671": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C(=O)NCC=C",
+    "inchiKey": "XUXUPJSGVSOBRJ-UHFFFAOYSA-N"
+  },
+  "91809672": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CC3=CC=C(C=C3)Cl",
+    "inchiKey": "UUCVWRYFTNFIAW-UHFFFAOYSA-N"
+  },
+  "91809673": {
+    "smiles": "[B-](C1=CC=C(C=C1)N(C2=CC=CC=C2)C3=CC=CC=C3)(F)(F)F.[K+]",
+    "inchiKey": "LVLFZQHJZORNMT-UHFFFAOYSA-N"
+  },
+  "91809675": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)C=C(C=C3)OC(=O)C",
+    "inchiKey": "JZHMTATZPKPSTO-UHFFFAOYSA-N"
+  },
+  "91886703": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC(=O)COC3=CC4=C(C=C3)C=CC(=O)O4",
+    "inchiKey": "KZNLMPQYGHKHPJ-UHFFFAOYSA-N"
+  },
+  "91886706": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CCCOC(=O)C",
+    "inchiKey": "FOAUGALPMXZXFV-UHFFFAOYSA-N"
+  },
+  "91886708": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CC(=O)N3CCOCC3",
+    "inchiKey": "HAJCACYTHLPVPK-UHFFFAOYSA-N"
+  },
+  "91886720": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)B5NC6=CC=CC7=C6C(=CC=C7)N5",
+    "inchiKey": "WOURSKHZRWYIHF-UHFFFAOYSA-N"
+  },
+  "91980725": {
+    "smiles": "[B]1[B][B][B][B]C2([B]C([B]2)([B][B][B]1)[Si](C)(C)OC)[Si](C)(C)OC",
+    "inchiKey": "JCEDUOUWVSTNLH-UHFFFAOYSA-N"
+  },
+  "92042270": {
+    "smiles": "CC(C)(C)OC(=O)COCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "HMWOUJOCAQZURC-UHFFFAOYSA-N"
+  },
+  "99738341": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=C(C=C2)C=O)F",
+    "inchiKey": "GUCARQAICCYFBQ-UHFFFAOYSA-N"
+  },
+  "102197401": {
+    "smiles": "CC(C)(COCC(CN=[N+]=[N-])O)COCC(CN=[N+]=[N-])O",
+    "inchiKey": "ZMPSZIFDCZGUCJ-UHFFFAOYSA-N"
+  },
+  "102218926": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC5=CC=CC=C5C=C4",
+    "inchiKey": "CRBWKSOTCUEXGL-UHFFFAOYSA-N"
+  },
+  "102447774": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CCC3=CC=CC=C3",
+    "inchiKey": "WZMKQMIYIXCRIQ-UHFFFAOYSA-N"
+  },
+  "102514843": {
+    "smiles": "CC(C)(C)OC(=O)NCCOCCOCCOCCOCCOCCOCCOCCO",
+    "inchiKey": "WHRVSFPIFWXKQZ-UHFFFAOYSA-N"
+  },
+  "102517952": {
+    "smiles": "B1(OCCNCCO1)C2=CC=C(C=C2)C#N",
+    "inchiKey": "WQHLDUPDKWDOJD-UHFFFAOYSA-N"
+  },
+  "104561100": {
+    "smiles": "COCCOCCOCCOCC(CN)O",
+    "inchiKey": "FUXHIXPJSXPBNY-UHFFFAOYSA-N"
+  },
+  "104561124": {
+    "smiles": "CNCC(COCCOCCOC)O",
+    "inchiKey": "RWWMSHSUYMFLQL-UHFFFAOYSA-N"
+  },
+  "106937895": {
+    "smiles": "CCNCCOCCOCCO",
+    "inchiKey": "DBXWNPCKJRXVAA-UHFFFAOYSA-N"
+  },
+  "112693098": {
+    "smiles": "COCCOCCOCC(CN)O",
+    "inchiKey": "CFRPESPLEZFBKM-UHFFFAOYSA-N"
+  },
+  "113426834": {
+    "smiles": "CNCC(COCCOCCOCCOC)O",
+    "inchiKey": "DANGIQLOFSNETD-UHFFFAOYSA-N"
+  },
+  "117674671": {
+    "smiles": "CC(C)(C)OC(=O)N(C)CCOCCO",
+    "inchiKey": "CZEZSIHDVIWHNE-UHFFFAOYSA-N"
+  },
+  "117806315": {
+    "smiles": "CC(C)(C)OC(=O)N(C)CCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "RLEVTQIEDBSNOI-UHFFFAOYSA-N"
+  },
+  "117806572": {
+    "smiles": "CNCCOCCOCCOCCOCCOC",
+    "inchiKey": "AVPJZGZHJGJOID-UHFFFAOYSA-N"
+  },
+  "118500609": {
+    "smiles": "CNCCOCCOCCOCCOCCOCCOC",
+    "inchiKey": "LVSQTMWMKLPLGJ-UHFFFAOYSA-N"
+  },
+  "119087083": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C=NCCCC",
+    "inchiKey": "DRRJHGOYTLVJRA-UHFFFAOYSA-N"
+  },
+  "119087086": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN(N=C2)CC3=C(C(=CC=C3)Cl)F",
+    "inchiKey": "MXPVNMFNSBOFQV-UHFFFAOYSA-N"
+  },
+  "119087088": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CCOC(=O)C",
+    "inchiKey": "KHNXTXCADGLVRR-UHFFFAOYSA-N"
+  },
+  "121229100": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=C(C=C2)C=O)C(F)(F)F",
+    "inchiKey": "FTVXAOLWMJCMFK-UHFFFAOYSA-N"
+  },
+  "121594825": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C=NCCC",
+    "inchiKey": "UGQQYYZQDNRVLZ-UHFFFAOYSA-N"
+  },
+  "122164567": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC(=C2)F)OC(=O)C",
+    "inchiKey": "AIDDEDUBVQYMGQ-UHFFFAOYSA-N"
+  },
+  "122164569": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CC=CC=C3OCC4=CC=CC=C4",
+    "inchiKey": "ODTMDOYTVUWQHJ-UHFFFAOYSA-N"
+  },
+  "123132044": {
+    "smiles": "C1=CC2=C(C=C1NC(=S)NCCOCCOCCOCCOCCN=[N+]=[N-])C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O",
+    "inchiKey": "UJBMQXVHSKEUJW-UHFFFAOYSA-N"
+  },
+  "123132048": {
+    "smiles": "CC(C)(C)OC(=O)N(CCOCCOCCO)CC1=CC=CC=C1",
+    "inchiKey": "BDCCEAKTRBQRSG-UHFFFAOYSA-N"
+  },
+  "123824541": {
+    "smiles": "CCCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "AUIPHNJFSJAPAG-UHFFFAOYSA-N"
+  },
+  "124177585": {
+    "smiles": "COCCNCCOCCOCCO",
+    "inchiKey": "XEMOQRJLQDMJTL-UHFFFAOYSA-N"
+  },
+  "125415628": {
+    "smiles": "C1=CC2=C(C=C1NC(=S)NCCCC(=O)O)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O",
+    "inchiKey": "IPVZNIANELKKNG-UHFFFAOYSA-N"
+  },
+  "126697428": {
+    "smiles": "CCCCCCCCCOC(=O)CCCCCCCN(CCCCCCCC(=O)OC(CCCCCCCC)CCCCCCCC)CCO",
+    "inchiKey": "ABCVHPIKBGRCJA-UHFFFAOYSA-N"
+  },
+  "126697616": {
+    "smiles": "CCCCCCCCCCCOC(=O)CCCCCN(CCCCCCCC(=O)OC(CCCCCCCC)CCCCCCCC)CCO",
+    "inchiKey": "BGNVBNJYBVCBJH-UHFFFAOYSA-N"
+  },
+  "129322884": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CC(=CC=C3)Cl",
+    "inchiKey": "AYJZJTISYWGXQT-UHFFFAOYSA-N"
+  },
+  "129322892": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CC=CC=C3Cl",
+    "inchiKey": "IPVTWYPVZDTKNH-UHFFFAOYSA-N"
+  },
+  "129522019": {
+    "smiles": "CC(C)(C)OC(=O)CN1C(=C2C(=C(N(C2=O)CC(=O)OC(C)(C)C)C3=CC=CC=C3)C1=O)C4=CC=CC=C4",
+    "inchiKey": "QNAJHXBCTTVRFG-UHFFFAOYSA-N"
+  },
+  "129522020": {
+    "smiles": "CCCCCCCCCCCCCCCC(=O)OC1=C2C=CC=C3C2=C(C=C1)C(=O)N(C3=O)CCC",
+    "inchiKey": "RAFBTNAUUYSDBF-UHFFFAOYSA-N"
+  },
+  "129522021": {
+    "smiles": "CCCC(=O)OC1=C2C=CC=C3C2=C(C=C1)C(=O)N(C3=O)CCC",
+    "inchiKey": "SHXHTZRRMINVAE-UHFFFAOYSA-N"
+  },
+  "129522022": {
+    "smiles": "CCCCCCCC(=O)OC1=C2C=CC=C3C2=C(C=C1)C(=O)N(C3=O)CCC",
+    "inchiKey": "UHPZBBSXNMQEFY-UHFFFAOYSA-N"
+  },
+  "129522023": {
+    "smiles": "C1=CC2=C(C=C1NC(=S)NCCCCCCCC(=O)O)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O",
+    "inchiKey": "UMKSBNGFOOPQCJ-UHFFFAOYSA-N"
+  },
+  "129560942": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CNC3=CC=C(C=C3)OC",
+    "inchiKey": "OYMKRXSNLORMFH-UHFFFAOYSA-N"
+  },
+  "129560943": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)C3=CC(=CC=C3)OC",
+    "inchiKey": "QRLUQLVTOZYCSA-UHFFFAOYSA-N"
+  },
+  "129947050": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(C=C2)NCCCOCC",
+    "inchiKey": "NYOJPFWWJWHLIQ-UHFFFAOYSA-N"
+  },
+  "130046620": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2NC(=O)CCl",
+    "inchiKey": "YDDAYVDRICSOLS-UHFFFAOYSA-N"
+  },
+  "130141617": {
+    "smiles": "B(C1=CC(=CC=C1)CCN(C)C)(O)O",
+    "inchiKey": "TXIWECVJLSOSLG-UHFFFAOYSA-N"
+  },
+  "131631776": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CSC(=C2)CNC(=O)OC(C)(C)C",
+    "inchiKey": "PKXYEBQLYCHGAG-UHFFFAOYSA-N"
+  },
+  "132071097": {
+    "smiles": "COCCOCCOCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "GRQHYZOCCBXIMP-UHFFFAOYSA-N"
+  },
+  "132648316": {
+    "smiles": "[B-](C1=CC2=C(C=C1)OC(=O)C=C2)(F)(F)F.[K+]",
+    "inchiKey": "VEFQKLWGAOUSOB-UHFFFAOYSA-N"
+  },
+  "133669921": {
+    "smiles": "[B-](C1=C(C2=CC=CC=C2C=C1)C)(F)(F)F.[K+]",
+    "inchiKey": "BRWADAFCEOOUGW-UHFFFAOYSA-N"
+  },
+  "137950400": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=CC(=C2)OC(=O)C)C",
+    "inchiKey": "CPCGFUZLHFYIHY-UHFFFAOYSA-N"
+  },
+  "137950406": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC3=C(C=C2)OC(=O)CC3",
+    "inchiKey": "RGTGWPZRWOIMTE-UHFFFAOYSA-N"
+  },
+  "137950410": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCN=[N+]=[N-]",
+    "inchiKey": "BHSQQZROHZCKJW-UHFFFAOYSA-N"
+  },
+  "137950411": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CNC(=O)N",
+    "inchiKey": "QCBPINUKIIKBTH-UHFFFAOYSA-N"
+  },
+  "137950412": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)CNC(=O)N",
+    "inchiKey": "ORVBATQGZJIQBF-UHFFFAOYSA-N"
+  },
+  "137950413": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCN",
+    "inchiKey": "SFJNXDHQPKWQKK-UHFFFAOYSA-N"
+  },
+  "137967127": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)F",
+    "inchiKey": "NUIJTFCIYLDVTL-UHFFFAOYSA-N"
+  },
+  "138040407": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C3=CC=CC=C3C=C2)C",
+    "inchiKey": "RYURBVHXPGKVJZ-UHFFFAOYSA-N"
+  },
+  "138375888": {
+    "smiles": "[B-](C1=CC=C(C=C1)CO)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "DKQGOLDYDINUJJ-UHFFFAOYSA-N"
+  },
+  "138375889": {
+    "smiles": "[B-](C1=CC(=CC=C1)[B-](F)(F)F)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "PAWYADLBFMHKLT-UHFFFAOYSA-N"
+  },
+  "138375898": {
+    "smiles": "[B-](C1=CC(=NC=C1)Cl)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "KXMJFXRCKWLEAM-UHFFFAOYSA-N"
+  },
+  "138375904": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)C(=O)N3CCNCC3.Cl",
+    "inchiKey": "YNHIJHIMTIKNLH-UHFFFAOYSA-N"
+  },
+  "138375911": {
+    "smiles": "[B-](C1=CC(=NC=C1)N2CCOCC2)(F)(F)F.CCCC[N+](CCCC)(CCCC)CCCC",
+    "inchiKey": "DULRISMTNKHFSM-UHFFFAOYSA-N"
+  },
+  "138375917": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=CC(=C2)OCC3=CC=CC=C3)I",
+    "inchiKey": "FSDADMRNTHKFGS-UHFFFAOYSA-N"
+  },
+  "138958132": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=C(C=C(C=C2)F)COC(=O)C",
+    "inchiKey": "SDMYSNBDPDPKFG-UHFFFAOYSA-N"
+  },
+  "138987317": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=CC=C2CNC(=O)N",
+    "inchiKey": "MFICSPYXUCLTKO-UHFFFAOYSA-N"
+  },
+  "138987426": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CNC(=O)[C@H](C(C)C)NC(=O)OCC3=CC=CC=C3",
+    "inchiKey": "VESKKKJYKZJCJC-QFIPXVFZSA-N"
+  },
+  "138987427": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC(=O)OCC(C)C",
+    "inchiKey": "LUSFHHGKWVMCLY-UHFFFAOYSA-N"
+  },
+  "138987428": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)NC(=O)OCC",
+    "inchiKey": "FHXRTEFERUPPHB-UHFFFAOYSA-N"
+  },
+  "139026248": {
+    "smiles": "C1=CC2=C(C=C1NC(=S)NCC(CO)O)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O",
+    "inchiKey": "VRSKUBXNFFWINN-UHFFFAOYSA-N"
+  },
+  "139026249": {
+    "smiles": "C1=CC2=C(C=C1NC(=S)NC(CO)CO)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O",
+    "inchiKey": "MKOAONRDSXJZRS-UHFFFAOYSA-N"
+  },
+  "139592756": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC(=CC=C2)NC(=O)CCl",
+    "inchiKey": "KRUFNIIOOFTHTC-UHFFFAOYSA-N"
+  },
+  "139663671": {
+    "smiles": "C1CN(CCN1)CC(COCCOCC(CN2CCNCC2)O)O",
+    "inchiKey": "XNDIXKWZFHBWQI-UHFFFAOYSA-N"
+  },
+  "140655235": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCOCCOCCOCCOC",
+    "inchiKey": "HLMKWOZOKADPKD-UHFFFAOYSA-N"
+  },
+  "140699141": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)COC(=O)ON3C(=O)CCC3=O",
+    "inchiKey": "LLVFCJGCTPWGKV-UHFFFAOYSA-N"
+  },
+  "140710968": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CP(=O)(OCC)OCC",
+    "inchiKey": "FMPLFEGDIWHWDG-UHFFFAOYSA-N"
+  },
+  "140916937": {
+    "smiles": "CCCCCCCCCCCOC(=O)CCCCCNCCO",
+    "inchiKey": "OMJBMDVBMKBDRJ-UHFFFAOYSA-N"
+  },
+  "141003690": {
+    "smiles": "CCCCCCCCCCCCCCCCCCNCCOC",
+    "inchiKey": "CMYNFQNCAPMQBA-UHFFFAOYSA-N"
+  },
+  "146048594": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CN=C(N=C2)N3CCCN(CC3)C",
+    "inchiKey": "UASBRJYKSIPJSS-UHFFFAOYSA-N"
+  },
+  "146079305": {
+    "smiles": "CCN(CCOCCOCCO)C(=O)OC(C)(C)C",
+    "inchiKey": "OWZNWZKYKBTLMV-UHFFFAOYSA-N"
+  },
+  "146082577": {
+    "smiles": "CC(C)(COCC(CN1CCNCC1)O)COCC(CN2CCNCC2)O",
+    "inchiKey": "JXVXHCIRKFBUPC-UHFFFAOYSA-N"
+  },
+  "146155703": {
+    "smiles": "C(COCCOCCN=[N+]=[N-])N.Cl",
+    "inchiKey": "NZGULSXSYLKLEJ-UHFFFAOYSA-N"
+  },
+  "150167299": {
+    "smiles": "C(CN)COCCCN=[N+]=[N-]",
+    "inchiKey": "FIRAGCZWXVWJIR-UHFFFAOYSA-N"
+  },
+  "150354521": {
+    "smiles": "C(COCCOCCN=[N+]=[N-])N=C=O",
+    "inchiKey": "GUKXTDAINFOOEV-UHFFFAOYSA-N"
+  },
+  "152116297": {
+    "smiles": "CNCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "VEHCZDVZXVAGBF-UHFFFAOYSA-N"
+  },
+  "154016949": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CCCC(=O)OCC",
+    "inchiKey": "MICUUJMNIFAKSC-UHFFFAOYSA-N"
+  },
+  "154814901": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)OCCOCC3=CC=CC=C3",
+    "inchiKey": "BWMSLGJWAZNELB-UHFFFAOYSA-N"
+  },
+  "163339378": {
+    "smiles": "COCCNCCOCCOCCN=[N+]=[N-]",
+    "inchiKey": "RENSUAVUNVUBKT-UHFFFAOYSA-N"
+  },
+  "167995454": {
+    "smiles": "B1(OC(C(O1)(C)C)(C)C)C2=CC=C(C=C2)CCCCCBr",
+    "inchiKey": "HBICJUPZSTYKIH-UHFFFAOYSA-N"
+  },
+  "170367058": {
+    "smiles": "CCCCCCCCCCCOC(=O)CCCCC[N+](CCCCCCCC(=O)OC(CCCCCCCC)CCCCCCCC)(CCO)[O-]",
+    "inchiKey": "YNUITBCJKUWYSR-UHFFFAOYSA-N"
+  },
+  "172871935": {
+    "smiles": "CCCCCCCCCCCOC(=O)CCCCC[N+](C)(CCCCCCCC(=O)OC(CCCCCCCC)CCCCCCCC)CCO.[I-]",
+    "inchiKey": "OFVAGWVUQMTSAD-UHFFFAOYSA-M"
+  },
+  "177924742": {
+    "smiles": "C(COCCOCCOCCOCCN=[N+]=[N-])N.Cl",
+    "inchiKey": "ZFCBATIWCWFOPW-UHFFFAOYSA-N"
+  },
+  "177929775": {
+    "smiles": "B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=C5C=CC=C6C5=C(C=C4)C7=CC=CC=C76",
+    "inchiKey": "TXWFSOSDKMEBTM-UHFFFAOYSA-N"
+  }
+}

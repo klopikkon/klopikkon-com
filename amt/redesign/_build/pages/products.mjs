@@ -2,9 +2,10 @@
  * Product pages: one products/<id>/index.html per catalogue row.
  * Loaded by the shell _build/build.mjs. HTML goes through ctx.writeFile.
  */
+import { readFileSync } from "node:fs";
 import { mkdir, readdir, readFile, rm, writeFile as fsWriteFile } from "node:fs/promises";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { canonical, url } from "../lib/paths.mjs";
 import { breadcrumbs, priceBadge } from "../lib/ui.mjs";
 import {
@@ -14,14 +15,17 @@ import {
   familyLabel,
   formatPerMg,
   isQuotedPack,
+  loadIdentifierCache,
   loadRanking,
   matchProduct,
   packLabel,
   pricePositionCopy,
   pubchemFields,
+  publishedAmtTechnical,
   publishedText,
   renderPriceMatchMarkdown,
   summariseMatches,
+  technicalIdentifiers,
 } from "../product-support.mjs";
 
 function safeId(id) {
@@ -44,35 +48,119 @@ function displayName(product) {
   return publishedText(product.name) || publishedText(product.sku) || String(product.id || "");
 }
 
-export function renderPubchem(product, id) {
+function sourceRow(label, value, tag, tagClass) {
+  return `<tr><th scope="row">${escapeHtml(label)}</th><td>${escapeHtml(value)} <span class="${tagClass}">${escapeHtml(tag)}</span></td></tr>`;
+}
+
+function renderIdentifier(label, value, ariaLabel, buttonLabel) {
+  return `<div class="identifier">
+    <h3>${escapeHtml(label)} <span class="pubchem-tag">from PubChem</span></h3>
+    <p class="identifier-value">${escapeHtml(value)}</p>
+    <button type="button" class="btn btn-secondary copy-identifier" data-copy="${escapeHtml(value)}" aria-label="${escapeHtml(ariaLabel)}">${escapeHtml(buttonLabel)}</button>
+  </div>`;
+}
+
+function renderTechnical(product, id, cache) {
+  const amt = publishedAmtTechnical(product);
   const fields = pubchemFields(product);
-  if (!fields) return "";
-  const rows = [];
-  if (fields.formula) {
-    rows.push(`<tr><th scope="row">Formula</th><td>${escapeHtml(fields.formula)} <span class="pubchem-tag">from PubChem</span></td></tr>`);
-  }
-  if (fields.mw) {
-    rows.push(`<tr><th scope="row">Molecular weight</th><td>${escapeHtml(fields.mw)} <span class="pubchem-tag">from PubChem</span></td></tr>`);
-  }
-  const link = fields.href
-    ? `<p><a href="${escapeHtml(fields.href)}" rel="noopener noreferrer">PubChem CID ${escapeHtml(fields.cid)}</a></p>`
+  const ids = technicalIdentifiers(product, cache);
+  const showPubchem = Boolean(fields && (fields.formula || fields.mw || fields.image || ids.smiles || ids.inchiKey));
+  if (!amt && !showPubchem) return "";
+  const amtRows = [];
+  if (amt?.formula) amtRows.push(sourceRow("Formula", amt.formula, "Published by AMT", "source-tag"));
+  if (amt?.mw) amtRows.push(sourceRow("Molecular weight", amt.mw, "Published by AMT", "source-tag"));
+  const amtImage = amt?.image
+    ? `<figure class="structure">
+        ${structureImg(structureUrl(product), `Structure of ${displayName(product)} published by Advanced Molecular Technologies`)}
+        <figcaption>Structure published by AMT</figcaption>
+      </figure>`
     : "";
-  const image = fields.image
+  const amtBlock =
+    amtRows.length || amtImage
+      ? `<div class="technical-amt">
+          <h3>Published by AMT</h3>
+          ${
+            amtRows.length
+              ? `<div class="table-scroll"><table class="specs"><caption>Values published by AMT.</caption><tbody>${amtRows.join("")}</tbody></table></div>`
+              : ""
+          }
+          ${amtImage}
+        </div>`
+      : "";
+  const pubRows = [];
+  if (fields?.formula) pubRows.push(sourceRow("Formula", fields.formula, "from PubChem", "pubchem-tag"));
+  if (fields?.mw) pubRows.push(sourceRow("Molecular weight", fields.mw, "from PubChem", "pubchem-tag"));
+  const pubImage = fields?.image
     ? `<figure class="structure pubchem-structure">
-        <img src="${escapeHtml(structureUrl({ structureImage: fields.image }) || fields.image)}" alt="Structure of ${escapeHtml(displayName(product))} from PubChem" width="480" height="360">
+        ${structureImg(structureUrl({ structureImage: fields.image }) || fields.image, `Structure of ${displayName(product)} from PubChem`)}
         <figcaption>Structure from PubChem${fields.cid ? `, CID ${escapeHtml(fields.cid)}` : ""}</figcaption>
       </figure>`
     : "";
-  const table = rows.length
-    ? `<div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody>${rows.join("")}</tbody></table></div>`
+  const identifiers = [
+    ids.smiles ? renderIdentifier("SMILES", ids.smiles, "Copy SMILES from PubChem", "Copy SMILES") : "",
+    ids.inchiKey ? renderIdentifier("InChIKey", ids.inchiKey, "Copy InChIKey from PubChem", "Copy InChIKey") : "",
+  ].join("");
+  const link = fields?.href
+    ? `<p><a href="${escapeHtml(fields.href)}" rel="noopener noreferrer">PubChem CID ${escapeHtml(fields.cid)}</a></p>`
     : "";
-  return `<section class="pubchem" aria-labelledby="pubchem-${escapeHtml(id)}">
-    <h2 id="pubchem-${escapeHtml(id)}">From PubChem</h2>
-    <p class="fine">Not printed in the AMT catalogue.</p>
-    ${table}
-    ${image}
-    ${link}
+  const pubBlock = showPubchem
+    ? `<div class="technical-pubchem">
+        <h3>From PubChem</h3>
+        <p class="fine">Not printed in the AMT catalogue.</p>
+        ${
+          pubRows.length
+            ? `<div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody>${pubRows.join("")}</tbody></table></div>`
+            : ""
+        }
+        ${pubImage}
+        ${identifiers}
+        ${link}
+      </div>`
+    : "";
+  return `<section class="technical" data-technical aria-labelledby="technical-${escapeHtml(id)}">
+    <h2 id="technical-${escapeHtml(id)}">Technical</h2>
+    ${amtBlock}
+    ${pubBlock}
   </section>`;
+}
+
+function renderSpecs(product, id) {
+  const specs = specRows(product)
+    .map((row) => {
+      const value = row.value ? escapeHtml(row.value) : "Not published";
+      const copy = row.copy
+        ? ` <button type="button" class="btn btn-secondary copy-cas" data-copy="${escapeHtml(row.copy)}" aria-label="Copy CAS ${escapeHtml(row.copy)}">Copy</button>`
+        : "";
+      return `<tr><th scope="row">${escapeHtml(row.key)}</th><td>${value}${copy}</td></tr>`;
+    })
+    .join("");
+  return `<section class="specs-section" aria-labelledby="specs-${escapeHtml(id)}">
+      <h2 id="specs-${escapeHtml(id)}">Specifications</h2>
+      <div class="table-scroll">
+      <table class="specs">
+        <caption>Values as published by AMT. Unpublished fields stay blank.</caption>
+        <tbody>${specs}</tbody>
+      </table>
+      </div>
+    </section>`;
+}
+
+function renderDetails(product, id, cache) {
+  const specs = renderSpecs(product, id);
+  const technical = renderTechnical(product, id, cache);
+  if (!technical) return specs;
+  return `<div class="detail-tabs" data-detail-tabs>
+    <div class="detail-tablist" role="tablist" aria-label="Product details">
+      <button type="button" role="tab" id="specs-tab-${escapeHtml(id)}" aria-controls="specs-panel-${escapeHtml(id)}" aria-selected="true">Specifications</button>
+      <button type="button" role="tab" id="tech-tab-${escapeHtml(id)}" aria-controls="tech-panel-${escapeHtml(id)}" aria-selected="false" tabindex="-1">Technical</button>
+    </div>
+    <div role="tabpanel" id="specs-panel-${escapeHtml(id)}" aria-labelledby="specs-tab-${escapeHtml(id)}">
+      ${specs}
+    </div>
+    <div role="tabpanel" id="tech-panel-${escapeHtml(id)}" aria-labelledby="tech-tab-${escapeHtml(id)}">
+      ${technical}
+    </div>
+  </div>`;
 }
 
 function structureUrl(product) {
@@ -81,6 +169,72 @@ function structureUrl(product) {
   if (/^https?:\/\//i.test(src)) return src;
   if (src.startsWith("/")) return src;
   return url(src);
+}
+
+const redesignRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
+
+function structureSize(src) {
+  if (!src || /^https?:\/\//i.test(src)) return null;
+  let rel = String(src).split("?")[0].split("#")[0];
+  if (rel.startsWith("/amt/redesign/")) rel = rel.slice("/amt/redesign/".length);
+  else if (rel.startsWith("/")) return null;
+  if (!rel || rel.includes("..")) return null;
+  let buf;
+  try {
+    buf = readFileSync(path.join(redesignRoot, rel));
+  } catch {
+    return null;
+  }
+  if (buf.length >= 24 && buf[0] === 0x89 && buf.toString("ascii", 1, 4) === "PNG") {
+    const width = buf.readUInt32BE(16);
+    const height = buf.readUInt32BE(20);
+    if (width > 0 && height > 0) return { width, height };
+  }
+  if (buf.length >= 10 && buf.toString("ascii", 0, 3) === "GIF") {
+    const width = buf.readUInt16LE(6);
+    const height = buf.readUInt16LE(8);
+    if (width > 0 && height > 0) return { width, height };
+  }
+  if (buf.length > 4 && buf[0] === 0xff && buf[1] === 0xd8) {
+    let offset = 2;
+    while (offset < buf.length - 8) {
+      if (buf[offset] !== 0xff) break;
+      const marker = buf[offset + 1];
+      if (marker === 0xd9 || marker === 0xda) break;
+      const length = buf.readUInt16BE(offset + 2);
+      if (marker >= 0xc0 && marker <= 0xc3) {
+        const height = buf.readUInt16BE(offset + 5);
+        const width = buf.readUInt16BE(offset + 7);
+        if (width > 0 && height > 0) return { width, height };
+      }
+      offset += 2 + length;
+    }
+  }
+  const tag = buf.subarray(0, 500).toString("utf8").match(/<svg\b[^>]*>/i)?.[0];
+  if (!tag) return null;
+  const attr = (name) => {
+    const match = tag.match(new RegExp(`\\b${name}="([\\d.]+)"`));
+    const value = match ? Math.round(Number(match[1])) : 0;
+    return value > 0 ? value : null;
+  };
+  const width = attr("width");
+  const height = attr("height");
+  if (width && height) return { width, height };
+  const box = tag.match(/viewBox="\s*[-\d.]+\s+[-\d.]+\s+([\d.]+)\s+([\d.]+)\s*"/);
+  if (!box) return null;
+  const boxWidth = Math.round(Number(box[1]));
+  const boxHeight = Math.round(Number(box[2]));
+  if (boxWidth > 0 && boxHeight > 0) return { width: boxWidth, height: boxHeight };
+  return null;
+}
+
+function structureImg(src, alt) {
+  const size = structureSize(src);
+  const safeSrc = escapeHtml(src);
+  const responsive = size
+    ? ` srcset="${safeSrc} 1x" width="${size.width}" height="${size.height}"`
+    : "";
+  return `<img src="${safeSrc}"${responsive} alt="${escapeHtml(alt)}">`;
 }
 
 function familyTitle(site, family) {
@@ -270,7 +424,7 @@ function renderPacks(product) {
   ${renderPackCompare(product)}`;
 }
 
-function renderProduct(product, all, match, site) {
+function renderProduct(product, all, match, site, cache) {
   const id = safeId(product.id);
   const family = product.family || "other";
   const familyText = familyTitle(site, family);
@@ -280,7 +434,7 @@ function renderProduct(product, all, match, site) {
   const image = structureUrl(product);
   const figure = image
     ? `<figure class="structure">
-        <img src="${escapeHtml(image)}" alt="Structure of ${escapeHtml(displayName(product))} published by Advanced Molecular Technologies" width="480" height="360">
+        ${structureImg(image, `Structure of ${displayName(product)} published by Advanced Molecular Technologies`)}
       </figure>`
     : `<figure class="structure structure-placeholder">
         <svg viewBox="0 0 160 100" aria-hidden="true" focusable="false">
@@ -288,15 +442,6 @@ function renderProduct(product, all, match, site) {
         </svg>
         <figcaption>No structure image published by AMT</figcaption>
       </figure>`;
-  const specs = specRows(product)
-    .map((row) => {
-      const value = row.value ? escapeHtml(row.value) : "Not published";
-      const copy = row.copy
-        ? ` <button type="button" class="btn btn-secondary copy-cas" data-copy="${escapeHtml(row.copy)}" aria-label="Copy CAS ${escapeHtml(row.copy)}">Copy</button>`
-        : "";
-      return `<tr><th scope="row">${escapeHtml(row.key)}</th><td>${value}${copy}</td></tr>`;
-    })
-    .join("");
   const docs = documentLinks(product);
   const documents = docs.length
     ? `<section class="documents" aria-labelledby="docs-${escapeHtml(id)}">
@@ -358,16 +503,7 @@ function renderProduct(product, all, match, site) {
         ${sourceHtml}
       </div>
     </div>
-    <section class="specs-section" aria-labelledby="specs-${escapeHtml(id)}">
-      <h2 id="specs-${escapeHtml(id)}">Specifications</h2>
-      <div class="table-scroll">
-      <table class="specs">
-        <caption>Values as published by AMT. Unpublished fields stay blank.</caption>
-        <tbody>${specs}</tbody>
-      </table>
-      </div>
-    </section>
-    ${renderPubchem(product, id)}
+    ${renderDetails(product, id, cache)}
     ${documents}
     ${relatedHtml}
     <section class="recent" data-recent hidden>
@@ -424,6 +560,7 @@ export async function build(ctx) {
     throw new Error("products build needs ctx.renderPage and ctx.writeFile");
   }
   const ranking = await loadRanking(path.resolve(outDir, "..", "ranking-on-price"));
+  const identifiers = await loadIdentifierCache(new URL("../pubchem-identifiers.json", import.meta.url));
   const summary = summariseMatches(products, ranking);
   const productsDir = path.join(outDir, "products");
   await mkdir(productsDir, { recursive: true });
@@ -442,7 +579,7 @@ export async function build(ctx) {
       description,
       path: pagePath,
       head: `${socialMeta(product, pagePath, site)}\n<link rel="stylesheet" href="${url("css/product.css")}">`,
-      body: renderProduct(product, products, match, site),
+      body: renderProduct(product, products, match, site, identifiers),
     });
     await write(`products/${id}/index.html`, html);
   }

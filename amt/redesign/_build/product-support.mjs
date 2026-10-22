@@ -513,10 +513,29 @@ function digitId(value) {
   return null;
 }
 
+const INCHI_KEY = /^[A-Z]{14}-[A-Z]{10}-[A-Z]$/;
+
+function cleanIdentifier(value, kind) {
+  const text = publishedText(value);
+  if (!text || /[\u0000-\u001f]/.test(text)) return null;
+  if (kind === "inchiKey") return INCHI_KEY.test(text) ? text : null;
+  if (text.length > 2000) return null;
+  return text;
+}
+
+function firstIdentifier(kind, ...values) {
+  for (const value of values) {
+    const text = cleanIdentifier(value, kind);
+    if (text) return text;
+  }
+  return null;
+}
+
 /**
  * PubChem extras. Shown only when the catalogue row carries them.
  * They are never copied into the AMT formula, molecular weight, or structure fields.
- * CID is `pubchemCid` or `cidExternal`.
+ * CID is `externalSource.cid`, `pubchemCid`, or `cidExternal`.
+ * SMILES and InChIKey stay on the external fields. The build cache can fill them in.
  */
 export function pubchemFields(product) {
   if (!product || typeof product !== "object") return null;
@@ -525,16 +544,88 @@ export function pubchemFields(product) {
     product.mwExternal == null || product.mwExternal === "" ? null : publishedText(String(product.mwExternal));
   const image = publishedText(product.structureImageExternal);
   const cid =
+    digitId(product.externalSource?.cid) ||
     digitId(product.pubchemCid) ||
     digitId(product.cidExternal) ||
     digitId(product.pubchem?.cid) ||
     digitId(product.pubchem?.CID);
-  if (!formula && !mw && !image && !cid) return null;
+  const smiles = firstIdentifier(
+    "smiles",
+    product.smilesExternal,
+    product.externalSource?.smiles,
+    product.externalSource?.SMILES,
+    product.pubchem?.smiles,
+    product.pubchem?.SMILES,
+  );
+  const inchiKey = firstIdentifier(
+    "inchiKey",
+    product.inchiKeyExternal,
+    product.externalSource?.inchiKey,
+    product.externalSource?.InChIKey,
+    product.pubchem?.inchiKey,
+    product.pubchem?.InChIKey,
+  );
+  if (!formula && !mw && !image && !cid && !smiles && !inchiKey) return null;
   return {
     formula,
     mw,
     image,
     cid,
     href: cid ? `https://pubchem.ncbi.nlm.nih.gov/compound/${cid}` : null,
+    smiles,
+    inchiKey,
   };
+}
+
+/** AMT formula, molecular weight, and structure. Null fields stay null. */
+export function publishedAmtTechnical(product) {
+  if (!product || typeof product !== "object") return null;
+  const formula = publishedText(product.formula);
+  const mw = product.mw == null || product.mw === "" ? null : publishedText(String(product.mw));
+  const image = publishedText(product.structureImage);
+  if (!formula && !mw && !image) return null;
+  return { formula, mw, image };
+}
+
+/**
+ * SMILES and InChIKey for the copy buttons.
+ * A value on the product wins. Otherwise the CID is looked up in the
+ * PubChem cache at _build/pubchem-identifiers.json. Nothing is invented.
+ */
+export function technicalIdentifiers(product, cache = null) {
+  const fields = pubchemFields(product);
+  const cached = fields?.cid && cache && typeof cache === "object" ? cache[fields.cid] : null;
+  return {
+    smiles: fields?.smiles || cleanIdentifier(cached?.smiles, "smiles"),
+    inchiKey: fields?.inchiKey || cleanIdentifier(cached?.inchiKey, "inchiKey"),
+  };
+}
+
+/** True when the product page has a Technical tab to show. */
+export function hasTechnicalTab(product, cache = null) {
+  const amt = publishedAmtTechnical(product);
+  const fields = pubchemFields(product);
+  const ids = technicalIdentifiers(product, cache);
+  const pubchem = Boolean(fields && (fields.formula || fields.mw || fields.image));
+  return Boolean(amt || pubchem || ids.smiles || ids.inchiKey);
+}
+
+/** CID-keyed `{ smiles, inchiKey }` fetched from PubChem. Missing file yields {}. */
+export async function loadIdentifierCache(file) {
+  try {
+    const parsed = JSON.parse(await readFile(file, "utf8"));
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+    const cache = {};
+    for (const [cid, row] of Object.entries(parsed)) {
+      if (!/^\d+$/.test(cid) || !row || typeof row !== "object") continue;
+      const smiles = cleanIdentifier(row.smiles, "smiles");
+      const inchiKey = cleanIdentifier(row.inchiKey, "inchiKey");
+      if (!smiles && !inchiKey) continue;
+      cache[cid] = { smiles, inchiKey };
+    }
+    return cache;
+  } catch (err) {
+    if (err.code === "ENOENT") return {};
+    throw err;
+  }
 }

@@ -24,7 +24,8 @@
 
 .structure img {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   height: auto;
   background: #ffffff;
   border-radius: var(--radius-md);
@@ -127,11 +128,79 @@
   font-weight: 600;
 }
 
-.pubchem {
+.detail-tabs {
   margin-top: var(--space-6);
 }
 
-.pubchem-tag {
+.detail-tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.detail-tablist [role="tab"] {
+  appearance: none;
+  margin: 0;
+  min-height: var(--tap);
+  padding: 0.35rem 0.95rem;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.detail-tablist [role="tab"][aria-selected="true"] {
+  color: var(--ink);
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+.detail-tabs .specs-section,
+.detail-tabs .technical {
+  margin-top: 0;
+}
+
+.technical h3 {
+  font-size: var(--step-1);
+  margin: var(--space-5) 0 var(--space-3);
+}
+
+.technical h3:first-of-type {
+  margin-top: 0;
+}
+
+.technical .structure {
+  max-width: 22rem;
+  margin-top: var(--space-4);
+}
+
+.identifier {
+  margin-top: var(--space-4);
+}
+
+.identifier h3 {
+  margin-bottom: var(--space-2);
+}
+
+.identifier-value {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  overflow-wrap: anywhere;
+}
+
+.copy-identifier {
+  min-height: var(--tap);
+}
+
+.pubchem-tag,
+.source-tag {
   display: inline-block;
   margin-left: var(--space-2);
   padding: 0.05rem 0.45rem;
@@ -327,12 +396,18 @@
   .site-footer,
   .product-actions,
   .copy-cas,
+  .copy-identifier,
+  .detail-tablist,
   .pack-form button,
   .quote-status,
   .related,
   .recent,
   .price-position-link {
     display: none !important;
+  }
+
+  .detail-tabs [role="tabpanel"] {
+    display: block !important;
   }
 
   :root,

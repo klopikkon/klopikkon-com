@@ -296,22 +296,35 @@ const AmtQuoteCount = class extends HTMLElement {
     const link = this.shadowRoot.querySelector("a");
     badge.textContent = String(count);
     badge.dataset.show = count > 0 ? "true" : "false";
-    const label =
-      count === 0 ? "Quote list, no items yet" : count === 1 ? "Quote list, 1 item" : `Quote list, ${count} items`;
-    link.setAttribute("aria-label", label);
+    link.setAttribute("aria-label", quoteCountLabel(count));
   }
 }
 
+function quoteCountLabel(count) {
+  if (count === 0) return "Quote list, no items yet";
+  if (count === 1) return "Quote list, 1 item";
+  return `Quote list, ${count} items`;
+}
+
+function paintShellQuoteCount() {
+  const link = document.querySelector("[data-quote-count]");
+  if (!link) return false;
+  const count = totalQty(readCart());
+  link.textContent = `Quote (${count})`;
+  link.setAttribute("aria-label", quoteCountLabel(count));
+  return true;
+}
+
 function ensureCount() {
-  if (document.querySelector("amt-quote-count")) return;
+  paintShellQuoteCount();
+  if (document.querySelector("[data-quote-count]") || document.querySelector("amt-quote-count")) return;
   const el = document.createElement("amt-quote-count");
-  const utility = document.querySelector("header .utility");
-  const toggle = utility?.querySelector("[data-theme-toggle]");
-  if (utility && toggle) {
-    utility.insertBefore(el, toggle);
+  const toggle = document.querySelector("header [data-theme-toggle]");
+  if (toggle?.parentElement) {
+    toggle.parentElement.insertBefore(el, toggle);
     return;
   }
-  const host = document.querySelector("header nav") || document.querySelector("header");
+  const host = document.querySelector("header .utility") || document.querySelector("header");
   if (!host) return;
   host.appendChild(el);
 }
@@ -560,11 +573,48 @@ function rememberProduct() {
   host.hidden = false;
 }
 
+function initDetailTabs() {
+  for (const host of document.querySelectorAll("[data-detail-tabs]")) {
+    const tabs = [...host.querySelectorAll('[role="tab"]')];
+    if (tabs.length < 2) continue;
+    const select = (tab) => {
+      for (const item of tabs) {
+        const on = item === tab;
+        item.setAttribute("aria-selected", on ? "true" : "false");
+        item.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(item.getAttribute("aria-controls"));
+        if (panel) panel.hidden = !on;
+      }
+    };
+    select(tabs.find((tab) => tab.getAttribute("aria-selected") === "true") || tabs[0]);
+    host.addEventListener("click", (event) => {
+      const tab = event.target?.closest?.('[role="tab"]');
+      if (!tab || !host.contains(tab)) return;
+      select(tab);
+    });
+    host.addEventListener("keydown", (event) => {
+      const index = tabs.indexOf(document.activeElement);
+      if (index < 0) return;
+      let next = index;
+      if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+      else if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+      else if (event.key === "Home") next = 0;
+      else if (event.key === "End") next = tabs.length - 1;
+      else return;
+      event.preventDefault();
+      tabs[next].focus();
+      select(tabs[next]);
+    });
+  }
+}
+
 function init() {
   if (!customElements.get("amt-quote-count")) {
     customElements.define("amt-quote-count", AmtQuoteCount);
   }
   ensureCount();
+  window.addEventListener("amt:quote-changed", paintShellQuoteCount);
+  window.addEventListener("storage", paintShellQuoteCount);
   document.addEventListener("submit", (event) => {
     const form = event.target?.closest?.("[data-quote-form]");
     if (!form) return;
@@ -607,6 +657,7 @@ function init() {
     }, 1500);
   });
   rememberProduct();
+  initDetailTabs();
   const page = document.querySelector("[data-quote-page]");
   if (page) {
     const form = page.querySelector("[data-quote-details]");

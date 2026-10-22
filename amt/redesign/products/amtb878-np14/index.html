@@ -51,14 +51,17 @@
       <span aria-hidden="true">·</span>
       <a href="mailto:enquiries@amtechpl.com">enquiries@amtechpl.com</a>
     </p>
-    <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme">
+    <div class="utility-actions">
+      <a class="quote-count" href="/amt/redesign/quote/" data-quote-count>Quote (0)</a>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme">
       <span class="when-light">Dark theme</span>
       <span class="when-dark">Light theme</span>
     </button>
+    </div>
   </div>
   <div class="wrap brand-bar">
     <a class="brand" href="/amt/redesign/">
-      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" width="183" height="99" alt=""></span>
+      <span class="brand-mark"><img class="logo" src="/amt/redesign/assets/amt-logo.png" srcset="/amt/redesign/assets/amt-logo.png 183w, /amt/redesign/assets/amt-logo@2x.png 464w" sizes="(min-width: 56rem) 6.25rem, 5.5rem" width="183" height="99" alt=""></span>
       <span class="brand-name">Advanced Molecular Technologies</span>
     </a>
     <form class="search" role="search" action="/amt/redesign/catalogue/" method="get">
@@ -134,7 +137,13 @@
         <p class="source-line">Published source: <a href="https://www.amtechpl.com/wp-content/uploads/2026/04/AMT-Organoboron-Compounds-List-20260421.pdf" rel="noopener noreferrer">Catalogue PDF</a> · <a href="https://www.amtechpl.com/" rel="noopener noreferrer">AMT page</a></p>
       </div>
     </div>
-    <section class="specs-section" aria-labelledby="specs-amtb878-np14">
+    <div class="detail-tabs" data-detail-tabs>
+    <div class="detail-tablist" role="tablist" aria-label="Product details">
+      <button type="button" role="tab" id="specs-tab-amtb878-np14" aria-controls="specs-panel-amtb878-np14" aria-selected="true">Specifications</button>
+      <button type="button" role="tab" id="tech-tab-amtb878-np14" aria-controls="tech-panel-amtb878-np14" aria-selected="false" tabindex="-1">Technical</button>
+    </div>
+    <div role="tabpanel" id="specs-panel-amtb878-np14" aria-labelledby="specs-tab-amtb878-np14">
+      <section class="specs-section" aria-labelledby="specs-amtb878-np14">
       <h2 id="specs-amtb878-np14">Specifications</h2>
       <div class="table-scroll">
       <table class="specs">
@@ -143,16 +152,33 @@
       </table>
       </div>
     </section>
-    <section class="pubchem" aria-labelledby="pubchem-amtb878-np14">
-    <h2 id="pubchem-amtb878-np14">From PubChem</h2>
-    <p class="fine">Not printed in the AMT catalogue.</p>
-    <div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody><tr><th scope="row">Formula</th><td>C16H13BN2O <span class="pubchem-tag">from PubChem</span></td></tr><tr><th scope="row">Molecular weight</th><td>260.1 <span class="pubchem-tag">from PubChem</span></td></tr></tbody></table></div>
-    <figure class="structure pubchem-structure">
-        <img src="/amt/redesign/assets/structures/pubchem/75176071.svg" alt="Structure of 4-(1H-naphtho[1,8-de][1,3,2]diazaborinin-2(3H)-yl)phenol from PubChem" width="480" height="360">
-        <figcaption>Structure from PubChem</figcaption>
-      </figure>
+    </div>
+    <div role="tabpanel" id="tech-panel-amtb878-np14" aria-labelledby="tech-tab-amtb878-np14">
+      <section class="technical" data-technical aria-labelledby="technical-amtb878-np14">
+    <h2 id="technical-amtb878-np14">Technical</h2>
     
+    <div class="technical-pubchem">
+        <h3>From PubChem</h3>
+        <p class="fine">Not printed in the AMT catalogue.</p>
+        <div class="table-scroll"><table class="specs"><caption>Values from PubChem, not from the AMT catalogue.</caption><tbody><tr><th scope="row">Formula</th><td>C16H13BN2O <span class="pubchem-tag">from PubChem</span></td></tr><tr><th scope="row">Molecular weight</th><td>260.1 <span class="pubchem-tag">from PubChem</span></td></tr></tbody></table></div>
+        <figure class="structure pubchem-structure">
+        <img src="/amt/redesign/assets/structures/pubchem/75176071.svg" srcset="/amt/redesign/assets/structures/pubchem/75176071.svg 1x" width="152" height="264" alt="Structure of 4-(1H-naphtho[1,8-de][1,3,2]diazaborinin-2(3H)-yl)phenol from PubChem">
+        <figcaption>Structure from PubChem, CID 75176071</figcaption>
+      </figure>
+        <div class="identifier">
+    <h3>SMILES <span class="pubchem-tag">from PubChem</span></h3>
+    <p class="identifier-value">B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)O</p>
+    <button type="button" class="btn btn-secondary copy-identifier" data-copy="B1(NC2=CC=CC3=C2C(=CC=C3)N1)C4=CC=C(C=C4)O" aria-label="Copy SMILES from PubChem">Copy SMILES</button>
+  </div><div class="identifier">
+    <h3>InChIKey <span class="pubchem-tag">from PubChem</span></h3>
+    <p class="identifier-value">VGYRSZGDYCOPGK-UHFFFAOYSA-N</p>
+    <button type="button" class="btn btn-secondary copy-identifier" data-copy="VGYRSZGDYCOPGK-UHFFFAOYSA-N" aria-label="Copy InChIKey from PubChem">Copy InChIKey</button>
+  </div>
+        <p><a href="https://pubchem.ncbi.nlm.nih.gov/compound/75176071" rel="noopener noreferrer">PubChem CID 75176071</a></p>
+      </div>
   </section>
+    </div>
+  </div>
     
     <section class="related" aria-labelledby="related-amtb878-np14">
         <h2 id="related-amtb878-np14">Related in AMT Organoboron Catalogue List</h2>
@@ -196,5 +222,7 @@
   </div>
 </footer>
   <script type="module" src="/amt/redesign/js/theme.js"></script>
+  <script type="module" src="/amt/redesign/js/quote-count.js"></script>
+  <script type="module" src="/amt/redesign/js/sw-register.js"></script>
 </body>
 </html>
