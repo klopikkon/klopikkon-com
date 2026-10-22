@@ -1,0 +1,266 @@
+/* Catalogue listing and search. Colours come from the shared tokens. */
+
+.catalogue h2 {
+  margin-top: 0;
+}
+
+.cat-toolbar {
+  display: grid;
+  gap: var(--space-3);
+  align-items: end;
+}
+
+.cat-layout {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.cat-filters {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.cat-facet {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.cat-facet legend {
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.cat-facet-list {
+  display: grid;
+  gap: 0.15rem;
+  max-height: 16rem;
+  overflow: auto;
+  padding-right: 0.2rem;
+}
+
+.cat-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  min-height: var(--tap);
+  padding: 0.35rem 0;
+}
+
+.cat-check input {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.2rem;
+  accent-color: var(--accent);
+}
+
+.cat-check span:nth-child(2) {
+  flex: 1;
+}
+
+.cat-count {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--step--1);
+}
+
+.cat-facet-note,
+.cat-live,
+.cat-price {
+  color: var(--muted);
+  font-size: var(--step--1);
+}
+
+.cat-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.cat-range input {
+  min-height: var(--tap);
+}
+
+.cat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.cat-chips:empty {
+  display: none;
+}
+
+.cat-chip,
+.cat-pager a,
+.cat-pager button {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  text-decoration: none;
+}
+
+.cat-pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.cat-pager a[aria-current="page"],
+.cat-pager button[aria-current="page"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+
+.cat-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.catalogue .product-card h2 {
+  margin-top: var(--space-2);
+  font-size: var(--step-2);
+}
+
+.catalogue .product-card h2 a {
+  color: var(--ink);
+  text-decoration-thickness: 1px;
+}
+
+.cat-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.8rem;
+  margin-top: var(--space-2);
+  color: var(--muted);
+  font-size: var(--step--1);
+}
+
+.cat-buy {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  margin-top: var(--space-3);
+}
+
+.cat-price {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--step-1);
+  font-weight: 700;
+}
+
+.cat-mark {
+  background: var(--amber-bg);
+  color: var(--amber-ink);
+  padding: 0 0.12em;
+  border-radius: 0.15em;
+}
+
+.cat-empty {
+  margin-top: var(--space-4);
+}
+
+.cat-filter-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.cat-filter-head h2 {
+  flex: 1;
+  font-size: var(--step-2);
+}
+
+.cat-textish {
+  border: 0;
+  background: transparent;
+  color: var(--link);
+  font: inherit;
+  min-height: var(--tap);
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+@media (min-width: 40rem) {
+  .cat-toolbar {
+    grid-template-columns: minmax(0, 1fr) 12rem auto;
+  }
+
+  .catalogue .product-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 14rem;
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .cat-buy {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 55.99rem) {
+  .cat-filters {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    overflow: auto;
+    padding: var(--space-4);
+    background: var(--bg);
+    transform: translateX(100%);
+    visibility: hidden;
+  }
+
+  .cat-filters.is-open {
+    transform: none;
+    visibility: visible;
+  }
+
+  body.cat-lock {
+    overflow: hidden;
+  }
+}
+
+@media (min-width: 56rem) {
+  .cat-layout {
+    grid-template-columns: 17rem minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .cat-filters {
+    position: sticky;
+    top: var(--space-4);
+    max-height: calc(100vh - 2rem);
+    overflow: auto;
+    padding: var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+
+  .cat-filter-open,
+  .cat-filter-close {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-filters {
+    transition: none;
+  }
+}
