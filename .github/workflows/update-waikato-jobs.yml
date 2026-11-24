@@ -2,8 +2,8 @@ name: Update Waikato MyMSD Jobs
 
 on:
   schedule:
-    # Runs daily at 18:00 UTC (7:00 AM NZDT / 6:00 AM NZST)
-    - cron: "0 18 * * *"
+    # Runs daily at 19:55 UTC (8:55 AM NZDT / 7:55 AM NZST)
+    - cron: "55 19 * * *"
   workflow_dispatch:
 
 permissions:
