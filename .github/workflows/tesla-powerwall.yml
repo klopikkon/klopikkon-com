@@ -214,3 +214,54 @@ jobs:
           curl -sS -H "Authorization: token $GH_PAT" -H "Accept: application/vnd.github.raw" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/contents/energy/car_step.sh?ref=main" -o /tmp/car_step.sh
           bash /tmp/car_step.sh
+
+  waikato-msd-jobs-daily:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.status_only != 'true'
+    steps:
+      - name: Trigger daily Waikato MyMSD Jobs update & email (once per day after 8:55 AM NZT)
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          nz_now = datetime.now(ZoneInfo("Pacific/Auckland"))
+          print("Current NZ time:", nz_now.isoformat())
+
+          if (nz_now.hour, nz_now.minute) < (8, 55):
+              print("Before 08:55 NZT — skipping.")
+              raise SystemExit(0)
+
+          today_nz = nz_now.strftime("%Y-%m-%d")
+          try:
+              meta = json.loads(
+                  urllib.request.urlopen(
+                      "https://raw.githubusercontent.com/klopikkon/klopikkon-com/main/waikato-msd-jobs/jobs.json",
+                      timeout=15,
+                  ).read().decode("utf-8")
+              )
+              excel_file = meta.get("excelFile", "")
+              if f"waikato_jobs_{today_nz}_" in excel_file:
+                  print(f"Already updated today ({excel_file}) — skipping.")
+                  raise SystemExit(0)
+          except Exception as e:
+              print("Could not read jobs.json (proceeding to trigger):", e)
+
+          req = urllib.request.Request(
+              "https://api.github.com/repos/klopikkon/klopikkon-com/actions/workflows/update-waikato-jobs.yml/dispatches",
+              data=json.dumps({"ref": "main"}).encode("utf-8"),
+              method="POST",
+              headers={
+                  "Authorization": f"token {os.environ['GH_PAT']}",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+                  "Content-Type": "application/json",
+                  "User-Agent": "klopikkon-daily-trigger",
+              },
+          )
+          with urllib.request.urlopen(req, timeout=20) as resp:
+              print(f"Triggered update-waikato-jobs.yml! HTTP {resp.status}")
+          PY
