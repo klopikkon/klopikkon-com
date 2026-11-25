@@ -447,11 +447,11 @@ def recommend_providers_for_job(
     job: dict[str, Any],
     description: str,
     providers: list[dict[str, Any]],
-    limit: int = 4,
-) -> str:
+    limit: int = 3,
+) -> list[dict[str, Any]]:
     """Return top matching external Waikato training providers for a job based on district & skills."""
     if not providers:
-        return ""
+        return []
 
     job_districts = {
         _normalize_waikato_district(d)
@@ -496,18 +496,17 @@ def recommend_providers_for_job(
         scored.append((score, 1 if p.get("scope") == "Local" else 0, p["name"], p))
 
     scored.sort(key=lambda x: (-x[0], -x[1], x[2].lower()))
-    top = [item[3] for item in scored[:limit]]
+    return [item[3] for item in scored[:limit]]
 
-    lines: list[str] = []
-    for p in top:
-        tags: list[str] = []
-        if p.get("scope") == "Local":
-            tags.append("Local")
-        if p.get("phone"):
-            tags.append(p["phone"])
-        suffix = f" ({' · '.join(tags)})" if tags else ""
-        lines.append(f"• {p['name']}{suffix}")
-    return "\n".join(lines)
+
+def _format_provider_label(p: dict[str, Any]) -> str:
+    tags: list[str] = []
+    if p.get("scope") == "Local":
+        tags.append("Local")
+    if p.get("phone"):
+        tags.append(p["phone"])
+    suffix = f" ({' · '.join(tags)})" if tags else ""
+    return f"{p['name']}{suffix}"
 
 
 def fetch_waikato_job_training_providers() -> list[dict[str, Any]]:
@@ -702,7 +701,9 @@ def export_to_excel(
         "Job ID",
         "Title",
         "Position Description",
-        "Recommended Training Providers",
+        "Recommended Provider 1",
+        "Recommended Provider 2",
+        "Recommended Provider 3",
         "Category",
         "Occupation",
         "Industry",
@@ -738,12 +739,18 @@ def export_to_excel(
 
     for row_idx, job in enumerate(jobs, start=2):
         desc = descriptions.get(job["vacancyId"], "")
-        rec_providers = recommend_providers_for_job(job, desc, providers or [])
+        rec_list = recommend_providers_for_job(job, desc, providers or [], limit=3)
+        rec_labels = [_format_provider_label(p) for p in rec_list]
+        while len(rec_labels) < 3:
+            rec_labels.append("")
+
         row = [
             job["vacancyId"],
             job["title"],
             desc,
-            rec_providers,
+            rec_labels[0],
+            rec_labels[1],
+            rec_labels[2],
             job["category"],
             job["occupation"],
             job["industry"],
@@ -766,12 +773,23 @@ def export_to_excel(
 
         for col_idx in range(1, len(headers) + 1):
             cell = ws.cell(row=row_idx, column=col_idx)
-            cell.alignment = wrap_align if col_idx in (3, 4) else top_align
+            cell.alignment = wrap_align if col_idx in (3, 4, 5, 6) else top_align
 
         if job["url"]:
+            title_cell = ws.cell(row=row_idx, column=2)
+            title_cell.hyperlink = job["url"]
+            title_cell.font = link_font
+
             url_cell = ws.cell(row=row_idx, column=len(headers))
             url_cell.hyperlink = job["url"]
             url_cell.font = link_font
+
+        for i, p in enumerate(rec_list):
+            p_url = p.get("website") or p.get("directoryUrl") or ""
+            if p_url:
+                p_cell = ws.cell(row=row_idx, column=4 + i)
+                p_cell.hyperlink = p_url
+                p_cell.font = link_font
 
     ws.freeze_panes = "A2"
     ws.auto_filter.ref = f"A1:{get_column_letter(len(headers))}{len(jobs) + 1}"
@@ -781,8 +799,8 @@ def export_to_excel(
         if col_idx == 3:  # Position Description column
             ws.column_dimensions[col_letter].width = 65
             continue
-        if col_idx == 4:  # Recommended Training Providers column
-            ws.column_dimensions[col_letter].width = 48
+        if col_idx in (4, 5, 6):  # Recommended Provider 1-3 columns
+            ws.column_dimensions[col_letter].width = 36
             continue
         max_len = max(
             len(str(ws.cell(row=r, column=col_idx).value or ""))
