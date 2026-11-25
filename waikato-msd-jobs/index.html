@@ -44,8 +44,56 @@
       border-radius: 8px;
       font-weight: 600;
       font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
     }
     .btn:hover { background: var(--primary-hover); }
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    .btn-secondary:hover { background: #edf4fb; }
+    .btn:disabled { opacity: 0.6; cursor: wait; }
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .trigger-panel {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      font-size: 0.92rem;
+    }
+    .trigger-panel.open { display: block; }
+    .trigger-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+      align-items: center;
+    }
+    .trigger-status {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: 500;
+    }
+    .trigger-status.error { color: #b91c1c; }
+    .small-link {
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -99,10 +147,27 @@
     <header>
       <div>
         <h1>Waikato Region — Active MyMSD Jobs</h1>
-        <div class="meta" id="meta">103 active vacancies · Last updated: 25 Nov 2026, 07:31 PM NZT</div>
+        <div class="meta" id="meta">103 active vacancies · Last updated: 25 Nov 2026, 07:55 PM NZT</div>
       </div>
-      <a class="btn" id="download-btn" href="waikato_jobs_2026-11-25_19-31_NZT.xlsx" download="waikato_jobs_2026-11-25_19-31_NZT.xlsx" title="waikato_jobs_2026-11-25_19-31_NZT.xlsx">⬇ Download Excel (.xlsx)</a>
+      <div class="header-actions">
+        <button type="button" class="btn btn-secondary" id="trigger-btn">🔄 Run Update &amp; Email</button>
+        <a class="btn" id="download-btn" href="waikato_jobs_2026-11-25_19-55_NZT.xlsx" download="waikato_jobs_2026-11-25_19-55_NZT.xlsx" title="waikato_jobs_2026-11-25_19-55_NZT.xlsx">⬇ Download Excel (.xlsx)</a>
+      </div>
     </header>
+
+    <div class="trigger-panel" id="trigger-panel">
+      <div>
+        <strong>One-time setup for this browser:</strong> Paste your fine-grained GitHub token
+        (scoped only to <code>Actions: Read &amp; write</code> on <code>klopikkon-com</code>). It is saved only in this browser.
+        Or <a href="https://github.com/klopikkon/klopikkon-com/actions/workflows/update-waikato-jobs.yml" target="_blank" rel="noopener">open GitHub Actions directly</a>.
+      </div>
+      <div class="trigger-row">
+        <input type="password" id="gh-token-input" placeholder="github_pat_..." autocomplete="off" />
+        <button type="button" class="btn" id="save-trigger-btn">Save &amp; Run Update</button>
+        <button type="button" class="small-link" id="cancel-trigger-btn">Cancel</button>
+      </div>
+    </div>
+    <div class="trigger-status" id="trigger-status" style="margin-bottom: 12px;"></div>
 
     <div class="controls">
       <input type="search" id="search" placeholder="Search by Job ID, title, suburb, category, or pay…" />
@@ -1090,6 +1155,84 @@
     ["search", "district", "hours"].forEach(id =>
       document.getElementById(id).addEventListener("input", filterRows)
     );
+
+    const TOKEN_KEY = "waikato_msd_gh_token";
+    const WORKFLOW_API = "https://api.github.com/repos/klopikkon/klopikkon-com/actions/workflows/update-waikato-jobs.yml/dispatches";
+    const triggerBtn = document.getElementById("trigger-btn");
+    const triggerPanel = document.getElementById("trigger-panel");
+    const tokenInput = document.getElementById("gh-token-input");
+    const saveTriggerBtn = document.getElementById("save-trigger-btn");
+    const cancelTriggerBtn = document.getElementById("cancel-trigger-btn");
+    const statusEl = document.getElementById("trigger-status");
+
+    function setStatus(msg, isError = false, showReset = false) {
+      statusEl.className = isError ? "trigger-status error" : "trigger-status";
+      statusEl.innerHTML = msg + (showReset ? ' · <button type="button" class="small-link" id="reset-token-btn">Reset saved token</button>' : "");
+      const resetBtn = document.getElementById("reset-token-btn");
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          localStorage.removeItem(TOKEN_KEY);
+          setStatus("Saved token cleared.");
+        });
+      }
+    }
+
+    async function runWorkflow(token) {
+      triggerBtn.disabled = true;
+      setStatus("⏳ Triggering live update & email…");
+      try {
+        const resp = await fetch(WORKFLOW_API, {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token,
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ ref: "main" })
+        });
+        if (resp.status === 204) {
+          triggerPanel.classList.remove("open");
+          setStatus("✅ Update & email triggered! Fresh Excel & email will arrive in ~45–60 seconds (refresh page to see updated jobs).", false, true);
+        } else if (resp.status === 401 || resp.status === 403) {
+          localStorage.removeItem(TOKEN_KEY);
+          triggerPanel.classList.add("open");
+          setStatus("❌ Token was rejected (HTTP " + resp.status + "). Please check it has Actions: Read & write on klopikkon-com.", true);
+        } else {
+          const txt = await resp.text();
+          setStatus("❌ GitHub returned HTTP " + resp.status + ": " + txt.slice(0, 160), true, true);
+        }
+      } catch (err) {
+        setStatus("❌ Network error triggering workflow: " + err.message, true, true);
+      } finally {
+        triggerBtn.disabled = false;
+      }
+    }
+
+    triggerBtn.addEventListener("click", () => {
+      const saved = localStorage.getItem(TOKEN_KEY);
+      if (saved) {
+        runWorkflow(saved);
+      } else {
+        triggerPanel.classList.toggle("open");
+        if (triggerPanel.classList.contains("open")) tokenInput.focus();
+      }
+    });
+
+    saveTriggerBtn.addEventListener("click", () => {
+      const tok = tokenInput.value.trim();
+      if (!tok) {
+        setStatus("Please paste your GitHub token first.", true);
+        return;
+      }
+      localStorage.setItem(TOKEN_KEY, tok);
+      tokenInput.value = "";
+      runWorkflow(tok);
+    });
+
+    cancelTriggerBtn.addEventListener("click", () => {
+      triggerPanel.classList.remove("open");
+    });
   </script>
 </body>
 </html>
