@@ -31,6 +31,23 @@ from openpyxl.utils import get_column_letter
 
 API_URL = "https://new.my.msd.govt.nz/bin/sep/vacancies/search"
 DETAILS_API_URL = "https://new.my.msd.govt.nz/bin/sep/vacancies/details"
+FSD_WAIKATO_JOB_TRAINING_URL = (
+    "https://www.familyservices.govt.nz/directory/searchresultspublic.htm"
+    "?pageNumber=1&searchRegion=15&cat1=220&expandCategories=false"
+    "&searchTerms=&searchByProviderName=false&cat2=259&pageSize=0"
+    "&searchCriterion.sortOrder=NAME_AZ"
+)
+FSD_WAIKATO_DISTRICTS: list[tuple[str, str]] = [
+    ("62", "Hamilton"),
+    ("65", "Hauraki"),
+    ("66", "Matamata-Piako"),
+    ("67", "Otorohanga"),
+    ("68", "South Waikato"),
+    ("16", "Thames-Coromandel"),
+    ("63", "Waikato"),
+    ("64", "Waipa"),
+    ("69", "Waitomo"),
+]
 DEFAULT_SEARCH_URL = (
     "https://new.my.msd.govt.nz/en/jobs/search"
     "?l=W3siZGVzYyI6WyJXYWlrYXRvJTIwUmVnaW9uIiwiTm9ydGglMjBJc2xhbmQiXSwicmVnaW9uIjp0cnVlfV0%3D"
@@ -190,6 +207,132 @@ def fetch_all_descriptions(vacancy_ids: list[str], max_workers: int = 5) -> dict
     return descriptions
 
 
+def _clean_html_snippet(snippet: str) -> str:
+    text = re.sub(r"<[^>]+>", " ", html.unescape(snippet))
+    return " ".join(text.split())
+
+
+def _fetch_fsd_html(url: str) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(req, timeout=25) as resp:
+        return resp.read().decode("utf-8", errors="replace")
+
+
+def _extract_provider_ids_from_fsd(page_html: str) -> set[str]:
+    return set(re.findall(r'viewprovider\.htm\?id=(\d+)', page_html, re.I))
+
+
+def fetch_waikato_job_training_providers() -> list[dict[str, Any]]:
+    """Fetch all Waikato Job Training providers (cat1=220, cat2=259) from MSD Family Services Directory."""
+    main_html = _fetch_fsd_html(FSD_WAIKATO_JOB_TRAINING_URL)
+
+    # Fetch each Waikato district filter in parallel to map exact districts served
+    district_map: dict[str, list[str]] = {}
+    with ThreadPoolExecutor(max_workers=5) as pool:
+        futures = {
+            pool.submit(
+                _fetch_fsd_html,
+                f"{FSD_WAIKATO_JOB_TRAINING_URL}&selectedDistricts={dist_id}",
+            ): dist_name
+            for dist_id, dist_name in FSD_WAIKATO_DISTRICTS
+        }
+        for future in as_completed(futures):
+            dist_name = futures[future]
+            try:
+                pids = _extract_provider_ids_from_fsd(future.result())
+                for pid in pids:
+                    district_map.setdefault(pid, []).append(dist_name)
+            except Exception:
+                pass
+
+    providers: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    # Split on each result card
+    blocks = re.split(r'<div\s+class="result">', main_html)[1:]
+    for block in blocks:
+        title_m = re.search(
+            r'href="viewprovider\.htm\?id=(\d+)[^"]*"[^>]*>(.*?)</a>',
+            block,
+            re.S | re.I,
+        )
+        if not title_m:
+            continue
+        pid = title_m.group(1)
+        if pid in seen:
+            continue
+        seen.add(pid)
+        name = _clean_html_snippet(title_m.group(2))
+
+        # Summary paragraph
+        summary_m = re.search(r"</div>\s*<p>(.*?)</p>", block, re.S | re.I)
+        summary = _clean_html_snippet(summary_m.group(1)) if summary_m else ""
+
+        # Bullet info (hours, charges, referral)
+        info_m = re.search(r'<div\s+class="result-info">\s*<ul>(.*?)</ul>', block, re.S | re.I)
+        info_items = (
+            [_clean_html_snippet(li) for li in re.findall(r"<li>(.*?)</li>", info_m.group(1), re.S | re.I)]
+            if info_m
+            else []
+        )
+        charges = next((i for i in info_items if "free" in i.lower() or "cost" in i.lower() or "charge" in i.lower()), "")
+        referral = next((i for i in info_items if "referral" in i.lower()), "")
+        hours = " | ".join(i for i in info_items if i not in (charges, referral) and i)
+
+        addr_m = re.search(r'<div\s+class="address">(.*?)</div>', block, re.S | re.I)
+        address = ", ".join(
+            line.strip()
+            for line in html.unescape(re.sub(r"<[^>]+>", "", addr_m.group(1))).splitlines()
+            if line.strip()
+        ) if addr_m else ""
+
+        scope = "Local" if re.search(r'<div\s+class="local">', block, re.I) else (
+            "National" if re.search(r'<div\s+class="national">', block, re.I) else ""
+        )
+
+        email_m = re.search(r'mailto:([^"\'<>\s]+)', block, re.I)
+        email = html.unescape(email_m.group(1)).strip() if email_m else ""
+
+        phone_m = re.search(r'<div\s+class="contact">(.*?)</div>', block, re.S | re.I)
+        phone = _clean_html_snippet(phone_m.group(1)) if phone_m else ""
+
+        web_m = re.search(r'<div\s+class="website">\s*<a[^>]*href="([^"]+)"', block, re.S | re.I)
+        website = html.unescape(web_m.group(1)).strip() if web_m else ""
+
+        fsd_m = re.search(r'<div\s+class="fsdId">(.*?)</div>', block, re.S | re.I)
+        fsd_id = _clean_html_snippet(fsd_m.group(1)) if fsd_m else f"FSD{int(pid):07d}"
+
+        upd_m = re.search(r'<div\s+class="updated">(.*?)</div>', block, re.S | re.I)
+        last_updated = _clean_html_snippet(upd_m.group(1)).replace("Last updated", "").strip() if upd_m else ""
+
+        served = sorted(district_map.get(pid, []))
+        districts_served = (
+            "All Waikato Districts"
+            if len(served) == len(FSD_WAIKATO_DISTRICTS)
+            else ", ".join(served)
+        )
+
+        providers.append(
+            {
+                "fsdId": fsd_id,
+                "name": name,
+                "scope": scope,
+                "districtsServed": districts_served,
+                "address": address,
+                "phone": phone,
+                "email": email,
+                "website": website,
+                "charges": charges,
+                "referral": referral,
+                "hours": hours,
+                "summary": summary,
+                "lastUpdated": last_updated,
+                "directoryUrl": f"https://www.familyservices.govt.nz/directory/viewprovider.htm?id={pid}",
+            }
+        )
+
+    return providers
+
+
 def format_pay(job: dict[str, Any]) -> str:
     if not job.get("displayPayOnListing"):
         return "To be discussed"
@@ -244,6 +387,7 @@ def export_to_excel(
     jobs: list[dict[str, Any]],
     descriptions: dict[str, str],
     output_path: Path,
+    providers: list[dict[str, Any]] | None = None,
 ) -> None:
     """Write normalized jobs (including Job ID and Position Description) to Excel."""
     wb = Workbook()
@@ -335,6 +479,80 @@ def export_to_excel(
             for r in range(1, len(jobs) + 2)
         )
         ws.column_dimensions[col_letter].width = min(max(max_len + 3, 12), 45)
+
+    if providers:
+        ws_p = wb.create_sheet(title="Job Training Providers")
+        p_headers = [
+            "FSD ID",
+            "Provider Name",
+            "Scope",
+            "Waikato Districts Served",
+            "Physical Address",
+            "Phone",
+            "Email",
+            "Website",
+            "Charges",
+            "Referral",
+            "Availability / Hours",
+            "Summary",
+            "Last Updated",
+            "Directory Link",
+        ]
+        ws_p.append(p_headers)
+        for col_idx in range(1, len(p_headers) + 1):
+            cell = ws_p.cell(row=1, column=col_idx)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.alignment = Alignment(horizontal="left", vertical="center")
+
+        for row_idx, p in enumerate(providers, start=2):
+            ws_p.append(
+                [
+                    p["fsdId"],
+                    p["name"],
+                    p["scope"],
+                    p["districtsServed"],
+                    p["address"],
+                    p["phone"],
+                    p["email"],
+                    p["website"],
+                    p["charges"],
+                    p["referral"],
+                    p["hours"],
+                    p["summary"],
+                    p["lastUpdated"],
+                    p["directoryUrl"],
+                ]
+            )
+            for col_idx in range(1, len(p_headers) + 1):
+                cell = ws_p.cell(row=row_idx, column=col_idx)
+                cell.alignment = wrap_align if col_idx in (4, 5, 11, 12) else top_align
+
+            if p["website"]:
+                w_cell = ws_p.cell(row=row_idx, column=8)
+                w_cell.hyperlink = p["website"]
+                w_cell.font = link_font
+            if p["directoryUrl"]:
+                d_cell = ws_p.cell(row=row_idx, column=len(p_headers))
+                d_cell.hyperlink = p["directoryUrl"]
+                d_cell.font = link_font
+
+        ws_p.freeze_panes = "A2"
+        ws_p.auto_filter.ref = f"A1:{get_column_letter(len(p_headers))}{len(providers) + 1}"
+
+        for col_idx in range(1, len(p_headers) + 1):
+            col_letter = get_column_letter(col_idx)
+            if col_idx == 12:  # Summary
+                ws_p.column_dimensions[col_letter].width = 55
+                continue
+            if col_idx in (4, 5):  # Districts Served / Address
+                ws_p.column_dimensions[col_letter].width = 32
+                continue
+            max_len = max(
+                len(str(ws_p.cell(row=r, column=col_idx).value or ""))
+                for r in range(1, len(providers) + 2)
+            )
+            ws_p.column_dimensions[col_letter].width = min(max(max_len + 3, 12), 40)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(output_path)
@@ -643,6 +861,14 @@ def main() -> None:
     fetched_count = sum(1 for v in descriptions.values() if v)
     print(f"Fetched {fetched_count}/{len(jobs)} position descriptions.")
 
+    providers: list[dict[str, Any]] = []
+    try:
+        print("Fetching Waikato Job Training providers from Family Services Directory...")
+        providers = fetch_waikato_job_training_providers()
+        print(f"Fetched {len(providers)} Waikato Job Training providers.")
+    except Exception as exc:
+        print(f"Warning: could not fetch Job Training providers ({exc}); continuing with jobs only.")
+
     site_dir_arg = args.site_dir or ("docs" if args.docs else "")
     if site_dir_arg:
         docs_dir = Path(site_dir_arg).resolve()
@@ -656,7 +882,7 @@ def main() -> None:
         excel_path = docs_dir / excel_filename
         json_path = docs_dir / "jobs.json"
         html_path = docs_dir / "index.html"
-        export_to_excel(jobs, descriptions, excel_path)
+        export_to_excel(jobs, descriptions, excel_path, providers=providers)
         export_to_json(jobs, json_path, excel_filename=excel_filename)
         export_to_html(jobs, html_path, excel_filename=excel_filename, updated_nz=updated_nz)
         print(f"Saved Excel file to: {excel_path}")
@@ -664,7 +890,7 @@ def main() -> None:
         print(f"Saved static HTML to: {html_path}")
     else:
         excel_path = Path(args.output).resolve()
-        export_to_excel(jobs, descriptions, excel_path)
+        export_to_excel(jobs, descriptions, excel_path, providers=providers)
         print(f"Saved Excel file to: {excel_path}")
         if args.json_output:
             json_path = Path(args.json_output).resolve()
