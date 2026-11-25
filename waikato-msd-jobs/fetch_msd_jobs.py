@@ -222,8 +222,296 @@ def _extract_provider_ids_from_fsd(page_html: str) -> set[str]:
     return set(re.findall(r'viewprovider\.htm\?id=(\d+)', page_html, re.I))
 
 
+PROVIDER_CATEGORY_RULES: list[tuple[str, tuple[str, ...]]] = [
+    (
+        "Trades, Construction & Licensing",
+        (
+            "trade", "construction", "civil", "scaffold", "forklift", "driver licen",
+            "drivers licen", "heavy vehicle", "class 2", "class 4", "class 5",
+            "wheels, tracks", "health and safety", "health & safety", "site safe",
+            "manufacturing", "engineering", "plumb", "electric", "automotive",
+            "building", "warehouse", "logistics", "transport", "industry training",
+        ),
+    ),
+    (
+        "Agriculture & Primary Industries",
+        (
+            "agricultur", "farming", "farm ", "dairy", "horticultur", "land based",
+            "land-based", "forestry", "rural", "equine", "animal", "primary industr",
+        ),
+    ),
+    (
+        "Health, Care & Community",
+        (
+            "healthcare", "health care", "aged care", "caregiver", "nursing",
+            "early childhood", "community support", "social service", "counselling",
+            "homecare", "home care", "support worker",
+        ),
+    ),
+    (
+        "Hospitality, Retail & Business",
+        (
+            "hospitality", "barista", "cafe", "café", "retail", "customer service",
+            "business", "self-employment", "self employment", "entrepreneur",
+            "administration", "tourism", "food safety", "lcq",
+        ),
+    ),
+    (
+        "Youth & Rangatahi",
+        (
+            "youth", "rangatahi", "school", "neet", "young people", "transition from school",
+            "secondary", "16-24", "16 to 24",
+        ),
+    ),
+    (
+        "Disability, Health & Supported Employment",
+        (
+            "disabilit", "impairment", "supported employment", "mental health",
+            "rehabilitation", "neurodiver", "deaf", "health condition", "injury",
+            "acc ", "addiction", "wellbeing",
+        ),
+    ),
+    (
+        "Māori & Pasifika Support",
+        (
+            "māori", "maori", "whānau", "whanau", "iwi", "marae", "pasifika",
+            "pacific", "kaupapa",
+        ),
+    ),
+    (
+        "Literacy, Numeracy & Digital Skills",
+        (
+            "literacy", "numeracy", "esol", "english language", "digital", "computer",
+            "communication programme",
+        ),
+    ),
+    (
+        "General Work-Readiness & Job Placement",
+        (
+            "employment placement", "work-readiness", "work readiness", "job readiness",
+            "job search", "career planning", "cv", "interview", "in-work", "in work",
+            "recruitment", "job seeker", "jobseeker", "work and income clients",
+            "employment support", "job training", "pre-employment", "employability",
+        ),
+    ),
+]
+
+
+def _fetch_provider_detail_text(pid: str) -> tuple[str, str]:
+    """Fetch full untruncated Purpose/About and Services text from viewprovider.htm."""
+    url = f"https://www.familyservices.govt.nz/directory/viewprovider.htm?id={pid}"
+    page = _fetch_fsd_html(url)
+    idx = page.find('id="singleResults"')
+    if idx == -1:
+        return "", ""
+    chunk = page[idx:]
+    # Stop before footer
+    foot_idx = chunk.find("<footer")
+    if foot_idx != -1:
+        chunk = chunk[:foot_idx]
+    # Remove scripts/styles
+    chunk = re.sub(r"<(script|style)[^>]*>.*?</\1>", "", chunk, flags=re.S | re.I)
+
+    # Full About / Purpose: between </h1> (or Select checkbox) and Availability / Geographic / Services
+    about_text = ""
+    h1_end = chunk.find("</h1>")
+    if h1_end != -1:
+        after_h1 = chunk[h1_end + 5:]
+        stop_m = re.search(
+            r"(?:Availability:|Geographic coverage area|Services and programmes)",
+            after_h1,
+            re.I,
+        )
+        about_chunk = after_h1[: stop_m.start()] if stop_m else after_h1[:2500]
+        # Remove the Select button div
+        about_chunk = re.sub(r'<div\s+class="ar-button">.*?</div>\s*</div>', "", about_chunk, flags=re.S | re.I)
+        about_chunk = re.sub(r"<label[^>]*>.*?</label>", "", about_chunk, flags=re.S | re.I)
+        paragraphs = [
+            _clean_html_snippet(p)
+            for p in re.findall(r"<p[^>]*>(.*?)</p>", about_chunk, re.S | re.I)
+        ]
+        paragraphs = [p for p in paragraphs if p and p.lower() != "select"]
+        about_text = "\n\n".join(paragraphs)
+
+    # Services & Programmes section
+    services_text = ""
+    srv_m = re.search(r"Services and programmes(.*?)(?:<div\s+class=\"deets\"|<div\s+class=\"contact-deets\"|<footer|$)", chunk, re.S | re.I)
+    if srv_m:
+        srv_chunk = srv_m.group(1)
+        # Extract service headings and paragraphs
+        srv_titles = [
+            _clean_html_snippet(h)
+            for h in re.findall(r"<h[34][^>]*>(.*?)</h[34]>", srv_chunk, re.S | re.I)
+        ]
+        srv_paras = [
+            _clean_html_snippet(p)
+            for p in re.findall(r"<p[^>]*>(.*?)</p>", srv_chunk, re.S | re.I)
+        ]
+        parts: list[str] = []
+        for t in srv_titles:
+            if t and t.lower() not in ("services and programmes",):
+                parts.append(f"• {t}")
+        for p in srv_paras:
+            if p and len(p) > 15:
+                parts.append(p)
+        services_text = "\n".join(parts)[:8000]
+
+    return about_text[:8000], services_text
+
+
+def categorize_provider(name: str, summary: str, services: str) -> list[str]:
+    """Deterministically categorize a provider using its name, full summary, and services."""
+    lower_name = name.lower()
+    if "work and income" in lower_name or "ministry of social development" in lower_name:
+        return ["MSD / Work & Income Office"]
+
+    blob = f"{name} {summary} {services}".lower()
+    cats: list[str] = []
+    for label, keywords in PROVIDER_CATEGORY_RULES:
+        if any(kw in blob for kw in keywords):
+            cats.append(label)
+
+    if not cats:
+        cats.append("General Work-Readiness & Job Placement")
+    return cats
+
+
+def _job_target_categories(job: dict[str, Any], description: str) -> set[str]:
+    """Determine which provider training categories best fit a given MyMSD job."""
+    blob = " ".join(
+        [
+            job.get("title", ""),
+            job.get("category", ""),
+            job.get("occupation", ""),
+            job.get("industry", ""),
+            description,
+        ]
+    ).lower()
+
+    matched: set[str] = set()
+    if any(
+        k in blob
+        for k in (
+            "building & trades", "transport, logistics", "manufacturing", "truck",
+            "driver", "forklift", "scaffold", "bricklayer", "plumber", "electrician",
+            "builder", "carpenter", "civil", "warehouse", "storeperson", "yard",
+            "chip seal", "licence", "license", "machinery", "welder", "mechanic",
+        )
+    ):
+        matched.add("Trades, Construction & Licensing")
+
+    if any(
+        k in blob
+        for k in (
+            "agriculture", "farming", "farm", "dairy", "horticulture", "orchard",
+            "forestry", "livestock", "tractor", "rural", "shearing",
+        )
+    ):
+        matched.add("Agriculture & Primary Industries")
+
+    if any(
+        k in blob
+        for k in (
+            "health & social care", "carer", "caregiver", "support worker", "nurse",
+            "aged care", "disability", "early childhood", "childcare", "healthcare",
+            "whānau", "family support",
+        )
+    ):
+        matched.add("Health, Care & Community")
+
+    if any(
+        k in blob
+        for k in (
+            "retail, hospitality", "cafe", "café", "barista", "kitchen", "chef",
+            "waiter", "duty manager", "retail", "sales assistant", "customer service",
+            "reception", "admin", "office", "hotel", "tourism",
+        )
+    ):
+        matched.add("Hospitality, Retail & Business")
+
+    if any(k in blob for k in ("apprentice", "junior", "entry level", "no experience", "trainee")):
+        matched.add("Youth & Rangatahi")
+
+    return matched
+
+
+def _normalize_waikato_district(dist: str) -> str:
+    d = dist.strip().lower()
+    for suffix in (" city", " district"):
+        if d.endswith(suffix):
+            d = d[: -len(suffix)].strip()
+    return d
+
+
+def recommend_providers_for_job(
+    job: dict[str, Any],
+    description: str,
+    providers: list[dict[str, Any]],
+    limit: int = 4,
+) -> str:
+    """Return top matching external Waikato training providers for a job based on district & skills."""
+    if not providers:
+        return ""
+
+    job_districts = {
+        _normalize_waikato_district(d)
+        for d in (job.get("districts") or "").split(",")
+        if d.strip()
+    }
+    target_cats = _job_target_categories(job, description)
+
+    scored: list[tuple[int, int, str, dict[str, Any]]] = []
+    for p in providers:
+        p_cats = set(p.get("categories") or [])
+        if "MSD / Work & Income Office" in p_cats:
+            continue
+
+        # Check district coverage
+        served_list = [d.lower() for d in (p.get("districtsList") or [])]
+        serves_all = len(served_list) >= len(FSD_WAIKATO_DISTRICTS)
+        if job_districts and not serves_all:
+            if not any(jd in served_list for jd in job_districts):
+                continue
+
+        score = 0
+        overlap = target_cats & p_cats
+        score += len(overlap) * 5
+
+        if p.get("scope") == "Local":
+            score += 3
+        if "General Work-Readiness & Job Placement" in p_cats:
+            score += 2
+        if "Literacy, Numeracy & Digital Skills" in p_cats:
+            score += 1
+
+        # Slightly de-prioritize narrow specialist-only orgs when a job doesn't match that specialty
+        specialist_only = p_cats <= {
+            "Disability, Health & Supported Employment",
+            "Māori & Pasifika Support",
+            "Youth & Rangatahi",
+        }
+        if specialist_only and not overlap:
+            score -= 2
+
+        scored.append((score, 1 if p.get("scope") == "Local" else 0, p["name"], p))
+
+    scored.sort(key=lambda x: (-x[0], -x[1], x[2].lower()))
+    top = [item[3] for item in scored[:limit]]
+
+    lines: list[str] = []
+    for p in top:
+        tags: list[str] = []
+        if p.get("scope") == "Local":
+            tags.append("Local")
+        if p.get("phone"):
+            tags.append(p["phone"])
+        suffix = f" ({' · '.join(tags)})" if tags else ""
+        lines.append(f"• {p['name']}{suffix}")
+    return "\n".join(lines)
+
+
 def fetch_waikato_job_training_providers() -> list[dict[str, Any]]:
-    """Fetch all Waikato Job Training providers (cat1=220, cat2=259) from MSD Family Services Directory."""
+    """Fetch all Waikato Job Training providers (cat1=220, cat2=259) with full untruncated details."""
     main_html = _fetch_fsd_html(FSD_WAIKATO_JOB_TRAINING_URL)
 
     # Fetch each Waikato district filter in parallel to map exact districts served
@@ -247,7 +535,6 @@ def fetch_waikato_job_training_providers() -> list[dict[str, Any]]:
 
     providers: list[dict[str, Any]] = []
     seen: set[str] = set()
-    # Split on each result card
     blocks = re.split(r'<div\s+class="result">', main_html)[1:]
     for block in blocks:
         title_m = re.search(
@@ -263,11 +550,9 @@ def fetch_waikato_job_training_providers() -> list[dict[str, Any]]:
         seen.add(pid)
         name = _clean_html_snippet(title_m.group(2))
 
-        # Summary paragraph
         summary_m = re.search(r"</div>\s*<p>(.*?)</p>", block, re.S | re.I)
-        summary = _clean_html_snippet(summary_m.group(1)) if summary_m else ""
+        fallback_summary = _clean_html_snippet(summary_m.group(1)) if summary_m else ""
 
-        # Bullet info (hours, charges, referral)
         info_m = re.search(r'<div\s+class="result-info">\s*<ul>(.*?)</ul>', block, re.S | re.I)
         info_items = (
             [_clean_html_snippet(li) for li in re.findall(r"<li>(.*?)</li>", info_m.group(1), re.S | re.I)]
@@ -286,7 +571,7 @@ def fetch_waikato_job_training_providers() -> list[dict[str, Any]]:
         ) if addr_m else ""
 
         scope = "Local" if re.search(r'<div\s+class="local">', block, re.I) else (
-            "National" if re.search(r'<div\s+class="national">', block, re.I) else ""
+            "National" if re.search(r'<div\s+class="national">', block, re.I) else "National / Out-of-region"
         )
 
         email_m = re.search(r'mailto:([^"\'<>\s]+)', block, re.I)
@@ -313,9 +598,11 @@ def fetch_waikato_job_training_providers() -> list[dict[str, Any]]:
 
         providers.append(
             {
+                "pid": pid,
                 "fsdId": fsd_id,
                 "name": name,
                 "scope": scope,
+                "districtsList": served,
                 "districtsServed": districts_served,
                 "address": address,
                 "phone": phone,
@@ -324,11 +611,28 @@ def fetch_waikato_job_training_providers() -> list[dict[str, Any]]:
                 "charges": charges,
                 "referral": referral,
                 "hours": hours,
-                "summary": summary,
+                "summary": fallback_summary,
+                "services": "",
+                "categories": [],
                 "lastUpdated": last_updated,
                 "directoryUrl": f"https://www.familyservices.govt.nz/directory/viewprovider.htm?id={pid}",
             }
         )
+
+    # Fetch full untruncated Purpose & Services from each provider's detail page in parallel
+    with ThreadPoolExecutor(max_workers=5) as pool:
+        detail_futures = {pool.submit(_fetch_provider_detail_text, p["pid"]): p for p in providers}
+        for future in as_completed(detail_futures):
+            p = detail_futures[future]
+            try:
+                full_about, full_services = future.result()
+                if full_about:
+                    p["summary"] = full_about
+                if full_services:
+                    p["services"] = full_services
+            except Exception:
+                pass
+            p["categories"] = categorize_provider(p["name"], p["summary"], p["services"])
 
     return providers
 
@@ -398,6 +702,7 @@ def export_to_excel(
         "Job ID",
         "Title",
         "Position Description",
+        "Recommended Training Providers",
         "Category",
         "Occupation",
         "Industry",
@@ -433,10 +738,12 @@ def export_to_excel(
 
     for row_idx, job in enumerate(jobs, start=2):
         desc = descriptions.get(job["vacancyId"], "")
+        rec_providers = recommend_providers_for_job(job, desc, providers or [])
         row = [
             job["vacancyId"],
             job["title"],
             desc,
+            rec_providers,
             job["category"],
             job["occupation"],
             job["industry"],
@@ -459,7 +766,7 @@ def export_to_excel(
 
         for col_idx in range(1, len(headers) + 1):
             cell = ws.cell(row=row_idx, column=col_idx)
-            cell.alignment = wrap_align if col_idx == 3 else top_align
+            cell.alignment = wrap_align if col_idx in (3, 4) else top_align
 
         if job["url"]:
             url_cell = ws.cell(row=row_idx, column=len(headers))
@@ -474,6 +781,9 @@ def export_to_excel(
         if col_idx == 3:  # Position Description column
             ws.column_dimensions[col_letter].width = 65
             continue
+        if col_idx == 4:  # Recommended Training Providers column
+            ws.column_dimensions[col_letter].width = 48
+            continue
         max_len = max(
             len(str(ws.cell(row=r, column=col_idx).value or ""))
             for r in range(1, len(jobs) + 2)
@@ -485,6 +795,7 @@ def export_to_excel(
         p_headers = [
             "FSD ID",
             "Provider Name",
+            "Training / Support Categories",
             "Scope",
             "Waikato Districts Served",
             "Physical Address",
@@ -494,7 +805,8 @@ def export_to_excel(
             "Charges",
             "Referral",
             "Availability / Hours",
-            "Summary",
+            "Full Summary / Purpose",
+            "Services & Programmes",
             "Last Updated",
             "Directory Link",
         ]
@@ -510,6 +822,7 @@ def export_to_excel(
                 [
                     p["fsdId"],
                     p["name"],
+                    ", ".join(p.get("categories") or []),
                     p["scope"],
                     p["districtsServed"],
                     p["address"],
@@ -520,16 +833,17 @@ def export_to_excel(
                     p["referral"],
                     p["hours"],
                     p["summary"],
+                    p.get("services", ""),
                     p["lastUpdated"],
                     p["directoryUrl"],
                 ]
             )
             for col_idx in range(1, len(p_headers) + 1):
                 cell = ws_p.cell(row=row_idx, column=col_idx)
-                cell.alignment = wrap_align if col_idx in (4, 5, 11, 12) else top_align
+                cell.alignment = wrap_align if col_idx in (3, 5, 6, 12, 13, 14) else top_align
 
             if p["website"]:
-                w_cell = ws_p.cell(row=row_idx, column=8)
+                w_cell = ws_p.cell(row=row_idx, column=9)
                 w_cell.hyperlink = p["website"]
                 w_cell.font = link_font
             if p["directoryUrl"]:
@@ -542,11 +856,11 @@ def export_to_excel(
 
         for col_idx in range(1, len(p_headers) + 1):
             col_letter = get_column_letter(col_idx)
-            if col_idx == 12:  # Summary
-                ws_p.column_dimensions[col_letter].width = 55
+            if col_idx in (13, 14):  # Full Summary / Services
+                ws_p.column_dimensions[col_letter].width = 60
                 continue
-            if col_idx in (4, 5):  # Districts Served / Address
-                ws_p.column_dimensions[col_letter].width = 32
+            if col_idx in (3, 5, 6):  # Categories / Districts / Address
+                ws_p.column_dimensions[col_letter].width = 34
                 continue
             max_len = max(
                 len(str(ws_p.cell(row=r, column=col_idx).value or ""))
