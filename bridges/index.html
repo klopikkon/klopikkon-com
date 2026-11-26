@@ -661,9 +661,14 @@
             </div>
           </div>
 
-          <!-- Quick Physics Callout -->
-          <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2">
-            <span class="text-[var(--muted-foreground)]"><strong class="text-[var(--foreground)]">Why 100 km/h Transfer Works Easily:</strong> At 100 km/h (28 m/s), a 1–2 km 915 MHz bubble gives a <strong>35–70 second window</strong> — 3 months of bridge metrics is only 32–200 KB (smaller than 1 phone photo).</span>
+          <!-- Quick Physics & Future Vision Callout -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+            <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] px-3.5 py-2.5 text-[var(--muted-foreground)]">
+              <strong class="text-[var(--foreground)]">100 km/h Transfer Physics:</strong> A 1–2 km 915 MHz bubble gives a <strong>35–70 sec window</strong> — 3 months of logs is only 32–200 KB (smaller than 1 phone photo).
+            </div>
+            <div class="rounded-lg border border-sky-500/40 bg-sky-500/10 px-3.5 py-2.5 text-[var(--muted-foreground)]">
+              <strong class="text-sky-600">Future Vision (Opt-In Crowd-Relay):</strong> Built-in BLE ($0 extra hardware) could eventually allow opt-in <strong>VicEmergency, Service Victoria, or local council apps</strong> on passing public phones to silently relay encrypted health/flood pings.
+            </div>
           </div>
         </div>
 
@@ -778,15 +783,15 @@
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs pt-1 border-t border-[var(--border)]">
                 <div class="p-2.5 rounded bg-[var(--card)] border border-[var(--border)]">
-                  <div class="font-bold text-[var(--foreground)]">Per-Bridge 30-Day Auto-Baseline</div>
+                  <div class="font-bold text-[var(--foreground)]">Priority-First (Newest-First) Transfer</div>
                   <p class="text-[11px] text-[var(--muted-foreground)] mt-0.5">
-                    Every bridge teaches the model its own tilt-vs-temperature curve (cancels 5°C–38°C thermal flex) and normal stiffness frequency.
+                    Sends a 32-byte <strong>live flood/alert snapshot first (50 ms)</strong>, then newest → oldest history — so even a brief 1–2 sec phone pass catches critical alerts.
                   </p>
                 </div>
                 <div class="p-2.5 rounded bg-[var(--card)] border border-[var(--border)]">
-                  <div class="font-bold text-[var(--foreground)]">Deviation Triage (Zero Liability Trap)</div>
+                  <div class="font-bold text-[var(--foreground)]">30-Day Baseline &amp; Triage (Zero Liability)</div>
                   <p class="text-[11px] text-[var(--muted-foreground)] mt-0.5">
-                    Flags abnormal shifts (e.g. &gt;0.25° post-flood tilt or &gt;7% stiffness drop) so engineers know <em>which</em> bridges to inspect first.
+                    Each bridge learns its own tilt-vs-temperature curve &amp; stiffness; flags abnormal shifts (&gt;0.25° tilt / &gt;7% stiffness drop) for engineers.
                   </p>
                 </div>
               </div>
@@ -1332,6 +1337,7 @@
                   <li>• Deploy 10–30 priority flood/timber bridges (~$3.5k–$11k* all-in est.)</li>
                   <li>• ACMA <code class="text-[var(--foreground)]">AU915</code> (915–928 MHz) compliant; RCM certification path for commercial scale</li>
                   <li>• Co-fund via <strong>Sustainability Victoria</strong> / <strong>MAVlab</strong> grants</li>
+                  <li>• <em>Future Horizon:</em> Opt-in public crowd-relay via <strong>VicEmergency / Service VIC / council apps</strong></li>
                 </ul>
               </div>
               <div class="mt-4 pt-2.5 border-t border-[var(--border)] text-xs font-semibold text-amber-600">Target: ~$250–$400/bridge* installed · $0/mo ongoing</div>
