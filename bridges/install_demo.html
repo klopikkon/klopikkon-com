@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --background: #f8fafc;
+      --card: #ffffff;
+      --card-border: #e2e8f0;
+      --border: #cbd5e1;
+      --foreground: #0f172a;
+      --muted-foreground: #475569;
+      --primary: #059669;
+      --primary-foreground: #ffffff;
+      --success: #059669;
+      --warning: #d97706;
+      --error: #dc2626;
+    }
+    html.dark {
+      --background: #0b1120;
+      --card: #111827;
+      --card-border: #1f2937;
+      --border: #334155;
+      --foreground: #f1f5f9;
+      --muted-foreground: #94a3b8;
+      --primary: #10b981;
+      --primary-foreground: #022c22;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #f87171;
+    }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+    .step-g { transition: opacity 0.45s ease; }
+    .clamp-l { animation: clL 2.6s ease-in-out infinite; }
+    .clamp-r { animation: clR 2.6s ease-in-out infinite; }
+    @keyframes clL { 0%, 20% { transform: translateX(-20px); } 50%, 100% { transform: translateX(0); } }
+    @keyframes clR { 0%, 20% { transform: translateX(20px); } 50%, 100% { transform: translateX(0); } }
+    .plug-in { animation: plugSlide 2.4s ease-in-out infinite; }
+    @keyframes plugSlide { 0%, 20% { transform: translateX(24px); } 55%, 100% { transform: translateX(0); } }
+    .pipe-slide { animation: slidePipe 2.6s ease-in-out infinite; }
+    @keyframes slidePipe { 0%, 20% { transform: translateY(22px); opacity: 0.4; } 55%, 100% { transform: translateY(0); opacity: 1; } }
+    .dash-drop { animation: dropDash 2.6s ease-in-out infinite; }
+    @keyframes dropDash { 0%, 20% { transform: translateY(-18px); opacity: 0.4; } 55%, 100% { transform: translateY(0); opacity: 1; } }
+    .ping-ok { animation: pingOk 1.6s ease-out infinite; transform-origin: 550px 128px; }
+    @keyframes pingOk { 0% { transform: scale(0.5); opacity: 0.95; } 100% { transform: scale(1.9); opacity: 0; } }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] p-4 antialiased p-0 m-0">
+  <div class="py-1 space-y-2">
+    <div class="relative w-full overflow-hidden rounded-lg border border-[var(--card-border)] bg-[var(--card)]">
+      <div class="absolute top-2 left-2 z-10 flex items-center gap-1.5 px-2 py-0.5 rounded bg-[var(--background)]/90 border border-[var(--card-border)] text-[11px] font-mono">
+        <span id="recDot" class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span id="stepBadge" class="font-semibold text-[var(--foreground)]">INSTALL 1 / 5</span>
+      </div>
+
+      <button id="voiceBtn" class="absolute top-2 right-2 z-10 flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--background)]/90 border border-[var(--card-border)] hover:border-[var(--primary)] text-[11px] font-medium text-[var(--foreground)] cursor-pointer transition">
+        <span id="voiceIcon">🔇</span>
+        <span id="voiceLabel">Voiceover: OFF</span>
+      </button>
+
+      <svg viewBox="0 0 800 310" class="w-full h-auto block select-none">
+        <!-- STEP 1: LADDER-REACHABLE SPOT (1.5-2m FROM DRY BANK) -->
+        <g id="st0" class="step-g" opacity="1">
+          <text x="400" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">INSTALL STEP 1 · PICK THE LADDER-REACHABLE DOWNSTREAM SPOT</text>
+          <text x="400" y="48" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">1.5–2 m out from the dry grassy bank — zero $3,000/day snooper cranes, zero road closures</text>
+
+          <!-- Creek & Dry Grassy Bank -->
+          <path d="M 0,145 L 220,145 L 295,285 L 0,285 Z" fill="#84cc16" opacity="0.22" />
+          <path d="M 800,145 L 590,145 L 520,285 L 800,285 Z" fill="#84cc16" opacity="0.22" />
+          <rect x="260" y="255" width="290" height="35" fill="#38bdf8" opacity="0.5" />
+          <!-- Bridge Deck & Girder -->
+          <rect x="110" y="132" width="580" height="12" rx="2" fill="#cbd5e1" stroke="#475569" stroke-width="1.4" />
+          <rect x="165" y="144" width="470" height="14" fill="#94a3b8" stroke="#475569" stroke-width="1.4" />
+          <!-- Signpost on right bank -->
+          <rect x="615" y="76" width="7" height="56" fill="#e2e8f0" stroke="#475569" />
+
+          <!-- Step-ladder on right dry bank! -->
+          <g stroke="#f59e0b" stroke-width="2.6" stroke-linecap="round">
+            <line x1="560" y1="224" x2="574" y2="164" />
+            <line x1="590" y1="224" x2="576" y2="164" />
+            <line x1="564" y1="208" x2="586" y2="208" stroke-width="1.8" />
+            <line x1="568" y1="190" x2="582" y2="190" stroke-width="1.8" />
+            <line x1="571" y1="174" x2="579" y2="174" stroke-width="1.8" />
+          </g>
+          <text x="575" y="242" text-anchor="middle" font-size="9.5" font-weight="700" fill="#d97706">Standard Step-Ladder</text>
+          <text x="575" y="254" text-anchor="middle" font-size="8.5" fill="currentColor" opacity="0.75">(Dry bank · 100% safe)</text>
+
+          <!-- Target Highlight Zone -->
+          <rect x="520" y="140" width="82" height="36" rx="6" fill="#10b981" fill-opacity="0.18" stroke="#10b981" stroke-width="2" stroke-dasharray="5 3" />
+          <text x="512" y="192" text-anchor="end" font-size="10" font-weight="700" fill="#10b981">Sweet Spot: 1.5–2 m off bank</text>
+          <text x="512" y="205" text-anchor="end" font-size="8.5" fill="currentColor" opacity="0.75">Short 2–3 m coax · Full stiffness frequency</text>
+        </g>
+
+        <!-- STEP 2: CLAMP BOX WITH CERTIFIED STEEL C-CLAMPS -->
+        <g id="st1" class="step-g" opacity="0">
+          <text x="400" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">INSTALL STEP 2 · LOCK ON WITH 2× STEEL GIRDER C-CLAMPS</text>
+          <text x="400" y="48" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">Zero drilling into beams · Tighten locknut with 1 spanner · 60–120 kg rating per clamp</text>
+
+          <g transform="translate(180, 68)">
+            <rect x="0" y="0" width="440" height="215" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <rect x="60" y="22" width="320" height="16" fill="#cbd5e1" stroke="#475569" />
+            <rect x="140" y="38" width="160" height="10" fill="#64748b" />
+            <rect x="208" y="48" width="24" height="48" fill="#64748b" />
+            <rect x="140" y="96" width="160" height="12" fill="#64748b" />
+            <text x="220" y="105" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">STEEL I-BEAM FLANGE</text>
+
+            <g class="clamp-l">
+              <path d="M 128,90 L 160,90 L 160,96 L 136,96 L 136,108 L 160,108 L 160,118 L 128,118 Z" fill="#e2e8f0" stroke="#1e293b" stroke-width="1.5" />
+              <rect x="142" y="82" width="8" height="9" fill="#f59e0b" />
+            </g>
+            <g class="clamp-r">
+              <path d="M 312,90 L 280,90 L 280,96 L 304,96 L 304,108 L 280,108 L 280,118 L 312,118 Z" fill="#e2e8f0" stroke="#1e293b" stroke-width="1.5" />
+              <rect x="290" y="82" width="8" height="9" fill="#f59e0b" />
+            </g>
+
+            <rect x="158" y="118" width="124" height="38" rx="5" fill="#10b981" stroke="#065f46" stroke-width="1.8" />
+            <text x="220" y="136" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">IP68 SENSOR BOX</text>
+            <text x="220" y="148" text-anchor="middle" font-size="8" fill="#d1fae5">250g · Lid foam locks battery</text>
+
+            <text x="220" y="182" text-anchor="middle" font-size="9.5" font-weight="600" fill="#10b981">✓ Tighten clamp locknuts (or stainless straps on concrete/timber piers)</text>
+            <text x="220" y="198" text-anchor="middle" font-size="9" fill="currentColor" opacity="0.75">Zero structural holes · 500× load safety margin</text>
+          </g>
+        </g>
+
+        <!-- STEP 3: CLICK IN OFF-THE-SHELF CABLES -->
+        <g id="st2" class="step-g" opacity="0">
+          <text x="400" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">INSTALL STEP 3 · SCREW IN OFF-THE-SHELF 2m / 3m / 5m CABLES</text>
+          <text x="400" y="48" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">Zero field wiring or crimping — two waterproof screw-on plugs, coil extra slack under girder</text>
+
+          <g transform="translate(80, 74)">
+            <rect x="0" y="0" width="640" height="200" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <rect x="40" y="54" width="150" height="90" rx="8" fill="#10b981" stroke="#065f46" stroke-width="2" />
+            <text x="115" y="96" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">SENSOR BOX</text>
+            <text x="115" y="112" text-anchor="middle" font-size="8.5" fill="#d1fae5">Already clamped</text>
+
+            <!-- Ports -->
+            <rect x="190" y="70" width="16" height="14" rx="2" fill="#f59e0b" />
+            <rect x="190" y="112" width="16" height="14" rx="2" fill="#38bdf8" />
+
+            <!-- Animated Plug-In -->
+            <g class="plug-in">
+              <rect x="208" y="71" width="18" height="12" rx="2" fill="#d97706" />
+              <line x1="226" y1="77" x2="430" y2="77" stroke="#f59e0b" stroke-width="3.5" />
+              <text x="328" y="68" text-anchor="middle" font-size="9" font-weight="700" fill="#d97706">Off-the-shelf SMA Coax (2m / 3m / 5m)</text>
+
+              <rect x="208" y="113" width="18" height="12" rx="2" fill="#0284c7" />
+              <line x1="226" y1="119" x2="430" y2="119" stroke="#38bdf8" stroke-width="3.5" />
+              <text x="328" y="136" text-anchor="middle" font-size="9" font-weight="700" fill="#0284c7">Off-the-shelf IP68 2-Pin Float Lead (2m / 3m / 5m)</text>
+            </g>
+
+            <rect x="455" y="42" width="155" height="114" rx="6" fill="currentColor" opacity="0.06" />
+            <text x="532" y="68" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor">Installer Checklist</text>
+            <text x="468" y="90" font-size="8.5" fill="currentColor" opacity="0.85">1. Finger-tighten SMA</text>
+            <text x="468" y="108" font-size="8.5" fill="currentColor" opacity="0.85">2. Click IP68 float plug</text>
+            <text x="468" y="126" font-size="8.5" fill="currentColor" opacity="0.85">3. Zip-tie slack neatly</text>
+            <text x="468" y="144" font-size="8.5" fill="#10b981" font-weight="700">Time: ~60 seconds</text>
+          </g>
+        </g>
+
+        <!-- STEP 4: SNIP CONDUIT, CLIP FLOAT & ANTENNA ON SIGNPOST -->
+        <g id="st3" class="step-g" opacity="0">
+          <text x="400" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">INSTALL STEP 4 · CLIP CONDUIT, FLOAT TUBE &amp; ANTENNA TO SIGNPOST</text>
+          <text x="400" y="48" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">Snip recycled conduit (or split loom) to signpost height · Seal ends with silicone · Zero extra poles</text>
+
+          <g transform="translate(100, 68)">
+            <rect x="0" y="0" width="600" height="215" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <!-- Road & Signpost -->
+            <line x1="30" y1="176" x2="290" y2="176" stroke="#475569" stroke-width="2" />
+            <rect x="150" y="54" width="12" height="122" fill="#e2e8f0" stroke="#475569" stroke-width="1.3" />
+            <!-- Antenna -->
+            <line x1="156" y1="54" x2="156" y2="20" stroke="#0f172a" stroke-width="3.5" stroke-linecap="round" />
+            <circle cx="156" cy="20" r="3.5" fill="#10b981" />
+            <!-- Conduit sliding into place -->
+            <g class="pipe-slide">
+              <rect x="139" y="56" width="9" height="120" rx="3" fill="#64748b" />
+              <!-- T-branch to float -->
+              <path d="M 148,136 L 176,136 L 176,144" fill="none" stroke="#38bdf8" stroke-width="2.5" />
+              <!-- Float Tube -->
+              <rect x="166" y="144" width="22" height="28" rx="3" fill="#64748b" stroke="#334155" />
+              <rect x="171" y="158" width="12" height="6" rx="1.5" fill="#f59e0b" />
+              <line x1="169" y1="171" x2="185" y2="171" stroke="#e2e8f0" stroke-width="1.8" stroke-dasharray="2 1.5" />
+            </g>
+
+            <!-- Right-side Steps -->
+            <g transform="translate(270, 34)" font-size="10" fill="currentColor">
+              <text x="0" y="14" font-weight="700" font-size="11">On the Existing Bridge Signpost:</text>
+              <text x="0" y="42">1. <tspan font-weight="700">Cut recycled conduit</tspan> (or snap split loom) to height</text>
+              <text x="0" y="68">2. <tspan font-weight="700">Hose-clamp float tube</tspan> right at road-deck level</text>
+              <text x="0" y="94">3. <tspan font-weight="700">Screw on $10 antenna</tspan> 1.5 m above deck (dry in floods)</text>
+              <text x="0" y="120">4. <tspan font-weight="700">Dab of silicone</tspan> in conduit ends (stops ants)</text>
+              <text x="0" y="150" font-weight="700" fill="#10b981">✓ Total bridge install time: ~10–15 minutes</text>
+            </g>
+          </g>
+        </g>
+
+        <!-- STEP 5: PLACE DASH BOX IN UTE & VERIFY PING -->
+        <g id="st4" class="step-g" opacity="0">
+          <text x="400" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">INSTALL STEP 5 · PLUG IN UTE DASH BOX &amp; VERIFY LIVE PING</text>
+          <text x="400" y="48" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">Off-the-shelf ~$60 pocket box sits on ute dash (3M Velcro + 12V USB) — drive away &amp; confirm sync!</text>
+
+          <g transform="translate(80, 74)">
+            <rect x="0" y="0" width="640" height="200" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <!-- Windshield / Dashboard Outline -->
+            <path d="M 40,140 L 90,48 L 310,48 L 360,140 Z" fill="#0ea5e9" opacity="0.08" stroke="#64748b" stroke-width="1.5" />
+            <rect x="36" y="140" width="328" height="36" rx="6" fill="#334155" />
+            <text x="200" y="162" text-anchor="middle" font-size="9.5" font-weight="700" fill="#cbd5e1">COUNCIL UTE DASHBOARD (NO ROOF WIRING)</text>
+
+            <!-- Off-the-shelf Dash Box dropping onto Velcro -->
+            <g class="dash-drop">
+              <rect x="158" y="106" width="84" height="34" rx="5" fill="#0f172a" stroke="#10b981" stroke-width="1.8" />
+              <line x1="230" y1="106" x2="230" y2="82" stroke="#10b981" stroke-width="2.8" stroke-linecap="round" />
+              <circle cx="174" cy="123" r="4" fill="#22c55e" />
+              <text x="206" y="126" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">915 MHz</text>
+            </g>
+
+            <!-- Verification Panel (Right) -->
+            <circle cx="470" cy="54" r="14" fill="none" stroke="#10b981" stroke-width="2" class="ping-ok" />
+            <g transform="translate(400, 38)" font-size="10" fill="currentColor">
+              <text x="0" y="18" font-weight="700" font-size="11" fill="#10b981">✓ BRIDGE_042 ONLINE</text>
+              <text x="0" y="44">• 3M Velcro + 12V USB (10-sec setup)</text>
+              <text x="0" y="68">• Green LED = packet received</text>
+              <text x="0" y="92">• Auto-uploads on Depot Wi-Fi</text>
+              <text x="0" y="116">• 30-day auto-baseline begins today</text>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Narration Bar -->
+    <div class="px-3 py-2 rounded-lg border border-[var(--card-border)] bg-[var(--card)] space-y-1">
+      <div class="flex items-center justify-between gap-2">
+        <div id="narrationTitle" class="text-xs font-semibold text-[var(--foreground)]"></div>
+        <span id="timeTag" class="text-[11px] font-mono px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--card-border)] text-[var(--muted-foreground)]"></span>
+      </div>
+      <p id="narrationBody" class="text-xs text-[var(--muted-foreground)] leading-relaxed"></p>
+    </div>
+
+    <!-- Transport Bar -->
+    <div class="flex items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-1.5">
+        <button id="playBtn" class="px-2.5 py-1 rounded font-medium bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 cursor-pointer">Pause</button>
+        <button id="prevBtn" class="px-2 py-1 rounded border border-[var(--border)] bg-[var(--card)] hover:border-[var(--primary)] cursor-pointer">←</button>
+        <button id="nextBtn" class="px-2 py-1 rounded border border-[var(--border)] bg-[var(--card)] hover:border-[var(--primary)] cursor-pointer">→</button>
+      </div>
+      <div class="flex items-center gap-1 flex-wrap">
+        <button data-i="0" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">1. Spot</button>
+        <button data-i="1" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">2. Clamp</button>
+        <button data-i="2" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">3. Plug In</button>
+        <button data-i="3" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">4. Signpost</button>
+        <button data-i="4" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">5. Ute Dash</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const steps = [
+      {
+        badge: 'INSTALL 1 / 5 · LOCATION',
+        tag: '~2 mins · No Cranes',
+        title: '1. Walk Down the Dry Bank — 1.5–2 m Out on the Downstream Girder',
+        body: 'Pick the sheltered downstream outer girder 1.5 to 2 metres off the grassy bank. A crew member reaches it safely on a standard step-ladder — zero $3,000/day snooper cranes and zero traffic lane closures.',
+        voice: 'Install step one: pick the ladder-reachable spot. Walk down the dry bank and choose the sheltered downstream outer girder, one and a half to two metres off the bank. No snooper crane or road closure is needed.'
+      },
+      {
+        badge: 'INSTALL 2 / 5 · CLAMPING',
+        tag: '~3 mins · 1 Spanner',
+        title: '2. Lock On With Certified Steel Girder C-Clamps (Zero Drilling)',
+        body: 'Slide two certified steel C-clamps onto the I-beam flange (or wrap stainless banding straps on concrete/timber piers) and tighten the vibration-proof locknuts with a spanner. Zero holes drilled into structural beams.',
+        voice: 'Install step two: clamp the box on. Tighten two certified steel girder C-clamps onto the I-beam flange, or wrap stainless straps around a concrete or timber pier. Zero holes are drilled into the bridge.'
+      },
+      {
+        badge: 'INSTALL 3 / 5 · CABLES',
+        tag: '~1 min · Off-the-Shelf',
+        title: '3. Screw In Off-the-Shelf 2 m / 3 m / 5 m Plug-In Cables',
+        body: 'Screw the standard SMA coax cable and the IP68 2-pin float cable straight into the waterproof ports on the box — zero wiring or crimping on site. Coil any extra slack neatly inside the sheltered girder pocket.',
+        voice: 'Install step three: connect the off-the-shelf cables. Screw in the standard coax and waterproof float leads — no cutting or crimping needed — and coil any spare slack neatly under the girder.'
+      },
+      {
+        badge: 'INSTALL 4 / 5 · SIGNPOST',
+        tag: '~5 mins · Rat & Ant Proof',
+        title: '4. Cut Recycled Conduit & Clip Float Tube + Antenna to Signpost',
+        body: 'Snip hollow recycled conduit (or snap split loom) to signpost height, slide both cables through, hose-clamp the rainproof float tube at deck level, screw on the $10 antenna 1.5 m up, and seal conduit ends with a dab of silicone.',
+        voice: 'Install step four: dress the signpost. Snip the recycled conduit to height, slide both cables through, clamp the rainproof float tube at deck height, attach the antenna one and a half metres up, and dab silicone in the conduit ends to keep ants out.'
+      },
+      {
+        badge: 'INSTALL 5 / 5 · UTE DASH',
+        tag: '~10 secs · Auto-Sync',
+        title: '5. Stick Off-the-Shelf Dash Box in Council Ute & Verify Ping',
+        body: 'Place the pre-cased ~$60 915 MHz receiver on the ute dashboard with 3M Velcro and plug it into 12V USB. Drive away — a green LED confirms live packet capture, and the 30-day automatic bridge baseline starts immediately.',
+        voice: 'Install step five: plug in the ute dash box. Stick the off-the-shelf receiver onto the council ute dashboard, plug into twelve-volt USB, and drive off. A green light confirms the bridge is online and logging its thirty-day baseline.'
+      }
+    ];
+
+    let idx = 0, playing = true, voiceOn = false, timer = null, activeUtterance = null;
+    const stepBadge = document.getElementById('stepBadge');
+    const narrationTitle = document.getElementById('narrationTitle');
+    const narrationBody = document.getElementById('narrationBody');
+    const timeTag = document.getElementById('timeTag');
+    const playBtn = document.getElementById('playBtn');
+    const voiceBtn = document.getElementById('voiceBtn');
+    const voiceIcon = document.getElementById('voiceIcon');
+    const voiceLabel = document.getElementById('voiceLabel');
+    const recDot = document.getElementById('recDot');
+    const chBtns = document.querySelectorAll('.ch-btn');
+
+    function pickVoice() {
+      const voices = window.speechSynthesis.getVoices() || [];
+      return voices.find(v => /en[-_]AU/i.test(v.lang))
+          || voices.find(v => /^en/i.test(v.lang))
+          || voices[0] || null;
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => pickVoice();
+      pickVoice();
+    }
+
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      if (!voiceOn) return;
+      setTimeout(() => {
+        if (!voiceOn) return;
+        window.speechSynthesis.resume();
+        const u = new SpeechSynthesisUtterance(text);
+        const v = pickVoice();
+        if (v) u.voice = v;
+        u.lang = v ? v.lang : 'en-AU';
+        u.rate = 1.02;
+        u.volume = 1.0;
+        u.onend = () => {
+          if (playing && voiceOn) {
+            clearTimeout(timer);
+            timer = setTimeout(() => show(idx + 1), 900);
+          }
+        };
+        activeUtterance = u;
+        window.speechSynthesis.speak(u);
+      }, 60);
+    }
+
+    function show(i) {
+      idx = (i + steps.length) % steps.length;
+      for (let k = 0; k < steps.length; k++) {
+        document.getElementById('st' + k).setAttribute('opacity', k === idx ? '1' : '0');
+      }
+      const s = steps[idx];
+      stepBadge.textContent = s.badge;
+      narrationTitle.textContent = s.title;
+      narrationBody.textContent = s.body;
+      timeTag.textContent = s.tag;
+
+      chBtns.forEach((btn, bIdx) => {
+        if (bIdx === idx) {
+          btn.style.backgroundColor = 'var(--primary)';
+          btn.style.color = 'var(--primary-foreground)';
+          btn.style.borderColor = 'var(--primary)';
+        } else {
+          btn.style.backgroundColor = 'var(--card)';
+          btn.style.color = 'var(--muted-foreground)';
+          btn.style.borderColor = 'var(--border)';
+        }
+      });
+
+      clearTimeout(timer);
+      if (voiceOn) speak(s.voice);
+      else if (playing) timer = setTimeout(() => show(idx + 1), 6500);
+    }
+
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      playBtn.textContent = playing ? 'Pause' : 'Play';
+      recDot.className = playing ? 'inline-block w-2 h-2 rounded-full bg-emerald-500' : 'inline-block w-2 h-2 rounded-full bg-amber-500';
+      if (!playing) {
+        clearTimeout(timer);
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      } else show(idx);
+    });
+
+    voiceBtn.addEventListener('click', () => {
+      voiceOn = !voiceOn;
+      voiceIcon.textContent = voiceOn ? '🔊' : '🔇';
+      voiceLabel.textContent = voiceOn ? 'Voiceover: ON' : 'Voiceover: OFF';
+      if (voiceOn) speak(steps[idx].voice);
+      else {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        if (playing) { clearTimeout(timer); timer = setTimeout(() => show(idx + 1), 6500); }
+      }
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => show(idx - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => show(idx + 1));
+    chBtns.forEach(b => b.addEventListener('click', () => show(Number(b.dataset.i))));
+
+    show(0);
+  </script>
+</body>
+</html>
