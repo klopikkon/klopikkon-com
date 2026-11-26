@@ -215,8 +215,8 @@
         <!-- 4 Key Metric Cards -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-[var(--border)]">
           <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3.5">
-            <div class="text-xl font-bold font-mono text-emerald-600">~$150–$250*</div>
-            <div class="text-xs font-semibold text-[var(--foreground)] mt-0.5">Est. Per Bridge (BOM + Labour)</div>
+            <div class="text-xl font-bold font-mono text-emerald-600">~$250–$400*</div>
+            <div class="text-xs font-semibold text-[var(--foreground)] mt-0.5">Est. Installed Per Bridge</div>
             <div class="text-[11px] text-[var(--muted-foreground)]">vs. $5,000–$10,000+ legacy SHM</div>
           </div>
           <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3.5">
@@ -305,12 +305,12 @@
 
                 <div>
                   <div class="flex justify-between text-xs mb-1">
-                    <span class="font-semibold text-[var(--foreground)]">Proposed Modular System (Incl. Labour &amp; Car/Depot Gear)*</span>
-                    <span class="font-mono font-bold text-emerald-600">~$35k – $55k</span>
+                    <span class="font-semibold text-[var(--foreground)]">Proposed Modular System (All-In Installed + Car/Depot Gear)*</span>
+                    <span class="font-mono font-bold text-emerald-600">~$55k – $85k</span>
                   </div>
                   <div class="w-full h-6 rounded bg-[var(--card)] border border-[var(--border)] overflow-hidden flex items-center">
-                    <div class="h-full bg-emerald-600 w-[4%] min-w-[18px]"></div>
-                    <span class="px-2 text-[10px] font-mono font-semibold text-emerald-600">~95% Lower Capital Cost · $0/mo Ongoing Fees</span>
+                    <div class="h-full bg-emerald-600 w-[6%] min-w-[22px]"></div>
+                    <span class="px-2 text-[10px] font-mono font-semibold text-emerald-600">~93% Lower Capital Cost · $0/mo Ongoing Fees</span>
                   </div>
                 </div>
               </div>
@@ -322,9 +322,9 @@
                   <div class="text-[10px] text-red-500">+ recurring cloud/SIMs</div>
                 </div>
                 <div class="p-2.5 rounded bg-[var(--card)] border border-emerald-500/40">
-                  <div class="text-[11px] text-[var(--muted-foreground)]">Est. Proposed Per Bridge*</div>
-                  <div class="font-mono font-bold text-emerald-600">~$150 – $250</div>
-                  <div class="text-[10px] text-emerald-600">BOM + labour · $0/mo ongoing</div>
+                  <div class="text-[11px] text-[var(--muted-foreground)]">Est. All-In Per Bridge*</div>
+                  <div class="font-mono font-bold text-emerald-600">~$250 – $400</div>
+                  <div class="text-[10px] text-emerald-600">BOM + build + council install</div>
                 </div>
               </div>
             </div>
@@ -1077,7 +1077,7 @@
               <div class="rounded bg-emerald-500/10 py-0.5"><div class="text-[10px] text-emerald-600 font-semibold">Est. Total Landed*</div><div class="font-mono font-bold text-emerald-600">$118–$210</div></div>
             </div>
             <div class="text-[10px] text-[var(--muted-foreground)] text-center border-t border-[var(--border)] pt-1.5">
-              *Preliminary estimates only (pre-prototype). Assembly time ~20–25 min/unit for early batches, ~12–15 min/unit at 50+ scale (~$55–$60/hr AU rate). Excludes council crew site install (~15–20 min).
+              *Preliminary estimates only (pre-prototype). Build cost ~$118–$210 (incl. 15–25 min bench labour @ ~$55–$60/hr). Factoring margin, compliance &amp; ~20–30 min council crew site install brings realistic all-in installed cost to <strong class="text-[var(--foreground)]">~$250–$400/bridge</strong>.
             </div>
           </div>
         </div>
@@ -1184,19 +1184,19 @@
 
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <div class="text-[11px] text-[var(--muted-foreground)]">Est. Unit Cost (BOM + Labour)</div>
-                  <div id="outPerBridge" class="text-2xl font-bold font-mono text-[var(--foreground)]">$192</div>
+                  <div class="text-[11px] text-[var(--muted-foreground)]">Est. All-In Per Bridge*</div>
+                  <div id="outPerBridge" class="text-2xl font-bold font-mono text-[var(--foreground)]">~$297</div>
                 </div>
                 <div>
                   <div class="text-[11px] text-[var(--muted-foreground)]">Est. Total Shire Cost</div>
-                  <div id="outTotal" class="text-2xl font-bold font-mono text-emerald-600">$11,350</div>
+                  <div id="outTotal" class="text-2xl font-bold font-mono text-emerald-600">~$16,740</div>
                 </div>
               </div>
 
               <div class="space-y-1.5 pt-2 border-t border-[var(--border)] text-xs">
                 <div class="flex justify-between">
-                  <span class="text-[var(--muted-foreground)]">Parts (BOM) + Est. Assembly Labour:</span>
-                  <span id="outBreakdown" class="font-mono font-semibold text-[var(--foreground)]">$178 + $14 (~15m)</span>
+                  <span class="text-[var(--muted-foreground)]">BOM + Build + Margin + Site Install:</span>
+                  <span id="outBreakdown" class="font-mono font-semibold text-[var(--foreground)]">$178 + $14 + $40 + $65</span>
                 </div>
                 <div class="flex justify-between">
                   <span class="text-[var(--muted-foreground)]">Ongoing SIM / Cloud Fees:</span>
@@ -1295,12 +1295,12 @@
                 <h3 class="text-base font-bold text-[var(--foreground)]">Multi-Bridge Shire Rollout &amp; Grants</h3>
                 <ul class="text-xs text-[var(--muted-foreground)] space-y-1.5">
                   <li>• Transition enclosure to Melbourne recycled-HDPE injection moulding</li>
-                  <li>• Deploy 10–30 priority flood/timber bridges (~$2.5k–$6.5k* est.)</li>
+                  <li>• Deploy 10–30 priority flood/timber bridges (~$3.5k–$11k* all-in est.)</li>
                   <li>• ACMA <code class="text-[var(--foreground)]">AU915</code> (915–928 MHz) compliant; RCM certification path for commercial scale</li>
                   <li>• Co-fund via <strong>Sustainability Victoria</strong> / <strong>MAVlab</strong> grants</li>
                 </ul>
               </div>
-              <div class="mt-4 pt-2.5 border-t border-[var(--border)] text-xs font-semibold text-amber-600">Target: ~$150–$250/bridge · $0/mo ongoing</div>
+              <div class="mt-4 pt-2.5 border-t border-[var(--border)] text-xs font-semibold text-amber-600">Target: ~$250–$400/bridge* installed · $0/mo ongoing</div>
             </div>
           </div>
 
@@ -1456,10 +1456,11 @@
       if (cfg.casing === 'rpetg') baseNode += 14;
       else baseNode += (n >= 50 ? 5 : 18); // Moulded HDPE cheaper at 50+
 
-      // Estimated bench assembly & QA labour (~$55-60/hr AU rate)
-      const labourCost = n >= 50 ? 14 : (n >= 20 ? 19 : 24);
-      const labourMins = n >= 50 ? '~15m' : (n >= 20 ? '~20m' : '~25m');
-      const unitTotal = baseNode + labourCost;
+      // Estimated bench assembly & QA labour (~$55-60/hr AU rate) + margin/compliance + council crew site install (~25 min)
+      const labourCost = n >= 50 ? 18 : (n >= 20 ? 24 : 30);
+      const marginCost = n >= 50 ? 45 : (n >= 20 ? 55 : 65);
+      const siteInstall = 65; // Est. council crew on-site clamp & signpost install
+      const unitTotal = baseNode + labourCost + marginCost + siteInstall;
 
       // Shared infrastructure (gateways @ $450 & off-the-shelf dash receivers @ $60)
       const gateways = Math.max(1, Math.ceil(n / 18));
@@ -1484,7 +1485,7 @@
       const wasteKg = (n * 0.25).toFixed(1);
 
       document.getElementById('outPerBridge').textContent = `~$${unitTotal}`;
-      document.getElementById('outBreakdown').textContent = `$${baseNode} BOM + $${labourCost} (${labourMins})`;
+      document.getElementById('outBreakdown').textContent = `$${baseNode} + $${labourCost} + $${marginCost} + $${siteInstall}`;
       document.getElementById('outTotal').textContent = `~$${total.toLocaleString()}`;
       document.getElementById('outInfra').textContent = infraText;
       document.getElementById('outCommercial').textContent = `$${commercial.toLocaleString()}`;
