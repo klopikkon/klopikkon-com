@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --background: #f8fafc;
+      --card: #ffffff;
+      --card-border: #e2e8f0;
+      --border: #cbd5e1;
+      --foreground: #0f172a;
+      --muted-foreground: #475569;
+      --primary: #059669;
+      --primary-foreground: #ffffff;
+      --success: #059669;
+      --warning: #d97706;
+      --error: #dc2626;
+    }
+    html.dark {
+      --background: #0b1120;
+      --card: #111827;
+      --card-border: #1f2937;
+      --border: #334155;
+      --foreground: #f1f5f9;
+      --muted-foreground: #94a3b8;
+      --primary: #10b981;
+      --primary-foreground: #022c22;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #f87171;
+    }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+    .scene-g { transition: opacity 0.45s ease; }
+    .spin-gear { animation: spin 2.2s linear infinite; transform-origin: 245px 158px; }
+    .spin-gear-rev { animation: spinRev 2.2s linear infinite; transform-origin: 295px 158px; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes spinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    .flake-drop { animation: dropFlake 1.4s linear infinite; }
+    @keyframes dropFlake {
+      0% { transform: translateY(0px); opacity: 1; }
+      100% { transform: translateY(52px); opacity: 0; }
+    }
+    .piston-push { animation: pushPiston 2.6s ease-in-out infinite; }
+    @keyframes pushPiston {
+      0%, 15% { transform: translateX(0px); }
+      50%, 75% { transform: translateX(48px); }
+      100% { transform: translateX(0px); }
+    }
+    .drop-pcb { animation: dropIn 2.8s ease-in-out infinite; }
+    @keyframes dropIn {
+      0%, 15% { transform: translateY(-28px); opacity: 0.2; }
+      45%, 100% { transform: translateY(0px); opacity: 1; }
+    }
+    .pour-resin { animation: resinRise 2.8s ease-in-out infinite; }
+    @keyframes resinRise {
+      0%, 40% { opacity: 0; }
+      65%, 100% { opacity: 0.55; }
+    }
+    .plug-click { animation: clickIn 2.4s ease-in-out infinite; }
+    @keyframes clickIn {
+      0%, 20% { transform: translateX(26px); }
+      50%, 100% { transform: translateX(0px); }
+    }
+    .rf-ping { animation: pingOut 1.5s ease-out infinite; transform-origin: 390px 108px; }
+    @keyframes pingOut {
+      0% { transform: scale(0.5); opacity: 0.95; }
+      100% { transform: scale(1.9); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] p-4 antialiased p-0 m-0">
+  <div class="py-1 space-y-2">
+    <div class="relative w-full overflow-hidden rounded-lg border border-[var(--card-border)] bg-[var(--card)]">
+      <!-- Top-left Step Badge -->
+      <div class="absolute top-2 left-2 z-10 flex items-center gap-1.5 px-2 py-0.5 rounded bg-[var(--background)]/90 border border-[var(--card-border)] text-[11px] font-mono">
+        <span id="recDot" class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span id="stepBadge" class="font-semibold text-[var(--foreground)]">STEP 1 / 5</span>
+      </div>
+
+      <!-- Top-right Voiceover Toggle -->
+      <button id="voiceBtn" class="absolute top-2 right-2 z-10 flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--background)]/90 border border-[var(--card-border)] hover:border-[var(--primary)] text-[11px] font-medium text-[var(--foreground)] cursor-pointer transition">
+        <span id="voiceIcon">🔇</span>
+        <span id="voiceLabel">Voiceover: OFF</span>
+      </button>
+
+      <svg viewBox="0 0 800 310" class="w-full h-auto block select-none">
+        <!-- ============================================================ -->
+        <!-- SCENE 1: COLLECT & SHRED VICTORIAN PLASTIC WASTE             -->
+        <!-- ============================================================ -->
+        <g id="s0" class="scene-g" opacity="1">
+          <text x="400" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">STEP 1 · COLLECT &amp; SHRED VICTORIAN PLASTIC WASTE</text>
+          <text x="400" y="50" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">Local HDPE milk bottles, bottle caps &amp; farm poly pipe offcuts → clean recycled flakes</text>
+
+          <!-- Waste Input (Left) -->
+          <g transform="translate(60, 88)">
+            <rect x="0" y="0" width="125" height="165" rx="8" fill="currentColor" opacity="0.05" stroke="currentColor" stroke-opacity="0.15" />
+            <text x="62" y="20" text-anchor="middle" font-size="10" font-weight="700" fill="currentColor">Victorian Waste</text>
+            <!-- Milk Bottle -->
+            <rect x="24" y="42" width="30" height="44" rx="4" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5" />
+            <rect x="33" y="33" width="12" height="9" rx="1" fill="#0ea5e9" />
+            <!-- Bottle Caps -->
+            <circle cx="84" cy="52" r="9" fill="#10b981" />
+            <circle cx="98" cy="68" r="9" fill="#f59e0b" />
+            <circle cx="76" cy="76" r="9" fill="#3b82f6" />
+            <!-- Offcut HDPE Pipe -->
+            <rect x="22" y="106" width="80" height="22" rx="11" fill="#334155" stroke="#0f172a" stroke-width="1.5" />
+            <ellipse cx="100" cy="117" rx="5" ry="11" fill="#64748b" />
+            <text x="62" y="150" text-anchor="middle" font-size="9" fill="currentColor" opacity="0.75">HDPE #2 + Offcut Pipe</text>
+          </g>
+
+          <!-- Arrow -->
+          <path d="M 192,162 L 218,162" stroke="#10b981" stroke-width="3" marker-end="url(#arr)" />
+
+          <!-- Shredder Machine (Center) -->
+          <g>
+            <!-- Hopper -->
+            <polygon points="222,74 318,74 300,126 240,126" fill="#475569" stroke="#1e293b" stroke-width="1.6" />
+            <rect x="220" y="126" width="100" height="66" rx="6" fill="#334155" stroke="#0f172a" stroke-width="1.8" />
+            <!-- Spinning Shredder Gears -->
+            <g class="spin-gear">
+              <circle cx="245" cy="158" r="16" fill="#94a3b8" stroke="#1e293b" stroke-width="2" stroke-dasharray="6 4" />
+              <circle cx="245" cy="158" r="5" fill="#1e293b" />
+            </g>
+            <g class="spin-gear-rev">
+              <circle cx="295" cy="158" r="16" fill="#94a3b8" stroke="#1e293b" stroke-width="2" stroke-dasharray="6 4" />
+              <circle cx="295" cy="158" r="5" fill="#1e293b" />
+            </g>
+            <!-- Falling Flakes -->
+            <g class="flake-drop">
+              <rect x="252" y="196" width="7" height="5" rx="1" fill="#10b981" />
+              <rect x="268" y="204" width="6" height="6" rx="1" fill="#38bdf8" />
+              <rect x="282" y="198" width="7" height="5" rx="1" fill="#f59e0b" />
+            </g>
+            <!-- Collection Bin -->
+            <rect x="230" y="232" width="80" height="36" rx="4" fill="#10b981" opacity="0.22" stroke="#10b981" stroke-width="1.5" />
+            <text x="270" y="254" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor">HDPE Flakes</text>
+          </g>
+
+          <!-- Output Info Card (Right) -->
+          <g transform="translate(365, 88)">
+            <rect x="0" y="0" width="375" height="178" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <text x="20" y="28" font-size="11.5" font-weight="700" fill="currentColor">Why Recycled HDPE / rPETG Works Here</text>
+            <text x="20" y="54" font-size="10" fill="currentColor" opacity="0.85">• Zero custom recycling plant needed — partners like</text>
+            <text x="30" y="69" font-size="10" font-weight="600" fill="#10b981">Precious Plastic Melbourne (Nunawading)</text>
+            <text x="20" y="84" font-size="10" fill="currentColor" opacity="0.85">  already shred &amp; supply local Victorian HDPE.</text>
+            <text x="20" y="110" font-size="10" fill="currentColor" opacity="0.85">• Each bridge sensor diverts ~150–250g of waste plastic.</text>
+            <text x="20" y="134" font-size="10" fill="currentColor" opacity="0.85">• Naturally waterproof, heat-tough (~110°C), and</text>
+            <text x="30" y="149" font-size="10" fill="currentColor" opacity="0.85">transparent to 915 MHz radio waves.</text>
+          </g>
+        </g>
+
+        <!-- ============================================================ -->
+        <!-- SCENE 2: MOULDING / 3D PRINTING THE ENCLOSURE                -->
+        <!-- ============================================================ -->
+        <g id="s1" class="scene-g" opacity="0">
+          <text x="400" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">STEP 2 · FORM THE WEATHERPROOF ENCLOSURE</text>
+          <text x="400" y="50" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">Units 1–10: 3D-print rPETG ($0 tooling) → Units 50+: Injection mould recycled HDPE in Melbourne</text>
+
+          <!-- Injection Moulder Animation (Left/Center) -->
+          <g transform="translate(55, 76)">
+            <rect x="0" y="0" width="380" height="200" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <text x="190" y="22" text-anchor="middle" font-size="10.5" font-weight="700" fill="currentColor">Recycled HDPE Injection Moulding (Scale)</text>
+
+            <!-- Hopper -->
+            <polygon points="95,40 135,40 125,74 105,74" fill="#10b981" opacity="0.7" stroke="#065f46" stroke-width="1.4" />
+            <!-- Heated Barrel -->
+            <rect x="36" y="74" width="165" height="28" rx="4" fill="#475569" stroke="#1e293b" stroke-width="1.5" />
+            <!-- Heater bands -->
+            <rect x="135" y="71" width="14" height="34" rx="2" fill="#ef4444" opacity="0.8" />
+            <rect x="158" y="71" width="14" height="34" rx="2" fill="#ef4444" opacity="0.8" />
+            <!-- Moving Piston -->
+            <g class="piston-push">
+              <rect x="20" y="81" width="70" height="14" rx="2" fill="#f59e0b" stroke="#78350f" stroke-width="1.2" />
+            </g>
+
+            <!-- CNC Aluminium Mould -->
+            <rect x="206" y="54" width="128" height="72" rx="5" fill="#cbd5e1" stroke="#475569" stroke-width="1.8" />
+            <!-- Cavity inside mould -->
+            <rect x="228" y="72" width="84" height="36" rx="4" fill="#10b981" stroke="#065f46" stroke-width="1.6" />
+            <text x="270" y="94" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ffffff">ENCLOSURE</text>
+
+            <text x="190" y="152" text-anchor="middle" font-size="9.5" font-weight="600" fill="currentColor">180°C melted HDPE → CNC mould → cools in 60s</text>
+            <text x="190" y="170" text-anchor="middle" font-size="9" fill="#10b981" font-weight="600">Output: Hundreds of identical waterproof boxes/day (~$3–$5 ea)</text>
+          </g>
+
+          <!-- Prototype Path Card (Right) -->
+          <g transform="translate(460, 76)">
+            <rect x="0" y="0" width="285" height="200" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <text x="142" y="22" text-anchor="middle" font-size="10.5" font-weight="700" fill="currentColor">Early Trials (Units 1–10)</text>
+            <rect x="78" y="42" width="128" height="58" rx="6" fill="#10b981" stroke="#065f46" stroke-width="1.8" />
+            <rect x="64" y="46" width="14" height="10" fill="#059669" />
+            <rect x="206" y="46" width="14" height="10" fill="#059669" />
+            <text x="142" y="68" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">3D-Printed rPETG</text>
+            <text x="142" y="83" text-anchor="middle" font-size="8" fill="#d1fae5">144 × 72 × 36 mm</text>
+            <text x="18" y="124" font-size="9.5" fill="currentColor" opacity="0.85">✓ Already designed in your cad/ folder</text>
+            <text x="18" y="142" font-size="9.5" fill="currentColor" opacity="0.85">✓ Zero mould cost while testing</text>
+            <text x="18" y="160" font-size="9.5" fill="currentColor" opacity="0.85">✓ Built-in O-ring groove &amp; stiff 4mm floor</text>
+            <text x="18" y="178" font-size="9.5" fill="currentColor" opacity="0.85">✓ Offcut HDPE pipe = float hood &amp; conduit</text>
+          </g>
+        </g>
+
+        <!-- ============================================================ -->
+        <!-- SCENE 3: ELECTRONICS ASSEMBLY & IP68 POTTING                 -->
+        <!-- ============================================================ -->
+        <g id="s2" class="scene-g" opacity="0">
+          <text x="400" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">STEP 3 · DROP IN ELECTRONICS &amp; SEAL IP68</text>
+          <text x="400" y="50" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">Rigid accelerometer mount + 915 MHz LoRa + heat-safe battery + waterproof resin seal</text>
+
+          <!-- Open Box Cross-Section -->
+          <g transform="translate(80, 74)">
+            <rect x="0" y="0" width="360" height="202" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <!-- Box shell -->
+            <path d="M 40,78 L 40,174 L 320,174 L 320,78 L 306,78 L 306,160 L 54,160 L 54,78 Z" fill="#10b981" stroke="#065f46" stroke-width="1.8" />
+            <!-- Silicone O-ring dots on rim -->
+            <circle cx="47" cy="78" r="3.5" fill="#ef4444" />
+            <circle cx="313" cy="78" r="3.5" fill="#ef4444" />
+
+            <!-- Animated Electronics Dropping In -->
+            <g class="drop-pcb">
+              <!-- Industrial Li-SOCl2 D-Cell -->
+              <rect x="64" y="114" width="92" height="40" rx="6" fill="#f59e0b" stroke="#92400e" stroke-width="1.5" />
+              <text x="110" y="132" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ffffff">Li-SOCl₂ D-Cell</text>
+              <text x="110" y="144" text-anchor="middle" font-size="7.5" fill="#fef3c7">-55°C to +85°C</text>
+
+              <!-- 915 MHz LoRa MCU Board -->
+              <rect x="168" y="124" width="68" height="30" rx="3" fill="#1e293b" stroke="#0f172a" stroke-width="1.4" />
+              <text x="202" y="142" text-anchor="middle" font-size="8" font-weight="700" fill="#38bdf8">915 MHz LoRa</text>
+
+              <!-- High-Res Tilt/Vibration Sensor bonded to 4mm floor -->
+              <rect x="246" y="134" width="50" height="24" rx="2" fill="#7c3aed" stroke="#4c1d95" stroke-width="1.4" />
+              <text x="271" y="149" text-anchor="middle" font-size="7.5" font-weight="700" fill="#ffffff">ADXL355</text>
+            </g>
+
+            <!-- Clear IP68 Potting Resin Layer -->
+            <rect x="164" y="118" width="138" height="41" rx="3" fill="#38bdf8" class="pour-resin" />
+
+            <text x="180" y="192" text-anchor="middle" font-size="9.5" font-weight="600" fill="currentColor">PCB potted IP68 · Battery bay stays swappable under O-ring lid</text>
+          </g>
+
+          <!-- Checklist (Right) -->
+          <g transform="translate(465, 74)">
+            <rect x="0" y="0" width="275" height="202" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <text x="20" y="28" font-size="11" font-weight="700" fill="currentColor">Built-In Protection</text>
+            <text x="20" y="56" font-size="9.5" fill="currentColor" opacity="0.88">1. <tspan font-weight="700">Rigid 4mm floor:</tspan> transfers bridge</text>
+            <text x="32" y="70" font-size="9.5" fill="currentColor" opacity="0.88">vibration cleanly to the sensor.</text>
+            <text x="20" y="96" font-size="9.5" fill="currentColor" opacity="0.88">2. <tspan font-weight="700">IP68 potting + breather vent:</tspan></text>
+            <text x="32" y="110" font-size="9.5" fill="currentColor" opacity="0.88">survives submersion &amp; condensation.</text>
+            <text x="20" y="136" font-size="9.5" fill="currentColor" opacity="0.88">3. <tspan font-weight="700">2–5 yr industrial battery:</tspan> zero</text>
+            <text x="32" y="150" font-size="9.5" fill="currentColor" opacity="0.88">solar panel, zero fire risk at 50°C.</text>
+            <text x="20" y="176" font-size="9.5" font-weight="700" fill="#10b981">Assembly time: ~10 mins per unit</text>
+          </g>
+        </g>
+
+        <!-- ============================================================ -->
+        <!-- SCENE 4: MODULAR PORTS (SOLVES ANY BRIDGE CABLE LENGTH!)     -->
+        <!-- ============================================================ -->
+        <g id="s3" class="scene-g" opacity="0">
+          <text x="400" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">STEP 4 · MODULAR PORTS — SOLVES ANY BRIDGE LAYOUT</text>
+          <text x="400" y="50" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">One standard box fits every bridge — just click in a 2 m, 4 m, or 6 m pre-made cable kit on site</text>
+
+          <!-- Main Box with External Waterproof Bulkhead Plugs -->
+          <g transform="translate(55, 76)">
+            <rect x="0" y="0" width="690" height="200" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+
+            <!-- Sealed Box -->
+            <rect x="36" y="56" width="150" height="86" rx="8" fill="#10b981" stroke="#065f46" stroke-width="2" />
+            <text x="111" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">STANDARD BOX</text>
+            <text x="111" y="110" text-anchor="middle" font-size="8.5" fill="#d1fae5">Same SKU for every bridge</text>
+
+            <!-- Waterproof SMA Bulkhead Port (Top) -->
+            <rect x="186" y="72" width="16" height="14" rx="2" fill="#f59e0b" stroke="#78350f" stroke-width="1.3" />
+            <text x="194" y="64" text-anchor="middle" font-size="8.5" font-weight="700" fill="currentColor">SMA Port</text>
+
+            <!-- Waterproof IP68 2-Pin Float Port (Bottom) -->
+            <rect x="186" y="112" width="16" height="14" rx="2" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" />
+            <text x="194" y="142" text-anchor="middle" font-size="8.5" font-weight="700" fill="currentColor">IP68 Float Plug</text>
+
+            <!-- Animated Plug-In Modular Cable Harness -->
+            <g class="plug-click">
+              <rect x="204" y="73" width="18" height="12" rx="2" fill="#d97706" />
+              <rect x="204" y="113" width="18" height="12" rx="2" fill="#0284c7" />
+              <!-- Recycled HDPE Conduit Sleeve -->
+              <rect x="222" y="68" width="190" height="62" rx="8" fill="#475569" opacity="0.18" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 3" />
+              <line x1="222" y1="79" x2="412" y2="79" stroke="#f59e0b" stroke-width="3" />
+              <line x1="222" y1="119" x2="412" y2="119" stroke="#38bdf8" stroke-width="3" />
+              <text x="317" y="102" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor">Pick Kit Length: 2m / 4m / 6m</text>
+            </g>
+
+            <!-- 3 Standard Kit Pills (Right) -->
+            <g transform="translate(445, 36)">
+              <rect x="0" y="0" width="215" height="36" rx="6" fill="#10b981" opacity="0.14" stroke="#10b981" />
+              <text x="12" y="16" font-size="9.5" font-weight="700" fill="currentColor">2 m Kit — Standard Abutment</text>
+              <text x="12" y="29" font-size="8.5" fill="currentColor" opacity="0.75">Box clamped right beside signpost</text>
+
+              <rect x="0" y="46" width="215" height="36" rx="6" fill="#38bdf8" opacity="0.14" stroke="#38bdf8" />
+              <text x="12" y="62" font-size="9.5" font-weight="700" fill="currentColor">4 m Kit — Wide Concrete Deck</text>
+              <text x="12" y="75" font-size="8.5" fill="currentColor" opacity="0.75">Reaches tall flood depth-marker pole</text>
+
+              <rect x="0" y="92" width="215" height="36" rx="6" fill="#f59e0b" opacity="0.14" stroke="#f59e0b" />
+              <text x="12" y="108" font-size="9.5" font-weight="700" fill="currentColor">Rule of Thumb: Stay ≤ 5–6 m</text>
+              <text x="12" y="121" font-size="8.5" fill="currentColor" opacity="0.75">Keeps 915 MHz signal loss tiny; coil slack</text>
+            </g>
+
+            <text x="345" y="186" text-anchor="middle" font-size="9.5" font-weight="600" fill="#10b981">✓ Zero custom wiring per bridge — spare slack coils neatly inside the girder pocket</text>
+          </g>
+        </g>
+
+        <!-- ============================================================ -->
+        <!-- SCENE 5: BENCH QA TEST & FLAT-PACK COUNCIL KIT               -->
+        <!-- ============================================================ -->
+        <g id="s4" class="scene-g" opacity="0">
+          <text x="400" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">STEP 5 · QUICK BENCH TEST &amp; COUNCIL FLAT-PACK KIT</text>
+          <text x="400" y="50" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">Automated tilt/shake + 915 MHz ping test → ships ready for a 5-minute zero-drill install</text>
+
+          <!-- QA Station (Left) -->
+          <g transform="translate(65, 76)">
+            <rect x="0" y="0" width="300" height="200" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <text x="150" y="24" text-anchor="middle" font-size="10.5" font-weight="700" fill="currentColor">2-Minute Automated QA Check</text>
+
+            <rect x="95" y="76" width="110" height="52" rx="6" fill="#10b981" stroke="#065f46" stroke-width="1.8" />
+            <text x="150" y="100" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">UNIT #042</text>
+            <text x="150" y="114" text-anchor="middle" font-size="8" fill="#d1fae5">915 MHz PING ✓</text>
+
+            <text x="24" y="152" font-size="9.5" fill="#10b981" font-weight="600">✓ Tilt zeroed &amp; vibration shock verified</text>
+            <text x="24" y="170" font-size="9.5" fill="#10b981" font-weight="600">✓ Float switch &amp; 915 MHz range passed</text>
+            <text x="24" y="188" font-size="9.5" fill="#10b981" font-weight="600">✓ Dual-mode firmware flashed (Gateway + Ute)</text>
+          </g>
+
+          <!-- Radio Ping Pulse between boxes -->
+          <circle cx="390" cy="108" r="14" fill="none" stroke="#22c55e" stroke-width="2" class="rf-ping" />
+
+          <!-- Flat-Pack Kit Contents (Right) -->
+          <g transform="translate(415, 76)">
+            <rect x="0" y="0" width="320" height="200" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <text x="160" y="24" text-anchor="middle" font-size="10.5" font-weight="700" fill="currentColor">What Arrives at the Council Depot (~$150–$250)</text>
+
+            <text x="20" y="52" font-size="9.5" fill="currentColor">📦 <tspan font-weight="700">1× Sealed Recycled-Plastic Sensor Box</tspan></text>
+            <text x="20" y="74" font-size="9.5" fill="currentColor">🗜️ <tspan font-weight="700">2× Certified Steel Beam Clamps</tspan> (60–120 kg ea)</text>
+            <text x="20" y="96" font-size="9.5" fill="currentColor">🔌 <tspan font-weight="700">1× Plug-in Cable Kit</tspan> (2m / 4m / 6m in HDPE pipe)</text>
+            <text x="20" y="118" font-size="9.5" fill="currentColor">🌊 <tspan font-weight="700">1× Rainproof / Wasp-Proof Float Tube</tspan></text>
+            <text x="20" y="140" font-size="9.5" fill="currentColor">📡 <tspan font-weight="700">1× Low-Theft 915 MHz Signpost Antenna</tspan></text>
+
+            <rect x="20" y="156" width="280" height="28" rx="5" fill="#10b981" opacity="0.16" />
+            <text x="160" y="174" text-anchor="middle" font-size="9.5" font-weight="700" fill="#10b981">Install with 1 spanner in 5 mins · Zero drilling</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Narration Bar -->
+    <div class="px-3 py-2 rounded-lg border border-[var(--card-border)] bg-[var(--card)] space-y-1">
+      <div class="flex items-center justify-between gap-2">
+        <div id="narrationTitle" class="text-xs font-semibold text-[var(--foreground)]"></div>
+        <span id="stageTag" class="text-[11px] font-mono px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--card-border)] text-[var(--muted-foreground)]"></span>
+      </div>
+      <p id="narrationBody" class="text-xs text-[var(--muted-foreground)] leading-relaxed"></p>
+    </div>
+
+    <!-- Transport Bar -->
+    <div class="flex items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-1.5">
+        <button id="playBtn" class="px-2.5 py-1 rounded font-medium bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 cursor-pointer">Pause</button>
+        <button id="prevBtn" class="px-2 py-1 rounded border border-[var(--border)] bg-[var(--card)] hover:border-[var(--primary)] cursor-pointer">←</button>
+        <button id="nextBtn" class="px-2 py-1 rounded border border-[var(--border)] bg-[var(--card)] hover:border-[var(--primary)] cursor-pointer">→</button>
+      </div>
+      <div class="flex items-center gap-1 flex-wrap">
+        <button data-i="0" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">1. Shred</button>
+        <button data-i="1" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">2. Mould</button>
+        <button data-i="2" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">3. Seal</button>
+        <button data-i="3" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">4. Modular Cables</button>
+        <button data-i="4" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">5. Ship Kit</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const steps = [
+      {
+        badge: 'STEP 1 / 5 · SHRED WASTE',
+        tag: 'Partner: Precious Plastic VIC',
+        title: '1. Shred Local Victorian HDPE Waste Into Clean Flakes',
+        body: 'Post-consumer HDPE (milk bottles, bottle caps) and rural poly-pipe offcuts are washed and shredded by existing Melbourne recyclers like Precious Plastic Victoria — zero need to build your own recycling plant.',
+        voice: 'Step one: source recycled Victorian plastic. Local recyclers like Precious Plastic Melbourne shred post-consumer HDPE bottles and farm pipe offcuts into clean flakes, diverting around two hundred grams of waste per bridge sensor.'
+      },
+      {
+        badge: 'STEP 2 / 5 · MOULD / 3D PRINT',
+        tag: 'Units 1–10: rPETG · 50+: HDPE',
+        title: '2. 3D-Print Prototypes First, Then Injection Mould at Scale',
+        body: 'For your first 10 council trial units, 3D-print in recycled PETG ($0 tooling). Once a council orders 50+, hand the exact same CAD file to a Melbourne moulder to press hundreds of identical waterproof HDPE boxes a day for ~$3–$5 each.',
+        voice: 'Step two: form the enclosure. For the first ten trial units, you 3D print in recycled PETG with zero tooling cost. Once councils order in volume, a Melbourne injection moulder presses hundreds of identical waterproof HDPE boxes a day.'
+      },
+      {
+        badge: 'STEP 3 / 5 · ASSEMBLE & SEAL',
+        tag: 'IP68 Potted · 2–5 Yr Battery',
+        title: '3. Drop In the Electronics & Pot the PCB IP68',
+        body: 'Mount the tilt/vibration sensor rigidly to the 4 mm floor, snap in the 915 MHz LoRa board, pour clear waterproof potting resin over the electronics (keeping the industrial D-cell bay swappable), and seal the O-ring lid.',
+        voice: 'Step three: assemble and seal. The vibration sensor bonds rigidly to the thick floor, the nine-fifteen megahertz LoRa board drops in, and clear waterproof resin seals the electronics against floods and condensation while leaving the industrial battery swappable.'
+      },
+      {
+        badge: 'STEP 4 / 5 · MODULAR CABLES',
+        tag: 'Solves Any Bridge Size!',
+        title: '4. Standard Waterproof Ports + 2m / 4m / 6m Plug-In Cable Kits',
+        body: 'Every bridge is different, so you never hard-wire a fixed cable length. Every box gets the exact same waterproof SMA + float plugs — the installer simply clicks in a 2 m, 4 m, or 6 m cable kit inside recycled HDPE conduit and coils any spare slack under the girder.',
+        voice: 'Step four: solving different bridge sizes. Every box has standard waterproof antenna and float plugs on the outside. Instead of custom-building lengths, you simply click in a two, four, or six metre cable kit in recycled HDPE conduit and coil any spare slack under the beam.'
+      },
+      {
+        badge: 'STEP 5 / 5 · QA & SHIP KIT',
+        tag: '5-Min Spanner Install',
+        title: '5. Quick Bench Test & Flat-Pack Ready for Council Crews',
+        body: 'Each unit runs a 2-minute automated shake, tilt, float, and 915 MHz radio ping test, then ships in a flat kit with 2× certified steel girder clamps, the plug-in cable/conduit kit, float tube, and stubby antenna.',
+        voice: 'Step five: test and ship. After a quick two-minute shake, tilt, and radio check, each sensor ships as a simple flat-pack kit with certified steel beam clamps, ready for a council crew to install in five minutes with a single spanner.'
+      }
+    ];
+
+    let idx = 0, playing = true, voiceOn = false, timer = null;
+    const stepBadge = document.getElementById('stepBadge');
+    const narrationTitle = document.getElementById('narrationTitle');
+    const narrationBody = document.getElementById('narrationBody');
+    const stageTag = document.getElementById('stageTag');
+    const playBtn = document.getElementById('playBtn');
+    const voiceBtn = document.getElementById('voiceBtn');
+    const voiceIcon = document.getElementById('voiceIcon');
+    const voiceLabel = document.getElementById('voiceLabel');
+    const recDot = document.getElementById('recDot');
+    const chBtns = document.querySelectorAll('.ch-btn');
+
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      if (!voiceOn) return;
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 1.03;
+      u.onend = () => {
+        if (playing && voiceOn) {
+          clearTimeout(timer);
+          timer = setTimeout(() => show(idx + 1), 900);
+        }
+      };
+      window.speechSynthesis.speak(u);
+    }
+
+    function show(i) {
+      idx = (i + steps.length) % steps.length;
+      for (let k = 0; k < steps.length; k++) {
+        document.getElementById('s' + k).setAttribute('opacity', k === idx ? '1' : '0');
+      }
+      const s = steps[idx];
+      stepBadge.textContent = s.badge;
+      narrationTitle.textContent = s.title;
+      narrationBody.textContent = s.body;
+      stageTag.textContent = s.tag;
+
+      chBtns.forEach((btn, bIdx) => {
+        if (bIdx === idx) {
+          btn.style.backgroundColor = 'var(--primary)';
+          btn.style.color = 'var(--primary-foreground)';
+          btn.style.borderColor = 'var(--primary)';
+        } else {
+          btn.style.backgroundColor = 'var(--card)';
+          btn.style.color = 'var(--muted-foreground)';
+          btn.style.borderColor = 'var(--border)';
+        }
+      });
+
+      clearTimeout(timer);
+      if (voiceOn) {
+        speak(s.voice);
+      } else if (playing) {
+        timer = setTimeout(() => show(idx + 1), 6500);
+      }
+    }
+
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      playBtn.textContent = playing ? 'Pause' : 'Play';
+      recDot.className = playing ? 'inline-block w-2 h-2 rounded-full bg-emerald-500' : 'inline-block w-2 h-2 rounded-full bg-amber-500';
+      if (!playing) {
+        clearTimeout(timer);
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      } else {
+        show(idx);
+      }
+    });
+
+    voiceBtn.addEventListener('click', () => {
+      voiceOn = !voiceOn;
+      voiceIcon.textContent = voiceOn ? '🔊' : '🔇';
+      voiceLabel.textContent = voiceOn ? 'Voiceover: ON' : 'Voiceover: OFF';
+      if (voiceOn) speak(steps[idx].voice);
+      else {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        if (playing) { clearTimeout(timer); timer = setTimeout(() => show(idx + 1), 6500); }
+      }
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => show(idx - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => show(idx + 1));
+    chBtns.forEach(b => b.addEventListener('click', () => show(Number(b.dataset.i))));
+
+    show(0);
+  </script>
+</body>
+</html>

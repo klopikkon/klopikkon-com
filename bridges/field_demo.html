@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --background: #f8fafc;
+      --card: #ffffff;
+      --card-border: #e2e8f0;
+      --border: #cbd5e1;
+      --foreground: #0f172a;
+      --muted-foreground: #475569;
+      --primary: #059669;
+      --primary-foreground: #ffffff;
+      --success: #059669;
+      --warning: #d97706;
+      --error: #dc2626;
+    }
+    html.dark {
+      --background: #0b1120;
+      --card: #111827;
+      --card-border: #1f2937;
+      --border: #334155;
+      --foreground: #f1f5f9;
+      --muted-foreground: #94a3b8;
+      --primary: #10b981;
+      --primary-foreground: #022c22;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #f87171;
+    }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+    #camera {
+      transition: transform 1.0s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-origin: 0 0;
+    }
+    .scene-layer {
+      transition: opacity 0.45s ease;
+    }
+    .pulse-ring {
+      animation: rfPulse 1.6s ease-out infinite;
+      transform-origin: 576px 50px;
+    }
+    .pulse-ring-2 {
+      animation: rfPulse 1.6s ease-out 0.55s infinite;
+      transform-origin: 576px 50px;
+    }
+    @keyframes rfPulse {
+      0% { opacity: 0.95; transform: scale(0.45); }
+      100% { opacity: 0; transform: scale(1.85); }
+    }
+    .wire-flow {
+      stroke-dasharray: 7 7;
+      animation: dashMove 0.7s linear infinite;
+    }
+    @keyframes dashMove {
+      from { stroke-dashoffset: 28; }
+      to { stroke-dashoffset: 0; }
+    }
+    .rain-line {
+      animation: rainFall 0.45s linear infinite;
+    }
+    @keyframes rainFall {
+      from { transform: translateY(0); opacity: 0.9; }
+      to { transform: translateY(34px); opacity: 0; }
+    }
+    .log-drift {
+      animation: driftLog 3.2s ease-in-out infinite;
+    }
+    @keyframes driftLog {
+      0%   { transform: translateX(0px) rotate(0deg); opacity: 0; }
+      15%  { opacity: 1; }
+      65%  { transform: translateX(132px) rotate(-6deg); opacity: 1; }
+      80%  { transform: translateX(126px) rotate(8deg); opacity: 1; }
+      100% { transform: translateX(118px) rotate(14deg); opacity: 0; }
+    }
+    .clamp-slide-l {
+      animation: clampInL 2.8s ease-in-out infinite;
+    }
+    .clamp-slide-r {
+      animation: clampInR 2.8s ease-in-out infinite;
+    }
+    @keyframes clampInL {
+      0%, 20% { transform: translateX(-22px); }
+      45%, 100% { transform: translateX(0px); }
+    }
+    @keyframes clampInR {
+      0%, 20% { transform: translateX(22px); }
+      45%, 100% { transform: translateX(0px); }
+    }
+    .box-lift {
+      animation: liftBox 2.8s ease-in-out infinite;
+    }
+    @keyframes liftBox {
+      0%, 15% { transform: translateY(18px); }
+      45%, 100% { transform: translateY(0px); }
+    }
+    .car-pass {
+      animation: passBridge 3.8s linear infinite;
+    }
+    @keyframes passBridge {
+      0% { transform: translateX(360px); }
+      100% { transform: translateX(-140px); }
+    }
+    .pkt-fly {
+      stroke-dasharray: 5 5;
+      animation: dashMove 0.45s linear infinite;
+    }
+    .gateway-beam {
+      stroke-dasharray: 6 6;
+      animation: dashMove 0.8s linear infinite;
+    }
+    .prog-fill {
+      animation: fillBar 3.8s linear infinite;
+    }
+    @keyframes fillBar {
+      0%, 15% { width: 0px; }
+      65%, 100% { width: 146px; }
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] p-4 antialiased p-0 m-0">
+  <div class="py-1 space-y-2">
+    <!-- 16:9 Animated Viewport -->
+    <div class="relative w-full overflow-hidden rounded-lg border border-[var(--card-border)] bg-[var(--card)]">
+      <!-- Top-left Scene Badge -->
+      <div class="absolute top-2 left-2 z-10 flex items-center gap-1.5 px-2 py-0.5 rounded bg-[var(--background)]/90 border border-[var(--card-border)] text-[11px] font-mono">
+        <span id="recDot" class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span id="sceneBadge" class="font-semibold text-[var(--foreground)]">SCENE 1 / 6</span>
+      </div>
+
+      <!-- Top-right Voiceover Toggle -->
+      <button id="voiceBtn" class="absolute top-2 right-2 z-10 flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--background)]/90 border border-[var(--card-border)] hover:border-[var(--primary)] text-[11px] font-medium text-[var(--foreground)] cursor-pointer transition">
+        <span id="voiceIcon">🔇</span>
+        <span id="voiceLabel">Voiceover: OFF</span>
+      </button>
+
+      <svg id="stage" viewBox="0 0 800 315" class="w-full h-auto block select-none">
+        <defs>
+          <linearGradient id="floodWater" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.65" />
+            <stop offset="100%" stop-color="#0369a1" stop-opacity="0.88" />
+          </linearGradient>
+          <linearGradient id="skyTint" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.08" />
+            <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.01" />
+          </linearGradient>
+        </defs>
+
+        <rect width="800" height="315" fill="url(#skyTint)" />
+
+        <!-- ================================================================ -->
+        <!-- LAYER A: SCENE 1 — DEDICATED UNDER-BRIDGE INSTALL VIEW           -->
+        <!-- ================================================================ -->
+        <g id="installView" class="scene-layer" opacity="1">
+          <!-- Title Header inside view -->
+          <text x="400" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">UNDER-BRIDGE VIEW · ZERO-DRILL INSTALLATION</text>
+          <text x="400" y="50" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">No holes drilled into structural steel or prestressed concrete beams (keeps bridge certification intact)</text>
+
+          <!-- LEFT PANEL: Steel I-Beam C-Clamp Install -->
+          <g transform="translate(55, 68)">
+            <rect x="0" y="0" width="320" height="225" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <text x="160" y="20" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Option A: Steel I-Beam Girder C-Clamps</text>
+
+            <!-- Concrete Deck Underside -->
+            <rect x="28" y="32" width="264" height="18" rx="2" fill="#cbd5e1" stroke="#475569" stroke-width="1.4" />
+            <text x="160" y="44" text-anchor="middle" font-size="9" font-weight="600" fill="#334155">BRIDGE DECK UNDERSIDE (SHADED)</text>
+
+            <!-- Steel I-Beam Cross Section -->
+            <!-- Top Flange -->
+            <rect x="85" y="50" width="150" height="12" fill="#64748b" stroke="#334155" stroke-width="1.4" />
+            <!-- Vertical Web -->
+            <rect x="148" y="62" width="24" height="58" fill="#64748b" stroke="#334155" stroke-width="1.4" />
+            <!-- Bottom Flange (what the clamps grip!) -->
+            <rect x="85" y="120" width="150" height="14" fill="#64748b" stroke="#334155" stroke-width="1.4" />
+            <text x="160" y="130" text-anchor="middle" font-size="8.5" font-weight="700" fill="#f8fafc">STEEL GIRDER FLANGE</text>
+
+            <!-- Animated Left Stainless C-Clamp -->
+            <g class="clamp-slide-l">
+              <path d="M 74,114 L 106,114 L 106,120 L 82,120 L 82,134 L 106,134 L 106,144 L 74,144 Z"
+                    fill="#e2e8f0" stroke="#1e293b" stroke-width="1.5" />
+              <!-- Squeeze bolt gripping flange (NOT drilling!) -->
+              <rect x="88" y="106" width="8" height="10" rx="1" fill="#f59e0b" stroke="#78350f" stroke-width="1" />
+            </g>
+
+            <!-- Animated Right Stainless C-Clamp -->
+            <g class="clamp-slide-r">
+              <path d="M 246,114 L 214,114 L 214,120 L 238,120 L 238,134 L 214,134 L 214,144 L 246,144 Z"
+                    fill="#e2e8f0" stroke="#1e293b" stroke-width="1.5" />
+              <rect x="224" y="106" width="8" height="10" rx="1" fill="#f59e0b" stroke="#78350f" stroke-width="1" />
+            </g>
+
+            <!-- Animated Sensor Box lifting neatly onto clamp flanges -->
+            <g class="box-lift">
+              <rect x="102" y="144" width="116" height="36" rx="5" fill="#10b981" stroke="#065f46" stroke-width="1.8" />
+              <!-- Mounting wings -->
+              <rect x="86" y="144" width="16" height="8" rx="1" fill="#059669" />
+              <rect x="218" y="144" width="16" height="8" rx="1" fill="#059669" />
+              <text x="160" y="160" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">rPETG SENSOR BOX</text>
+              <text x="160" y="172" text-anchor="middle" font-size="8" fill="#d1fae5">Rigid grip for vibration</text>
+            </g>
+
+            <text x="160" y="206" text-anchor="middle" font-size="9.5" font-weight="600" fill="#10b981">✓ Squeezes flange · Zero holes in steel</text>
+          </g>
+
+          <!-- RIGHT PANEL: Concrete / Timber Pier Stainless Banding -->
+          <g transform="translate(425, 68)">
+            <rect x="0" y="0" width="320" height="225" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <text x="160" y="20" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Option B: Timber / Concrete Pier Straps</text>
+
+            <!-- Bridge Deck -->
+            <rect x="28" y="32" width="264" height="18" rx="2" fill="#cbd5e1" stroke="#475569" stroke-width="1.4" />
+
+            <!-- Round Concrete / Timber Pier (Downstream view) -->
+            <rect x="115" y="50" width="90" height="134" rx="4" fill="#94a3b8" stroke="#475569" stroke-width="1.5" />
+            <text x="160" y="72" text-anchor="middle" font-size="8.5" font-weight="700" fill="#1e293b">BRIDGE PIER</text>
+            <text x="160" y="84" text-anchor="middle" font-size="7.5" fill="#334155">(Downstream face)</text>
+
+            <!-- Heavy Stainless Banding Straps wrapping around pier -->
+            <rect x="111" y="104" width="98" height="8" rx="2" fill="#e2e8f0" stroke="#334155" stroke-width="1.3" />
+            <rect x="111" y="138" width="98" height="8" rx="2" fill="#e2e8f0" stroke="#334155" stroke-width="1.3" />
+
+            <!-- Sensor Box strapped tight to pier -->
+            <rect x="128" y="96" width="64" height="58" rx="5" fill="#10b981" stroke="#065f46" stroke-width="1.8" />
+            <text x="160" y="122" text-anchor="middle" font-size="9" font-weight="700" fill="#ffffff">SENSOR</text>
+            <text x="160" y="134" text-anchor="middle" font-size="8" fill="#d1fae5">BOX</text>
+
+            <!-- Strap buckles -->
+            <rect x="152" y="103" width="16" height="10" rx="1" fill="#f59e0b" stroke="#78350f" stroke-width="1" />
+            <rect x="152" y="137" width="16" height="10" rx="1" fill="#f59e0b" stroke="#78350f" stroke-width="1" />
+
+            <text x="160" y="206" text-anchor="middle" font-size="9.5" font-weight="600" fill="#10b981">✓ Stainless band-it straps · 5-min install</text>
+          </g>
+        </g>
+
+        <!-- ================================================================ -->
+        <!-- LAYER B: SCENES 2–5 — FULL BRIDGE SIDE-ELEVATION CAMERA          -->
+        <!-- ================================================================ -->
+        <g id="bridgeWorld" class="scene-layer" opacity="0">
+          <g id="camera">
+            <!-- Distant Hill + Council Depot Gateway -->
+            <g id="hillGateway" opacity="0.3">
+              <path d="M 0,155 Q 70,70 165,125 L 220,155 Z" fill="#64748b" opacity="0.28" />
+              <rect x="64" y="88" width="28" height="16" fill="#475569" rx="1" />
+              <polygon points="60,88 78,76 96,88" fill="#334155" />
+              <line x1="88" y1="78" x2="88" y2="56" stroke="#0f172a" stroke-width="2" />
+              <circle cx="88" cy="56" r="3" fill="#22c55e" />
+              <text x="78" y="49" text-anchor="middle" font-size="9" font-weight="600" fill="currentColor">Council Depot Gateway</text>
+              <text x="78" y="114" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.75">10–15 km LoRaWAN</text>
+            </g>
+
+            <path id="longBeam" d="M 576,50 Q 330,8 88,56" fill="none" stroke="#22c55e" stroke-width="2" class="gateway-beam" opacity="0" />
+
+            <!-- Banks & Bed -->
+            <path d="M 0,162 L 155,162 L 215,292 L 0,292 Z" fill="#78716c" opacity="0.30" />
+            <path d="M 800,162 L 625,162 L 565,292 L 800,292 Z" fill="#78716c" opacity="0.30" />
+            <rect x="0" y="292" width="800" height="23" fill="#57534e" opacity="0.34" />
+
+            <text x="275" y="282" font-size="9" font-weight="600" fill="currentColor" opacity="0.65">Upstream Flood Flow →</text>
+
+            <!-- Piers -->
+            <rect x="245" y="180" width="26" height="114" rx="2" fill="#94a3b8" stroke="#475569" stroke-width="1.5" />
+            <rect x="500" y="180" width="26" height="114" rx="2" fill="#94a3b8" stroke="#475569" stroke-width="1.5" />
+
+            <!-- Deck & Girder -->
+            <rect x="100" y="156" width="580" height="14" rx="2" fill="#cbd5e1" stroke="#475569" stroke-width="1.5" />
+            <rect x="150" y="170" width="480" height="16" fill="#94a3b8" stroke="#475569" stroke-width="1.5" />
+            <line x1="0" y1="156" x2="800" y2="156" stroke="#475569" stroke-width="2" />
+
+            <!-- Guardrail -->
+            <line x1="140" y1="138" x2="640" y2="138" stroke="#94a3b8" stroke-width="3" />
+            <g stroke="#64748b" stroke-width="2.5">
+              <line x1="160" y1="136" x2="160" y2="156" />
+              <line x1="280" y1="136" x2="280" y2="156" />
+              <line x1="400" y1="136" x2="400" y2="156" />
+              <line x1="520" y1="136" x2="520" y2="156" />
+              <line x1="620" y1="136" x2="620" y2="156" />
+            </g>
+
+            <!-- Existing Bridge Width-Marker Signpost -->
+            <rect x="572" y="76" width="8" height="80" rx="1.5" fill="#e2e8f0" stroke="#475569" stroke-width="1.3" />
+            <rect x="569" y="84" width="14" height="24" rx="1" fill="#ffffff" stroke="#334155" stroke-width="1" />
+            <path d="M 569,90 L 583,86 M 569,98 L 583,94 M 569,106 L 583,102" stroke="#0f172a" stroke-width="2.2" />
+
+            <!-- Stainless C-Clamps (Zero-drill!) -->
+            <rect x="424" y="168" width="7" height="20" rx="1" fill="#e2e8f0" stroke="#334155" stroke-width="1.2" />
+            <rect x="485" y="168" width="7" height="20" rx="1" fill="#e2e8f0" stroke="#334155" stroke-width="1.2" />
+
+            <!-- Recycled-Plastic Sensor Box -->
+            <rect x="430" y="186" width="56" height="24" rx="4" fill="#10b981" stroke="#065f46" stroke-width="1.8" />
+            <text x="458" y="201" text-anchor="middle" font-size="7" font-weight="700" fill="#ecfdf5">IP68 rPETG</text>
+
+            <!-- Chew-Proof Conduit + Glowing Wire -->
+            <path d="M 486,198 L 542,198 Q 554,198 554,186 L 554,162 Q 554,148 566,148 L 572,148 L 572,78"
+                  fill="none" stroke="#64748b" stroke-width="5" stroke-linecap="round" />
+            <path d="M 486,198 L 542,198 Q 554,198 554,186 L 554,162 Q 554,148 566,148 L 572,148 L 572,78"
+                  fill="none" stroke="#f59e0b" stroke-width="2" class="wire-flow" />
+
+            <!-- Shielded Magnetic Float Switch -->
+            <g transform="translate(581, 126)">
+              <path d="M 0,4 Q 0,0 4,0 L 20,0 Q 24,0 24,4 L 24,28 L 21,28 L 21,4 L 3,4 L 3,28 L 0,28 Z"
+                    fill="#64748b" stroke="#334155" stroke-width="1" />
+              <line x1="3" y1="27" x2="21" y2="27" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="2 1.5" />
+              <line x1="12" y1="4" x2="12" y2="24" stroke="#94a3b8" stroke-width="2" />
+              <rect id="floatRing" x="6" y="17" width="12" height="6" rx="2" fill="#f59e0b" stroke="#92400e" stroke-width="1" />
+            </g>
+
+            <!-- Elevated 915 MHz Antenna -->
+            <line x1="576" y1="76" x2="576" y2="44" stroke="#0f172a" stroke-width="3.2" stroke-linecap="round" />
+            <circle cx="576" cy="44" r="3.2" fill="#22c55e" />
+            <g fill="none" stroke="#22c55e" stroke-width="1.8">
+              <path class="pulse-ring" d="M 562,44 A 18,18 0 0,1 590,44" />
+              <path class="pulse-ring-2" d="M 556,38 A 26,26 0 0,1 596,38" />
+            </g>
+
+            <!-- Flood Log (Scene 2) -->
+            <g id="floodLog" opacity="0">
+              <g class="log-drift">
+                <rect x="260" y="196" width="66" height="10" rx="4" fill="#78350f" stroke="#451a03" stroke-width="1.2" />
+                <line x1="276" y1="196" x2="286" y2="188" stroke="#78350f" stroke-width="2.5" stroke-linecap="round" />
+                <text x="293" y="184" text-anchor="middle" font-size="8" font-weight="700" fill="#b45309">Flood Log</text>
+              </g>
+            </g>
+
+            <!-- Rain (Scene 4) -->
+            <g id="rainGroup" opacity="0" stroke="#38bdf8" stroke-width="1.4" stroke-linecap="round">
+              <line class="rain-line" x1="560" y1="92" x2="555" y2="104" />
+              <line class="rain-line" x1="578" y1="90" x2="573" y2="102" style="animation-delay:0.15s" />
+              <line class="rain-line" x1="592" y1="94" x2="587" y2="106" style="animation-delay:0.3s" />
+              <line class="rain-line" x1="606" y1="90" x2="601" y2="102" style="animation-delay:0.1s" />
+            </g>
+
+            <!-- Water Level -->
+            <rect id="waterFill" x="0" y="256" width="800" height="60" fill="url(#floodWater)" style="transition: all 1.1s ease;" />
+            <line id="waterTop" x1="0" y1="256" x2="800" y2="256" stroke="#0284c7" stroke-width="2" style="transition: all 1.1s ease;" />
+          </g>
+        </g>
+
+        <!-- ================================================================ -->
+        <!-- LAYER C: SCENE 6 — DRIVE-OVER CAR + IN-CABIN PHONE / 12V BOX     -->
+        <!-- ================================================================ -->
+        <g id="driveOverView" class="scene-layer" opacity="0">
+          <text x="400" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">DRIVE-OVER DATA MULING · 100 km/h AUTOMATIC LOG TRANSFER</text>
+          <text x="400" y="50" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.72">No SIM card or Starlink needed — passing council ute or test car scoops 3 months of data (~120 KB) in under 2 seconds</text>
+
+          <!-- LEFT: Road & Bridge Pass-By Animation -->
+          <g transform="translate(28, 66)">
+            <rect x="0" y="0" width="445" height="228" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+
+            <!-- Bridge deck & road -->
+            <rect x="0" y="138" width="445" height="12" fill="#cbd5e1" stroke="#475569" stroke-width="1.2" />
+            <rect x="130" y="150" width="185" height="12" fill="#94a3b8" stroke="#475569" stroke-width="1.2" />
+            <!-- Creek below -->
+            <rect x="125" y="188" width="195" height="40" fill="url(#floodWater)" />
+            <!-- Sensor box + signpost antenna -->
+            <rect x="246" y="162" width="40" height="18" rx="3" fill="#10b981" stroke="#065f46" stroke-width="1.4" />
+            <rect x="296" y="88" width="6" height="50" fill="#e2e8f0" stroke="#475569" stroke-width="1.2" />
+            <line x1="299" y1="88" x2="299" y2="62" stroke="#0f172a" stroke-width="2.8" stroke-linecap="round" />
+            <circle cx="299" cy="62" r="3" fill="#22c55e" />
+
+            <!-- Radio Bubble Zone (400m - 2km) -->
+            <ellipse cx="299" cy="115" rx="138" ry="62" fill="#22c55e" opacity="0.10" stroke="#22c55e" stroke-width="1.3" stroke-dasharray="5 4" />
+            <text x="299" y="48" text-anchor="middle" font-size="9.5" font-weight="700" fill="#16a34a">Radio Bubble (15–60 sec window at 100 km/h)</text>
+
+            <!-- Animated Passing Car / Council Ute -->
+            <g class="car-pass">
+              <g transform="translate(0, 108)">
+                <rect x="0" y="14" width="76" height="14" rx="4" fill="#2563eb" />
+                <path d="M 16,14 L 26,3 L 52,3 L 62,14 Z" fill="#60a5fa" />
+                <circle cx="16" cy="28" r="6" fill="#0f172a" />
+                <circle cx="60" cy="28" r="6" fill="#0f172a" />
+                <!-- Roof puck / dash receiver -->
+                <line x1="40" y1="3" x2="40" y2="-7" stroke="#22c55e" stroke-width="2" />
+                <circle cx="40" cy="-7" r="2.5" fill="#22c55e" />
+                <text x="38" y="-12" text-anchor="middle" font-size="8.5" font-weight="700" fill="currentColor">100 km/h</text>
+              </g>
+            </g>
+
+            <!-- Data packets flying -->
+            <path d="M 299,62 Q 250,76 210,104" fill="none" stroke="#22c55e" stroke-width="2" class="pkt-fly" />
+            <text x="222" y="214" text-anchor="middle" font-size="9" font-weight="600" fill="currentColor" opacity="0.8">Auto-syncs to Council Cloud once vehicle hits town</text>
+          </g>
+
+          <!-- RIGHT: Inside the Cabin — Phone / 12V Receiver Box -->
+          <g transform="translate(490, 66)">
+            <rect x="0" y="0" width="282" height="228" rx="8" fill="currentColor" opacity="0.04" stroke="currentColor" stroke-opacity="0.14" />
+            <text x="141" y="20" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">Inside the Car (2 Options)</text>
+
+            <!-- Dash-Mounted Android Phone (Milestone 1) -->
+            <rect x="20" y="34" width="242" height="106" rx="10" fill="#0f172a" stroke="#334155" stroke-width="2" />
+            <text x="32" y="52" font-size="9" font-weight="700" fill="#38bdf8">BRIDGE_042 · CONNECTED (BLE / 915 MHz)</text>
+            <text x="32" y="68" font-size="8.5" font-family="monospace" fill="#e2e8f0">Tilt: +0.04° (OK) | Max Shock: 1.8g</text>
+            <text x="32" y="82" font-size="8.5" font-family="monospace" fill="#fbbf24">Flood Log: 0 events (Dry 90 days)</text>
+            <text x="32" y="98" font-size="8.5" font-family="monospace" fill="#4ade80">Transferring 118 KB → Done in 1.2s ✓</text>
+            <!-- Animated Progress Bar -->
+            <rect x="32" y="108" width="146" height="8" rx="4" fill="#1e293b" />
+            <rect x="32" y="108" height="8" rx="4" fill="#22c55e" class="prog-fill" />
+            <text x="186" y="115" font-size="8" font-family="monospace" fill="#94a3b8">100%</text>
+
+            <!-- 12V Council Ute Receiver Box (Production) -->
+            <rect x="20" y="152" width="242" height="62" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1.4" />
+            <circle cx="36" cy="172" r="4" fill="#22c55e" />
+            <text x="48" y="175" font-size="9.5" font-weight="700" fill="#ffffff">Production: Plug-in 12V Ute Box (~$40)</text>
+            <text x="32" y="191" font-size="8.5" fill="#cbd5e1">• Plugs into ute 12V socket + roof puck antenna</text>
+            <text x="32" y="204" font-size="8.5" fill="#cbd5e1">• Zero driver effort — uploads automatically at depot</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Narration Bar -->
+    <div class="px-3 py-2 rounded-lg border border-[var(--card-border)] bg-[var(--card)] space-y-1">
+      <div class="flex items-center justify-between gap-2">
+        <div id="narrationTitle" class="text-xs font-semibold text-[var(--foreground)]"></div>
+        <span id="costTag" class="text-[11px] font-mono px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--card-border)] text-[var(--muted-foreground)]"></span>
+      </div>
+      <p id="narrationBody" class="text-xs text-[var(--muted-foreground)] leading-relaxed"></p>
+    </div>
+
+    <!-- Transport Bar -->
+    <div class="flex items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-1.5">
+        <button id="playBtn" class="px-2.5 py-1 rounded font-medium bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 cursor-pointer">Pause</button>
+        <button id="prevBtn" class="px-2 py-1 rounded border border-[var(--border)] bg-[var(--card)] hover:border-[var(--primary)] cursor-pointer">←</button>
+        <button id="nextBtn" class="px-2 py-1 rounded border border-[var(--border)] bg-[var(--card)] hover:border-[var(--primary)] cursor-pointer">→</button>
+      </div>
+      <div class="flex items-center gap-1 flex-wrap">
+        <button data-i="0" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">1. Install</button>
+        <button data-i="1" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">2. Box</button>
+        <button data-i="2" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">3. Wire</button>
+        <button data-i="3" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">4. Float</button>
+        <button data-i="4" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">5. Antenna</button>
+        <button data-i="5" class="ch-btn px-2 py-0.5 rounded border text-[11px] cursor-pointer">6. Drive-Over</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const scenes = [
+      {
+        layer: 'install',
+        badge: 'SCENE 1 / 6 · UNDER-BRIDGE INSTALL',
+        title: '1. Under-Bridge Install — Zero Drilling Into Structural Beams',
+        cost: 'Clamps / Straps: ~$15',
+        body: 'Looking from underneath the bridge: stainless girder C-clamps squeeze straight onto a steel I-beam flange, or stainless banding straps wrap around a concrete or timber pier. Zero holes drilled — preserving structural integrity and council regulations.',
+        voice: 'Step one: under-bridge installation. Stainless steel C-clamps squeeze onto a steel girder flange, or heavy stainless straps wrap around a concrete or timber pier. Zero holes are drilled into the bridge, so structural certification stays completely intact.'
+      },
+      {
+        layer: 'bridge',
+        cam: 'translate(-250px, -145px) scale(1.75)',
+        waterY: 196, log: true, rain: false, floatUp: false, beam: false, hillOp: 0.2,
+        badge: 'SCENE 2 / 6 · BOX & FLOOD LOGS',
+        title: '2. Recycled-Plastic Box — IP68 Potted & Sheltered From Logs',
+        cost: 'Core unit: ~$100–$150',
+        body: 'Housed in recycled Victorian plastic, potted in IP68 resin to stop frost-to-summer condensation, and powered by a hidden -55°C to +85°C industrial D-cell. Tucked on the downstream side so floating flood logs deflect off the concrete pier.',
+        voice: 'Step two: the sensor box itself. Made from recycled Victorian plastic and sealed in waterproof resin to stop condensation, it runs for years on a heat-safe industrial battery with no solar panel for thieves to steal. Mounting it on the downstream side shields it from floating flood logs.'
+      },
+      {
+        layer: 'bridge',
+        cam: 'translate(-490px, -120px) scale(1.85)',
+        waterY: 256, log: false, rain: false, floatUp: false, beam: false, hillOp: 0.2,
+        badge: 'SCENE 3 / 6 · CONDUIT RUN',
+        title: '3. Following the Wire — Chew-Proof Conduit Up the Signpost',
+        cost: 'Wire + Conduit: ~$10',
+        body: 'One single run of grey electrical conduit carries both the 915 MHz coax and the thin 2-core float wire up behind the existing Victorian bridge width-marker post — protecting them from rats, possums, UV sun, and vandals with no second box needed.',
+        voice: 'Step three: following the wire up. Both the antenna cable and the flood sensor wire run together inside chew-proof grey conduit clipped behind the existing bridge signpost. No second box is needed, and wildlife or vandals can not chew or snag loose wires.'
+      },
+      {
+        layer: 'bridge',
+        cam: 'translate(-790px, -145px) scale(2.45)',
+        waterY: 136, log: false, rain: true, floatUp: true, beam: false, hillOp: 0.15,
+        badge: 'SCENE 4 / 6 · FLOOD FLOAT',
+        title: '4. Rainproof, Wasp-Proof Flood Switch at Deck Level',
+        cost: 'Sealed float + tube: ~$5',
+        body: 'A $3 magnetic float switch sits inside an upside-down tube at road height. Rain rolls off the closed top, stainless flyscreen mesh at the bottom keeps out mud wasps, and a 2-minute software timer ignores truck splashes.',
+        voice: 'Step four: the flood meter. A three-dollar magnetic float switch sits inside an upside-down tube at deck height. Rain bounces off the closed top, stainless flyscreen mesh blocks mud wasps underneath, and a two-minute timer ignores passing truck splashes.'
+      },
+      {
+        layer: 'bridge',
+        cam: 'translate(0px, 0px) scale(1)',
+        waterY: 146, log: false, rain: false, floatUp: true, beam: true, hillOp: 1,
+        badge: 'SCENE 5 / 6 · ELEVATED ANTENNA',
+        title: '5. Elevated 915 MHz Antenna — Dry Above Floods & Live Gateway Mode',
+        cost: 'Stubby 915 MHz: ~$10',
+        body: 'Mounted 1.5 metres above the deck on the signpost so it stays dry even when the bridge is submerged. Near a town or council depot (10–15 km), it beams live flood alerts straight to a single shared LoRaWAN gateway.',
+        voice: 'Step five: the elevated antenna. Standing one and a half metres above the road, it stays dry even when the bridge is underwater. Within ten to fifteen kilometres of a council depot gateway, it beams live flood alerts straight back to town.'
+      },
+      {
+        layer: 'drive',
+        badge: 'SCENE 6 / 6 · DRIVE-OVER TRANSFER',
+        title: '6. Drive-Over Transfer — Phone or 12V Car Box at 100 km/h',
+        cost: 'Ute receiver: ~$40 (or $0 phone)',
+        body: 'In deep valleys with no gateway or mobile signal, the exact same box shifts into high gear as a council ute (or your test car with a dash-mounted Android phone) drives past at 100 km/h — scooping 3 months of bridge logs in under 2 seconds.',
+        voice: 'Step six: the drive-over transfer. In deep valleys with no mobile signal or gateway, the same bridge box automatically scoops three months of tilt, truck-load, and flood logs into a passing council ute or dash-mounted phone in under two seconds at one hundred kilometres an hour.'
+      }
+    ];
+
+    let idx = 0;
+    let playing = true;
+    let voiceOn = false;
+    let timer = null;
+
+    const installView = document.getElementById('installView');
+    const bridgeWorld = document.getElementById('bridgeWorld');
+    const driveOverView = document.getElementById('driveOverView');
+    const camera = document.getElementById('camera');
+    const waterFill = document.getElementById('waterFill');
+    const waterTop = document.getElementById('waterTop');
+    const floodLog = document.getElementById('floodLog');
+    const rainGroup = document.getElementById('rainGroup');
+    const floatRing = document.getElementById('floatRing');
+    const longBeam = document.getElementById('longBeam');
+    const hillGateway = document.getElementById('hillGateway');
+    const sceneBadge = document.getElementById('sceneBadge');
+    const narrationTitle = document.getElementById('narrationTitle');
+    const narrationBody = document.getElementById('narrationBody');
+    const costTag = document.getElementById('costTag');
+    const playBtn = document.getElementById('playBtn');
+    const voiceBtn = document.getElementById('voiceBtn');
+    const voiceIcon = document.getElementById('voiceIcon');
+    const voiceLabel = document.getElementById('voiceLabel');
+    const recDot = document.getElementById('recDot');
+    const chBtns = document.querySelectorAll('.ch-btn');
+
+    function speakScene(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      if (!voiceOn) return;
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 1.03;
+      u.onend = () => {
+        if (playing && voiceOn) {
+          clearTimeout(timer);
+          timer = setTimeout(() => renderScene(idx + 1), 900);
+        }
+      };
+      window.speechSynthesis.speak(u);
+    }
+
+    function renderScene(i) {
+      idx = (i + scenes.length) % scenes.length;
+      const s = scenes[idx];
+
+      installView.setAttribute('opacity', s.layer === 'install' ? '1' : '0');
+      bridgeWorld.setAttribute('opacity', s.layer === 'bridge' ? '1' : '0');
+      driveOverView.setAttribute('opacity', s.layer === 'drive' ? '1' : '0');
+
+      if (s.layer === 'bridge') {
+        camera.style.transform = s.cam;
+        waterFill.setAttribute('y', s.waterY);
+        waterFill.setAttribute('height', 315 - s.waterY);
+        waterTop.setAttribute('y1', s.waterY);
+        waterTop.setAttribute('y2', s.waterY);
+        floodLog.setAttribute('opacity', s.log ? '1' : '0');
+        rainGroup.setAttribute('opacity', s.rain ? '1' : '0');
+        longBeam.setAttribute('opacity', s.beam ? '1' : '0');
+        hillGateway.setAttribute('opacity', String(s.hillOp));
+        floatRing.setAttribute('y', s.floatUp ? '7' : '17');
+        floatRing.setAttribute('fill', s.floatUp ? '#ef4444' : '#f59e0b');
+      }
+
+      sceneBadge.textContent = s.badge;
+      narrationTitle.textContent = s.title;
+      narrationBody.textContent = s.body;
+      costTag.textContent = s.cost;
+
+      chBtns.forEach((btn, bIdx) => {
+        if (bIdx === idx) {
+          btn.style.backgroundColor = 'var(--primary)';
+          btn.style.color = 'var(--primary-foreground)';
+          btn.style.borderColor = 'var(--primary)';
+        } else {
+          btn.style.backgroundColor = 'var(--card)';
+          btn.style.color = 'var(--muted-foreground)';
+          btn.style.borderColor = 'var(--border)';
+        }
+      });
+
+      clearTimeout(timer);
+      if (voiceOn) {
+        speakScene(s.voice);
+      } else if (playing) {
+        timer = setTimeout(() => renderScene(idx + 1), 6500);
+      }
+    }
+
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      playBtn.textContent = playing ? 'Pause' : 'Play';
+      recDot.className = playing
+        ? 'inline-block w-2 h-2 rounded-full bg-emerald-500'
+        : 'inline-block w-2 h-2 rounded-full bg-amber-500';
+      if (!playing) {
+        clearTimeout(timer);
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      } else {
+        renderScene(idx);
+      }
+    });
+
+    voiceBtn.addEventListener('click', () => {
+      voiceOn = !voiceOn;
+      voiceIcon.textContent = voiceOn ? '🔊' : '🔇';
+      voiceLabel.textContent = voiceOn ? 'Voiceover: ON' : 'Voiceover: OFF';
+      if (voiceOn) {
+        speakScene(scenes[idx].voice);
+      } else {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        if (playing) {
+          clearTimeout(timer);
+          timer = setTimeout(() => renderScene(idx + 1), 6500);
+        }
+      }
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => renderScene(idx - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => renderScene(idx + 1));
+    chBtns.forEach(btn => btn.addEventListener('click', () => renderScene(Number(btn.dataset.i))));
+
+    renderScene(0);
+  </script>
+</body>
+</html>

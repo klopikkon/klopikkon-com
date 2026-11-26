@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Circular-Economy Rural Bridge Monitoring — Victorian Council Technical Brief</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --background: #f8fafc;
+      --card: #ffffff;
+      --card-border: #e2e8f0;
+      --border: #cbd5e1;
+      --foreground: #0f172a;
+      --muted-foreground: #475569;
+      --primary: #059669;
+      --primary-foreground: #ffffff;
+      --success: #059669;
+      --warning: #d97706;
+      --error: #dc2626;
+    }
+    html.dark {
+      --background: #0b1120;
+      --card: #111827;
+      --card-border: #1f2937;
+      --border: #334155;
+      --foreground: #f1f5f9;
+      --muted-foreground: #94a3b8;
+      --primary: #10b981;
+      --primary-foreground: #022c22;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #f87171;
+    }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    .slide {
+      display: none;
+      animation: fadeSlide 0.28s ease-out;
+    }
+    .slide.active {
+      display: flex;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .opt-card {
+      transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .opt-card:hover {
+      border-color: var(--primary);
+    }
+    .cfg-btn {
+      transition: all 0.15s ease;
+    }
+    .cfg-btn.selected {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+    /* Crisp Landscape Print / Save as PDF layout */
+    @media print {
+      @page { size: landscape; margin: 10mm; }
+      body { background: #ffffff !important; color: #0f172a !important; }
+      #deckChrome, #deckFooter, #overviewModal { display: none !important; }
+      #slideStage { padding: 0 !important; overflow: visible !important; display: block !important; height: auto !important; }
+      .slide {
+        display: flex !important;
+        page-break-after: always;
+        break-after: page;
+        min-height: 175mm;
+        max-height: 185mm;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        margin-bottom: 8mm;
+        background: #ffffff !important;
+        color: #0f172a !important;
+      }
+      .slide:last-child { page-break-after: auto; break-after: auto; }
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased flex flex-col min-h-screen">
+
+  <!-- ====================================================================== -->
+  <!-- TOP PRESENTATION CHROME                                                -->
+  <!-- ====================================================================== -->
+  <header id="deckChrome" class="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--card)]/95 backdrop-blur px-4 py-2.5">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-7 h-7 rounded-md bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+          BS
+        </div>
+        <div class="min-w-0">
+          <div class="text-xs font-semibold truncate text-[var(--foreground)]">Circular-Economy Rural Bridge Monitoring</div>
+          <div class="text-[11px] text-[var(--muted-foreground)] truncate">Victorian Local Government Technical Brief &amp; Modular Options</div>
+        </div>
+      </div>
+
+      <!-- Progress Dots -->
+      <div id="topDots" class="hidden md:flex items-center gap-1.5"></div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-1.5 shrink-0 text-xs flex-wrap">
+        <button id="fieldDemoBtn" class="px-2.5 py-1 rounded border border-emerald-500/50 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 font-medium cursor-pointer" title="Watch 6-Scene Narrated Field & Drive-Over Demo">
+          ▶ Field Demo
+        </button>
+        <button id="mfgDemoBtn" class="px-2.5 py-1 rounded border border-sky-500/50 bg-sky-500/10 hover:bg-sky-500/20 text-sky-600 font-medium cursor-pointer" title="Watch 5-Step Recycled Manufacturing Demo">
+          ▶ How It&rsquo;s Made
+        </button>
+        <button id="themeBtn" class="px-2 py-1 rounded border border-[var(--border)] bg-[var(--background)] hover:border-[var(--primary)] text-[var(--foreground)] cursor-pointer" title="Toggle Light / Dark Mode">
+          🌙
+        </button>
+        <button id="overviewBtn" class="px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] hover:border-[var(--primary)] text-[var(--foreground)] cursor-pointer">
+          Slides
+        </button>
+        <button id="printBtn" class="px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] hover:border-[var(--primary)] text-[var(--foreground)] cursor-pointer" title="Print or Save All 10 Slides as PDF">
+          Print / PDF
+        </button>
+        <button id="fsBtn" class="px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] hover:border-[var(--primary)] text-[var(--foreground)] cursor-pointer" title="Toggle Fullscreen (F)">
+          Fullscreen
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====================================================================== -->
+  <!-- SLIDE STAGE                                                            -->
+  <!-- ====================================================================== -->
+  <main id="slideStage" class="flex-1 flex items-center justify-center p-4 md:p-6">
+    <div class="w-full max-w-6xl">
+
+      <!-- ================================================================== -->
+      <!-- SLIDE 1: COVER / EXECUTIVE SUMMARY                                 -->
+      <!-- ================================================================== -->
+      <section class="slide active flex-col justify-between rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-sm p-7 md:p-10 min-h-[560px]" data-title="Executive Overview">
+        <div class="flex items-center justify-between text-xs text-[var(--muted-foreground)] border-b border-[var(--border)] pb-3">
+          <span class="font-mono uppercase tracking-wider text-emerald-600 font-semibold">Technical Concept &amp; Modular Options Proposal</span>
+          <span class="font-mono">VICTORIA · REGIONAL INFRASTRUCTURE · 01 / 10</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-6">
+          <div class="lg:col-span-7 space-y-4">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-600 text-xs font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+              Concept Stage · Preliminary Estimates Only (Pre-Prototype)
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight text-[var(--foreground)]">
+              Ultra-Low-Cost, Zero-Drill<br />
+              <span class="text-emerald-600">Rural Bridge Health &amp; Flood Monitoring</span>
+            </h1>
+            <p class="text-sm md:text-base text-[var(--muted-foreground)] leading-relaxed max-w-xl">
+              A modular, bolt-free structural &amp; flood monitoring node housed in <strong>recycled Victorian plastic</strong> — engineered to close the 2–5 year blind spot between Level 2 inspections with <strong>zero cellular subscriptions</strong> and <strong>95% lower capital cost</strong> than legacy SHM systems.
+            </p>
+          </div>
+
+          <!-- Clean Hero Schematic Card -->
+          <div class="lg:col-span-5 rounded-xl border border-[var(--border)] bg-[var(--background)] p-4">
+            <svg viewBox="0 0 380 230" class="w-full h-auto block">
+              <!-- Subtle grid -->
+              <defs>
+                <pattern id="g1" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" stroke-opacity="0.06" stroke-width="1" />
+                </pattern>
+                <linearGradient id="creekHero" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.35" />
+                  <stop offset="100%" stop-color="#0284c7" stop-opacity="0.65" />
+                </linearGradient>
+              </defs>
+              <rect width="380" height="230" fill="url(#g1)" rx="6" />
+              <!-- Banks -->
+              <path d="M 0,118 L 65,118 L 95,210 L 0,210 Z" fill="#64748b" opacity="0.22" />
+              <path d="M 380,118 L 315,118 L 285,210 L 380,210 Z" fill="#64748b" opacity="0.22" />
+              <!-- Water -->
+              <rect x="0" y="178" width="380" height="52" fill="url(#creekHero)" />
+              <!-- Piers -->
+              <rect x="115" y="128" width="16" height="82" fill="#94a3b8" stroke="#475569" stroke-width="1.2" />
+              <rect x="249" y="128" width="16" height="82" fill="#94a3b8" stroke="#475569" stroke-width="1.2" />
+              <!-- Deck & Girder -->
+              <rect x="45" y="108" width="290" height="10" rx="1.5" fill="#cbd5e1" stroke="#475569" stroke-width="1.2" />
+              <rect x="75" y="118" width="230" height="12" fill="#94a3b8" stroke="#475569" stroke-width="1.2" />
+              <!-- Guardrail -->
+              <line x1="65" y1="96" x2="315" y2="96" stroke="#94a3b8" stroke-width="2" />
+              <!-- Signpost + Antenna -->
+              <rect x="292" y="54" width="6" height="54" fill="#e2e8f0" stroke="#475569" stroke-width="1" />
+              <line x1="295" y1="54" x2="295" y2="30" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" />
+              <circle cx="295" cy="30" r="3" fill="#10b981" />
+              <path d="M 284,30 A 13,13 0 0,1 306,30" fill="none" stroke="#10b981" stroke-width="1.5" />
+              <path d="M 278,24 A 20,20 0 0,1 312,24" fill="none" stroke="#10b981" stroke-width="1.2" opacity="0.6" />
+              <!-- Float hood -->
+              <rect x="299" y="88" width="12" height="18" rx="2" fill="#64748b" />
+              <rect x="302" y="97" width="6" height="4" rx="1" fill="#f59e0b" />
+              <!-- Conduit -->
+              <path d="M 244,139 L 278,139 Q 286,139 286,131 L 286,104 L 292,104 L 292,56" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4 2" />
+              <!-- Under-deck Sensor Box -->
+              <rect x="204" y="130" width="40" height="18" rx="3" fill="#10b981" stroke="#065f46" stroke-width="1.5" />
+              <text x="224" y="142" text-anchor="middle" font-size="7" font-weight="700" fill="#ffffff">rPETG</text>
+              <!-- Labels -->
+              <text x="275" y="18" text-anchor="end" font-size="8.5" font-weight="600" fill="currentColor">915 MHz Elevated Antenna</text>
+              <text x="316" y="100" font-size="8" font-weight="600" fill="currentColor">Shielded Float</text>
+              <text x="196" y="143" text-anchor="end" font-size="8.5" font-weight="600" fill="currentColor">Zero-Drill IP68 Node</text>
+              <text x="190" y="218" text-anchor="middle" font-size="8" font-weight="600" fill="#ffffff">Survives Submersion · Sheltered From Flood Logs</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 4 Key Metric Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-[var(--border)]">
+          <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3.5">
+            <div class="text-xl font-bold font-mono text-emerald-600">~$200–$350*</div>
+            <div class="text-xs font-semibold text-[var(--foreground)] mt-0.5">Est. Per Bridge (Incl. Labour)</div>
+            <div class="text-[11px] text-[var(--muted-foreground)]">vs. $5,000–$10,000+ legacy SHM</div>
+          </div>
+          <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3.5">
+            <div class="text-xl font-bold font-mono text-sky-600">$0 / month</div>
+            <div class="text-xs font-semibold text-[var(--foreground)] mt-0.5">Zero Per-Bridge SIM Fees</div>
+            <div class="text-[11px] text-[var(--muted-foreground)]">Shared LoRa gateway or drive-by ute</div>
+          </div>
+          <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3.5">
+            <div class="text-xl font-bold font-mono text-amber-600">Zero Drills</div>
+            <div class="text-xs font-semibold text-[var(--foreground)] mt-0.5">Non-Invasive Clamping</div>
+            <div class="text-[11px] text-[var(--muted-foreground)]">Certified steel clamps / pier straps</div>
+          </div>
+          <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3.5">
+            <div class="text-xl font-bold font-mono text-emerald-600">90%+ Waste</div>
+            <div class="text-xs font-semibold text-[var(--foreground)] mt-0.5">Recycled VIC Plastic</div>
+            <div class="text-[11px] text-[var(--muted-foreground)]">Sustainability Victoria grant-aligned</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- SLIDE 2: THE RURAL VICTORIAN BRIDGE CHALLENGE & COST GAP           -->
+      <!-- ================================================================== -->
+      <section class="slide flex-col justify-between rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-sm p-7 md:p-10 min-h-[560px]" data-title="The Rural Bridge Gap">
+        <div class="flex items-center justify-between text-xs text-[var(--muted-foreground)] border-b border-[var(--border)] pb-3">
+          <span class="font-mono uppercase tracking-wider text-emerald-600 font-semibold">02 · Problem Statement &amp; Economics</span>
+          <span class="font-mono">02 / 10</span>
+        </div>
+
+        <div class="space-y-5 my-4 flex-1">
+          <div>
+            <h2 class="text-2xl font-bold text-[var(--foreground)]">Why Regional Shires Are Flying Blind Between Inspections</h2>
+            <p class="text-xs md:text-sm text-[var(--muted-foreground)] mt-1">
+              Under Victorian rate-capping, rural councils manage hundreds of aging timber &amp; concrete bridges hammered by higher-mass agricultural/timber freight and severe flood events — yet commercial SHM is priced exclusively for state freeways.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <!-- Left: Inspection Blind Spot Timeline -->
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--background)] p-4 space-y-3">
+              <div class="text-xs font-bold uppercase tracking-wide text-[var(--foreground)]">The 2–5 Year Level 2 Blind Spot (Austroads)</div>
+              <svg viewBox="0 0 420 155" class="w-full h-auto block">
+                <!-- Timeline axis -->
+                <line x1="20" y1="88" x2="400" y2="88" stroke="#64748b" stroke-width="2.5" />
+                <!-- Year 0 L2 -->
+                <circle cx="35" cy="88" r="8" fill="#10b981" />
+                <text x="35" y="112" text-anchor="middle" font-size="9" font-weight="700" fill="currentColor">Yr 0</text>
+                <text x="35" y="124" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.75">Level 2</text>
+                <!-- Blind spot zone -->
+                <rect x="46" y="42" width="328" height="36" rx="5" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-dasharray="4 3" />
+                <text x="210" y="57" text-anchor="middle" font-size="9.5" font-weight="700" fill="#dc2626">UNMONITORED RISK WINDOW (24 – 60 MONTHS)</text>
+                <text x="210" y="70" text-anchor="middle" font-size="8.5" fill="currentColor" opacity="0.8">Overnight floods · Pier scour · Illegal overweight B-doubles · Timber rot</text>
+                <!-- Level 1 dots -->
+                <circle cx="155" cy="88" r="4.5" fill="#f59e0b" />
+                <text x="155" y="108" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.7">L1 Visual</text>
+                <circle cx="275" cy="88" r="4.5" fill="#f59e0b" />
+                <text x="275" y="108" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.7">L1 Visual</text>
+                <!-- Year 3-5 L2 -->
+                <circle cx="385" cy="88" r="8" fill="#10b981" />
+                <text x="385" y="112" text-anchor="middle" font-size="9" font-weight="700" fill="currentColor">Yr 2–5</text>
+                <text x="385" y="124" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.75">Level 2</text>
+                <!-- Bottom summary -->
+                <text x="210" y="146" text-anchor="middle" font-size="8.5" font-weight="600" fill="#10b981">Sensor supplements (never replaces) L2 — prioritizes which bridges need immediate engineers</text>
+              </svg>
+              <ul class="text-xs text-[var(--muted-foreground)] space-y-1.5 pt-1 border-t border-[var(--border)]">
+                <li>• <strong class="text-[var(--foreground)]">Post-Flood Triage:</strong> Instantly identify which remote bridges actually went underwater overnight.</li>
+                <li>• <strong class="text-[var(--foreground)]">SLGAAP / NHVR Evidence:</strong> Real heavy-vehicle impact counts on load-limited rural spans.</li>
+              </ul>
+            </div>
+
+            <!-- Right: Commercial SHM vs Proposed Cost Chart -->
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--background)] p-4 space-y-3">
+              <div class="text-xs font-bold uppercase tracking-wide text-[var(--foreground)]">Shire-Wide Cost Benchmark (200 Rural Bridges)</div>
+              <div class="space-y-3.5 pt-1">
+                <div>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="font-semibold text-[var(--foreground)]">Commercial SHM (Viotel / Senceive / Worldsensing)</span>
+                    <span class="font-mono font-bold text-red-500">$1.0M – $2.0M+</span>
+                  </div>
+                  <div class="w-full h-6 rounded bg-[var(--card)] border border-[var(--border)] overflow-hidden">
+                    <div class="h-full bg-red-500/80 w-full flex items-center px-2 text-[10px] font-mono text-white">
+                      $1.2k–$2.4k/node + $2.3k–$5.3k/gateway + annual SaaS &amp; SIMs
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="font-semibold text-[var(--foreground)]">Proposed Modular Recycled-Plastic System</span>
+                    <span class="font-mono font-bold text-emerald-600">$30k – $50k</span>
+                  </div>
+                  <div class="w-full h-6 rounded bg-[var(--card)] border border-[var(--border)] overflow-hidden flex items-center">
+                    <div class="h-full bg-emerald-600 w-[4%] min-w-[18px]"></div>
+                    <span class="px-2 text-[10px] font-mono font-semibold text-emerald-600">~95% Lower Capital Cost · $0/mo Ongoing Fees</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border)] text-xs">
+                <div class="p-2.5 rounded bg-[var(--card)] border border-[var(--border)]">
+                  <div class="text-[11px] text-[var(--muted-foreground)]">Commercial Per Bridge</div>
+                  <div class="font-mono font-bold text-[var(--foreground)]">$5,000 – $10,000+</div>
+                  <div class="text-[10px] text-red-500">+ recurring cloud/SIMs</div>
+                </div>
+                <div class="p-2.5 rounded bg-[var(--card)] border border-emerald-500/40">
+                  <div class="text-[11px] text-[var(--muted-foreground)]">Proposed Per Bridge</div>
+                  <div class="font-mono font-bold text-emerald-600">$150 – $250</div>
+                  <div class="text-[10px] text-emerald-600">$0/mo · local data ownership</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2.5 flex justify-between">
+          <span>Source benchmarks: Published Senceive / Worldsensing / Move Solutions distributor tiers &amp; VicRoads Level 1–3 cycles</span>
+          <span class="font-mono">Use ← / → keys to navigate</span>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- SLIDE 3: FULL SYSTEM ARCHITECTURE & HAZARD MITIGATION              -->
+      <!-- ================================================================== -->
+      <section class="slide flex-col justify-between rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-sm p-7 md:p-10 min-h-[560px]" data-title="System Architecture">
+        <div class="flex items-center justify-between text-xs text-[var(--muted-foreground)] border-b border-[var(--border)] pb-3">
+          <span class="font-mono uppercase tracking-wider text-emerald-600 font-semibold">03 · System Architecture &amp; Field Survival</span>
+          <span class="font-mono">03 / 10</span>
+        </div>
+
+        <div class="space-y-4 my-3 flex-1">
+          <h2 class="text-2xl font-bold text-[var(--foreground)]">Engineered for Floods, Heatwaves, Frost, Wildlife &amp; Theft</h2>
+
+          <!-- Crisp Technical Cross-Section Diagram -->
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--background)] p-3">
+            <svg viewBox="0 0 820 225" class="w-full h-auto block">
+              <defs>
+                <linearGradient id="archWater" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45" />
+                  <stop offset="100%" stop-color="#0284c7" stop-opacity="0.72" />
+                </linearGradient>
+              </defs>
+              <!-- Banks & Creek -->
+              <path d="M 0,115 L 145,115 L 195,215 L 0,215 Z" fill="#78716c" opacity="0.22" />
+              <path d="M 820,115 L 655,115 L 605,215 L 820,215 Z" fill="#78716c" opacity="0.22" />
+              <rect x="0" y="176" width="820" height="49" fill="url(#archWater)" />
+              <!-- Piers -->
+              <rect x="230" y="134" width="24" height="84" fill="#94a3b8" stroke="#475569" stroke-width="1.3" />
+              <rect x="525" y="134" width="24" height="84" fill="#94a3b8" stroke="#475569" stroke-width="1.3" />
+              <!-- Deck & Girder -->
+              <rect x="95" y="110" width="610" height="12" rx="1.5" fill="#cbd5e1" stroke="#475569" stroke-width="1.4" />
+              <rect x="145" y="122" width="510" height="14" fill="#94a3b8" stroke="#475569" stroke-width="1.4" />
+              <line x1="0" y1="110" x2="820" y2="110" stroke="#475569" stroke-width="1.8" />
+              <!-- Guardrail -->
+              <line x1="135" y1="94" x2="665" y2="94" stroke="#94a3b8" stroke-width="2.5" />
+              <!-- Existing Signpost -->
+              <rect x="600" y="42" width="8" height="68" rx="1" fill="#e2e8f0" stroke="#475569" stroke-width="1.2" />
+              <rect x="598" y="50" width="12" height="20" fill="#ffffff" stroke="#334155" stroke-width="1" />
+              <path d="M 598,56 L 610,52 M 598,63 L 610,59" stroke="#0f172a" stroke-width="1.8" />
+              <!-- Antenna -->
+              <line x1="604" y1="42" x2="604" y2="18" stroke="#0f172a" stroke-width="3" stroke-linecap="round" />
+              <circle cx="604" cy="18" r="3.2" fill="#10b981" />
+              <!-- Shielded Float Tube -->
+              <rect x="610" y="84" width="18" height="24" rx="2" fill="#64748b" stroke="#334155" stroke-width="1" />
+              <rect x="614" y="96" width="10" height="5" rx="1.5" fill="#f59e0b" />
+              <line x1="612" y1="107" x2="626" y2="107" stroke="#e2e8f0" stroke-width="1.6" stroke-dasharray="2 1.5" />
+              <!-- Conduit -->
+              <path d="M 506,148 L 570,148 Q 582,148 582,136 L 582,102 L 600,102 L 600,44" fill="none" stroke="#f59e0b" stroke-width="3" />
+              <!-- Under-deck Sensor Box (downstream sheltered) -->
+              <rect x="448" y="136" width="58" height="24" rx="4" fill="#10b981" stroke="#065f46" stroke-width="1.6" />
+              <text x="477" y="151" text-anchor="middle" font-size="8" font-weight="700" fill="#ffffff">IP68 NODE</text>
+              <!-- Upstream flood log arrow -->
+              <rect x="160" y="150" width="52" height="8" rx="3" fill="#78350f" />
+              <text x="186" y="145" text-anchor="middle" font-size="8" font-weight="700" fill="#92400e">Debris deflected by pier →</text>
+
+              <!-- 5 Numbered Callouts -->
+              <g font-size="9.5" fill="currentColor">
+                <circle cx="448" cy="176" r="8" fill="#10b981" /><text x="448" y="179" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">1</text>
+                <text x="435" y="179" text-anchor="end" font-weight="600">Sheltered Downstream Girder Pocket</text>
+
+                <circle cx="578" cy="166" r="8" fill="#f59e0b" /><text x="578" y="169" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">2</text>
+                <text x="590" y="169" font-weight="600">Recycled HDPE Conduit (Coax + Float Wire)</text>
+
+                <circle cx="638" cy="95" r="8" fill="#0ea5e9" /><text x="638" y="98" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">3</text>
+                <text x="650" y="94" font-weight="600">Rainproof, Wasp-Proof Float Tube</text>
+                <text x="650" y="106" font-size="8.5" opacity="0.72">Closed top + flyscreen mesh + 2-min debounce</text>
+
+                <circle cx="584" cy="24" r="8" fill="#10b981" /><text x="584" y="27" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">4</text>
+                <text x="572" y="23" text-anchor="end" font-weight="600">Elevated 915 MHz Antenna (1.5 m above deck)</text>
+                <text x="572" y="35" text-anchor="end" font-size="8.5" opacity="0.72">Dry during floods · ~$10 stubby · Zero scrap value</text>
+
+                <circle cx="310" cy="70" r="8" fill="#6366f1" /><text x="310" y="73" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">5</text>
+                <text x="322" y="73" font-weight="600">Single Electronics Box (No second roadside cabinet)</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- 5-Column Hazard Mitigation Matrix -->
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-2.5 text-xs">
+            <div class="p-3 rounded-lg border border-[var(--border)] bg-[var(--background)]">
+              <div class="font-bold text-[var(--foreground)]">🌊 Flood Debris</div>
+              <p class="text-[11px] text-[var(--muted-foreground)] mt-1">Mounted in sheltered downstream girder pocket; logs deflect off upstream pier.</p>
+            </div>
+            <div class="p-3 rounded-lg border border-[var(--border)] bg-[var(--background)]">
+              <div class="font-bold text-[var(--foreground)]">💧 Condensation</div>
+              <p class="text-[11px] text-[var(--muted-foreground)] mt-1">IP68 potted PCB + silicone O-ring + waterproof breather vent stops thermal breathing.</p>
+            </div>
+            <div class="p-3 rounded-lg border border-[var(--border)] bg-[var(--background)]">
+              <div class="font-bold text-[var(--foreground)]">☀️ 46°C / Frost</div>
+              <p class="text-[11px] text-[var(--muted-foreground)] mt-1">Permanent under-deck shade + recycled HDPE/ASA + industrial -60°C to +85°C cell.</p>
+            </div>
+            <div class="p-3 rounded-lg border border-[var(--border)] bg-[var(--background)]">
+              <div class="font-bold text-[var(--foreground)]">🐜 Ants &amp; Wasps</div>
+              <p class="text-[11px] text-[var(--muted-foreground)] mt-1">Silicone-sealed rigid HDPE conduit beats rats/ants; flyscreen blocks mud wasps.</p>
+            </div>
+            <div class="p-3 rounded-lg border border-[var(--border)] bg-[var(--background)]">
+              <div class="font-bold text-[var(--foreground)]">🔒 Rural Theft</div>
+              <p class="text-[11px] text-[var(--muted-foreground)] mt-1">No big solar panels or 12V batteries visible; ~$10 plastic antenna has zero resale value.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2.5 flex justify-between">
+          <span>All external fittings clip to existing Victorian bridge width-marker or flood-depth signposts</span>
+          <span class="font-mono">03 / 10</span>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- SLIDE 4: MODULAR SENSING OPTIONS                                   -->
+      <!-- ================================================================== -->
+      <section class="slide flex-col justify-between rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-sm p-7 md:p-10 min-h-[560px]" data-title="Sensing Options">
+        <div class="flex items-center justify-between text-xs text-[var(--muted-foreground)] border-b border-[var(--border)] pb-3">
+          <span class="font-mono uppercase tracking-wider text-emerald-600 font-semibold">04 · Subsystem Options — Structural &amp; Flood Sensing</span>
+          <span class="font-mono">04 / 10</span>
+        </div>
+
+        <div class="space-y-4 my-4 flex-1">
+          <div>
+            <h2 class="text-2xl font-bold text-[var(--foreground)]">Modular Sensing Suite: Start Simple, Add What Each Bridge Needs</h2>
+            <p class="text-xs md:text-sm text-[var(--muted-foreground)] mt-1">
+              Every bridge starts with the sealed internal tilt &amp; vibration core — then councils optionally plug in flood or crack sensors only on high-risk sites.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Core Sensor Card (Highlighted) -->
+            <div class="opt-card rounded-xl border-2 border-emerald-500/60 bg-[var(--background)] p-4 flex flex-col justify-between">
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-bold uppercase">Core · Included Standard</span>
+                  <span class="font-mono text-xs font-bold text-emerald-600">+$25–$40 BOM</span>
+                </div>
+                <h3 class="text-base font-bold text-[var(--foreground)]">Internal High-Res MEMS Tilt &amp; Vibration</h3>
+                <p class="text-xs text-[var(--muted-foreground)]">
+                  Industrial <code class="text-[var(--foreground)]">ADXL355</code> / <code class="text-[var(--foreground)]">SCL3300</code> rigidly bonded to the 4 mm enclosure floor — zero external sensor wires required.
+                </p>
+                <div class="space-y-1.5 text-xs pt-1">
+                  <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                    <strong class="text-[var(--foreground)]">Pier Scour &amp; Settlement:</strong> Flags permanent tilt shifts down to <strong>~0.1°</strong> after heavy rainfall.
+                  </div>
+                  <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                    <strong class="text-[var(--foreground)]">Stiffness / Timber Rot Trend:</strong> Tracks gradual drops in natural vibration frequency as spans soften.
+                  </div>
+                  <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                    <strong class="text-[var(--foreground)]">Overweight Truck Hits:</strong> Logs timestamped peak G-force shocks on load-limited rural crossings.
+                  </div>
+                </div>
+              </div>
+              <div class="text-[11px] text-emerald-600 font-medium pt-3">Pilot Prototype Option: $5–$8 MSA311 / MPU6050 for bench validation</div>
+            </div>
+
+            <!-- 3 Optional Add-on Sensors -->
+            <div class="space-y-3 flex flex-col justify-between">
+              <div class="opt-card rounded-xl border border-[var(--border)] bg-[var(--background)] p-3.5">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-bold text-[var(--foreground)]">Option S1 · Deck-Level Flood Float Switch</span>
+                  <span class="font-mono text-xs font-semibold text-sky-600">+$8 AUD</span>
+                </div>
+                <p class="text-xs text-[var(--muted-foreground)]">
+                  Sealed magnetic float inside an upside-down recycled HDPE tube with stainless flyscreen &amp; 2-min splash debounce. Records exact <strong>submersion start, end &amp; duration</strong> — 100% immune to rain and mud wasps.
+                </p>
+              </div>
+
+              <div class="opt-card rounded-xl border border-[var(--border)] bg-[var(--background)] p-3.5">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-bold text-[var(--foreground)]">Option S2 · Under-Deck Ultrasonic Creek Gauge</span>
+                  <span class="font-mono text-xs font-semibold text-sky-600">+$15 AUD</span>
+                </div>
+                <p class="text-xs text-[var(--muted-foreground)]">
+                  Waterproof ultrasonic transducer (<code class="text-[var(--foreground)]">JSN-SR04T</code>) pointing down at the creek — measures continuous rising water height in centimetres <strong>before</strong> water reaches the girders.
+                </p>
+              </div>
+
+              <div class="opt-card rounded-xl border border-[var(--border)] bg-[var(--background)] p-3.5">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-bold text-[var(--foreground)]">Option S3 · Linear Crack / Joint Expansion Gauge</span>
+                  <span class="font-mono text-xs font-semibold text-sky-600">+$25 AUD</span>
+                </div>
+                <p class="text-xs text-[var(--muted-foreground)]">
+                  Optional magnetic/linear gap transducer bridged across a <em>known</em> abutment crack or expansion joint to quantify seasonal vs. structural widening.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2.5 flex justify-between">
+          <span>Output stays dead simple for engineers: clear threshold alerts (no noisy raw waveforms unless requested)</span>
+          <span class="font-mono">04 / 10</span>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- SLIDE 5: COMMUNICATIONS OPTIONS (SINGLE HARDWARE, DUAL MODE)       -->
+      <!-- ================================================================== -->
+      <section class="slide flex-col justify-between rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-sm p-7 md:p-10 min-h-[560px]" data-title="Comms Options">
+        <div class="flex items-center justify-between text-xs text-[var(--muted-foreground)] border-b border-[var(--border)] pb-3">
+          <span class="font-mono uppercase tracking-wider text-emerald-600 font-semibold">05 · Subsystem Options — Zero-Subscription Communications</span>
+          <span class="font-mono">05 / 10</span>
+        </div>
+
+        <div class="space-y-4 my-4 flex-1">
+          <div class="flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <h2 class="text-2xl font-bold text-[var(--foreground)]">One 915 MHz Radio Chip. Three Flexible Backhaul Options.</h2>
+              <p class="text-xs md:text-sm text-[var(--muted-foreground)] mt-1">
+                No need to stock separate bridge models — Australia’s licence-free <strong>915 MHz ISM band</strong> runs both long-range live gateway pings and high-speed drive-by offloading on identical hardware.
+              </p>
+            </div>
+          </div>
+
+          <!-- 3 Comms Option Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Option C1 -->
+            <div class="opt-card rounded-xl border border-[var(--border)] bg-[var(--background)] p-4 flex flex-col justify-between">
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-500/15 text-sky-600 font-bold">Option C1</span>
+                  <span class="font-mono text-xs font-bold text-emerald-600">$0/mo per bridge</span>
+                </div>
+                <h3 class="text-sm font-bold text-[var(--foreground)]">Shared Council LoRaWAN Gateway (Live)</h3>
+                <p class="text-xs text-[var(--muted-foreground)]">
+                  Mount 1× <strong>$350–$500</strong> outdoor LoRaWAN gateway on an existing council depot, town hall, or hilltop water tower (or reuse existing Northern Melbourne / AgVic gateways).
+                </p>
+                <ul class="text-xs space-y-1 text-[var(--muted-foreground)] pt-1">
+                  <li>• <strong class="text-[var(--foreground)]">Range:</strong> 10–15 km radius (10–30 bridges/gateway)</li>
+                  <li>• <strong class="text-[var(--foreground)]">Live Flood Alerts:</strong> Instant push within seconds</li>
+                  <li>• <strong class="text-[var(--foreground)]">Best For:</strong> Bridges within 15 km of towns/hills</li>
+                </ul>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border)] text-[11px] font-mono text-[var(--muted-foreground)]">Data rate: Slow / Long-Range LoRa</div>
+            </div>
+
+            <!-- Option C2 -->
+            <div class="opt-card rounded-xl border border-[var(--border)] bg-[var(--background)] p-4 flex flex-col justify-between">
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-amber-500/15 text-amber-600 font-bold">Option C2</span>
+                  <span class="font-mono text-xs font-bold text-emerald-600">$0/mo · No Gateway</span>
+                </div>
+                <h3 class="text-sm font-bold text-[var(--foreground)]">Drive-By Data Muling (Ute / Drone)</h3>
+                <p class="text-xs text-[var(--muted-foreground)]">
+                  Plug a <strong>~$40 12V receiver + roof puck</strong> into existing council ranger/grader utes. As a ute crosses at <strong>100 km/h</strong>, it scoops 3 months of logs (~120 KB) in under 2 seconds and syncs back at the depot.
+                </p>
+                <ul class="text-xs space-y-1 text-[var(--muted-foreground)] pt-1">
+                  <li>• <strong class="text-[var(--foreground)]">Range:</strong> 1–2 km curvy roads (5+ km flat)</li>
+                  <li>• <strong class="text-[var(--foreground)]">Flood Backup:</strong> Same radio talks to a drone or ute parked 1 km up the hill on dry ground</li>
+                  <li>• <strong class="text-[var(--foreground)]">Best For:</strong> Deep valleys &amp; total blackspots</li>
+                </ul>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border)] text-[11px] font-mono text-[var(--muted-foreground)]">Data rate: High-Gear Fast LoRa / FSK</div>
+            </div>
+
+            <!-- Option C3 (Recommended) -->
+            <div class="opt-card rounded-xl border-2 border-emerald-500/60 bg-[var(--background)] p-4 flex flex-col justify-between">
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-600 text-white font-bold">Option C3 · Recommended</span>
+                  <span class="font-mono text-xs font-bold text-emerald-600">1 Single SKU</span>
+                </div>
+                <h3 class="text-sm font-bold text-[var(--foreground)]">Hybrid Auto-Fallback Firmware</h3>
+                <p class="text-xs text-[var(--muted-foreground)]">
+                  Every bridge gets the exact same box. Firmware attempts a live gateway ping first; if out of range or blocked by terrain, it seamlessly queues logs for the next passing council ute or drone.
+                </p>
+                <ul class="text-xs space-y-1 text-[var(--muted-foreground)] pt-1">
+                  <li>• <strong class="text-[var(--foreground)]">Zero Inventory Split:</strong> Bolt any box to any bridge</li>
+                  <li>• <strong class="text-[var(--foreground)]">Optional Satellite Add-On:</strong> Adelaide’s <strong>Myriota</strong> nanosatellite (~$3–$5/mo) only on ultra-remote critical flood bridges</li>
+                </ul>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border)] text-[11px] font-mono text-emerald-600 font-semibold">Best shire-wide operational simplicity</div>
+            </div>
+          </div>
+
+          <!-- Quick Physics Callout -->
+          <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2">
+            <span class="text-[var(--muted-foreground)]"><strong class="text-[var(--foreground)]">Why 100 km/h Transfer Works Easily:</strong> At 100 km/h (28 m/s), a 1–2 km 915 MHz bubble gives a <strong>35–70 second window</strong> — 3 months of bridge metrics is only 32–200 KB (smaller than 1 phone photo).</span>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2.5 flex justify-between">
+          <span>Uses Australia’s licence-free AU915 ISM spectrum (ACMA class-licensed — no radio licence fees)</span>
+          <span class="font-mono">05 / 10</span>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- SLIDE 6: POWER & BATTERY OPTIONS (VICTORIAN CLIMATE)               -->
+      <!-- ================================================================== -->
+      <section class="slide flex-col justify-between rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-sm p-7 md:p-10 min-h-[560px]" data-title="Power & Battery Options">
+        <div class="flex items-center justify-between text-xs text-[var(--muted-foreground)] border-b border-[var(--border)] pb-3">
+          <span class="font-mono uppercase tracking-wider text-emerald-600 font-semibold">06 · Subsystem Options — Australian Heat &amp; Frost Power</span>
+          <span class="font-mono">06 / 10</span>
+        </div>
+
+        <div class="space-y-4 my-4 flex-1">
+          <div>
+            <h2 class="text-2xl font-bold text-[var(--foreground)]">Battery Options Matched to Victorian Weather &amp; Inspection Cycles</h2>
+            <p class="text-xs md:text-sm text-[var(--muted-foreground)] mt-1">
+              Consumer phone LiPo batteries fail above 45°C and pose bushfire risks. All three options below are industrial, non-flammable chemistries aligned to Austroads inspection intervals.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- P1: Li-SOCl2 -->
+            <div class="opt-card rounded-xl border-2 border-emerald-500/60 bg-[var(--background)] p-4 flex flex-col justify-between">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-600 text-white font-bold">Option P1 · Simplest</span>
+                  <span class="font-mono text-xs font-bold text-[var(--foreground)]">~$20–$30</span>
+                </div>
+                <h3 class="text-base font-bold text-[var(--foreground)]">Industrial Li-SOCl₂ D-Cell</h3>
+                <div class="text-[11px] font-mono text-emerald-600 font-semibold">Non-Rechargeable · SAFT LS33600</div>
+                <div class="grid grid-cols-2 gap-2 pt-2 text-xs">
+                  <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                    <div class="text-[10px] text-[var(--muted-foreground)]">Temp Rating</div>
+                    <div class="font-mono font-bold">-60°C to +85°C</div>
+                  </div>
+                  <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                    <div class="text-[10px] text-[var(--muted-foreground)]">Runtime</div>
+                    <div class="font-mono font-bold">3 – 5+ Years</div>
+                  </div>
+                </div>
+                <ul class="text-xs text-[var(--muted-foreground)] space-y-1 pt-2">
+                  <li>• <strong class="text-[var(--foreground)]">17,000 mAh</strong> massive density (61 Wh)</li>
+                  <li>• Swapped in 30 sec during routine <strong>Level 2</strong> inspection — zero extra site trips</li>
+                  <li>• Works in 100% permanent tree shade; zero solar panel</li>
+                </ul>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border)] text-[11px] text-emerald-600 font-semibold">Best for: Set-and-forget shaded rural bridges</div>
+            </div>
+
+            <!-- P2: Swappable LiFePO4 -->
+            <div class="opt-card rounded-xl border border-[var(--border)] bg-[var(--background)] p-4 flex flex-col justify-between">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-500/15 text-sky-600 font-bold">Option P2 · Zero Waste</span>
+                  <span class="font-mono text-xs font-bold text-[var(--foreground)]">~$15–$25</span>
+                </div>
+                <h3 class="text-base font-bold text-[var(--foreground)]">Swappable High-Temp LiFePO₄</h3>
+                <div class="text-[11px] font-mono text-sky-600 font-semibold">Rechargeable at Depot · 32700 / 26650</div>
+                <div class="grid grid-cols-2 gap-2 pt-2 text-xs">
+                  <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                    <div class="text-[10px] text-[var(--muted-foreground)]">Temp Rating</div>
+                    <div class="font-mono font-bold">-20°C to +65°C</div>
+                  </div>
+                  <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                    <div class="text-[10px] text-[var(--muted-foreground)]">Per Charge</div>
+                    <div class="font-mono font-bold">1 – 2 Years</div>
+                  </div>
+                </div>
+                <ul class="text-xs text-[var(--muted-foreground)] space-y-1 pt-2">
+                  <li>• <strong class="text-[var(--foreground)]">3,200–6,000 mAh</strong> (2,000+ cycles)</li>
+                  <li>• Crew swaps charged cell during annual <strong>Level 1</strong> check and recharges old cell at depot</li>
+                  <li>• Zero disposable batteries &amp; zero solar panels to steal</li>
+                </ul>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border)] text-[11px] text-sky-600 font-semibold">Best for: Zero-waste circular-economy mandates</div>
+            </div>
+
+            <!-- P3: LTO + Mini Solar -->
+            <div class="opt-card rounded-xl border border-[var(--border)] bg-[var(--background)] p-4 flex flex-col justify-between">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-amber-500/15 text-amber-600 font-bold">Option P3 · 15-Yr Solar</span>
+                  <span class="font-mono text-xs font-bold text-[var(--foreground)]">~$30–$40</span>
+                </div>
+                <h3 class="text-base font-bold text-[var(--foreground)]">LTO (Lithium Titanate) + Mini Solar</h3>
+                <div class="text-[11px] font-mono text-amber-600 font-semibold">Rechargeable · 2× LTO + 2W Signpost Strip</div>
+                <div class="grid grid-cols-2 gap-2 pt-2 text-xs">
+                  <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                    <div class="text-[10px] text-[var(--muted-foreground)]">Temp Rating</div>
+                    <div class="font-mono font-bold">-30°C to +75°C</div>
+                  </div>
+                  <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                    <div class="text-[10px] text-[var(--muted-foreground)]">Total Life</div>
+                    <div class="font-mono font-bold">15 – 20 Years</div>
+                  </div>
+                </div>
+                <ul class="text-xs text-[var(--muted-foreground)] space-y-1 pt-2">
+                  <li>• <strong class="text-[var(--foreground)]">Charges safely in winter frost</strong> (unlike LiFePO₄)</li>
+                  <li>• 6–10 mo dark reserve laughs off Victorian winter cloud</li>
+                  <li>• Palm-sized 2W epoxy solar strip — zero theft appeal</li>
+                </ul>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border)] text-[11px] text-amber-600 font-semibold">Best for: Sun-exposed floodways &amp; high-frequency logging</div>
+            </div>
+          </div>
+
+          <div class="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-xs text-[var(--foreground)]">
+            <strong>Production Power Architecture:</strong> While initial bench prototypes use USB/ESP32 boards, field deployment uses ultra-low-power <strong>nRF52840 + SX1262 LoRa</strong> (e.g., RAK WisBlock) sipping microamps in deep sleep (~2–3 Ah/year).
+          </div>
+        </div>
+
+        <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2.5 flex justify-between">
+          <span>Under-deck shaded bridge temperatures typically remain ≤45–50°C even during 46°C heatwaves</span>
+          <span class="font-mono">06 / 10</span>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- SLIDE 7: ZERO-DRILL MOUNTING & MODULAR CABLING OPTIONS             -->
+      <!-- ================================================================== -->
+      <section class="slide flex-col justify-between rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-sm p-7 md:p-10 min-h-[560px]" data-title="Mounting & Cabling">
+        <div class="flex items-center justify-between text-xs text-[var(--muted-foreground)] border-b border-[var(--border)] pb-3">
+          <span class="font-mono uppercase tracking-wider text-emerald-600 font-semibold">07 · Subsystem Options — Zero-Drill Mounting &amp; Modular Cabling</span>
+          <span class="font-mono">07 / 10</span>
+        </div>
+
+        <div class="space-y-4 my-4 flex-1">
+          <div>
+            <h2 class="text-2xl font-bold text-[var(--foreground)]">5-Minute Non-Invasive Install on Any Bridge Geometry</h2>
+            <p class="text-xs md:text-sm text-[var(--muted-foreground)] mt-1">
+              Zero holes drilled into structural steel or prestressed concrete (protects tensioned tendons &amp; structural certification), plus plug-in cable kits so one standard box fits every bridge width.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <!-- Left 7 cols: Mounting Options -->
+            <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div class="opt-card rounded-xl border border-[var(--border)] bg-[var(--background)] p-4 flex flex-col justify-between">
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 font-bold">Option M1</span>
+                    <span class="font-mono text-xs font-bold">~$10–$20/ea</span>
+                  </div>
+                  <h3 class="text-sm font-bold text-[var(--foreground)]">Certified Steel Girder C-Clamps</h3>
+                  <svg viewBox="0 0 220 110" class="w-full h-auto my-1">
+                    <rect x="20" y="10" width="180" height="10" fill="#cbd5e1" stroke="#475569" />
+                    <rect x="60" y="20" width="100" height="8" fill="#64748b" />
+                    <rect x="102" y="28" width="16" height="32" fill="#64748b" />
+                    <rect x="60" y="60" width="100" height="9" fill="#64748b" />
+                    <!-- C-clamps -->
+                    <path d="M 52,55 L 76,55 L 76,60 L 58,60 L 58,69 L 76,69 L 76,76 L 52,76 Z" fill="#e2e8f0" stroke="#1e293b" stroke-width="1.2" />
+                    <path d="M 168,55 L 144,55 L 144,60 L 162,60 L 162,69 L 144,69 L 144,76 L 168,76 Z" fill="#e2e8f0" stroke="#1e293b" stroke-width="1.2" />
+                    <!-- Box -->
+                    <rect x="74" y="76" width="72" height="24" rx="3" fill="#10b981" stroke="#065f46" stroke-width="1.4" />
+                    <text x="110" y="91" text-anchor="middle" font-size="7.5" font-weight="700" fill="#fff">250g BOX</text>
+                  </svg>
+                  <ul class="text-xs text-[var(--muted-foreground)] space-y-1">
+                    <li>• <strong class="text-[var(--foreground)]">60–120 kg rating each</strong> (~500× safety margin)</li>
+                    <li>• Locknutted cup-point screw resists vibration</li>
+                    <li>• Can tuck <em>inside</em> I-beam web pocket for 3-sided steel armour against flood logs</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="opt-card rounded-xl border border-[var(--border)] bg-[var(--background)] p-4 flex flex-col justify-between">
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-500/15 text-sky-600 font-bold">Option M2</span>
+                    <span class="font-mono text-xs font-bold">~$8–$15/site</span>
+                  </div>
+                  <h3 class="text-sm font-bold text-[var(--foreground)]">Stainless Pier Banding Straps</h3>
+                  <svg viewBox="0 0 220 110" class="w-full h-auto my-1">
+                    <rect x="20" y="10" width="180" height="10" fill="#cbd5e1" stroke="#475569" />
+                    <rect x="74" y="20" width="72" height="82" rx="3" fill="#94a3b8" stroke="#475569" />
+                    <rect x="71" y="42" width="78" height="7" rx="1.5" fill="#e2e8f0" stroke="#1e293b" stroke-width="1.2" />
+                    <rect x="71" y="68" width="78" height="7" rx="1.5" fill="#e2e8f0" stroke="#1e293b" stroke-width="1.2" />
+                    <rect x="86" y="36" width="48" height="46" rx="3" fill="#10b981" stroke="#065f46" stroke-width="1.4" />
+                    <text x="110" y="62" text-anchor="middle" font-size="7.5" font-weight="700" fill="#fff">BOX</text>
+                  </svg>
+                  <ul class="text-xs text-[var(--muted-foreground)] space-y-1">
+                    <li>• <strong class="text-[var(--foreground)]">300+ kg tensile rating</strong> (316 marine stainless)</li>
+                    <li>• Fits round/square concrete or timber piers</li>
+                    <li>• Zero plastic creep (metal clamps hold recycled plastic box)</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right 5 cols: Modular Cable Kits -->
+            <div class="lg:col-span-5 rounded-xl border border-[var(--border)] bg-[var(--background)] p-4 flex flex-col justify-between">
+              <div class="space-y-3">
+                <div class="text-xs font-bold uppercase tracking-wide text-[var(--foreground)]">Solving Variable Bridge Sizes: Plug-In Cable Kits</div>
+                <p class="text-xs text-[var(--muted-foreground)]">
+                  Every box ships with identical exterior waterproof ports (<strong>SMA antenna bulkhead</strong> + <strong>IP68 2-pin float plug</strong>). Installers simply click in one of 3 standard lengths inside recycled HDPE conduit:
+                </p>
+                <div class="space-y-2 text-xs">
+                  <div class="flex items-center justify-between p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)]">
+                    <div>
+                      <div class="font-bold text-[var(--foreground)]">2 m Standard Kit</div>
+                      <div class="text-[11px] text-[var(--muted-foreground)]">Box clamped at abutment right below width-marker post</div>
+                    </div>
+                    <span class="font-mono text-emerald-600 font-bold">~$12</span>
+                  </div>
+                  <div class="flex items-center justify-between p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)]">
+                    <div>
+                      <div class="font-bold text-[var(--foreground)]">4 m Extended Kit</div>
+                      <div class="text-[11px] text-[var(--muted-foreground)]">Wide concrete decks &amp; deep girders</div>
+                    </div>
+                    <span class="font-mono text-sky-600 font-bold">~$18</span>
+                  </div>
+                  <div class="flex items-center justify-between p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)]">
+                    <div>
+                      <div class="font-bold text-[var(--foreground)]">6 m Flood-Pole Kit</div>
+                      <div class="text-[11px] text-[var(--muted-foreground)]">Tall flood depth markers (max recommended coax length)</div>
+                    </div>
+                    <span class="font-mono text-amber-600 font-bold">~$24</span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-[11px] text-emerald-600 font-medium pt-2 border-t border-[var(--border)]">
+                ✓ Any spare slack coils cleanly inside the sheltered girder pocket — zero field crimping
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2.5 flex justify-between">
+          <span>Structural safety rule: Always use certified metal fasteners for load retention; recycled plastic for enclosure &amp; conduit</span>
+          <span class="font-mono">07 / 10</span>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- SLIDE 8: RECYCLED PLASTIC CASING & MANUFACTURING ROADMAP           -->
+      <!-- ================================================================== -->
+      <section class="slide flex-col justify-between rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-sm p-7 md:p-10 min-h-[560px]" data-title="Recycled Manufacturing">
+        <div class="flex items-center justify-between text-xs text-[var(--muted-foreground)] border-b border-[var(--border)] pb-3">
+          <span class="font-mono uppercase tracking-wider text-emerald-600 font-semibold">08 · Circular Economy — Recycled Victorian Plastic Manufacturing</span>
+          <span class="font-mono">08 / 10</span>
+        </div>
+
+        <div class="space-y-4 my-4 flex-1">
+          <div>
+            <h2 class="text-2xl font-bold text-[var(--foreground)]">“Monitoring Victoria’s Bridges Using Victoria’s Plastic Waste”</h2>
+            <p class="text-xs md:text-sm text-[var(--muted-foreground)] mt-1">
+              Staged enclosure manufacturing keeps upfront tooling at <strong>$0 during council pilots</strong>, then scales seamlessly to local Melbourne recycled-HDPE injection moulding — unlocking <strong>Sustainability Victoria</strong> circular-economy co-funding.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Stage 1 -->
+            <div class="opt-card rounded-xl border border-[var(--border)] bg-[var(--background)] p-4 flex flex-col justify-between">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-[var(--card)] border border-[var(--border)] font-bold">Option E1 · $0 Shell</span>
+                  <span class="font-mono text-xs text-[var(--muted-foreground)]">Bench / Creek</span>
+                </div>
+                <h3 class="text-sm font-bold text-[var(--foreground)]">Offcut HDPE Irrigation Pipe</h3>
+                <p class="text-xs text-[var(--muted-foreground)]">
+                  15–20 cm offcuts of thick-walled rural HDPE poly pipe sealed with pressure-rated plumbing compression end-caps.
+                </p>
+                <ul class="text-xs text-[var(--muted-foreground)] space-y-1 pt-1">
+                  <li>• Engineered for 50+ years outdoors</li>
+                  <li>• Cylindrical torpedo sheds floodwater</li>
+                  <li>• Also serves as chew-proof conduit &amp; float hood</li>
+                </ul>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border)] text-[11px] font-mono text-[var(--muted-foreground)]">Tooling: $0 · Manual prep (1–5 units)</div>
+            </div>
+
+            <!-- Stage 2 -->
+            <div class="opt-card rounded-xl border-2 border-sky-500/50 bg-[var(--background)] p-4 flex flex-col justify-between">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-600 text-white font-bold">Option E2 · Pilot Ready</span>
+                  <span class="font-mono text-xs text-sky-600 font-bold">Units 1 – 20</span>
+                </div>
+                <h3 class="text-sm font-bold text-[var(--foreground)]">3D-Printed Recycled PETG / ASA</h3>
+                <p class="text-xs text-[var(--muted-foreground)]">
+                  Printed from 90% recycled Australian rPETG filament using our v1 CAD (<code class="text-[var(--foreground)]">144×72×36 mm</code>, 4 mm rigid sensor floor, silicone O-ring groove).
+                </p>
+                <ul class="text-xs text-[var(--muted-foreground)] space-y-1 pt-1">
+                  <li>• ~150g recycled plastic (~$4 material cost)</li>
+                  <li>• Fast design iteration from field feedback</li>
+                  <li>• Exterior epoxy-sealed + shaded under deck</li>
+                </ul>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border)] text-[11px] font-mono text-sky-600 font-semibold">Tooling: $0 · CAD files already built</div>
+            </div>
+
+            <!-- Stage 3 -->
+            <div class="opt-card rounded-xl border-2 border-emerald-500/60 bg-[var(--background)] p-4 flex flex-col justify-between">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-600 text-white font-bold">Option E3 · Shire Scale</span>
+                  <span class="font-mono text-xs text-emerald-600 font-bold">Units 50 – 5,000</span>
+                </div>
+                <h3 class="text-sm font-bold text-[var(--foreground)]">Melbourne Recycled HDPE Moulding</h3>
+                <p class="text-xs text-[var(--muted-foreground)]">
+                  Hand locked CAD to <strong>Precious Plastic Melbourne</strong> (Nunawading / Fishermans Bend) or a commercial Victorian moulder running 100% recycled HDPE pellets.
+                </p>
+                <ul class="text-xs text-[var(--muted-foreground)] space-y-1 pt-1">
+                  <li>• ~110°C heat tolerance, 100% waterproof &amp; RF-clear</li>
+                  <li>• Automated output: hundreds of boxes/day</li>
+                  <li>• Drops shell cost to <strong>~$3–$5 AUD/unit</strong></li>
+                </ul>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border)] text-[11px] font-mono text-emerald-600 font-semibold">~250g VIC waste diverted per bridge (box + conduit)</div>
+            </div>
+          </div>
+
+          <!-- Compact Unit Economics Table (Incl. Assembly Labour) -->
+          <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3 text-xs space-y-2">
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-2 text-center">
+              <div><div class="text-[10px] text-[var(--muted-foreground)]">LoRa + ADXL355</div><div class="font-mono font-bold">$55–$90</div></div>
+              <div><div class="text-[10px] text-[var(--muted-foreground)]">Industrial Battery</div><div class="font-mono font-bold">$15–$30</div></div>
+              <div><div class="text-[10px] text-[var(--muted-foreground)]">Shell + Potting</div><div class="font-mono font-bold">$8–$20</div></div>
+              <div><div class="text-[10px] text-[var(--muted-foreground)]">Clamps + Cable</div><div class="font-mono font-bold">$25–$45</div></div>
+              <div><div class="text-[10px] text-amber-600 font-semibold">Est. Labour (15–25m)</div><div class="font-mono font-bold text-amber-600">$15–$25</div></div>
+              <div class="rounded bg-emerald-500/10 py-0.5"><div class="text-[10px] text-emerald-600 font-semibold">Est. Total Landed*</div><div class="font-mono font-bold text-emerald-600">$118–$210</div></div>
+            </div>
+            <div class="text-[10px] text-[var(--muted-foreground)] text-center border-t border-[var(--border)] pt-1.5">
+              *Preliminary estimates only (pre-prototype). Assembly time ~20–25 min/unit for early batches, ~12–15 min/unit at 50+ scale (~$55–$60/hr AU rate). Excludes council crew site install (~15–20 min).
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2.5 flex justify-between">
+          <span>Every unit diverts post-consumer Victorian HDPE &amp; farm poly-pipe offcuts from landfill</span>
+          <span class="font-mono">08 / 10</span>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- SLIDE 9: INTERACTIVE SHIRE CONFIGURATOR & BUDGET ESTIMATOR         -->
+      <!-- ================================================================== -->
+      <section class="slide flex-col justify-between rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-sm p-7 md:p-10 min-h-[560px]" data-title="Interactive Configurator">
+        <div class="flex items-center justify-between text-xs text-[var(--muted-foreground)] border-b border-[var(--border)] pb-3">
+          <span class="font-mono uppercase tracking-wider text-emerald-600 font-semibold">09 · Interactive Council Configurator &amp; Shire Cost Estimator</span>
+          <span class="font-mono">09 / 10</span>
+        </div>
+
+        <div class="space-y-4 my-3 flex-1">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 class="text-2xl font-bold text-[var(--foreground)]">Configure Your Shire Deployment (Live Estimate)</h2>
+            <span class="text-xs text-[var(--muted-foreground)]">Click any subsystem option below to recalculate instantly</span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            <!-- Left 7 Cols: Interactive Controls -->
+            <div class="lg:col-span-7 space-y-3.5 text-xs">
+              <!-- Bridge Count Slider -->
+              <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3.5">
+                <div class="flex justify-between items-center mb-1.5">
+                  <span class="font-bold text-[var(--foreground)]">1. Number of Bridges to Monitor</span>
+                  <span id="cfgBridgesVal" class="font-mono text-sm font-bold text-emerald-600">50 Bridges</span>
+                </div>
+                <input id="cfgBridges" type="range" min="1" max="250" value="50" class="w-full accent-[var(--primary)] cursor-pointer" />
+                <div class="flex justify-between text-[10px] text-[var(--muted-foreground)] font-mono mt-0.5">
+                  <span>1 (Single Pilot)</span><span>25 (Priority)</span><span>100 (Small Shire)</span><span>250 (Large Shire)</span>
+                </div>
+              </div>
+
+              <!-- Comms Mode -->
+              <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3">
+                <div class="font-bold text-[var(--foreground)] mb-2">2. Communications Backhaul</div>
+                <div class="grid grid-cols-3 gap-2">
+                  <button data-group="comms" data-val="ute" class="cfg-btn px-2.5 py-2 rounded border border-[var(--border)] bg-[var(--card)] text-left cursor-pointer">
+                    <div class="font-semibold">Drive-By Only</div>
+                    <div class="text-[10px] opacity-80">Ute boxes ($40 ea)</div>
+                  </button>
+                  <button data-group="comms" data-val="gateway" class="cfg-btn px-2.5 py-2 rounded border border-[var(--border)] bg-[var(--card)] text-left cursor-pointer">
+                    <div class="font-semibold">Depot Gateways</div>
+                    <div class="text-[10px] opacity-80">10–15km live ($450)</div>
+                  </button>
+                  <button data-group="comms" data-val="hybrid" class="cfg-btn selected px-2.5 py-2 rounded border border-[var(--border)] bg-[var(--card)] text-left cursor-pointer">
+                    <div class="font-semibold">Hybrid Auto</div>
+                    <div class="text-[10px] opacity-80">Gateway + Ute backup</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Battery Option -->
+              <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3">
+                <div class="font-bold text-[var(--foreground)] mb-2">3. Power &amp; Battery Chemistry</div>
+                <div class="grid grid-cols-3 gap-2">
+                  <button data-group="power" data-val="lisocl2" class="cfg-btn selected px-2.5 py-2 rounded border border-[var(--border)] bg-[var(--card)] text-left cursor-pointer">
+                    <div class="font-semibold">Li-SOCl₂ D-Cell</div>
+                    <div class="text-[10px] opacity-80">3–5 yr · -60 to +85°C</div>
+                  </button>
+                  <button data-group="power" data-val="lifepo4" class="cfg-btn px-2.5 py-2 rounded border border-[var(--border)] bg-[var(--card)] text-left cursor-pointer">
+                    <div class="font-semibold">Swap LiFePO₄</div>
+                    <div class="text-[10px] opacity-80">1–2 yr · Depot recharge</div>
+                  </button>
+                  <button data-group="power" data-val="lto" class="cfg-btn px-2.5 py-2 rounded border border-[var(--border)] bg-[var(--card)] text-left cursor-pointer">
+                    <div class="font-semibold">LTO + 2W Solar</div>
+                    <div class="text-[10px] opacity-80">15+ yr · Frost-safe</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Sensor & Casing Row -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3">
+                  <div class="font-bold text-[var(--foreground)] mb-2">4. Flood Sensing Add-On</div>
+                  <div class="grid grid-cols-2 gap-1.5">
+                    <button data-group="flood" data-val="float" class="cfg-btn selected px-2 py-1.5 rounded border border-[var(--border)] bg-[var(--card)] cursor-pointer">Float (+$8)</button>
+                    <button data-group="flood" data-val="ultra" class="cfg-btn px-2 py-1.5 rounded border border-[var(--border)] bg-[var(--card)] cursor-pointer">Float + Ultra (+$23)</button>
+                  </div>
+                </div>
+                <div class="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3">
+                  <div class="font-bold text-[var(--foreground)] mb-2">5. Recycled Housing Tier</div>
+                  <div class="grid grid-cols-2 gap-1.5">
+                    <button data-group="casing" data-val="rpetg" class="cfg-btn px-2 py-1.5 rounded border border-[var(--border)] bg-[var(--card)] cursor-pointer">rPETG 3D-Print</button>
+                    <button data-group="casing" data-val="hdpe" class="cfg-btn selected px-2 py-1.5 rounded border border-[var(--border)] bg-[var(--card)] cursor-pointer">Moulded HDPE</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right 5 Cols: Live Financial & Impact Summary -->
+            <div class="lg:col-span-5 rounded-xl border-2 border-emerald-500/50 bg-[var(--background)] p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-[var(--border)] pb-2.5">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Preliminary Cost Estimate*</span>
+                <span class="text-[11px] font-mono text-amber-600 font-semibold">Pre-Prototype · AUD</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <div class="text-[11px] text-[var(--muted-foreground)]">Est. Unit Cost (BOM + Labour)</div>
+                  <div id="outPerBridge" class="text-2xl font-bold font-mono text-[var(--foreground)]">$192</div>
+                </div>
+                <div>
+                  <div class="text-[11px] text-[var(--muted-foreground)]">Est. Total Shire Cost</div>
+                  <div id="outTotal" class="text-2xl font-bold font-mono text-emerald-600">$11,350</div>
+                </div>
+              </div>
+
+              <div class="space-y-1.5 pt-2 border-t border-[var(--border)] text-xs">
+                <div class="flex justify-between">
+                  <span class="text-[var(--muted-foreground)]">Parts (BOM) + Est. Assembly Labour:</span>
+                  <span id="outBreakdown" class="font-mono font-semibold text-[var(--foreground)]">$178 + $14 (~15m)</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-[var(--muted-foreground)]">Ongoing SIM / Cloud Fees:</span>
+                  <span class="font-mono font-bold text-emerald-600">$0 / year</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-[var(--muted-foreground)]">Infra (Gateways / Ute Boxes):</span>
+                  <span id="outInfra" class="font-mono font-semibold text-[var(--foreground)]">3 gateways + 10 utes ($1,750)</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-[var(--muted-foreground)]">Commercial SHM Equivalent (~$6.5k/br):</span>
+                  <span id="outCommercial" class="font-mono text-red-500 line-through">$325,000</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-[var(--muted-foreground)]">Estimated Capital Savings:</span>
+                  <span id="outSavings" class="font-mono font-bold text-emerald-600">$313,650 (96.5%)</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-[var(--muted-foreground)]">VIC Plastic Waste Diverted:</span>
+                  <span id="outWaste" class="font-mono font-semibold text-sky-600">12.5 kg</span>
+                </div>
+              </div>
+
+              <div id="outNote" class="p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)] text-[11px] text-[var(--muted-foreground)] leading-relaxed">
+                Aligned to Level 2 (2–5 yr) inspection battery swaps; hybrid firmware provides live town-radius flood alerts + deep-valley ute fallback.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2.5 flex justify-between">
+          <span>*All figures are preliminary pre-prototype estimates only (no units built yet) — actual build &amp; labour times to be verified in Phase 1/2</span>
+          <span class="font-mono">09 / 10</span>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- SLIDE 10: ZERO-RISK 3-PHASE COUNCIL PILOT ROADMAP                  -->
+      <!-- ================================================================== -->
+      <section class="slide flex-col justify-between rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-sm p-7 md:p-10 min-h-[560px]" data-title="Pilot Roadmap">
+        <div class="flex items-center justify-between text-xs text-[var(--muted-foreground)] border-b border-[var(--border)] pb-3">
+          <span class="font-mono uppercase tracking-wider text-emerald-600 font-semibold">10 · Proposed Zero-Risk Council Pilot Roadmap</span>
+          <span class="font-mono">10 / 10</span>
+        </div>
+
+        <div class="space-y-5 my-4 flex-1">
+          <div>
+            <h2 class="text-2xl font-bold text-[var(--foreground)]">Validate First, Scale Only When Proven in the Field</h2>
+            <p class="text-xs md:text-sm text-[var(--muted-foreground)] mt-1">
+              A three-phase rollout designed to require <strong>zero upfront budget</strong> and <strong>zero structural modification</strong> from a participating Victorian shire.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Phase 1 -->
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--background)] p-5 flex flex-col justify-between">
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="px-2 py-0.5 rounded bg-sky-500/15 text-sky-600 font-mono text-[10px] font-bold">PHASE 1 · UNDERWAY</span>
+                  <span class="font-mono text-xs text-[var(--muted-foreground)]">Weeks 1–2</span>
+                </div>
+                <h3 class="text-base font-bold text-[var(--foreground)]">Roadside Bench &amp; Drive-By Validation</h3>
+                <ul class="text-xs text-[var(--muted-foreground)] space-y-1.5">
+                  <li>• Verify clean 100 km/h drive-by wireless log transfer on open Victorian roads</li>
+                  <li>• Bench-test rainproof/wasp-proof float switch &amp; 2-min splash debounce</li>
+                  <li>• 3D-print recycled rPETG v1 enclosure &amp; verify IP68 seal</li>
+                </ul>
+              </div>
+              <div class="mt-4 pt-2.5 border-t border-[var(--border)] text-xs font-semibold text-sky-600">Council Commitment: $0 · Zero site access</div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="rounded-xl border-2 border-emerald-500/60 bg-[var(--background)] p-5 flex flex-col justify-between">
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="px-2 py-0.5 rounded bg-emerald-600 text-white font-mono text-[10px] font-bold">PHASE 2 · PROPOSED PILOT</span>
+                  <span class="font-mono text-xs text-emerald-600 font-bold">30 – 90 Days</span>
+                </div>
+                <h3 class="text-base font-bold text-[var(--foreground)]">Approved 1-Bridge Field Trial</h3>
+                <ul class="text-xs text-[var(--muted-foreground)] space-y-1.5">
+                  <li>• Council selects 1 low-risk rural creek bridge (ideally flood- or freight-prone)</li>
+                  <li>• 5-minute zero-drill clamp-on install alongside council Assets team</li>
+                  <li>• Validate real truck vibration logs, tilt drift, flood trigger &amp; ute/gateway offload</li>
+                </ul>
+              </div>
+              <div class="mt-4 pt-2.5 border-t border-[var(--border)] text-xs font-semibold text-emerald-600">Council Commitment: $0 · Non-invasive approval</div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--background)] p-5 flex flex-col justify-between">
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="px-2 py-0.5 rounded bg-amber-500/15 text-amber-600 font-mono text-[10px] font-bold">PHASE 3 · SCALE</span>
+                  <span class="font-mono text-xs text-[var(--muted-foreground)]">Months 3–6+</span>
+                </div>
+                <h3 class="text-base font-bold text-[var(--foreground)]">Multi-Bridge Shire Rollout &amp; Grants</h3>
+                <ul class="text-xs text-[var(--muted-foreground)] space-y-1.5">
+                  <li>• Transition enclosure to Melbourne recycled-HDPE injection moulding</li>
+                  <li>• Deploy 10–30 priority flood/timber bridges (~$2k–$5k total)</li>
+                  <li>• Co-fund via <strong>Sustainability Victoria</strong> circular-economy / <strong>MAVlab</strong> innovation grants</li>
+                </ul>
+              </div>
+              <div class="mt-4 pt-2.5 border-t border-[var(--border)] text-xs font-semibold text-amber-600">Target: ~$150–$250/bridge · $0/mo ongoing</div>
+            </div>
+          </div>
+
+          <!-- Closing Call-to-Action Strip -->
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--background)] p-4 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div class="text-sm font-bold text-[var(--foreground)]">Ready to Validate With Your Assets &amp; Infrastructure Team</div>
+              <div class="text-xs text-[var(--muted-foreground)] mt-0.5">
+                Feedback welcomed on priority pain points (floodwater verification, overweight truck enforcement, or remote timber pier scour).
+              </div>
+            </div>
+            <div class="text-right text-xs">
+              <div class="font-bold text-[var(--foreground)]">Adam · Northern Suburbs, VIC</div>
+              <div class="font-mono text-[var(--muted-foreground)]">klopikkon@gmail.com</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2.5 flex justify-between">
+          <span>Tip: Click "Print / PDF" in the top bar and choose Landscape → Save as PDF to email a crisp 10-page deck</span>
+          <span class="font-mono">10 / 10</span>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ====================================================================== -->
+  <!-- BOTTOM NAVIGATION BAR                                                  -->
+  <!-- ====================================================================== -->
+  <footer id="deckFooter" class="sticky bottom-0 z-30 border-t border-[var(--border)] bg-[var(--card)]/95 backdrop-blur px-4 py-2.5">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-3 text-xs">
+      <button id="prevBtn" class="px-3.5 py-1.5 rounded-md border border-[var(--border)] bg-[var(--background)] hover:border-[var(--primary)] font-medium cursor-pointer">
+        ← Previous
+      </button>
+
+      <div class="flex items-center gap-2 text-[var(--muted-foreground)]">
+        <span id="slideCounter" class="font-mono font-bold text-[var(--foreground)]">Slide 1 / 10</span>
+        <span class="hidden sm:inline">·</span>
+        <span id="slideTitleLabel" class="hidden sm:inline font-medium">Executive Overview</span>
+      </div>
+
+      <button id="nextBtn" class="px-3.5 py-1.5 rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 font-medium cursor-pointer">
+        Next →
+      </button>
+    </div>
+  </footer>
+
+  <!-- ====================================================================== -->
+  <!-- SLIDE OVERVIEW MODAL                                                   -->
+  <!-- ====================================================================== -->
+  <div id="overviewModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl rounded-xl border border-[var(--border)] bg-[var(--card)] p-5 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-2.5">
+        <h3 class="text-sm font-bold text-[var(--foreground)]">Jump to Slide</h3>
+        <button id="closeModal" class="px-2 py-0.5 rounded border border-[var(--border)] text-xs cursor-pointer">Close (Esc)</button>
+      </div>
+      <div id="overviewGrid" class="grid grid-cols-2 gap-2 text-xs"></div>
+    </div>
+  </div>
+
+  <script>
+    // ========================================================================
+    // SLIDE NAVIGATION ENGINE
+    // ========================================================================
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const topDots = document.getElementById('topDots');
+    const slideCounter = document.getElementById('slideCounter');
+    const slideTitleLabel = document.getElementById('slideTitleLabel');
+    const overviewModal = document.getElementById('overviewModal');
+    const overviewGrid = document.getElementById('overviewGrid');
+    let current = 0;
+
+    // Build top progress dots & overview grid
+    slides.forEach((s, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'h-2 rounded-full transition-all cursor-pointer';
+      dot.title = `${i + 1}. ${s.dataset.title}`;
+      dot.addEventListener('click', () => goTo(i));
+      topDots.appendChild(dot);
+
+      const item = document.createElement('button');
+      item.className = 'p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)] hover:border-[var(--primary)] text-left cursor-pointer flex items-center gap-2';
+      item.innerHTML = `<span class="font-mono text-[11px] font-bold text-emerald-600">${String(i + 1).padStart(2, '0')}</span><span class="font-medium text-[var(--foreground)]">${s.dataset.title}</span>`;
+      item.addEventListener('click', () => { goTo(i); overviewModal.classList.add('hidden'); });
+      overviewGrid.appendChild(item);
+    });
+
+    function goTo(idx) {
+      current = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => s.classList.toggle('active', i === current));
+      Array.from(topDots.children).forEach((d, i) => {
+        if (i === current) {
+          d.style.width = '22px';
+          d.style.backgroundColor = 'var(--primary)';
+        } else {
+          d.style.width = '8px';
+          d.style.backgroundColor = 'var(--border)';
+        }
+      });
+      slideCounter.textContent = `Slide ${current + 1} / ${slides.length}`;
+      slideTitleLabel.textContent = slides[current].dataset.title;
+      document.getElementById('prevBtn').style.opacity = current === 0 ? '0.45' : '1';
+      document.getElementById('nextBtn').textContent = current === slides.length - 1 ? 'Restart ↺' : 'Next →';
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (current === slides.length - 1) goTo(0);
+      else goTo(current + 1);
+    });
+    document.getElementById('overviewBtn').addEventListener('click', () => overviewModal.classList.remove('hidden'));
+    document.getElementById('closeModal').addEventListener('click', () => overviewModal.classList.add('hidden'));
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+    document.getElementById('fsBtn').addEventListener('click', () => {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+      else if (e.key === 'Escape') { overviewModal.classList.add('hidden'); }
+      else if (e.key.toLowerCase() === 'f') {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+        else document.exitFullscreen?.();
+      }
+    });
+
+    goTo(0);
+
+    // ========================================================================
+    // SLIDE 9: INTERACTIVE SHIRE CONFIGURATOR LOGIC
+    // ========================================================================
+    const cfg = { bridges: 50, comms: 'hybrid', power: 'lisocl2', flood: 'float', casing: 'hdpe' };
+    const bridgesInput = document.getElementById('cfgBridges');
+    const bridgesVal = document.getElementById('cfgBridgesVal');
+
+    function recalc() {
+      const n = cfg.bridges;
+      bridgesVal.textContent = n === 1 ? '1 Bridge (Pilot)' : `${n} Bridges`;
+
+      // Base core electronics (RAK WisBlock + ADXL355 + clamps + 4m cable kit + potting)
+      let baseNode = n >= 50 ? 115 : (n >= 10 ? 132 : 148);
+      if (cfg.power === 'lisocl2') baseNode += 25;
+      else if (cfg.power === 'lifepo4') baseNode += 20;
+      else if (cfg.power === 'lto') baseNode += 36;
+
+      if (cfg.flood === 'float') baseNode += 8;
+      else baseNode += 23;
+
+      if (cfg.casing === 'rpetg') baseNode += 14;
+      else baseNode += (n >= 50 ? 5 : 18); // Moulded HDPE cheaper at 50+
+
+      // Estimated bench assembly & QA labour (~$55-60/hr AU rate)
+      const labourCost = n >= 50 ? 14 : (n >= 20 ? 19 : 24);
+      const labourMins = n >= 50 ? '~15m' : (n >= 20 ? '~20m' : '~25m');
+      const unitTotal = baseNode + labourCost;
+
+      // Shared infrastructure (gateways & ute boxes)
+      const gateways = Math.max(1, Math.ceil(n / 18));
+      const utes = Math.max(1, Math.min(20, Math.ceil(n / 6)));
+      let infraCost = 0;
+      let infraText = '';
+      if (cfg.comms === 'ute') {
+        infraCost = utes * 40;
+        infraText = `${utes} ute receiver${utes > 1 ? 's' : ''} ($${infraCost.toLocaleString()})`;
+      } else if (cfg.comms === 'gateway') {
+        infraCost = gateways * 450;
+        infraText = `${gateways} depot gateway${gateways > 1 ? 's' : ''} ($${infraCost.toLocaleString()})`;
+      } else {
+        infraCost = gateways * 450 + utes * 40;
+        infraText = `${gateways} gateway${gateways > 1 ? 's' : ''} + ${utes} ute${utes > 1 ? 's' : ''} ($${infraCost.toLocaleString()})`;
+      }
+
+      const total = n * unitTotal + infraCost;
+      const commercial = n * 6500;
+      const savings = commercial - total;
+      const pct = ((savings / commercial) * 100).toFixed(1);
+      const wasteKg = (n * 0.25).toFixed(1);
+
+      document.getElementById('outPerBridge').textContent = `~$${unitTotal}`;
+      document.getElementById('outBreakdown').textContent = `$${baseNode} BOM + $${labourCost} (${labourMins})`;
+      document.getElementById('outTotal').textContent = `~$${total.toLocaleString()}`;
+      document.getElementById('outInfra').textContent = infraText;
+      document.getElementById('outCommercial').textContent = `$${commercial.toLocaleString()}`;
+      document.getElementById('outSavings').textContent = `$${savings.toLocaleString()} (${pct}%)`;
+      document.getElementById('outWaste').textContent = `${wasteKg} kg`;
+
+      const pNote = cfg.power === 'lisocl2'
+        ? 'Aligned to Level 2 (3–5 yr) inspection battery swaps.'
+        : cfg.power === 'lifepo4'
+          ? 'Aligned to annual Level 1 depot swap-and-recharge (zero battery waste).'
+          : '15+ yr frost-safe solar/LTO power — minimal ongoing site visits.';
+      const cNote = cfg.comms === 'ute'
+        ? '100% offline drive-by muling — zero gateway infrastructure needed.'
+        : cfg.comms === 'gateway'
+          ? 'Live 10–15 km LoRaWAN flood alerts straight to council depots.'
+          : 'Live depot flood alerts near towns + automatic ute muling in deep valleys.';
+      document.getElementById('outNote').textContent = `${pNote} ${cNote}`;
+    }
+
+    bridgesInput.addEventListener('input', () => {
+      cfg.bridges = Number(bridgesInput.value);
+      recalc();
+    });
+
+    document.querySelectorAll('.cfg-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const grp = btn.dataset.group;
+        cfg[grp] = btn.dataset.val;
+        document.querySelectorAll(`.cfg-btn[data-group="${grp}"]`).forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        recalc();
+      });
+    });
+
+    recalc();
+  </script>
+
+  <!-- INTERACTIVE WALKTHROUGH VIDEO MODAL -->
+  <div id="demoModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 md:p-6">
+    <div class="w-full max-w-4xl rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-2xl overflow-hidden flex flex-col">
+      <div class="flex items-center justify-between px-4 py-2.5 border-b border-[var(--border)]">
+        <span id="demoModalTitle" class="text-xs font-bold text-[var(--foreground)]">Interactive Walkthrough</span>
+        <button id="closeDemoModal" class="px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] text-xs cursor-pointer">Close (Esc)</button>
+      </div>
+      <iframe id="demoFrame" src="about:blank" class="w-full h-[520px] border-0 bg-[var(--background)]"></iframe>
+    </div>
+  </div>
+
+  <script>
+    const demoModal = document.getElementById("demoModal");
+    const demoFrame = document.getElementById("demoFrame");
+    const demoModalTitle = document.getElementById("demoModalTitle");
+    function openDemo(url, title) {
+      demoModalTitle.textContent = title;
+      demoFrame.src = url;
+      demoModal.classList.remove("hidden");
+    }
+    function closeDemo() {
+      demoModal.classList.add("hidden");
+      demoFrame.src = "about:blank";
+    }
+    document.getElementById("fieldDemoBtn").addEventListener("click", () => openDemo("field_demo.html", "6-Scene Field Install, Flood Protection & 100 km/h Drive-Over Demo"));
+    document.getElementById("mfgDemoBtn").addEventListener("click", () => openDemo("manufacturing_demo.html", "5-Step Recycled Victorian Plastic Manufacturing Demo"));
+    document.getElementById("closeDemoModal").addEventListener("click", closeDemo);
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDemo(); });
+
+    const themeBtn = document.getElementById("themeBtn");
+    themeBtn.addEventListener("click", () => {
+      const dark = document.documentElement.classList.toggle("dark");
+      themeBtn.textContent = dark ? "☀️" : "🌙";
+      try {
+        demoFrame.contentDocument?.documentElement?.classList.toggle("dark", dark);
+      } catch (e) {}
+    });
+  </script>
+</body>
+</html>
