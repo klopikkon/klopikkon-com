@@ -1,9 +1,7 @@
 name: Update & Email Waikato MyMSD Jobs
 
+# Timer is cron-job.org workflow_dispatch only (8:55 AM Pacific/Auckland). GitHub on.schedule is off.
 on:
-  schedule:
-    # Runs daily at 19:47 UTC (8:47 AM NZDT / 7:47 AM NZST — off-peak minute for reliability)
-    - cron: "47 19 * * *"
   workflow_dispatch:
 
 permissions:
