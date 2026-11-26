@@ -66,11 +66,12 @@
       border-color: var(--primary);
       font-weight: 600;
     }
-    /* Crisp Landscape Print / Save as PDF layout — exact 11 pages, zero blank overflow pages */
+    /* Crisp Landscape Print / Save as PDF layout — exact 11 widescreen pages, zero blank slides */
     @media print {
       @page { size: A4 landscape; margin: 6mm; }
       html, body {
         display: block !important;
+        width: 1120px !important;
         height: auto !important;
         min-height: 0 !important;
         overflow: visible !important;
@@ -94,13 +95,16 @@
       }
       .slide {
         display: block !important;
-        zoom: 0.76;
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        zoom: 0.82;
         page-break-after: always !important;
         break-after: page !important;
         min-height: 0 !important;
         max-height: none !important;
         height: auto !important;
-        padding: 16px 20px !important;
+        padding: 18px 24px !important;
         margin: 0 !important;
         border: 1px solid #cbd5e1 !important;
         box-shadow: none !important;
@@ -108,6 +112,18 @@
         color: #0f172a !important;
       }
       .slide:last-child { page-break-after: auto !important; break-after: auto !important; }
+      /* Keep desktop multi-column grids intact at print width */
+      .lg\:grid-cols-12 { display: grid !important; grid-template-columns: repeat(12, minmax(0, 1fr)) !important; }
+      .lg\:col-span-7 { grid-column: span 7 / span 7 !important; }
+      .lg\:col-span-5 { grid-column: span 5 / span 5 !important; }
+      .lg\:grid-cols-2 { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+      .md\:grid-cols-2 { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+      .md\:grid-cols-3 { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+      .md\:grid-cols-4 { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+      .md\:grid-cols-5 { display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+      .md\:grid-cols-6 { display: grid !important; grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
+      .sm\:grid-cols-2 { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+      .sm\:grid-cols-3 { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
     }
   </style>
 </head>
