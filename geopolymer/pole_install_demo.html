@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Geopolymer Pole Shield — 10-Minute Install Walkthrough</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0b1120;
+      color: #f1f5f9;
+      margin: 0;
+    }
+    .step-btn.active {
+      background-color: #059669;
+      color: #ffffff;
+      border-color: #10b981;
+    }
+    .fade-in { animation: fadeIn 0.35s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/90 px-5 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white font-bold text-sm">GP</span>
+      <div>
+        <div class="font-bold text-sm">Smart Bushfire Pole Shield — Installation Walkthrough</div>
+        <div class="text-xs text-slate-400">Geopolymer Clamshell + Buried "Pole-Lite" LoRa Sensor · 10-Min Retrofit</div>
+      </div>
+    </div>
+    <a href="index.html" class="text-xs px-3 py-1.5 rounded-md border border-slate-700 hover:border-emerald-500 transition">← Back to Deck</a>
+  </header>
+
+  <!-- Main Stage -->
+  <main class="flex-1 max-w-6xl w-full mx-auto p-4 md:p-8 flex flex-col gap-6">
+
+    <!-- Video-Style Mockup Canvas -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+      <!-- Left: Animated Engineering Mockup -->
+      <div class="lg:col-span-7 rounded-2xl border border-slate-800 bg-slate-950 p-4 flex flex-col justify-between shadow-2xl">
+        <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+          <span class="font-mono text-emerald-400" id="stageBadge">STEP 1 OF 5 · SITE PREP</span>
+          <span class="font-mono">NO LADDER · NO CHERRY-PICKER · 1.5 m HEIGHT</span>
+        </div>
+
+        <svg id="installSvg" viewBox="0 0 540 360" class="w-full h-auto rounded-xl bg-[#0b1120] border border-slate-800/80">
+          <defs>
+            <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="#ef4444"/>
+              <stop offset="55%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#fde047" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Background sky & distant pole (for Step 5 daisy-chain) -->
+          <g id="distantPole" opacity="0.25">
+            <rect x="465" y="120" width="10" height="165" fill="#78350f"/>
+            <rect x="448" y="132" width="44" height="4" fill="#78350f"/>
+            <rect x="461" y="215" width="18" height="70" rx="2" fill="#475569"/>
+            <text x="470" y="112" fill="#94a3b8" font-size="9" font-family="monospace" text-anchor="middle">NEXT POLE (150m+)</text>
+          </g>
+
+          <!-- Soil / Groundline -->
+          <rect x="0" y="285" width="540" height="75" fill="#1e293b"/>
+          <line x1="0" y1="285" x2="540" y2="285" stroke="#475569" stroke-width="2"/>
+          <text x="16" y="303" fill="#64748b" font-size="10" font-family="monospace">GROUNDLINE (0 mm)</text>
+          <line x1="0" y1="315" x2="290" y2="315" stroke="#334155" stroke-dasharray="4,4"/>
+          <text x="16" y="330" fill="#64748b" font-size="9" font-family="monospace">-100 mm TOPSOIL SCRAPE</text>
+
+          <!-- Main Timber Power Pole -->
+          <rect x="175" y="20" width="54" height="335" rx="3" fill="#92400e" stroke="#78350f" stroke-width="2"/>
+          <text x="202" y="45" fill="#fde68a" font-size="9" font-family="monospace" text-anchor="middle">TIMBER</text>
+          <text x="202" y="57" fill="#fde68a" font-size="9" font-family="monospace" text-anchor="middle">POLE</text>
+          <!-- Crossarm hint -->
+          <rect x="115" y="26" width="174" height="8" rx="2" fill="#78350f" opacity="0.6"/>
+
+          <!-- STEP 1: Crushed Waste-Glass Drainage Bed -->
+          <g id="layerBed" opacity="0">
+            <rect x="132" y="285" width="140" height="28" rx="4" fill="#0f766e" fill-opacity="0.45" stroke="#14b8a6" stroke-width="1.5" stroke-dasharray="4,2"/>
+            <text x="202" y="303" fill="#5eead4" font-size="9" font-family="monospace" text-anchor="middle">CRUSHED WASTE-GLASS BED</text>
+          </g>
+
+          <!-- STEP 2: Buried Potted Pole-Lite Sensor + Moisture Pins + 1.5m Wire -->
+          <g id="layerSensor" opacity="0">
+            <!-- IP68 Potted Puck at -50mm -->
+            <rect x="234" y="274" width="32" height="26" rx="4" fill="#0284c7" stroke="#38bdf8" stroke-width="1.8"/>
+            <text x="250" y="290" fill="#e0f2fe" font-size="7" font-family="monospace" text-anchor="middle">PUCK</text>
+            <!-- 2 Stainless Moisture Pins into wood -->
+            <line x1="224" y1="281" x2="234" y2="281" stroke="#e2e8f0" stroke-width="2.5"/>
+            <line x1="224" y1="291" x2="234" y2="291" stroke="#e2e8f0" stroke-width="2.5"/>
+            <!-- 1.5m internal coax wire up to top of clamshell -->
+            <path d="M 250 274 L 250 112 L 268 102" fill="none" stroke="#38bdf8" stroke-width="2"/>
+            <!-- 8 cm Antenna Tip -->
+            <line x1="268" y1="102" x2="268" y2="82" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+            <text x="280" y="92" fill="#10b981" font-size="9" font-family="monospace">8 cm ANTENNA (1.5m)</text>
+            <text x="275" y="286" fill="#38bdf8" font-size="9" font-family="monospace">IP68 PUCK + ROT PINS</text>
+          </g>
+
+          <!-- STEP 3: Interlocking Geopolymer Clamshell Halves -->
+          <g id="layerShell" opacity="0">
+            <!-- Left Half-Shell (30mm wall + 45 deg drip bevel at top) -->
+            <polygon points="140,120 162,108 162,285 140,285" fill="#64748b" stroke="#cbd5e1" stroke-width="1.5"/>
+            <!-- Right Half-Shell -->
+            <polygon points="242,108 264,120 264,285 242,285" fill="#64748b" stroke="#cbd5e1" stroke-width="1.5"/>
+            <!-- 15mm Air Gap Spacer Ribs -->
+            <rect x="162" y="160" width="13" height="6" fill="#94a3b8"/>
+            <rect x="162" y="240" width="13" height="6" fill="#94a3b8"/>
+            <rect x="229" y="160" width="13" height="6" fill="#94a3b8"/>
+            <rect x="229" y="240" width="13" height="6" fill="#94a3b8"/>
+            <!-- Labels -->
+            <text x="128" y="195" fill="#cbd5e1" font-size="9" font-family="monospace" text-anchor="end">30mm GEOPOLYMER</text>
+            <text x="128" y="208" fill="#94a3b8" font-size="8" font-family="monospace" text-anchor="end">15mm AIR GAP</text>
+            <text x="128" y="112" fill="#38bdf8" font-size="9" font-family="monospace" text-anchor="end">45° DRIP BEVEL</text>
+          </g>
+
+          <!-- STEP 4: Stainless Band-It Straps + Recycled Ember Collar -->
+          <g id="layerStraps" opacity="0">
+            <!-- Top & Bottom Stainless Straps -->
+            <rect x="138" y="145" width="128" height="6" rx="1" fill="#10b981"/>
+            <rect x="138" y="252" width="128" height="6" rx="1" fill="#10b981"/>
+            <!-- Recycled Slag-Wool / Stainless Mesh Ember Collar -->
+            <rect x="162" y="108" width="13" height="12" fill="#f59e0b" fill-opacity="0.8"/>
+            <rect x="229" y="108" width="13" height="12" fill="#f59e0b" fill-opacity="0.8"/>
+            <text x="202" y="98" fill="#f59e0b" font-size="9" font-family="monospace" text-anchor="middle">RECYCLED EMBER COLLAR ($0–$2)</text>
+          </g>
+
+          <!-- STEP 5: Live LoRa Daisy-Chain + 800°C Bushfire Shield -->
+          <g id="layerLive" opacity="0">
+            <!-- Wireless LoRa Arc to Next Pole -->
+            <path d="M 272 86 Q 370 40 462 195" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="6,4">
+              <animate attributeName="stroke-dashoffset" from="40" to="0" dur="1.2s" repeatCount="indefinite"/>
+            </path>
+            <text x="372" y="58" fill="#10b981" font-size="10" font-family="monospace" text-anchor="middle">915 MHz LoRa DAISY-CHAIN</text>
+            <text x="372" y="71" fill="#94a3b8" font-size="8" font-family="monospace" text-anchor="middle">12-BYTE ROT &amp; TILT PACKET</text>
+            <!-- Bushfire Flames Deflected -->
+            <path d="M 80 285 Q 105 220 138 245 Q 115 285 138 285 Z" fill="url(#flameGrad)">
+              <animate attributeName="opacity" values="0.7;1;0.7" dur="0.9s" repeatCount="indefinite"/>
+            </path>
+            <path d="M 324 285 Q 300 220 266 245 Q 290 285 266 285 Z" fill="url(#flameGrad)">
+              <animate attributeName="opacity" values="1;0.7;1" dur="0.9s" repeatCount="indefinite"/>
+            </path>
+            <text x="202" y="346" fill="#f59e0b" font-size="10" font-family="monospace" text-anchor="middle">800 °C FLAME FRONT DEFLECTED · BURIED PUCK STAYS &lt;50 °C</text>
+          </g>
+        </svg>
+
+        <!-- Playback Controls -->
+        <div class="mt-4 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button id="playBtn" onclick="togglePlay()" class="px-4 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition">⏸ Pause</button>
+            <button onclick="prevStep()" class="px-3 py-1.5 rounded-md border border-slate-700 hover:border-emerald-500 text-xs">← Prev</button>
+            <button onclick="nextStep()" class="px-3 py-1.5 rounded-md border border-slate-700 hover:border-emerald-500 text-xs">Next →</button>
+          </div>
+          <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div id="progressBar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 20%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Step-by-Step Field Instructions -->
+      <div class="lg:col-span-5 flex flex-col justify-between gap-4">
+        <div id="stepCard" class="rounded-2xl border border-slate-800 bg-slate-900 p-6 flex-1 fade-in">
+          <div class="text-xs font-mono text-emerald-400 mb-1" id="stepTime">TIME: 0:00 – 2:00</div>
+          <h1 class="text-xl font-bold mb-3" id="stepTitle">Step 1: Scrape 100 mm Topsoil &amp; Lay Drainage Bed</h1>
+          <p class="text-sm text-slate-300 leading-relaxed mb-4" id="stepDesc"></p>
+          <div class="rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs space-y-2" id="stepBullets"></div>
+        </div>
+
+        <!-- Step Selector Pills -->
+        <div class="grid grid-cols-5 gap-2">
+          <button onclick="goStep(0)" class="step-btn active text-xs py-2 rounded-lg border border-slate-700 font-semibold">1. Prep</button>
+          <button onclick="goStep(1)" class="step-btn text-xs py-2 rounded-lg border border-slate-700 font-semibold">2. Puck</button>
+          <button onclick="goStep(2)" class="step-btn text-xs py-2 rounded-lg border border-slate-700 font-semibold">3. Shell</button>
+          <button onclick="goStep(3)" class="step-btn text-xs py-2 rounded-lg border border-slate-700 font-semibold">4. Strap</button>
+          <button onclick="goStep(4)" class="step-btn text-xs py-2 rounded-lg border border-slate-700 font-semibold">5. Live</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const steps = [
+      {
+        badge: "STEP 1 OF 5 · SITE PREP",
+        time: "TIME: 0:00 – 2:00",
+        title: "Step 1: Scrape 100 mm Topsoil & Lay Drainage Bed",
+        desc: "A 2-person crew clears just 50–100 mm of topsoil around the pole base (zero impact on a pole buried 2 m deep—or done during a scheduled 3–5 yr inspection dig). Pour a 50 mm collar of coarse crushed waste glass for rapid drainage.",
+        bullets: [
+          "• <strong>No heavy excavation:</strong> Hand trowel depth only.",
+          "• <strong>Rot prevention:</strong> Crushed glass never holds water against the timber.",
+          "• <strong>Zero pole stability impact.</strong>"
+        ],
+        layers: ["layerBed"]
+      },
+      {
+        badge: "STEP 2 OF 5 · POLE-LITE SENSOR",
+        time: "TIME: 2:00 – 4:00",
+        title: "Step 2: Seat Buried IP68 Puck & Moisture Pins",
+        desc: "Drive the two stainless steel moisture screws into the timber at groundline and seat the $20 IP68-potted Pole-Lite puck 50 mm below grade. The 1.5 m coax pigtail is already pre-clipped inside the shell.",
+        bullets: [
+          "• <strong>800 °C heat protection:</strong> Earth + geopolymer keeps battery <50 °C.",
+          "• <strong>Flood-proof:</strong> Solid IP68 resin potting, 5–10 yr AA Li-SOCl₂ cell.",
+          "• <strong>Monitors:</strong> Groundline rot (moisture) + progressive tilt/lean."
+        ],
+        layers: ["layerBed", "layerSensor"]
+      },
+      {
+        badge: "STEP 3 OF 5 · GEOPOLYMER CLAMSHELL",
+        time: "TIME: 4:00 – 7:00",
+        title: "Step 3: Snap Interlocking Geopolymer Halves",
+        desc: "Place the two rigid C-shaped geopolymer half-shells around the bottom 1.5 m of the pole. Moulded internal spacer ribs lock in a 15 mm breathable air gap, and the 8 cm antenna tip exits cleanly under the 45° top drip-bevel.",
+        bullets: [
+          "• <strong>No ladder / no cherry-picker:</strong> Chest-height install (1.5 m).",
+          "• <strong>45° outward drip-bevel:</strong> Sheds rain outside the shell.",
+          "• <strong>15 mm convection chimney:</strong> Dries timber naturally after rain."
+        ],
+        layers: ["layerBed", "layerSensor", "layerShell"]
+      },
+      {
+        badge: "STEP 4 OF 5 · STRAP & EMBER SEAL",
+        time: "TIME: 7:00 – 9:30",
+        title: "Step 4: Cinch Stainless Straps & Recycled Ember Collar",
+        desc: "Lock both halves tight with two standard stainless Band-It straps. Tuck reclaimed slag-wool/rockwool offcuts behind a salvaged stainless ember-mesh collar at the top rim ($0–$2/pole).",
+        bullets: [
+          "• <strong>Standard utility tools:</strong> Uses the same Band-It tool crews already carry.",
+          "• <strong>Breathable fire barrier:</strong> Blocks embers while letting moisture vapour out.",
+          "• <strong>2-minute unstrap:</strong> Easy visual inspection every 3–5 years."
+        ],
+        layers: ["layerBed", "layerSensor", "layerShell", "layerStraps"]
+      },
+      {
+        badge: "STEP 5 OF 5 · LIVE PROTECTION & MESH",
+        time: "TIME: 9:30 – 10:00 (LIVE)",
+        title: "Step 5: Wireless LoRa Daisy-Chain & >1,000 °C Shield Active",
+        desc: "The pole is now armoured against 800–1,000 °C grassfires, termites, and whipper-snippers. Once per day (or instantly on a >5° storm tilt), the puck hops a 12-byte packet wirelessly pole-to-pole back to the nearest substation.",
+        bullets: [
+          "• <strong>Zero SIM cards:</strong> 915 MHz AU915 LoRa hops 500 m – 2+ km pole-to-pole.",
+          "• <strong>Saves $7,500–$14,500</strong> per prevented pole replacement.",
+          "• <strong>Total install time:</strong> ~10 minutes from the ground."
+        ],
+        layers: ["layerBed", "layerSensor", "layerShell", "layerStraps", "layerLive"]
+      }
+    ];
+
+    const allLayers = ["layerBed", "layerSensor", "layerShell", "layerStraps", "layerLive"];
+    let cur = 0;
+    let playing = true;
+    let timer = null;
+
+    function render() {
+      const s = steps[cur];
+      document.getElementById("stageBadge").textContent = s.badge;
+      document.getElementById("stepTime").textContent = s.time;
+      document.getElementById("stepTitle").textContent = s.title;
+      document.getElementById("stepDesc").textContent = s.desc;
+      document.getElementById("stepBullets").innerHTML = s.bullets.map(b => `<div>${b}</div>`).join("");
+      document.getElementById("progressBar").style.width = `${((cur + 1) / steps.length) * 100}%`;
+
+      allLayers.forEach(id => {
+        document.getElementById(id).style.opacity = s.layers.includes(id) ? "1" : "0";
+      });
+      document.getElementById("distantPole").style.opacity = cur === 4 ? "1" : "0.25";
+
+      document.querySelectorAll(".step-btn").forEach((btn, i) => {
+        btn.classList.toggle("active", i === cur);
+      });
+    }
+
+    function goStep(n) {
+      cur = (n + steps.length) % steps.length;
+      render();
+    }
+    function nextStep() { goStep(cur + 1); }
+    function prevStep() { goStep(cur - 1); }
+
+    function togglePlay() {
+      playing = !playing;
+      document.getElementById("playBtn").textContent = playing ? "⏸ Pause" : "▶ Play";
+      if (playing) startTimer(); else clearInterval(timer);
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        if (playing) nextStep();
+      }, 4500);
+    }
+
+    render();
+    startTimer();
+  </script>
+</body>
+</html>
