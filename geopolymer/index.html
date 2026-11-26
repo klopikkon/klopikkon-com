@@ -209,7 +209,129 @@
         </div>
       </section>
 
-      <!-- SLIDE 6: Milestone 1 Benchtop Plan -->
+      <!-- SLIDE 6: Interactive Bushfire Power-Pole Protection Animation -->
+      <section class="slide flex-col justify-between rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-8 md:p-10 shadow-xl min-h-[540px]">
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">05 · Utility Asset Protection</span>
+              <h2 class="text-2xl md:text-3xl font-bold mt-1">Bushfire Power-Pole Protection: Clamshell vs. Spray-On R&amp;D</h2>
+            </div>
+            <div class="flex gap-2">
+              <button id="btnModeShell" onclick="setPoleMode('shell')" class="text-xs px-3 py-1.5 rounded-md bg-emerald-600 text-white font-semibold">Rigid Clamshell</button>
+              <button id="btnModeSpray" onclick="setPoleMode('spray')" class="text-xs px-3 py-1.5 rounded-md border border-[var(--border)] hover:border-amber-400">Drone / Spray-On R&amp;D</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <!-- Animated SVG Stage -->
+            <div class="lg:col-span-6 rounded-xl border border-[var(--border)] bg-[#0b1120] p-3">
+              <svg id="poleSvg" viewBox="0 0 420 310" class="w-full h-auto">
+                <defs>
+                  <linearGradient id="fireGrad" x1="0" y1="1" x2="0" y2="0">
+                    <stop offset="0%" stop-color="#ef4444"/>
+                    <stop offset="60%" stop-color="#f59e0b"/>
+                    <stop offset="100%" stop-color="#fde047" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <!-- Ground -->
+                <rect x="0" y="265" width="420" height="45" fill="#1e293b"/>
+                <line x1="0" y1="265" x2="420" y2="265" stroke="#475569" stroke-width="2"/>
+                <!-- Crossarm & wires -->
+                <rect x="135" y="42" width="150" height="10" rx="2" fill="#78350f"/>
+                <circle cx="150" cy="36" r="5" fill="#94a3b8"/>
+                <circle cx="270" cy="36" r="5" fill="#94a3b8"/>
+                <path d="M 0 32 Q 75 48 150 36" fill="none" stroke="#64748b" stroke-width="1.5"/>
+                <path d="M 270 36 Q 345 48 420 32" fill="none" stroke="#64748b" stroke-width="1.5"/>
+                <!-- Timber Pole -->
+                <rect x="192" y="25" width="36" height="245" rx="3" fill="#92400e" stroke="#78350f" stroke-width="2"/>
+
+                <!-- RIGID CLAMSHELL GROUP -->
+                <g id="grpShell">
+                  <!-- Left half-shell sliding in -->
+                  <g>
+                    <animateTransform attributeName="transform" type="translate" values="-48,0; 0,0; 0,0; -48,0" keyTimes="0;0.35;0.85;1" dur="5s" repeatCount="indefinite"/>
+                    <rect x="172" y="135" width="18" height="130" rx="3" fill="#64748b" stroke="#38bdf8" stroke-width="1.5"/>
+                    <text x="166" y="205" fill="#38bdf8" font-size="9" font-family="monospace" text-anchor="end">HALF A</text>
+                  </g>
+                  <!-- Right half-shell sliding in -->
+                  <g>
+                    <animateTransform attributeName="transform" type="translate" values="48,0; 0,0; 0,0; 48,0" keyTimes="0;0.35;0.85;1" dur="5s" repeatCount="indefinite"/>
+                    <rect x="230" y="135" width="18" height="130" rx="3" fill="#64748b" stroke="#38bdf8" stroke-width="1.5"/>
+                    <text x="254" y="205" fill="#38bdf8" font-size="9" font-family="monospace">HALF B</text>
+                  </g>
+                  <!-- Stainless bands -->
+                  <g opacity="0">
+                    <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.35;0.45;0.85;1" dur="5s" repeatCount="indefinite"/>
+                    <rect x="170" y="155" width="80" height="5" fill="#10b981"/>
+                    <rect x="170" y="235" width="80" height="5" fill="#10b981"/>
+                    <text x="210" y="128" fill="#10b981" font-size="10" font-family="monospace" text-anchor="middle">15mm AIR GAP + EMBER SEAL</text>
+                  </g>
+                  <!-- Bushfire flames deflected -->
+                  <g opacity="0">
+                    <animate attributeName="opacity" values="0;0;0.9;0.9;0" keyTimes="0;0.45;0.55;0.85;1" dur="5s" repeatCount="indefinite"/>
+                    <path d="M 110 265 Q 130 210 168 235 Q 145 265 168 265 Z" fill="url(#fireGrad)"/>
+                    <path d="M 310 265 Q 290 210 252 235 Q 275 265 252 265 Z" fill="url(#fireGrad)"/>
+                    <text x="210" y="290" fill="#f59e0b" font-size="11" font-family="monospace" text-anchor="middle">&gt;1,000 °C HEAT SHIELD · SAVES $7.5k–$14.5k POLE</text>
+                  </g>
+                </g>
+
+                <!-- DRONE / SPRAY-ON R&D GROUP -->
+                <g id="grpSpray" style="display:none;">
+                  <!-- Drone hovering & scanning up/down -->
+                  <g>
+                    <animateTransform attributeName="transform" type="translate" values="0,0; 0,95; 0,0" dur="4s" repeatCount="indefinite"/>
+                    <rect x="95" y="75" width="38" height="10" rx="4" fill="#38bdf8"/>
+                    <line x1="85" y1="73" x2="105" y2="73" stroke="#e2e8f0" stroke-width="2"/>
+                    <line x1="123" y1="73" x2="143" y2="73" stroke="#e2e8f0" stroke-width="2"/>
+                    <!-- Spray cone -->
+                    <polygon points="133,80 192,65 192,100" fill="#10b981" fill-opacity="0.35"/>
+                    <text x="114" y="65" fill="#38bdf8" font-size="9" font-family="monospace" text-anchor="middle">AG-DRONE</text>
+                  </g>
+                  <!-- Mineral mist coating on upper pole -->
+                  <rect x="190" y="60" width="40" height="145" rx="3" fill="#10b981" fill-opacity="0.28" stroke="#10b981" stroke-dasharray="4,3"/>
+                  <text x="210" y="290" fill="#38bdf8" font-size="11" font-family="monospace" text-anchor="middle">R&amp;D CONCEPT: 2-PART MINERAL / PHOSPHATE MIST COAT</text>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Challenges & Engineering Reality -->
+            <div class="lg:col-span-6 space-y-3 text-xs">
+              <div id="infoShell" class="space-y-3">
+                <div class="rounded-xl border border-emerald-500/40 bg-emerald-500/5 p-4">
+                  <div class="font-bold text-sm text-emerald-400 mb-1">Why Rigid Clamshells Win Today</div>
+                  <p class="text-[var(--muted-foreground)]">Two interlocking C-shells bolt or Band-It strap around the bottom 1.5–2 m of live poles in 10 minutes. Unlike flexible mesh wraps, rigid geopolymer resists whipper-snippers, cattle, and falling branches.</p>
+                </div>
+                <div class="rounded-xl border border-[var(--border)] p-4">
+                  <div class="font-bold text-sm text-amber-400 mb-1">Engineering Challenges We’re Solving</div>
+                  <ul class="list-disc pl-4 space-y-1 text-[var(--muted-foreground)]">
+                    <li><strong>No Rot Trap:</strong> Moulded 15 mm internal spacer ribs + open base let rainwater drain so timber breathes.</li>
+                    <li><strong>Ember Collar:</strong> Mineral-wool top lip stops burning embers falling down the air gap.</li>
+                    <li><strong>Weight for 2-Person Crews:</strong> Hollow/foamed geopolymer keeps each 1 m half-shell under ~25 kg.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div id="infoSpray" class="space-y-3 hidden">
+                <div class="rounded-xl border border-sky-500/40 bg-sky-500/5 p-4">
+                  <div class="font-bold text-sm text-sky-400 mb-1">Moonshot R&amp;D: On-Site Spray / Drone Coating</div>
+                  <p class="text-[var(--muted-foreground)]">Thick geopolymer mortar is too heavy for drones, <em>but</em> heavy-lift ag-drones (40–50 kg payload) could spray a thin <strong>2-part phosphate/silicate mineral gel</strong> onto upper poles &amp; cross-arms without a cherry-picker.</p>
+                </div>
+                <div class="rounded-xl border border-[var(--border)] p-4">
+                  <div class="font-bold text-sm text-amber-400 mb-1">Key Technical Hurdles to Crack</div>
+                  <ul class="list-disc pl-4 space-y-1 text-[var(--muted-foreground)]">
+                    <li><strong>Nozzle Clogging:</strong> Requires dual-nozzle external mixing (Part A activator + Part B fine ash/perlite slurry).</li>
+                    <li><strong>Adhesion to Old Wood:</strong> Needs organic bio-tackifiers (lignosulfonate/tannin) to grip weathered timber.</li>
+                    <li><strong>Ground Ute First:</strong> Trailer-mounted shotcrete pump is the practical stepping stone before drones.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Milestone 1 Benchtop Plan -->
       <section class="slide flex-col justify-between rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-8 md:p-12 shadow-xl min-h-[540px]">
         <div>
           <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">05 · Next Step — Milestone 1</span>
@@ -245,7 +367,7 @@
   <!-- Footer Navigation -->
   <footer id="deckFooter" class="border-t border-[var(--border)] bg-[var(--card)] px-6 py-3 flex items-center justify-between text-xs">
     <button onclick="prevSlide()" class="px-4 py-1.5 rounded-md border border-[var(--border)] hover:border-emerald-500 transition">← Prev</button>
-    <div id="slideCounter" class="font-mono text-[var(--muted-foreground)]">Slide 1 / 6</div>
+    <div id="slideCounter" class="font-mono text-[var(--muted-foreground)]">Slide 1 / 7</div>
     <button onclick="nextSlide()" class="px-4 py-1.5 rounded-md bg-emerald-600 text-white font-medium hover:bg-emerald-500 transition">Next →</button>
   </footer>
 
@@ -261,6 +383,19 @@
     function nextSlide() { showSlide(idx + 1); }
     function prevSlide() { showSlide(idx - 1); }
     function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+    function setPoleMode(mode) {
+      const isShell = mode === 'shell';
+      document.getElementById('grpShell').style.display = isShell ? 'inline' : 'none';
+      document.getElementById('grpSpray').style.display = isShell ? 'none' : 'inline';
+      document.getElementById('infoShell').classList.toggle('hidden', !isShell);
+      document.getElementById('infoSpray').classList.toggle('hidden', isShell);
+      document.getElementById('btnModeShell').className = isShell
+        ? 'text-xs px-3 py-1.5 rounded-md bg-emerald-600 text-white font-semibold'
+        : 'text-xs px-3 py-1.5 rounded-md border border-[var(--border)] hover:border-emerald-500';
+      document.getElementById('btnModeSpray').className = !isShell
+        ? 'text-xs px-3 py-1.5 rounded-md bg-sky-600 text-white font-semibold'
+        : 'text-xs px-3 py-1.5 rounded-md border border-[var(--border)] hover:border-amber-400';
+    }
     function updateEst() {
       const t = parseInt(document.getElementById('tonnesSlider').value, 10);
       const blocks = Math.round((t * 1000) / 14);
