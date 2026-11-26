@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waste-to-Rock Geopolymer Infrastructure — Technical Brief</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --background: #f8fafc;
+      --card: #ffffff;
+      --card-border: #e2e8f0;
+      --border: #cbd5e1;
+      --foreground: #0f172a;
+      --muted-foreground: #475569;
+      --primary: #059669;
+      --primary-foreground: #ffffff;
+    }
+    html.dark {
+      --background: #0b1120;
+      --card: #111827;
+      --card-border: #1f2937;
+      --border: #334155;
+      --foreground: #f1f5f9;
+      --muted-foreground: #94a3b8;
+      --primary: #10b981;
+      --primary-foreground: #022c22;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--background);
+      color: var(--foreground);
+      margin: 0;
+      padding: 0;
+    }
+    .slide { display: none; animation: fadeSlide 0.25s ease-out; }
+    .slide.active { display: flex; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @media print {
+      @page { size: A4 landscape; margin: 6mm; }
+      #deckChrome, #deckFooter { display: none !important; }
+      .slide {
+        display: block !important;
+        page-break-after: always !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 20px !important;
+        margin-bottom: 12px !important;
+      }
+      .slide:last-child { page-break-after: auto !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Chrome -->
+  <header id="deckChrome" class="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--card)]/90 backdrop-blur px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white font-bold text-sm">GP</span>
+      <div>
+        <div class="font-bold text-sm leading-tight">Waste-to-Rock Geopolymer Infrastructure</div>
+        <div class="text-xs text-[var(--muted-foreground)]">klopikkon.com/geopolymer · Australian Circular Infrastructure R&amp;D</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <a href="../bridges/" class="text-xs px-3 py-1.5 rounded-md border border-[var(--border)] hover:border-emerald-500 transition">← Bridge Sensors</a>
+      <button onclick="toggleTheme()" class="text-xs px-3 py-1.5 rounded-md border border-[var(--border)] hover:border-emerald-500 transition">Theme</button>
+      <button onclick="window.print()" class="text-xs px-3 py-1.5 rounded-md bg-emerald-600 text-white font-medium hover:bg-emerald-500 transition">Print / PDF</button>
+    </div>
+  </header>
+
+  <!-- Main Slide Stage -->
+  <main id="slideStage" class="flex-1 flex items-center justify-center p-4 md:p-8">
+    <div class="w-full max-w-6xl">
+
+      <!-- SLIDE 1: Hero -->
+      <section class="slide active flex-col justify-between rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-8 md:p-12 shadow-xl min-h-[540px]">
+        <div>
+          <span class="inline-block text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 mb-5">Circular Infrastructure · Technical Brief</span>
+          <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight">
+            Turning Australia’s Coal Ash &amp; Red Mud into <span class="text-emerald-400">Bushfire-Proof Infrastructure</span>
+          </h1>
+          <p class="text-lg text-[var(--muted-foreground)] max-w-3xl">
+            Zero-Portland-cement, kiln-free geopolymer composites engineered for &gt;1,000 °C fire resistance, termite/salt immunity, and multi-use deployment across utility assets, civil walls, and BAL-FZ construction.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+          <div class="rounded-xl border border-[var(--border)] p-4">
+            <div class="text-2xl font-bold text-emerald-400">&gt;500 Mt</div>
+            <div class="text-sm text-[var(--muted-foreground)]">Stockpiled coal ash (&gt;400 Mt) &amp; alumina red mud (&gt;100 Mt) in Australia</div>
+          </div>
+          <div class="rounded-xl border border-[var(--border)] p-4">
+            <div class="text-2xl font-bold text-amber-400">&gt;1,000 °C</div>
+            <div class="text-sm text-[var(--muted-foreground)]">Thermal stability without explosive concrete spalling (BAL-FZ ready)</div>
+          </div>
+          <div class="rounded-xl border border-[var(--border)] p-4">
+            <div class="text-2xl font-bold text-sky-400">70–80% Less CO₂</div>
+            <div class="text-sm text-[var(--muted-foreground)]">No 1,000 °C gas brick kilns; ambient or 60–80 °C curing</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Problem & Feedstock -->
+      <section class="slide flex-col justify-between rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-8 md:p-12 shadow-xl min-h-[540px]">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">01 · Feedstock Strategy</span>
+          <h2 class="text-2xl md:text-3xl font-bold mt-1 mb-6">Where the Waste Sits — &amp; Why We Start with Black-Coal Fly Ash</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="rounded-xl border border-[var(--border)] p-5">
+              <h3 class="font-bold text-lg mb-2 text-sky-400">Black-Coal Fly Ash (NSW &amp; QLD)</h3>
+              <ul class="text-sm text-[var(--muted-foreground)] space-y-2 list-disc pl-5">
+                <li><strong>Locations:</strong> Hunter Valley / Central Coast (Eraring, Bayswater, Vales Point), Gladstone, Tarong, Collie (WA).</li>
+                <li><strong>Why start here:</strong> Rich in reactive silica &amp; alumina—the gold-standard geopolymer feedstock.</li>
+                <li><strong>Easy Victoria access:</strong> Classified 20 kg bags are stocked at Victorian concrete suppliers (~$20/bag) for a repeatable M1 baseline.</li>
+              </ul>
+            </div>
+            <div class="rounded-xl border border-[var(--border)] p-5">
+              <h3 class="font-bold text-lg mb-2 text-amber-400">Victorian Brown-Coal Ash &amp; Red Mud</h3>
+              <ul class="text-sm text-[var(--muted-foreground)] space-y-2 list-disc pl-5">
+                <li><strong>Latrobe Valley (VIC):</strong> Loy Yang, Yallourn, Hazelwood. Higher calcium/sulfates—ideal for <strong>CO₂ carbonation curing</strong> or blended mixes.</li>
+                <li><strong>Alumina Red Mud (WA &amp; QLD):</strong> &gt;100 Mt stockpiled. Already alkaline (pH 10–13) and iron-rich (natural terracotta brick colour).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 text-xs text-[var(--muted-foreground)] border-t border-[var(--border)] pt-3">
+          Strategy: Baseline with off-the-shelf black-coal fly ash → then blend local Latrobe Valley ash / red mud to drop feedstock cost to near zero.
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Chemistry & Activator Breakthrough -->
+      <section class="slide flex-col justify-between rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-8 md:p-12 shadow-xl min-h-[540px]">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">02 · The Chemistry Moat</span>
+          <h2 class="text-2xl md:text-3xl font-bold mt-1 mb-5">Solving the Activator Cost Problem (4 R&amp;D Pathways)</h2>
+          <p class="text-sm text-[var(--muted-foreground)] mb-5">Virgin sodium silicate + caustic soda is the main cost killer in geopolymers. Our R&amp;D targets four cheaper pathways—including organic-chemistry levers rarely explored by civil engineers:</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="rounded-xl border border-[var(--border)] p-4">
+              <div class="font-bold text-emerald-400 mb-1">A. Acid-Activated (Phosphate Route)</div>
+              <p class="text-xs text-[var(--muted-foreground)]">Uses spent industrial phosphoric acid. Delivers <strong>&gt;1,200 °C heat resistance</strong> and <strong>superior electrical insulation</strong> (no mobile Na⁺ ions).</p>
+            </div>
+            <div class="rounded-xl border border-[var(--border)] p-4">
+              <div class="font-bold text-sky-400 mb-1">B. Organic Chelators &amp; Bio-Dispersants</div>
+              <p class="text-xs text-[var(--muted-foreground)]">Bio-derived ligands (citrates, tannins, lignosulfonates) mobilise Al/Si at milder pH and slash water + activator dosage by 30–50%.</p>
+            </div>
+            <div class="rounded-xl border border-[var(--border)] p-4">
+              <div class="font-bold text-amber-400 mb-1">C. CO₂ Carbonation Curing</div>
+              <p class="text-xs text-[var(--muted-foreground)]">Cures alkaline wastes (red mud, slag, brown-coal ash) with flue-gas CO₂. <strong>Zero liquid activator</strong> and carbon-negative.</p>
+            </div>
+            <div class="rounded-xl border border-[var(--border)] p-4">
+              <div class="font-bold text-purple-400 mb-1">D. Waste-Derived Alkali</div>
+              <p class="text-xs text-[var(--muted-foreground)]">Uses red mud’s residual caustic + dissolved waste glass fines or wood ash to eliminate virgin sodium silicate.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Multi-Use Product Ladder & Cost Estimator -->
+      <section class="slide flex-col justify-between rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-8 md:p-12 shadow-xl min-h-[540px]">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">03 · Commercial Path</span>
+          <h2 class="text-2xl md:text-3xl font-bold mt-1 mb-5">Multi-Use Product Ladder (High Margin First)</h2>
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-7 space-y-3">
+              <div class="rounded-xl border border-emerald-500/40 bg-emerald-500/5 p-4">
+                <div class="flex justify-between font-bold text-sm"><span>Phase 1: Utility Cable Troughs &amp; Fireproof Pole Sleeves</span><span class="text-emerald-400">$50 – $300+ / unit</span></div>
+                <p class="text-xs text-[var(--muted-foreground)] mt-1">Highest margin per kg of waste. Faster utility pilot approval than residential housing.</p>
+              </div>
+              <div class="rounded-xl border border-[var(--border)] p-4">
+                <div class="flex justify-between font-bold text-sm"><span>Phase 2: Interlocking Retaining &amp; Flood-Wall Blocks</span><span class="text-sky-400">$8 – $20+ / block</span></div>
+                <p class="text-xs text-[var(--muted-foreground)] mt-1">Dry-stackable 390×190×190 mm blocks with vertical rebar cores for wind/seismic stability.</p>
+              </div>
+              <div class="rounded-xl border border-[var(--border)] p-4">
+                <div class="flex justify-between font-bold text-sm"><span>Phase 3: BAL-FZ Bushfire Construction Bricks</span><span class="text-amber-400">$1.50 – $6.00 / unit</span></div>
+                <p class="text-xs text-[var(--muted-foreground)] mt-1">Kiln-free, natural red-mud terracotta colour, full AS 3700 / Flame Zone certification.</p>
+              </div>
+            </div>
+            <!-- Interactive Estimator -->
+            <div class="lg:col-span-5 rounded-xl border border-[var(--border)] p-5 bg-[var(--background)]">
+              <div class="font-bold text-sm mb-3">Quick Batch Yield Estimator</div>
+              <label class="block text-xs text-[var(--muted-foreground)] mb-1">Coal Ash + Red Mud Input (tonnes): <strong id="tonnesVal" class="text-emerald-400">10 t</strong></label>
+              <input id="tonnesSlider" type="range" min="1" max="100" value="10" oninput="updateEst()" class="w-full accent-emerald-500 mb-4" />
+              <div class="space-y-2 text-xs">
+                <div class="flex justify-between border-b border-[var(--border)] pb-1"><span>Interlocking Blocks (~14 kg ea):</span><strong id="estBlocks">714 blocks</strong></div>
+                <div class="flex justify-between border-b border-[var(--border)] pb-1"><span>Est. CO₂ Saved vs. Clay/OPC:</span><strong id="estCO2" class="text-emerald-400">~6.5 tonnes</strong></div>
+                <div class="flex justify-between"><span>Est. Retail Value (Civil Blocks @ $12):</span><strong id="estRev" class="text-amber-400">$8,568 AUD</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: CAD & Engineering Blueprint -->
+      <section class="slide flex-col justify-between rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-8 md:p-12 shadow-xl min-h-[540px]">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">04 · Engineering CAD</span>
+          <h2 class="text-2xl md:text-3xl font-bold mt-1 mb-4">Interlocking Geoblock &amp; 3D-Printable M1 Test Mould</h2>
+          <div class="rounded-xl border border-[var(--border)] overflow-hidden bg-[#0b1120] p-2">
+            <img src="geoblock_blueprint.svg" alt="Geopolymer Interlocking Block Blueprint" class="w-full h-auto max-h-[360px] object-contain mx-auto" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 text-xs text-[var(--muted-foreground)]">
+            <div class="rounded-lg border border-[var(--border)] p-3"><strong class="text-[var(--foreground)]">interlocking_geoblock.stl:</strong> 390×190×190 mm hollow-core block with 15 mm dry-stack alignment lugs and twin vertical rebar/grout cores.</div>
+            <div class="rounded-lg border border-[var(--border)] p-3"><strong class="text-[var(--foreground)]">test_cube_mould_50mm.stl:</strong> Ready to 3D-print in PETG/PLA for casting standardized 50×50×50 mm M1 lab cubes.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Milestone 1 Benchtop Plan -->
+      <section class="slide flex-col justify-between rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-8 md:p-12 shadow-xl min-h-[540px]">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">05 · Next Step — Milestone 1</span>
+          <h2 class="text-2xl md:text-3xl font-bold mt-1 mb-5">Under-$150 Benchtop Validation Protocol</h2>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="rounded-xl border border-[var(--border)] p-4">
+              <div class="text-emerald-400 font-bold text-sm mb-1">1. Cast 12 Cubes</div>
+              <p class="text-xs text-[var(--muted-foreground)]">4 batches × 3 cubes (50 mm): Portland control, Alkaline baseline, Phosphate route, and Chemist’s organic/low-alkali variant.</p>
+            </div>
+            <div class="rounded-xl border border-[var(--border)] p-4">
+              <div class="text-sky-400 font-bold text-sm mb-1">2. 48-Hr Water Soak</div>
+              <p class="text-xs text-[var(--muted-foreground)]">Submerge cured cubes for 2 days. Pass = stays rock-hard with sharp corners (confirms true chemical polymerisation).</p>
+            </div>
+            <div class="rounded-xl border border-[var(--border)] p-4">
+              <div class="text-amber-400 font-bold text-sm mb-1">3. Blowtorch Test</div>
+              <p class="text-xs text-[var(--muted-foreground)]">15-minute MAP-gas torch thermal shock test vs. Portland concrete control to verify zero spalling.</p>
+            </div>
+            <div class="rounded-xl border border-[var(--border)] p-4">
+              <div class="text-purple-400 font-bold text-sm mb-1">4. Shop-Press MPa</div>
+              <p class="text-xs text-[var(--muted-foreground)]">Crush in a 10–20t hydraulic press. Target &gt;15 MPa (brick/paver) to &gt;30 MPa (structural civil).</p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm flex flex-col md:flex-row justify-between items-center gap-3">
+          <span><strong>Ready for Lab Kickoff:</strong> Full BOM, safety PPE list, and CAD STLs are in the <code>geopolymer-materials</code> project folder.</span>
+          <span class="text-xs font-mono text-emerald-400">Est. M1 Budget: ~$142 AUD</span>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer Navigation -->
+  <footer id="deckFooter" class="border-t border-[var(--border)] bg-[var(--card)] px-6 py-3 flex items-center justify-between text-xs">
+    <button onclick="prevSlide()" class="px-4 py-1.5 rounded-md border border-[var(--border)] hover:border-emerald-500 transition">← Prev</button>
+    <div id="slideCounter" class="font-mono text-[var(--muted-foreground)]">Slide 1 / 6</div>
+    <button onclick="nextSlide()" class="px-4 py-1.5 rounded-md bg-emerald-600 text-white font-medium hover:bg-emerald-500 transition">Next →</button>
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let idx = 0;
+    function showSlide(n) {
+      slides[idx].classList.remove('active');
+      idx = (n + slides.length) % slides.length;
+      slides[idx].classList.add('active');
+      document.getElementById('slideCounter').textContent = `Slide ${idx + 1} / ${slides.length}`;
+    }
+    function nextSlide() { showSlide(idx + 1); }
+    function prevSlide() { showSlide(idx - 1); }
+    function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+    function updateEst() {
+      const t = parseInt(document.getElementById('tonnesSlider').value, 10);
+      const blocks = Math.round((t * 1000) / 14);
+      const co2 = (t * 0.65).toFixed(1);
+      const rev = (blocks * 12).toLocaleString();
+      document.getElementById('tonnesVal').textContent = `${t} t`;
+      document.getElementById('estBlocks').textContent = `${blocks.toLocaleString()} blocks`;
+      document.getElementById('estCO2').textContent = `~${co2} tonnes`;
+      document.getElementById('estRev').textContent = `$${rev} AUD`;
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+    updateEst();
+  </script>
+</body>
+</html>

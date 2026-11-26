@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 620" width="1100" height="620">
+  <rect width="1100" height="620" fill="#0b1120"/>
+  <defs>
+    <pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse">
+      <path d="M 25 0 L 0 0 0 25" fill="none" stroke="#1e293b" stroke-width="0.7"/>
+    </pattern>
+  </defs>
+  <rect width="1100" height="620" fill="url(#grid)"/>
+
+  <!-- Header -->
+  <text x="40" y="45" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="22" font-weight="700">GEOPOLYMER INTERLOCKING BLOCK &amp; M1 TEST MOULD — ENGINEERING BLUEPRINT</text>
+  <text x="40" y="68" fill="#94a3b8" font-family="monospace" font-size="13">FEEDSTOCK: FLY ASH + RED MUD / SLAG  |  FIRE RATING: &gt;1,000 °C  |  ALL DIMENSIONS IN MM</text>
+  <line x1="40" y1="82" x2="1060" y2="82" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Top View: Interlocking Block (390 x 190 mm, scaled 1.2x -> 468 x 228 px) -->
+  <text x="40" y="112" fill="#10b981" font-family="monospace" font-size="14" font-weight="700">1. TOP VIEW — INTERLOCKING GEOBLOCK (390 × 190 × 190 MM)</text>
+  <g transform="translate(60, 140)">
+    <!-- Outer body -->
+    <rect x="0" y="0" width="468" height="228" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"/>
+    <!-- Left Core (142.5 x 120 -> scaled 1.2x = 171 x 144) -->
+    <rect x="42" y="42" width="171" height="144" fill="#0b1120" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6,3"/>
+    <!-- Right Core -->
+    <rect x="255" y="42" width="171" height="144" fill="#0b1120" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6,3"/>
+    <!-- Rebar centers -->
+    <circle cx="127.5" cy="114" r="10" fill="none" stroke="#f59e0b" stroke-width="2"/>
+    <circle cx="340.5" cy="114" r="10" fill="none" stroke="#f59e0b" stroke-width="2"/>
+    <text x="127.5" y="142" fill="#f59e0b" font-family="monospace" font-size="11" text-anchor="middle">REBAR / GROUT CORE</text>
+    <text x="340.5" y="142" fill="#f59e0b" font-family="monospace" font-size="11" text-anchor="middle">REBAR / GROUT CORE</text>
+    <!-- Alignment Lugs -->
+    <rect x="48" y="10" width="159" height="22" fill="#059669" fill-opacity="0.35" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="261" y="10" width="159" height="22" fill="#059669" fill-opacity="0.35" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="48" y="196" width="159" height="22" fill="#059669" fill-opacity="0.35" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="261" y="196" width="159" height="22" fill="#059669" fill-opacity="0.35" stroke="#10b981" stroke-width="1.5"/>
+    <!-- Dimensions -->
+    <text x="234" y="252" fill="#cbd5e1" font-family="monospace" font-size="12" text-anchor="middle">← 390 mm →</text>
+    <text x="482" y="118" fill="#cbd5e1" font-family="monospace" font-size="12">190 mm</text>
+  </g>
+
+  <!-- Side Elevation -->
+  <text x="40" y="425" fill="#10b981" font-family="monospace" font-size="14" font-weight="700">2. SIDE ELEVATION — DRY-STACK LUGS &amp; WALL PROFILE</text>
+  <g transform="translate(60, 445)">
+    <rect x="0" y="18" width="468" height="114" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"/>
+    <rect x="48" y="0" width="159" height="18" fill="#059669" fill-opacity="0.4" stroke="#10b981" stroke-width="1.8"/>
+    <rect x="261" y="0" width="159" height="18" fill="#059669" fill-opacity="0.4" stroke="#10b981" stroke-width="1.8"/>
+    <text x="234" y="80" fill="#94a3b8" font-family="monospace" font-size="12" text-anchor="middle">190 mm BODY + 15 mm INTERLOCK LUGS (205 mm TOTAL)</text>
+  </g>
+
+  <!-- Right Panel: M1 50mm Test Cube Mould + Specs -->
+  <text x="640" y="112" fill="#10b981" font-family="monospace" font-size="14" font-weight="700">3. M1 3D-PRINTABLE TEST MOULD (50 MM CUBE)</text>
+  <g transform="translate(660, 140)">
+    <rect x="0" y="0" width="160" height="160" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+    <rect x="20" y="20" width="120" height="120" fill="#0b1120" stroke="#f59e0b" stroke-width="2"/>
+    <text x="80" y="84" fill="#f59e0b" font-family="monospace" font-size="13" text-anchor="middle">50 × 50 × 50</text>
+    <text x="80" y="102" fill="#94a3b8" font-family="monospace" font-size="11" text-anchor="middle">CAVITY (2500 mm²)</text>
+    <text x="80" y="182" fill="#cbd5e1" font-family="monospace" font-size="12" text-anchor="middle">Print in PETG/PLA + coat w/ mould release</text>
+  </g>
+
+  <!-- Spec Box -->
+  <g transform="translate(640, 355)">
+    <rect x="0" y="0" width="420" height="225" rx="8" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="20" y="32" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="15" font-weight="700">KEY ENGINEERING TARGETS</text>
+    <text x="20" y="62" fill="#cbd5e1" font-family="monospace" font-size="12">• Fire Resistance:   &gt;1,000 °C (BAL-FZ / Bushfire)</text>
+    <text x="20" y="88" fill="#cbd5e1" font-family="monospace" font-size="12">• Compressive Str.:  20–45 MPa (AS 1012.9)</text>
+    <text x="20" y="114" fill="#cbd5e1" font-family="monospace" font-size="12">• Curing Temp:       Ambient to 60–80 °C (No Kiln)</text>
+    <text x="20" y="140" fill="#cbd5e1" font-family="monospace" font-size="12">• Embodied CO2:      70–80% lower than clay/OPC</text>
+    <text x="20" y="166" fill="#cbd5e1" font-family="monospace" font-size="12">• Seismic / Wind:    Vertical rebar + waste fibres</text>
+    <text x="20" y="192" fill="#10b981" font-family="monospace" font-size="12">• Files: interlocking_geoblock.stl</text>
+    <text x="20" y="210" fill="#10b981" font-family="monospace" font-size="12">         test_cube_mould_50mm.stl</text>
+  </g>
+</svg>
