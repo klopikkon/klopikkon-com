@@ -66,25 +66,49 @@
       border-color: var(--primary);
       font-weight: 600;
     }
-    /* Crisp Landscape Print / Save as PDF layout */
+    /* Crisp Landscape Print / Save as PDF layout (display:block fixes Chrome flex-print truncation!) */
     @media print {
-      @page { size: landscape; margin: 10mm; }
-      body { background: #ffffff !important; color: #0f172a !important; }
-      #deckChrome, #deckFooter, #overviewModal { display: none !important; }
-      #slideStage { padding: 0 !important; overflow: visible !important; display: block !important; height: auto !important; }
+      @page { size: A4 landscape; margin: 8mm; }
+      html, body {
+        display: block !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      #deckChrome, #deckFooter, #overviewModal, #demoModal { display: none !important; }
+      #slideStage {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      #slideStage > div {
+        display: block !important;
+        max-width: none !important;
+        width: 100% !important;
+      }
       .slide {
-        display: flex !important;
-        page-break-after: always;
-        break-after: page;
-        min-height: 175mm;
-        max-height: 185mm;
+        display: block !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        height: auto !important;
+        padding: 18px 22px !important;
+        margin: 0 0 8mm 0 !important;
         border: 1px solid #cbd5e1 !important;
         box-shadow: none !important;
-        margin-bottom: 8mm;
         background: #ffffff !important;
         color: #0f172a !important;
       }
-      .slide:last-child { page-break-after: auto; break-after: auto; }
+      .slide:last-child { page-break-after: auto !important; break-after: auto !important; }
     }
   </style>
 </head>
@@ -1532,6 +1556,7 @@
       demoModal.classList.remove("hidden");
     }
     function closeDemo() {
+      try { demoFrame.contentWindow?.speechSynthesis?.cancel(); } catch (e) {}
       demoModal.classList.add("hidden");
       demoFrame.src = "about:blank";
     }

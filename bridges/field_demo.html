@@ -524,19 +524,41 @@
     const recDot = document.getElementById('recDot');
     const chBtns = document.querySelectorAll('.ch-btn');
 
+    let activeUtterance = null;
+    function pickVoice() {
+      const voices = window.speechSynthesis.getVoices() || [];
+      return voices.find(v => /en[-_]AU/i.test(v.lang))
+          || voices.find(v => /^en/i.test(v.lang))
+          || voices[0] || null;
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => pickVoice();
+      pickVoice();
+    }
+
     function speakScene(text) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
       if (!voiceOn) return;
-      const u = new SpeechSynthesisUtterance(text);
-      u.rate = 1.03;
-      u.onend = () => {
-        if (playing && voiceOn) {
-          clearTimeout(timer);
-          timer = setTimeout(() => renderScene(idx + 1), 900);
-        }
-      };
-      window.speechSynthesis.speak(u);
+      // 60ms delay works around Chromium's bug where cancel() kills an immediate speak()
+      setTimeout(() => {
+        if (!voiceOn) return;
+        window.speechSynthesis.resume();
+        const u = new SpeechSynthesisUtterance(text);
+        const v = pickVoice();
+        if (v) u.voice = v;
+        u.lang = v ? v.lang : 'en-AU';
+        u.rate = 1.02;
+        u.volume = 1.0;
+        u.onend = () => {
+          if (playing && voiceOn) {
+            clearTimeout(timer);
+            timer = setTimeout(() => renderScene(idx + 1), 900);
+          }
+        };
+        activeUtterance = u; // prevent GC cutting off speech
+        window.speechSynthesis.speak(u);
+      }, 60);
     }
 
     function renderScene(i) {
