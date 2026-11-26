@@ -489,7 +489,7 @@
       if (voiceOn) {
         speak(s.voice);
       } else if (playing) {
-        timer = setTimeout(() => show(idx + 1), 6500);
+        timer = setTimeout(() => show(idx + 1), 9000);
       }
     }
 
@@ -512,7 +512,7 @@
       if (voiceOn) speak(steps[idx].voice);
       else {
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        if (playing) { clearTimeout(timer); timer = setTimeout(() => show(idx + 1), 6500); }
+        if (playing) { clearTimeout(timer); timer = setTimeout(() => show(idx + 1), 9000); }
       }
     });
 
@@ -522,5 +522,21 @@
 
     show(0);
   </script>
+
+<script>
+  const vAudio = new Audio();
+  vAudio.preload = "auto";
+  function speak(text) {
+    vAudio.pause();
+    if (!voiceOn) return;
+    vAudio.src = "audio/mfg_" + idx + ".wav";
+    vAudio.onended = () => {
+      if (playing && voiceOn) { clearTimeout(timer); timer = setTimeout(() => show(idx + 1), 1200); }
+    };
+    vAudio.play().catch(() => { clearTimeout(timer); if (playing) timer = setTimeout(() => show(idx + 1), 9000); });
+  }
+  document.getElementById("voiceBtn").addEventListener("click", () => { if (!voiceOn) vAudio.pause(); });
+  document.getElementById("playBtn").addEventListener("click", () => { if (!playing) vAudio.pause(); });
+</script>
 </body>
 </html>
