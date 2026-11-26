@@ -294,11 +294,14 @@
       }
     ];
 
-    let idx = 0, playing = true, voiceOn = false, timer = null, activeUtterance = null;
+    const SLIDE_MS = 11000; // Calm, readable 11-second slide pace when Voiceover is OFF
+    let idx = 0, playing = true, voiceOn = false, timer = null, playToken = 0;
+    
     const stepBadge = document.getElementById('stepBadge');
     const narrationTitle = document.getElementById('narrationTitle');
     const narrationBody = document.getElementById('narrationBody');
     const timeTag = document.getElementById('timeTag');
+    
     const playBtn = document.getElementById('playBtn');
     const voiceBtn = document.getElementById('voiceBtn');
     const voiceIcon = document.getElementById('voiceIcon');
@@ -306,42 +309,63 @@
     const recDot = document.getElementById('recDot');
     const chBtns = document.querySelectorAll('.ch-btn');
 
-    function pickVoice() {
-      const voices = window.speechSynthesis.getVoices() || [];
-      return voices.find(v => /en[-_]AU/i.test(v.lang))
-          || voices.find(v => /^en/i.test(v.lang))
-          || voices[0] || null;
-    }
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = () => pickVoice();
-      pickVoice();
+    // Preload real recorded Australian voiceover clips
+    const vAudio = new Audio();
+    vAudio.preload = 'auto';
+    const preloaded = steps.map((_, k) => {
+      const a = new Audio('audio/install_' + k + '.wav?v=3');
+      a.preload = 'auto';
+      return a;
+    });
+
+    function stopAudio() {
+      playToken++;
+      vAudio.onended = null;
+      vAudio.onerror = null;
+      vAudio.pause();
+      try { vAudio.currentTime = 0; } catch (e) {}
     }
 
-    function speak(text) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
+    function playVoiceForCurrent() {
+      clearTimeout(timer);
+      stopAudio();
       if (!voiceOn) return;
-      setTimeout(() => {
-        if (!voiceOn) return;
-        window.speechSynthesis.resume();
-        const u = new SpeechSynthesisUtterance(text);
-        const v = pickVoice();
-        if (v) u.voice = v;
-        u.lang = v ? v.lang : 'en-AU';
-        u.rate = 1.02;
-        u.volume = 1.0;
-        u.onend = () => {
-          if (playing && voiceOn) {
+      const myToken = ++playToken;
+      vAudio.src = 'audio/install_' + idx + '.wav?v=3';
+      voiceLabel.textContent = 'Speaking...';
+      vAudio.onended = () => {
+        if (myToken !== playToken) return;
+        voiceLabel.textContent = 'Voiceover: ON';
+        if (playing && voiceOn) {
+          clearTimeout(timer);
+          timer = setTimeout(() => goSlide(idx + 1), 1800);
+        }
+      };
+      vAudio.onerror = () => {
+        if (myToken !== playToken) return;
+        voiceLabel.textContent = 'Voiceover: ON';
+        if (playing) {
+          clearTimeout(timer);
+          timer = setTimeout(() => goSlide(idx + 1), SLIDE_MS);
+        }
+      };
+      const p = vAudio.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(err => {
+          if (myToken !== playToken || err.name === 'AbortError') return;
+          voiceLabel.textContent = 'Tap to Enable Audio';
+          if (playing) {
             clearTimeout(timer);
-            timer = setTimeout(() => show(idx + 1), 900);
+            timer = setTimeout(() => goSlide(idx + 1), SLIDE_MS);
           }
-        };
-        activeUtterance = u;
-        window.speechSynthesis.speak(u);
-      }, 60);
+        });
+      }
     }
 
-    function show(i) {
+    function goSlide(i) {
+      clearTimeout(timer);
+      stopAudio();
+      
       idx = (i + steps.length) % steps.length;
       for (let k = 0; k < steps.length; k++) {
         document.getElementById('st' + k).setAttribute('opacity', k === idx ? '1' : '0');
@@ -351,7 +375,7 @@
       narrationTitle.textContent = s.title;
       narrationBody.textContent = s.body;
       timeTag.textContent = s.tag;
-
+    
       chBtns.forEach((btn, bIdx) => {
         if (bIdx === idx) {
           btn.style.backgroundColor = 'var(--primary)';
@@ -364,53 +388,50 @@
         }
       });
 
-      clearTimeout(timer);
-      if (voiceOn) speak(s.voice);
-      else if (playing) timer = setTimeout(() => show(idx + 1), 9000);
+      if (voiceOn && playing) {
+        playVoiceForCurrent();
+      } else if (playing) {
+        timer = setTimeout(() => goSlide(idx + 1), SLIDE_MS);
+      }
     }
 
     playBtn.addEventListener('click', () => {
       playing = !playing;
       playBtn.textContent = playing ? 'Pause' : 'Play';
       recDot.className = playing ? 'inline-block w-2 h-2 rounded-full bg-emerald-500' : 'inline-block w-2 h-2 rounded-full bg-amber-500';
+      clearTimeout(timer);
       if (!playing) {
-        clearTimeout(timer);
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      } else show(idx);
+        stopAudio();
+        if (voiceOn) voiceLabel.textContent = 'Voiceover: ON';
+      } else {
+        if (voiceOn) playVoiceForCurrent();
+        else timer = setTimeout(() => goSlide(idx + 1), SLIDE_MS);
+      }
     });
 
     voiceBtn.addEventListener('click', () => {
       voiceOn = !voiceOn;
+      clearTimeout(timer);
       voiceIcon.textContent = voiceOn ? '🔊' : '🔇';
       voiceLabel.textContent = voiceOn ? 'Voiceover: ON' : 'Voiceover: OFF';
-      if (voiceOn) speak(steps[idx].voice);
-      else {
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        if (playing) { clearTimeout(timer); timer = setTimeout(() => show(idx + 1), 9000); }
+      if (voiceOn) {
+        if (!playing) {
+          playing = true;
+          playBtn.textContent = 'Pause';
+          recDot.className = 'inline-block w-2 h-2 rounded-full bg-emerald-500';
+        }
+        playVoiceForCurrent();
+      } else {
+        stopAudio();
+        if (playing) timer = setTimeout(() => goSlide(idx + 1), SLIDE_MS);
       }
     });
 
-    document.getElementById('prevBtn').addEventListener('click', () => show(idx - 1));
-    document.getElementById('nextBtn').addEventListener('click', () => show(idx + 1));
-    chBtns.forEach(b => b.addEventListener('click', () => show(Number(b.dataset.i))));
+    document.getElementById('prevBtn').addEventListener('click', () => goSlide(idx - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => goSlide(idx + 1));
+    chBtns.forEach(b => b.addEventListener('click', () => goSlide(Number(b.dataset.i))));
 
-    show(0);
+    goSlide(0);
   </script>
-
-<script>
-  const vAudio = new Audio();
-  vAudio.preload = "auto";
-  function speak(text) {
-    vAudio.pause();
-    if (!voiceOn) return;
-    vAudio.src = "audio/install_" + idx + ".wav";
-    vAudio.onended = () => {
-      if (playing && voiceOn) { clearTimeout(timer); timer = setTimeout(() => show(idx + 1), 1200); }
-    };
-    vAudio.play().catch(() => { clearTimeout(timer); if (playing) timer = setTimeout(() => show(idx + 1), 9000); });
-  }
-  document.getElementById("voiceBtn").addEventListener("click", () => { if (!voiceOn) vAudio.pause(); });
-  document.getElementById("playBtn").addEventListener("click", () => { if (!playing) vAudio.pause(); });
-</script>
 </body>
 </html>

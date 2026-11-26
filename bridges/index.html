@@ -1588,9 +1588,9 @@
       demoModal.classList.add("hidden");
       demoFrame.src = "about:blank";
     }
-    document.getElementById("mfgDemoBtn").addEventListener("click", () => openDemo("manufacturing_demo.html", "5-Step Design & Recycled-Plastic Build Video"));
-    document.getElementById("installDemoBtn").addEventListener("click", () => openDemo("install_demo.html", "5-Step Council Crew Bridge Installation Guide"));
-    document.getElementById("fieldDemoBtn").addEventListener("click", () => openDemo("field_demo.html", "6-Scene Field Survival, Flood Protection & 100 km/h Drive-Over Demo"));
+    document.getElementById("mfgDemoBtn").addEventListener("click", () => openDemo("manufacturing_demo.html?v=3", "5-Step Design & Recycled-Plastic Build Video"));
+    document.getElementById("installDemoBtn").addEventListener("click", () => openDemo("install_demo.html?v=3", "5-Step Council Crew Bridge Installation Guide"));
+    document.getElementById("fieldDemoBtn").addEventListener("click", () => openDemo("field_demo.html?v=3", "6-Scene Field Survival, Flood Protection & 100 km/h Drive-Over Demo"));
     document.getElementById("closeDemoModal").addEventListener("click", closeDemo);
     window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDemo(); });
 

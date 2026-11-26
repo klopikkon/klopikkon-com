@@ -501,11 +501,9 @@
       }
     ];
 
-    let idx = 0;
-    let playing = true;
-    let voiceOn = false;
-    let timer = null;
-
+    const SLIDE_MS = 11000; // Calm, readable 11-second slide pace when Voiceover is OFF
+    let idx = 0, playing = true, voiceOn = false, timer = null, playToken = 0;
+    
     const installView = document.getElementById('installView');
     const bridgeWorld = document.getElementById('bridgeWorld');
     const driveOverView = document.getElementById('driveOverView');
@@ -521,6 +519,7 @@
     const narrationTitle = document.getElementById('narrationTitle');
     const narrationBody = document.getElementById('narrationBody');
     const costTag = document.getElementById('costTag');
+    
     const playBtn = document.getElementById('playBtn');
     const voiceBtn = document.getElementById('voiceBtn');
     const voiceIcon = document.getElementById('voiceIcon');
@@ -528,51 +527,68 @@
     const recDot = document.getElementById('recDot');
     const chBtns = document.querySelectorAll('.ch-btn');
 
-    let activeUtterance = null;
-    function pickVoice() {
-      const voices = window.speechSynthesis.getVoices() || [];
-      return voices.find(v => /en[-_]AU/i.test(v.lang))
-          || voices.find(v => /^en/i.test(v.lang))
-          || voices[0] || null;
-    }
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = () => pickVoice();
-      pickVoice();
+    // Preload real recorded Australian voiceover clips
+    const vAudio = new Audio();
+    vAudio.preload = 'auto';
+    const preloaded = scenes.map((_, k) => {
+      const a = new Audio('audio/field_' + k + '.wav?v=3');
+      a.preload = 'auto';
+      return a;
+    });
+
+    function stopAudio() {
+      playToken++;
+      vAudio.onended = null;
+      vAudio.onerror = null;
+      vAudio.pause();
+      try { vAudio.currentTime = 0; } catch (e) {}
     }
 
-    function speakScene(text) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
+    function playVoiceForCurrent() {
+      clearTimeout(timer);
+      stopAudio();
       if (!voiceOn) return;
-      // 60ms delay works around Chromium's bug where cancel() kills an immediate speak()
-      setTimeout(() => {
-        if (!voiceOn) return;
-        window.speechSynthesis.resume();
-        const u = new SpeechSynthesisUtterance(text);
-        const v = pickVoice();
-        if (v) u.voice = v;
-        u.lang = v ? v.lang : 'en-AU';
-        u.rate = 1.02;
-        u.volume = 1.0;
-        u.onend = () => {
-          if (playing && voiceOn) {
+      const myToken = ++playToken;
+      vAudio.src = 'audio/field_' + idx + '.wav?v=3';
+      voiceLabel.textContent = 'Speaking...';
+      vAudio.onended = () => {
+        if (myToken !== playToken) return;
+        voiceLabel.textContent = 'Voiceover: ON';
+        if (playing && voiceOn) {
+          clearTimeout(timer);
+          timer = setTimeout(() => goSlide(idx + 1), 1800);
+        }
+      };
+      vAudio.onerror = () => {
+        if (myToken !== playToken) return;
+        voiceLabel.textContent = 'Voiceover: ON';
+        if (playing) {
+          clearTimeout(timer);
+          timer = setTimeout(() => goSlide(idx + 1), SLIDE_MS);
+        }
+      };
+      const p = vAudio.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(err => {
+          if (myToken !== playToken || err.name === 'AbortError') return;
+          voiceLabel.textContent = 'Tap to Enable Audio';
+          if (playing) {
             clearTimeout(timer);
-            timer = setTimeout(() => renderScene(idx + 1), 900);
+            timer = setTimeout(() => goSlide(idx + 1), SLIDE_MS);
           }
-        };
-        activeUtterance = u; // prevent GC cutting off speech
-        window.speechSynthesis.speak(u);
-      }, 60);
+        });
+      }
     }
 
-    function renderScene(i) {
+    function goSlide(i) {
+      clearTimeout(timer);
+      stopAudio();
+      
       idx = (i + scenes.length) % scenes.length;
       const s = scenes[idx];
-
       installView.setAttribute('opacity', s.layer === 'install' ? '1' : '0');
       bridgeWorld.setAttribute('opacity', s.layer === 'bridge' ? '1' : '0');
       driveOverView.setAttribute('opacity', s.layer === 'drive' ? '1' : '0');
-
       if (s.layer === 'bridge') {
         camera.style.transform = s.cam;
         waterFill.setAttribute('y', s.waterY);
@@ -586,12 +602,11 @@
         floatRing.setAttribute('y', s.floatUp ? '7' : '17');
         floatRing.setAttribute('fill', s.floatUp ? '#ef4444' : '#f59e0b');
       }
-
       sceneBadge.textContent = s.badge;
       narrationTitle.textContent = s.title;
       narrationBody.textContent = s.body;
       costTag.textContent = s.cost;
-
+    
       chBtns.forEach((btn, bIdx) => {
         if (bIdx === idx) {
           btn.style.backgroundColor = 'var(--primary)';
@@ -604,64 +619,50 @@
         }
       });
 
-      clearTimeout(timer);
-      if (voiceOn) {
-        speakScene(s.voice);
+      if (voiceOn && playing) {
+        playVoiceForCurrent();
       } else if (playing) {
-        timer = setTimeout(() => renderScene(idx + 1), 9000);
+        timer = setTimeout(() => goSlide(idx + 1), SLIDE_MS);
       }
     }
 
     playBtn.addEventListener('click', () => {
       playing = !playing;
       playBtn.textContent = playing ? 'Pause' : 'Play';
-      recDot.className = playing
-        ? 'inline-block w-2 h-2 rounded-full bg-emerald-500'
-        : 'inline-block w-2 h-2 rounded-full bg-amber-500';
+      recDot.className = playing ? 'inline-block w-2 h-2 rounded-full bg-emerald-500' : 'inline-block w-2 h-2 rounded-full bg-amber-500';
+      clearTimeout(timer);
       if (!playing) {
-        clearTimeout(timer);
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        stopAudio();
+        if (voiceOn) voiceLabel.textContent = 'Voiceover: ON';
       } else {
-        renderScene(idx);
+        if (voiceOn) playVoiceForCurrent();
+        else timer = setTimeout(() => goSlide(idx + 1), SLIDE_MS);
       }
     });
 
     voiceBtn.addEventListener('click', () => {
       voiceOn = !voiceOn;
+      clearTimeout(timer);
       voiceIcon.textContent = voiceOn ? '🔊' : '🔇';
       voiceLabel.textContent = voiceOn ? 'Voiceover: ON' : 'Voiceover: OFF';
       if (voiceOn) {
-        speakScene(scenes[idx].voice);
-      } else {
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        if (playing) {
-          clearTimeout(timer);
-          timer = setTimeout(() => renderScene(idx + 1), 9000);
+        if (!playing) {
+          playing = true;
+          playBtn.textContent = 'Pause';
+          recDot.className = 'inline-block w-2 h-2 rounded-full bg-emerald-500';
         }
+        playVoiceForCurrent();
+      } else {
+        stopAudio();
+        if (playing) timer = setTimeout(() => goSlide(idx + 1), SLIDE_MS);
       }
     });
 
-    document.getElementById('prevBtn').addEventListener('click', () => renderScene(idx - 1));
-    document.getElementById('nextBtn').addEventListener('click', () => renderScene(idx + 1));
-    chBtns.forEach(btn => btn.addEventListener('click', () => renderScene(Number(btn.dataset.i))));
+    document.getElementById('prevBtn').addEventListener('click', () => goSlide(idx - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => goSlide(idx + 1));
+    chBtns.forEach(b => b.addEventListener('click', () => goSlide(Number(b.dataset.i))));
 
-    renderScene(0);
+    goSlide(0);
   </script>
-
-<script>
-  const vAudio = new Audio();
-  vAudio.preload = "auto";
-  function speakScene(text) {
-    vAudio.pause();
-    if (!voiceOn) return;
-    vAudio.src = "audio/field_" + idx + ".wav";
-    vAudio.onended = () => {
-      if (playing && voiceOn) { clearTimeout(timer); timer = setTimeout(() => renderScene(idx + 1), 1200); }
-    };
-    vAudio.play().catch(() => { clearTimeout(timer); if (playing) timer = setTimeout(() => renderScene(idx + 1), 9000); });
-  }
-  document.getElementById("voiceBtn").addEventListener("click", () => { if (!voiceOn) vAudio.pause(); });
-  document.getElementById("playBtn").addEventListener("click", () => { if (!playing) vAudio.pause(); });
-</script>
 </body>
 </html>
